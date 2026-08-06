@@ -49,6 +49,10 @@ function render() {
   if (isLast) {
     return html`
       <div class="player welcome">
+        <div class="player-top">
+          <button class="btn btn--ghost" type="button" data-back>Back</button>
+          <span style="flex:1"></span>
+        </div>
         <div class="player-scroll">
           <div class="player-inner welcome-inner">
             <div class="welcome-finish">
@@ -149,7 +153,7 @@ function mount(root) {
   });
 
   on('[data-back]', 'click', () => {
-    step = Math.max(0, step - 1);
+    step = Math.min(Math.max(0, step - 1), PANELS.length - 1);
     refresh('back');
   });
 

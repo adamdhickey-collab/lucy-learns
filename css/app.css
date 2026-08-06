@@ -941,6 +941,7 @@ a.visually-hidden:focus {
   aspect-ratio: 16 / 10;
   object-fit: cover;
   object-position: center 42%;
+  background: var(--surface-sunken);
 }
 
 .hero-body {
@@ -1154,6 +1155,7 @@ a.visually-hidden:focus {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
+  background: var(--surface-sunken);
 }
 
 .backlink {
@@ -1733,7 +1735,8 @@ details.disclosure .disclosure-body {
 }
 
 .field textarea,
-.field input[type='text'] {
+.field input[type='text'],
+.field input[type='datetime-local'] {
   width: 100%;
   min-height: var(--tap);
   padding: var(--s-3);

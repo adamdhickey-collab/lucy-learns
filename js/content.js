@@ -143,10 +143,11 @@ export const DEFAULT_COMMANDS = [
 // ---------------------------------------------------------------------------
 
 export const AROUSAL = [
-  { value: 1, label: 'Calm', hint: 'Took treats, stayed loose' },
-  { value: 2, label: 'Some excitement', hint: 'Wiggly but listening' },
-  { value: 3, label: 'Very excited', hint: 'Hard to reach, still recovered' },
-  { value: 4, label: 'Could not complete', hint: 'We stopped early' },
+  // `short` fits the one-word stat tile on the recommendation screen.
+  { value: 1, label: 'Calm', short: 'Calm', hint: 'Took treats, stayed loose' },
+  { value: 2, label: 'Some excitement', short: 'Wiggly', hint: 'Wiggly but listening' },
+  { value: 3, label: 'Very excited', short: 'Wired', hint: 'Hard to reach, still recovered' },
+  { value: 4, label: 'Could not complete', short: 'Stopped', hint: 'We stopped early' },
 ];
 
 export const BEHAVIORS = [

@@ -7,7 +7,7 @@ import {
   RECOVERY_BANDS,
 } from '../content.js';
 import { addIncident, isStorageOk } from '../store.js';
-import { html, join, icon, toast, focusOnNavigate } from '../ui.js';
+import { html, join, icon, toast, focusOnNavigate, confirmSheet } from '../ui.js';
 
 let draft = null;
 
@@ -207,8 +207,24 @@ function mount(root) {
   };
 
   on('[data-exit]', 'click', () => {
-    draft = null;
-    history.length > 1 ? history.back() : (location.hash = '#/today');
+    const leave = () => {
+      draft = null;
+      history.length > 1 ? history.back() : (location.hash = '#/today');
+    };
+    const dirty =
+      draft.context || draft.responses.size || draft.helpers.size ||
+      draft.recoveryBand || draft.note;
+    if (!dirty) {
+      leave();
+      return;
+    }
+    confirmSheet({
+      title: 'Discard this moment?',
+      body: 'Nothing you tapped here has been saved.',
+      confirmLabel: 'Discard',
+      cancelLabel: 'Keep editing',
+      onConfirm: leave,
+    });
   });
 
   on('[data-context]', 'click', (e) => {

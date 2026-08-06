@@ -151,7 +151,7 @@ function readyScreen(activity, level) {
         ${cues.length
           ? html`<div class="say" style="margin-top: var(--s-5)">
               <span class="label">Say</span>
-              <span class="cue">${cues.map((c) => `“${resolveCue(c)}”`).join('  ')}</span>
+              ${join(cues.map((c) => html`<span class="cue">“${resolveCue(c)}”</span>`))}
             </div>`
           : ''}
 
@@ -348,6 +348,11 @@ function resultScreen(activity, level) {
         </div>
       </div>
     </div>
+    <div class="player-foot">
+      <button class="btn btn--ghost btn--block" type="button" data-back-practice>
+        Back to counting
+      </button>
+    </div>
   `;
 }
 
@@ -497,7 +502,7 @@ function doneScreen(activity, level) {
             <span>Success</span>
           </div>
           <div class="stat">
-            <b>${AROUSAL.find((a) => a.value === saved.arousalLevel).label.split(' ')[0]}</b>
+            <b>${AROUSAL.find((a) => a.value === saved.arousalLevel).short}</b>
             <span>Arousal</span>
           </div>
         </div>
@@ -687,6 +692,11 @@ function wire(root) {
     refresh('back');
   });
 
+  on('[data-back-practice]', 'click', () => {
+    session.phase = 'practice';
+    refresh('back');
+  });
+
   on('[data-finish-practice]', 'click', () => {
     syncTotals();
     session.phase = 'result';
@@ -860,6 +870,9 @@ function wire(root) {
   });
 
   if (session.phase === 'step') preloadUpcoming(activity, level);
+  if (session.phase === 'ready' && steps[0] && steps[0].image) {
+    new Image().src = IMAGES[steps[0].image].src;
+  }
 
   // A sheet is modal: trap it, and never let focus land on the screen behind.
   if (session.releaseTrap) {

@@ -303,6 +303,9 @@ function mount(root, params, options = {}) {
     toggle.addEventListener('click', () => {
       editing = !editing;
       refreshApp();
+      // The refresh replaced the button; keep the keyboard where it was.
+      const fresh = document.querySelector('[data-toggle-edit]');
+      if (fresh) fresh.focus({ preventScroll: true });
     });
   }
 

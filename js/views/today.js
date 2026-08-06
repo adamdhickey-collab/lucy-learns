@@ -131,7 +131,7 @@ function render() {
       </section>
 
       <section class="section">
-        <h2>Something happen?</h2>
+        <h2>Did something happen?</h2>
         <p class="section-note" style="margin-bottom: var(--s-3)">
           Log a real arrival or a walk you did not plan for. It counts.
         </p>
