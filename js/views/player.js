@@ -19,7 +19,7 @@ import {
   updateSession,
 } from '../store.js';
 import { currentLevel, recommendation } from '../metrics.js';
-import { html, join, icon, toast, pct } from '../ui.js';
+import { html, join, icon, toast, pct, focusOnNavigate } from '../ui.js';
 
 let session = null;
 let wakeLock = null;
@@ -743,11 +743,7 @@ function wire(root) {
     location.hash = '#/today';
   });
 
-  const heading = root.querySelector('.step-instruction, .sheet h2');
-  if (heading) {
-    heading.setAttribute('tabindex', '-1');
-    heading.focus({ preventScroll: true });
-  }
+  focusOnNavigate(root.querySelector('.step-instruction, .sheet h2'));
 }
 
 function mount(root) {

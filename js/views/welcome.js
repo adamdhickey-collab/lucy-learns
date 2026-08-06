@@ -4,7 +4,7 @@
 
 import { DOG, IMAGES } from '../content.js';
 import { completeOnboarding, seedDemoSessions } from '../store.js';
-import { html, join, icon, raw } from '../ui.js';
+import { html, join, icon, raw, focusOnNavigate } from '../ui.js';
 
 let step = 0;
 
@@ -158,11 +158,7 @@ function mount(root) {
     finish(e.currentTarget.dataset.choice === 'demo');
   });
 
-  const heading = root.querySelector('h1');
-  if (heading) {
-    heading.setAttribute('tabindex', '-1');
-    heading.focus({ preventScroll: true });
-  }
+  focusOnNavigate(root.querySelector('h1'));
 }
 
 export default { render, mount, tab: null, fullscreen: true };

@@ -7,7 +7,7 @@ import {
   RECOVERY_BANDS,
 } from '../content.js';
 import { addIncident, isStorageOk } from '../store.js';
-import { html, join, icon, toast } from '../ui.js';
+import { html, join, icon, toast, focusOnNavigate } from '../ui.js';
 
 let draft = null;
 
@@ -261,11 +261,7 @@ function mount(root) {
     location.hash = '#/progress';
   });
 
-  const heading = root.querySelector('.step-instruction');
-  if (heading) {
-    heading.setAttribute('tabindex', '-1');
-    heading.focus({ preventScroll: true });
-  }
+  focusOnNavigate(root.querySelector('.step-instruction'));
 }
 
 export default { render, mount, tab: null, fullscreen: true };

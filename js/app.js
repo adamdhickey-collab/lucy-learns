@@ -1,5 +1,5 @@
 import { isStorageOk, isOnboarded, onStorageChange } from './store.js';
-import { ICONS } from './ui.js';
+import { ICONS, announceScreen, markNavigated } from './ui.js';
 import today from './views/today.js';
 import activities from './views/activities.js';
 import detail from './views/detail.js';
@@ -79,6 +79,14 @@ function route({ keepScroll = false } = {}) {
 
   if (view.mount) view.mount(app, params, { isRefresh: keepScroll });
   if (!view.fullscreen) window.scrollTo(0, keepScroll ? scrollY : 0);
+
+  if (!keepScroll) {
+    const heading = app.querySelector('h1, h2');
+    if (heading) announceScreen(heading.textContent.trim());
+    // Everything after the first paint counts as navigation, so from here on
+    // views may take focus to their heading.
+    markNavigated();
+  }
 
   document.querySelectorAll('[data-route]').forEach((el) => {
     el.addEventListener('click', () => {

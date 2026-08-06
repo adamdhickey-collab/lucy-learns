@@ -184,8 +184,12 @@ no nipping and arousal of 3 or lower. The recommendation screen always offers
   get a distinct shape.
 - The screen stays awake during a session via the Wake Lock API where supported.
 - `prefers-reduced-motion` disables the sheet animation and all transitions.
-- Focus moves to the screen heading on navigation, and stays put on in-place
-  updates.
+- Focus moves to the screen heading on navigation, so a screen reader is told
+  the screen changed. It deliberately does not do this on first paint, where
+  the browser already announces the document, and headings never show a focus
+  ring since they are not operable. A small live region names the new screen
+  rather than putting `aria-live` on the whole app container, which would
+  re-read everything on every navigation.
 - Light theme only. The illustrations are warm and bright, and the app is used
   in a lit entryway.
 

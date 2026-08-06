@@ -189,6 +189,14 @@ a {
   border-radius: 4px;
 }
 
+/* Headings and containers only ever receive focus programmatically, to tell a
+   screen reader the screen changed. They are not operable, so a focus ring on
+   them reads as a bug to sighted users. Real controls keep theirs above. */
+[tabindex='-1']:focus,
+[tabindex='-1']:focus-visible {
+  outline: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

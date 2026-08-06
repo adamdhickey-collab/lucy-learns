@@ -27,7 +27,12 @@
       private browsing. Anything you log now will be lost when you close the tab.
     </p>
 
-    <main id="app" aria-live="polite"></main>
+    <!-- A dedicated announcer says only the new screen's name. aria-live on
+         the app container itself would queue up the whole screen for reading
+         on every navigation. -->
+    <p id="route-announcer" class="visually-hidden" role="status" aria-live="polite"></p>
+
+    <main id="app"></main>
 
     <nav id="tabbar" class="tabbar" aria-label="Main"></nav>
 

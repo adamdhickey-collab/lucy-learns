@@ -196,14 +196,39 @@ export const mmss = (seconds) => {
 };
 
 /**
- * Move focus to the top of a freshly rendered screen for screen readers.
- * Skipped on in-place refreshes so a tap does not throw focus to the title.
+ * Moving focus to the heading is how a single-page app tells a screen reader
+ * that the screen changed, since no real navigation happens. It is only
+ * correct *after* a navigation: on the very first paint the browser already
+ * starts at the top of a freshly announced document, so doing it there just
+ * drops a focus ring on the title for no reason.
  */
+let hasNavigated = false;
+
+export const markNavigated = () => {
+  hasNavigated = true;
+};
+
+export function focusOnNavigate(element) {
+  if (!element || !hasNavigated) return;
+  element.setAttribute('tabindex', '-1');
+  element.focus({ preventScroll: true });
+}
+
+/** Announce the new screen without moving focus or re-reading the whole page. */
+export function announceScreen(label) {
+  if (!hasNavigated || !label) return;
+  const region = document.getElementById('route-announcer');
+  if (!region) return;
+  // Clearing first guarantees the change is seen as new even when two screens
+  // happen to share a title.
+  region.textContent = '';
+  setTimeout(() => {
+    region.textContent = label;
+  }, 60);
+}
+
+/** Convenience wrapper for views whose mount is just "focus the heading". */
 export function focusHeading(root, _params, options = {}) {
   if (options.isRefresh) return;
-  const heading = root.querySelector('h1, h2');
-  if (heading) {
-    heading.setAttribute('tabindex', '-1');
-    heading.focus({ preventScroll: true });
-  }
+  focusOnNavigate(root.querySelector('h1, h2'));
 }
