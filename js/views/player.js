@@ -19,7 +19,7 @@ import {
   updateSession,
 } from '../store.js';
 import { currentLevel, recommendation } from '../metrics.js';
-import { html, join, icon, toast, pct, focusOnNavigate } from '../ui.js';
+import { html, join, icon, toast, pct, focusOnNavigate, trapModal } from '../ui.js';
 
 let session = null;
 let wakeLock = null;
@@ -43,6 +43,7 @@ function begin(activity, level) {
     advice: null,
     detailAdded: false,
     sheetOpen: false,
+    releaseTrap: null,
     timer: null,
     timerLeft: null,
   };
@@ -70,6 +71,12 @@ function stopTimer() {
   }
 }
 
+function closeSheet() {
+  if (!session) return;
+  session.sheetOpen = false;
+  refresh();
+}
+
 // ---------------------------------------------------------------------------
 // Screens
 // ---------------------------------------------------------------------------
@@ -88,7 +95,7 @@ function topBar(label, value, max) {
         aria-valuemax="${max}"
         aria-label="${label}"
       >
-        <span style="width: ${max ? Math.round((value / max) * 100) : 0}%"></span>
+        <span style="transform: scaleX(${max ? (value / max).toFixed(3) : 0})"></span>
       </div>
       <span class="badge">${label}</span>
     </div>
@@ -551,16 +558,10 @@ function wire(root) {
     refresh();
   });
 
-  on('[data-sheet-close]', 'click', () => {
-    session.sheetOpen = false;
-    refresh();
-  });
+  on('[data-sheet-close]', 'click', closeSheet);
 
   on('[data-sheet-backdrop]', 'click', (e) => {
-    if (e.target === e.currentTarget) {
-      session.sheetOpen = false;
-      refresh();
-    }
+    if (e.target === e.currentTarget) closeSheet();
   });
 
   on('[data-sheet-end]', 'click', () => {
@@ -743,7 +744,23 @@ function wire(root) {
     location.hash = '#/today';
   });
 
-  focusOnNavigate(root.querySelector('.step-instruction, .sheet h2'));
+  // A sheet is modal: trap it, and never let focus land on the screen behind.
+  if (session.releaseTrap) {
+    session.releaseTrap({ restoreFocus: false });
+    session.releaseTrap = null;
+  }
+
+  if (session.sheetOpen) {
+    const backdrop = root.querySelector('.sheet-backdrop');
+    if (backdrop) {
+      session.releaseTrap = trapModal(backdrop, {
+        onEscape: closeSheet,
+        initialFocus: backdrop.querySelector('.sheet h2'),
+      });
+    }
+  } else {
+    focusOnNavigate(root.querySelector('.step-instruction'));
+  }
 }
 
 function mount(root) {
@@ -753,6 +770,7 @@ function mount(root) {
 export function cancelSession() {
   stopTimer();
   releaseAwake();
+  if (session && session.releaseTrap) session.releaseTrap({ restoreFocus: false });
   session = null;
 }
 

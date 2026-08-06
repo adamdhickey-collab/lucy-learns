@@ -62,11 +62,13 @@ function compare(label, now, before, unit, lowerIsBetter, format = (n) => n) {
   else if (before == null || before === 0) phrase = 'New this week';
   else phrase = `${direction === 'better' ? 'Down' : 'Up'} from ${format(previous)}`;
 
+  const unitLabel = unit === 'sessions' && current === 1 ? 'session' : unit;
+
   return html`<div class="compare-row">
     <span class="compare-label">${label}</span>
     <span class="compare-value">
       <b>${now == null ? '—' : format(current)}</b>
-      ${unit ? html`<small>${unit}</small>` : ''}
+      ${unitLabel ? html`<small>${unitLabel}</small>` : ''}
     </span>
     <span class="compare-delta compare-delta--${direction}">${phrase}</span>
   </div>`;

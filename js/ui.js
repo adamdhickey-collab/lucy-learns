@@ -124,6 +124,61 @@ export function toast(message, action) {
   };
 }
 
+const FOCUSABLE =
+  'button:not([disabled]), a[href], input:not([disabled]), textarea, select, summary, [tabindex]:not([tabindex="-1"])';
+
+/**
+ * Make a modal actually modal.
+ *
+ * Declaring role="dialog" and aria-modal="true" is a promise to assistive
+ * tech that nothing outside the dialog exists. Without this, that promise is
+ * a lie: the user tabs straight out of the sheet into the page behind it with
+ * no way to tell they have left.
+ *
+ * Everything that is not an ancestor of the dialog gets `inert`, which removes
+ * it from the tab order and the accessibility tree in one go. Returns a
+ * release function; call it when the dialog closes.
+ */
+export function trapModal(dialog, { onEscape, initialFocus } = {}) {
+  const inerted = [];
+  let node = dialog;
+  while (node && node.parentElement) {
+    for (const sibling of node.parentElement.children) {
+      // Leave live regions alone: inert would silence announcements.
+      const isLiveRegion = sibling.hasAttribute('aria-live');
+      if (sibling !== node && !isLiveRegion && !sibling.hasAttribute('inert')) {
+        sibling.setAttribute('inert', '');
+        inerted.push(sibling);
+      }
+    }
+    node = node.parentElement;
+  }
+
+  const previous = document.activeElement;
+  const target =
+    initialFocus || dialog.querySelector(FOCUSABLE) || dialog.querySelector('h1, h2');
+  if (target) {
+    if (!target.matches(FOCUSABLE)) target.setAttribute('tabindex', '-1');
+    target.focus({ preventScroll: true });
+  }
+
+  const onKey = (e) => {
+    if (e.key === 'Escape' && onEscape) {
+      e.preventDefault();
+      onEscape();
+    }
+  };
+  document.addEventListener('keydown', onKey);
+
+  return function release({ restoreFocus = true } = {}) {
+    document.removeEventListener('keydown', onKey);
+    inerted.forEach((el) => el.removeAttribute('inert'));
+    if (restoreFocus && previous && previous.isConnected && previous.focus) {
+      previous.focus({ preventScroll: true });
+    }
+  };
+}
+
 /**
  * Replaces window.confirm for destructive actions. The native dialog is the
  * one place the app's visual language drops away, and it shows up exactly at
@@ -139,7 +194,6 @@ export function confirmSheet({
   onExtra,
   onConfirm,
 }) {
-  const previous = document.activeElement;
   const backdrop = document.createElement('div');
   backdrop.className = 'sheet-backdrop';
   backdrop.innerHTML = `
@@ -159,14 +213,10 @@ export function confirmSheet({
       </div>
     </div>`;
 
+  let release = () => {};
   const close = () => {
+    release();
     backdrop.remove();
-    document.removeEventListener('keydown', onKey);
-    if (previous && previous.focus) previous.focus({ preventScroll: true });
-  };
-
-  const onKey = (e) => {
-    if (e.key === 'Escape') close();
   };
 
   backdrop.addEventListener('click', (e) => {
@@ -180,9 +230,11 @@ export function confirmSheet({
   const extra = backdrop.querySelector('[data-extra]');
   if (extra) extra.addEventListener('click', () => onExtra());
 
-  document.addEventListener('keydown', onKey);
   document.body.appendChild(backdrop);
-  backdrop.querySelector('[data-confirm]').focus({ preventScroll: true });
+  release = trapModal(backdrop, {
+    onEscape: close,
+    initialFocus: backdrop.querySelector('[data-confirm]'),
+  });
   return close;
 }
 

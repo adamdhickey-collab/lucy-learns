@@ -19,7 +19,19 @@ export const MEMBERS = [
 // Images
 // ---------------------------------------------------------------------------
 
-export const IMAGES = {
+/**
+ * Every illustration ships in two sizes: the 1100px original for full-bleed
+ * use and a 240px thumb for the 84px card squares. Cards were pulling the
+ * full file — 6.5x the pixels they display, ~190KB to paint an 84px square.
+ */
+const withThumb = (images) => {
+  for (const asset of Object.values(images)) {
+    asset.thumb = asset.src.replace('img/', 'img/thumb-');
+  }
+  return images;
+};
+
+export const IMAGES = withThumb({
   'dg-01': {
     src: 'img/dg-01.jpg',
     alt: 'Lucy sits on her bed a few feet inside the entryway while a visitor stands in the open doorway and a handler holds a loose leash.',
@@ -68,7 +80,7 @@ export const IMAGES = {
     src: 'img/dg-12.jpg',
     alt: 'A handler feeds Lucy a treat at a comfortable distance from the barely-open front door while a guest waits outside.',
   },
-};
+});
 
 // ---------------------------------------------------------------------------
 // Goals (how the Activities library is grouped)

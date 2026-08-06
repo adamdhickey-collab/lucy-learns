@@ -22,6 +22,13 @@ Then open `http://localhost:3478`. A `lucy-learns` entry is already in
 Service workers and `localStorage` both need a real origin, so open it over
 `http://localhost` rather than `file://`.
 
+One dev-server gotcha: `python3 -m http.server` sends no `Cache-Control`, so
+the browser applies heuristic caching to JS modules and a plain reload can
+keep executing a stale file even though the server has your edit. Hard-reload
+(hold the reload button → Empty Cache and Hard Reload) when an edit seems to
+not take. Production is unaffected: GitHub Pages sends real cache headers and
+the service worker revalidates with `cache: 'no-cache'`.
+
 ## Installing it on a phone
 
 1. Serve the folder somewhere the phone can reach (same Wi-Fi via your Mac's LAN
