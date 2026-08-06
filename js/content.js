@@ -2,18 +2,9 @@
 // Everything the app teaches lives here as structured data, so a new handout
 // from The Canine Coach becomes a new activity object rather than a new screen.
 
-export const DOG = {
-  id: 'lucy',
-  name: 'Lucy',
-  breed: 'Lab / German Wirehaired Pointer mix',
-  photo: 'img/lucy-portrait.jpg',
-  about: 'Friendly and affectionate. Gets over-aroused around arrivals and unfamiliar people.',
-};
-
-export const MEMBERS = [
-  { id: 'adam', name: 'Adam' },
-  { id: 'fabiola', name: 'Fabiola' },
-];
+// Who this install belongs to lives in config.js; re-exported here so views
+// keep a single import point for content and configuration alike.
+export { DOG, MEMBERS, TRAINER } from './config.js';
 
 // ---------------------------------------------------------------------------
 // Images

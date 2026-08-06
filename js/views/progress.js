@@ -270,7 +270,7 @@ function render() {
             </section>
 
             <section class="section">
-              <a class="btn btn--quiet btn--block" href="#/lucy">Export a summary for the trainer</a>
+              <a class="btn btn--quiet btn--block" href="#/report">Prepare for your next lesson</a>
             </section>
           `}
 

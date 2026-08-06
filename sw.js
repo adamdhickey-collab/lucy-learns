@@ -1,6 +1,6 @@
 // Cache the whole app on install so a session works in a hallway with no signal.
 
-const CACHE = 'lucy-learns-v10';
+const CACHE = 'lucy-learns-v11';
 
 const SHELL = [
   './',
@@ -17,6 +17,7 @@ const SHELL = [
   './js/ui.js',
   './js/store.js',
   './js/content.js',
+  './js/config.js',
   './js/metrics.js',
   './js/views/today.js',
   './js/views/activities.js',
@@ -26,6 +27,7 @@ const SHELL = [
   './js/views/lucy.js',
   './js/views/moment.js',
   './js/views/welcome.js',
+  './js/views/report.js',
   './img/lucy-portrait.jpg',
   './img/thumb-dg-01.jpg',
   './img/thumb-dg-02.jpg',

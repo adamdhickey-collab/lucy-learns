@@ -1,11 +1,11 @@
-import { DOG, MEMBERS, PROGRAMS } from '../content.js';
+import { DOG, MEMBERS, PROGRAMS, TRAINER } from '../content.js';
+import { downloadCsv } from './report.js';
 import {
   getState,
   updateCommand,
   setWeeklyGoal,
   setActiveMember,
   activeMember,
-  exportSummary,
   hasDemoData,
   clearDemoData,
   clearAll,
@@ -82,8 +82,21 @@ function render() {
       </section>
 
       <section class="section">
-        <h2>Trainer material</h2>
+        <h2>Your trainer</h2>
         <div class="card">
+          <div class="card-body">
+            <strong>${TRAINER.name}</strong>
+            <p class="section-note" style="margin-top: var(--s-2)">
+              Every activity, cue, and progression rule in this app comes from their
+              program. When something is not working, they are the next step.
+            </p>
+            <div class="btn-row" style="margin-top: var(--s-4)">
+              <a class="btn btn--quiet" href="tel:${TRAINER.phone}">Call</a>
+              <a class="btn btn--quiet" href="${TRAINER.url}" target="_blank" rel="noopener">Website</a>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-top: var(--s-3)">
           <div class="card-body">
             <strong>${program.source.label}</strong>
             <p class="section-note" style="margin-top: var(--s-2)">${program.source.note}</p>
@@ -162,25 +175,14 @@ function render() {
       </div>
 
       <p class="section-note" style="margin-top: var(--s-6); text-align: center">
-        Lucy Learns
+        Lucy Learns · training program by ${TRAINER.name}
       </p>
     </div>
   `;
 }
 
-function downloadExport() {
-  const csv = exportSummary();
-  // The BOM keeps Excel from mangling the curly quotes in notes.
-  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `lucy-training-log-${new Date().toISOString().slice(0, 10)}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
+// One CSV implementation for the whole app; the report screen owns it.
+const downloadExport = downloadCsv;
 
 function mount(root) {
   const on = (selector, event, handler) =>

@@ -2549,3 +2549,52 @@ details.disclosure .disclosure-body {
   text-transform: uppercase;
   color: var(--text-secondary);
 }
+
+/* --- trainer escalation + partner slot ------------------------------------- */
+
+.sheet-trainer {
+  margin-top: var(--s-4);
+  padding: var(--s-3) var(--s-4);
+  background: var(--primary-wash);
+  border-radius: var(--r-md);
+  color: var(--primary-dark);
+  font-size: var(--step--1);
+  font-weight: 550;
+}
+
+.sheet-trainer a {
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+
+.welcome-partner {
+  margin-top: var(--s-4);
+  color: var(--text-secondary);
+  font-size: var(--step--1);
+  text-align: center;
+}
+
+/* --- lesson report ---------------------------------------------------------- */
+
+.report-range {
+  margin-top: var(--s-2);
+}
+
+/* Handed across a table or printed for the file: the report is a document. */
+@media print {
+  .tabbar,
+  .report-range,
+  .report-actions,
+  .storage-warning,
+  .offline-note {
+    display: none !important;
+  }
+
+  body::before {
+    display: none;
+  }
+
+  .screen {
+    padding-bottom: 0;
+  }
+}

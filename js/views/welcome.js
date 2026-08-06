@@ -2,7 +2,7 @@
 // with example data first. Nothing is seeded until that choice is made, so the
 // app can be handed to someone genuinely blank.
 
-import { DOG, IMAGES } from '../content.js';
+import { DOG, IMAGES, TRAINER } from '../content.js';
 import { completeOnboarding, seedDemoSessions } from '../store.js';
 import { html, join, icon, raw, focusOnNavigate, withTransition } from '../ui.js';
 
@@ -109,6 +109,9 @@ function render() {
           <h1 class="welcome-title">${panel.title}</h1>
           <p class="welcome-body">${panel.body}</p>
           <p class="welcome-note">${panel.note}</p>
+          ${step === 0
+            ? html`<p class="welcome-partner">Training program by ${TRAINER.name}</p>`
+            : ''}
         </div>
       </div>
 

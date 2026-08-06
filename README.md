@@ -87,6 +87,7 @@ from `Lucy → Starting over`.
 
 ```
 index.html               app shell
+js/config.js             the household: dog, people, trainer — one file per client
 manifest.webmanifest     PWA manifest
 sw.js                    offline cache
 css/app.css              design tokens, then primitives, then screens
@@ -137,6 +138,23 @@ cd "/Users/ahickey/dev/claude-local/Lucy Learns" && for f in images/*/*.png; do 
 
 Every image key in `js/content.js` carries alt text. Keep writing it — the whole
 app is instructional images, and they need to work read aloud.
+
+## Setting up a new client
+
+The install is two things: `js/config.js` (the dog, the household members, and
+the trainer's contact) and the program content in `js/content.js`. Nothing
+about a new client touches a screen. The trainer's name and phone flow into
+the welcome, the Lucy tab, the "too excited" escalation, and the lesson
+report automatically.
+
+## The lesson report
+
+`#/report` (linked from Progress as "Prepare for your next lesson") is the
+follow-up-appointment artifact: sessions and success over a chosen window,
+per-skill standing, watch behaviours worth discussing, and every note the
+household kept — addressed to the trainer by name. It shares as plain text
+via the native share sheet (clipboard fallback), downloads as CSV, and prints
+cleanly (chrome and controls are stripped in print styles).
 
 ## Adding the next handout
 

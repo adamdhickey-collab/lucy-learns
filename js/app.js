@@ -8,6 +8,7 @@ import lucy from './views/lucy.js';
 import moment from './views/moment.js';
 import player, { cancelSession } from './views/player.js';
 import welcome from './views/welcome.js';
+import report from './views/report.js';
 
 const routes = [
   { pattern: /^#\/welcome$/, view: welcome },
@@ -16,6 +17,7 @@ const routes = [
   { pattern: /^#\/activity\/([^/]+)$/, view: detail, keys: ['slug'] },
   { pattern: /^#\/play\/([^/]+)$/, view: player, keys: ['slug'] },
   { pattern: /^#\/progress$/, view: progressView },
+  { pattern: /^#\/report$/, view: report },
   { pattern: /^#\/lucy$/, view: lucy },
   { pattern: /^#\/moment$/, view: moment },
 ];

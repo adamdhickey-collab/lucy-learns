@@ -14,6 +14,7 @@ import {
   BEHAVIORS,
   ASSISTANCE,
   RECOVERY_BANDS,
+  TRAINER,
 } from '../content.js';
 import {
   addSession,
@@ -328,6 +329,11 @@ function fallbackSheet(activity) {
         <ul class="notes-list notes-list--calm">
           ${join(activity.fallbackSteps.map((s) => html`<li>${s}</li>`))}
         </ul>
+        <p class="sheet-trainer">
+          Still stuck after making it easier? That is exactly what your trainer is
+          for. Bring it to your next lesson, or
+          <a href="tel:${TRAINER.phone}">call ${TRAINER.name}</a>.
+        </p>
         <div class="btn-row" style="margin-top: var(--s-5)">
           <button class="btn btn--quiet" type="button" data-sheet-close>Keep going</button>
           <button class="btn" type="button" data-sheet-end>End and log</button>

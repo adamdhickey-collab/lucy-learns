@@ -92,7 +92,7 @@ function render() {
       <section class="hero" aria-labelledby="today-next">
         <img src="${cover.src}" alt="${cover.alt}" />
         <div class="hero-body">
-          <p class="eyebrow">Practice next</p>
+          <p class="eyebrow">Today’s homework</p>
           <h2 id="today-next">${activity.title}</h2>
           <p>${level.setup}</p>
           <div class="meta">
