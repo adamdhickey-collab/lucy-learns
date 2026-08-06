@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Lucy Learns</title>
+    <meta
+      name="description"
+      content="A private training companion for Lucy. Practice what the trainer assigned, log it in seconds, and see what is actually improving."
+    />
+    <meta name="theme-color" content="#f7f5ef" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Lucy Learns" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="icons/icon-180.png" />
+    <link rel="icon" href="icons/icon-192.png" />
+    <link rel="stylesheet" href="css/app.css" />
+  </head>
+  <body>
+    <a class="visually-hidden" href="#app">Skip to content</a>
+
+    <main id="app" aria-live="polite"></main>
+
+    <nav id="tabbar" class="tabbar" aria-label="Main"></nav>
+
+    <p id="offline-note" class="offline-note" role="status" hidden>
+      Offline. Your sessions are saved on this device.
+    </p>
+
+    <noscript>
+      <div style="padding: 2rem; max-width: 34rem; margin: 0 auto">
+        <h1>Lucy Learns</h1>
+        <p>This app needs JavaScript to run the guided sessions.</p>
+      </div>
+    </noscript>
+
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>
