@@ -284,7 +284,6 @@ export const ACTIVITIES = [
       {
         instruction: 'Let her settle, then go again.',
         helper: 'A few quiet seconds between reps keeps her under threshold.',
-        timerSeconds: 15,
       },
     ],
     levels: [

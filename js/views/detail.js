@@ -65,7 +65,11 @@ function render({ slug }) {
 
   return html`
     <div class="detail-hero">
-      <img src="${cover.src}" alt="${cover.alt}" />
+      <img
+        src="${cover.src}"
+        alt="${cover.alt}"
+        style="view-transition-name: card-${activity.id}"
+      />
       <button class="backlink" type="button" data-back aria-label="Back">${icon('back')}</button>
     </div>
 

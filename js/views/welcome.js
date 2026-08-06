@@ -4,7 +4,7 @@
 
 import { DOG, IMAGES } from '../content.js';
 import { completeOnboarding, seedDemoSessions } from '../store.js';
-import { html, join, icon, raw, focusOnNavigate } from '../ui.js';
+import { html, join, icon, raw, focusOnNavigate, withTransition } from '../ui.js';
 
 let step = 0;
 
@@ -122,10 +122,14 @@ function render() {
   `;
 }
 
-function refresh() {
-  const root = document.getElementById('app');
-  root.innerHTML = String(render());
-  mount(root);
+function refresh(direction) {
+  const update = () => {
+    const root = document.getElementById('app');
+    root.innerHTML = String(render());
+    mount(root);
+  };
+  if (direction) withTransition(update, direction);
+  else update();
 }
 
 function finish(withDemo) {
@@ -141,22 +145,27 @@ function mount(root) {
 
   on('[data-next]', 'click', () => {
     step += 1;
-    refresh();
+    refresh('forward');
   });
 
   on('[data-back]', 'click', () => {
     step = Math.max(0, step - 1);
-    refresh();
+    refresh('back');
   });
 
   on('[data-skip]', 'click', () => {
     step = PANELS.length;
-    refresh();
+    refresh('forward');
   });
 
   on('[data-choice]', 'click', (e) => {
     finish(e.currentTarget.dataset.choice === 'demo');
   });
+
+  // The welcome runs before the service worker has cached anything, so fetch
+  // the next panel's illustration while this one is being read.
+  const next = PANELS[step + 1];
+  if (next) new Image().src = IMAGES[next.image].src;
 
   focusOnNavigate(root.querySelector('h1'));
 }

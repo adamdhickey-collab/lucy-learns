@@ -28,6 +28,11 @@ import {
   toast,
 } from '../ui.js';
 
+// Deletion is intentional, not ambient: the trash cans only appear after
+// "Edit" is tapped, so the log reads as a diary rather than a checklist of
+// things to destroy.
+let editing = false;
+
 const behaviorLabel = (id) => {
   const b = BEHAVIORS.find((x) => x.id === id);
   return b ? b : { label: id, tone: 'good' };
@@ -129,14 +134,16 @@ function render() {
           ${tags.length ? html`<div class="tag-line">${join(tags)}</div>` : ''}
           ${s.note ? html`<p>“${s.note}”</p>` : ''}
         </div>
-        <button
-          class="icon-btn log-remove"
-          type="button"
-          data-remove-session="${s.id}"
-          aria-label="Remove this session"
-        >
-          ${icon('trash')}
-        </button>
+        ${editing
+          ? html`<button
+              class="icon-btn log-remove"
+              type="button"
+              data-remove-session="${s.id}"
+              aria-label="Remove this session"
+            >
+              ${icon('trash')}
+            </button>`
+          : ''}
       </div>`;
     }
     const i = entry.data;
@@ -153,21 +160,23 @@ function render() {
         ${tags.length ? html`<div class="tag-line">${join(tags)}</div>` : ''}
         ${i.note ? html`<p>“${i.note}”</p>` : ''}
       </div>
-      <button
-        class="icon-btn log-remove"
-        type="button"
-        data-remove-incident="${i.id}"
-        aria-label="Remove this moment"
-      >
-        ${icon('trash')}
-      </button>
+      ${editing
+        ? html`<button
+            class="icon-btn log-remove"
+            type="button"
+            data-remove-incident="${i.id}"
+            aria-label="Remove this moment"
+          >
+            ${icon('trash')}
+          </button>`
+        : ''}
     </div>`;
   });
 
   const empty = !state.sessions.length && !state.incidents.length;
 
   return html`
-    <div class="screen screen--fab">
+    <div class="screen">
       <div class="screen-head">
         <p class="eyebrow">Last seven days</p>
         <h1>Progress</h1>
@@ -244,7 +253,17 @@ function render() {
             </section>
 
             <section class="section">
-              <h2>Recent activity</h2>
+              <div class="section-head-row">
+                <h2>Recent activity</h2>
+                <button
+                  class="btn btn--ghost"
+                  type="button"
+                  data-toggle-edit
+                  aria-pressed="${String(editing)}"
+                >
+                  ${editing ? 'Done' : 'Edit'}
+                </button>
+              </div>
               <div class="card">
                 <div class="card-body">${join(log)}</div>
               </div>
@@ -278,6 +297,14 @@ function mount(root, params, options = {}) {
       },
     });
   };
+
+  const toggle = root.querySelector('[data-toggle-edit]');
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      editing = !editing;
+      refreshApp();
+    });
+  }
 
   root.querySelectorAll('[data-remove-session]').forEach((button) => {
     button.addEventListener('click', () =>

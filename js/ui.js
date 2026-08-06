@@ -124,6 +124,28 @@ export function toast(message, action) {
   };
 }
 
+/**
+ * Run a DOM update inside a view transition when the browser has them and the
+ * user has not asked for reduced motion; otherwise just run it.
+ *
+ * `type` picks the choreography via a data attribute the CSS keys off:
+ *   'fade'    cross-fade (default — tab and route changes)
+ *   'forward' new screen slides in from the right (next step, next panel)
+ *   'back'    reverse of forward
+ */
+export function withTransition(update, type = 'fade') {
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!document.startViewTransition || reduced) {
+    update();
+    return;
+  }
+  document.documentElement.dataset.vt = type;
+  const transition = document.startViewTransition(update);
+  transition.finished.finally(() => {
+    delete document.documentElement.dataset.vt;
+  });
+}
+
 const FOCUSABLE =
   'button:not([disabled]), a[href], input:not([disabled]), textarea, select, summary, [tabindex]:not([tabindex="-1"])';
 

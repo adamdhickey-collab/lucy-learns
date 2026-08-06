@@ -12,7 +12,12 @@ function activityCard(activity) {
   const level = currentLevel(activity);
   return html`<li>
     <a class="activity-card" href="#/activity/${activity.slug}">
-      <img src="${img.thumb}" alt="" loading="lazy" />
+      <img
+        src="${img.thumb}"
+        alt=""
+        loading="lazy"
+        style="view-transition-name: card-${activity.id}"
+      />
       <div class="body">
         <h3>${activity.title}</h3>
         <p>${activity.shortPurpose}</p>

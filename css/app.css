@@ -107,6 +107,12 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Any author `display` beats the UA's [hidden] rule, which has already bitten
+   the tab bar and the tally's undo button. Settle it once, for everything. */
+[hidden] {
+  display: none !important;
+}
+
 body {
   margin: 0;
   font-family: var(--font);
@@ -251,6 +257,77 @@ a.visually-hidden:focus {
 }
 
 /* =========================================================================
+   View transitions
+   Spatial continuity: tabs cross-fade, guided steps slide in the direction
+   of travel, and an activity card's illustration morphs into the detail
+   hero. All of it no-ops in browsers without the API and under
+   prefers-reduced-motion (withTransition never starts a transition there).
+   ========================================================================= */
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.2s;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Forward: the new screen arrives from the right. Back: it returns. */
+  html[data-vt='forward'] ::view-transition-old(root) {
+    animation-name: vt-fade-out, vt-slide-out-left;
+  }
+  html[data-vt='forward'] ::view-transition-new(root) {
+    animation-name: vt-fade-in, vt-slide-in-right;
+  }
+  html[data-vt='back'] ::view-transition-old(root) {
+    animation-name: vt-fade-out, vt-slide-out-right;
+  }
+  html[data-vt='back'] ::view-transition-new(root) {
+    animation-name: vt-fade-in, vt-slide-in-left;
+  }
+
+  @keyframes vt-fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes vt-fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes vt-slide-out-left {
+    to {
+      transform: translateX(-24px);
+    }
+  }
+  @keyframes vt-slide-in-right {
+    from {
+      transform: translateX(24px);
+    }
+  }
+  @keyframes vt-slide-out-right {
+    to {
+      transform: translateX(24px);
+    }
+  }
+  @keyframes vt-slide-in-left {
+    from {
+      transform: translateX(-24px);
+    }
+  }
+}
+
+/* The tab bar is furniture: it holds still while screens change under it. */
+.tabbar {
+  view-transition-name: tabbar;
+}
+
+/* The morphing illustration rides above the cross-fading screens. */
+::view-transition-group(*) {
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* =========================================================================
    App shell
    ========================================================================= */
 
@@ -266,11 +343,6 @@ a.visually-hidden:focus {
 
 .screen--flush {
   padding-inline: 0;
-}
-
-/* Leave room so the floating Record moment button never covers content. */
-.screen--fab {
-  padding-bottom: calc(var(--nav-h) + 96px);
 }
 
 .screen-head {
@@ -308,6 +380,23 @@ a.visually-hidden:focus {
   color: var(--text-secondary);
   font-size: var(--step--1);
   margin-top: var(--s-1);
+}
+
+.section-head-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--s-3);
+}
+
+.section-head-row h2 {
+  font-size: var(--step-1);
+  margin: 0;
+}
+
+.section-head-row .btn {
+  min-height: 40px;
+  padding-inline: var(--s-3);
 }
 
 /* --- bottom navigation ---------------------------------------------------- */
@@ -516,6 +605,13 @@ a.visually-hidden:focus {
   background-repeat: no-repeat;
   background-position: center;
   background-size: 12px;
+}
+
+.chip:active,
+.option:active,
+.level-row:active,
+.choice:active {
+  transform: scale(0.98);
 }
 
 .chip[aria-pressed='true'] {
@@ -1148,6 +1244,15 @@ a.visually-hidden:focus {
   color: var(--text-on-dark);
 }
 
+/* The selected row says so in words, not border color alone. */
+.level-row[aria-pressed='true'] .txt strong::after {
+  content: ' · practicing this';
+  font-size: var(--step--1);
+  font-weight: 650;
+  color: var(--primary-dark);
+  white-space: nowrap;
+}
+
 .level-row .txt {
   min-width: 0;
   flex: 1;
@@ -1276,6 +1381,7 @@ details.disclosure .disclosure-body {
 }
 
 .player-top {
+  view-transition-name: player-top;
   display: flex;
   align-items: center;
   gap: var(--s-3);
@@ -1344,6 +1450,7 @@ details.disclosure .disclosure-body {
 }
 
 .player-foot {
+  view-transition-name: player-foot;
   padding: var(--s-3) var(--s-4) calc(var(--s-3) + env(safe-area-inset-bottom));
   background: var(--surface);
   border-top: 1px solid var(--border);
@@ -1377,6 +1484,7 @@ details.disclosure .disclosure-body {
 }
 
 .step-instruction {
+  text-wrap: balance;
   font-family: var(--font-display);
   font-size: var(--step-3);
   line-height: 1.18;
@@ -1412,27 +1520,6 @@ details.disclosure .disclosure-body {
   font-variation-settings: 'SOFT' 40, 'WONK' 1, 'opsz' 20;
 }
 
-.timer {
-  display: flex;
-  align-items: center;
-  gap: var(--s-3);
-  margin-top: var(--s-4);
-  padding: var(--s-3) var(--s-4);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-}
-
-.timer output {
-  font-size: var(--step-2);
-  font-weight: 650;
-  font-variant-numeric: tabular-nums;
-  min-width: 3.5ch;
-}
-
-.timer .meter {
-  flex: 1;
-}
 
 .rep-counter {
   margin-top: var(--s-4);
@@ -1466,6 +1553,113 @@ details.disclosure .disclosure-body {
 
 .panic {
   width: 100%;
+}
+
+/* --- the rep tally --------------------------------------------------------- */
+
+.tally {
+  margin-top: var(--s-5);
+  text-align: center;
+}
+
+.tally-count b {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 4.5rem;
+  line-height: 1;
+  font-weight: 600;
+  font-variation-settings: 'SOFT' 30, 'WONK' 0, 'opsz' 72;
+  font-variant-numeric: tabular-nums;
+}
+
+.tally-count span {
+  display: block;
+  margin-top: var(--s-1);
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.tally-meter {
+  height: 10px;
+  margin: var(--s-4) auto 0;
+  max-width: 16rem;
+}
+
+.tally-meter > span {
+  width: 100%;
+  transform-origin: left center;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tally-met {
+  margin-top: var(--s-3);
+  color: var(--success);
+  font-weight: 650;
+}
+
+.tally-actions {
+  display: grid;
+  gap: var(--s-2);
+  margin-top: var(--s-5);
+}
+
+.tally-good {
+  min-height: 88px;
+  font-size: var(--step-2);
+  border-radius: var(--r-lg);
+}
+
+.tally-miss {
+  min-height: 56px;
+  border-radius: var(--r-lg);
+}
+
+/* --- milestone -------------------------------------------------------------- */
+
+.milestone {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  margin: var(--s-2) 0 var(--s-4);
+  padding: var(--s-3) var(--s-4);
+  background: var(--reward-wash);
+  border-radius: var(--r-md);
+  border-left: 4px solid var(--reward);
+  animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
+}
+
+.milestone p {
+  color: var(--reward-text);
+  font-weight: 550;
+}
+
+.milestone strong {
+  font-weight: 750;
+}
+
+.milestone svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  margin-top: 2px;
+  stroke: var(--reward);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.milestone--reliable {
+  background: var(--success-wash);
+  border-left-color: var(--success);
+}
+
+.milestone--reliable p {
+  color: var(--success);
+}
+
+.milestone--reliable svg {
+  stroke: var(--success);
 }
 
 /* --- fallback sheet ------------------------------------------------------- */
@@ -1839,46 +2033,6 @@ details.disclosure .disclosure-body {
   color: var(--success);
 }
 
-/* --- floating record button ----------------------------------------------- */
-
-.fab {
-  position: fixed;
-  right: var(--s-4);
-  bottom: calc(var(--nav-h) + var(--s-3));
-  z-index: 25;
-  min-height: 52px;
-  padding: 0 var(--s-5) 0 var(--s-4);
-  border-radius: var(--r-pill);
-  box-shadow: var(--shadow-lift);
-  background: var(--text-primary);
-  color: var(--text-on-dark);
-  border: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--s-2);
-  font-weight: 650;
-  cursor: pointer;
-}
-
-.fab:hover {
-  background: var(--text-primary-dark);
-}
-
-.fab svg {
-  width: 20px;
-  height: 20px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-@media (min-width: 34rem) {
-  .fab {
-    right: calc(50% - var(--page-max) / 2 + var(--s-4));
-  }
-}
 
 /* =========================================================================
    Lucy / settings

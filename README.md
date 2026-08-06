@@ -8,6 +8,14 @@ are actually improving.
 It supports professional training. It does not diagnose behavior and it does not
 replace a trainer.
 
+A session runs as: guided steps (one instruction per screen) → a live rep
+tally (tap "That went well" or "Not that one" after each repetition, so the
+numbers are observations rather than reconstructions) → one arousal tap that
+saves everything. Screens connect with view transitions where the browser
+supports them — an activity card's illustration morphs into its detail hero,
+steps slide with the direction of travel — and all motion is disabled under
+prefers-reduced-motion.
+
 ## Running it
 
 No build step, no dependencies. Any static server works:

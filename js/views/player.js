@@ -1,5 +1,9 @@
 // The guided activity player. One instruction per screen, big targets, and a
-// session log that should take under fifteen seconds with a leash in one hand.
+// session that gets counted as it happens rather than reconstructed from
+// memory afterward.
+//
+// Phases: ready → step (1..n) → practice (the live rep tally) → result
+// (arousal, one tap saves) → done (recommendation) ⇄ detail (optional edits).
 
 import {
   activityBySlug,
@@ -18,8 +22,18 @@ import {
   setLevel,
   updateSession,
 } from '../store.js';
-import { currentLevel, recommendation } from '../metrics.js';
-import { html, join, icon, toast, pct, focusOnNavigate, trapModal } from '../ui.js';
+import { currentLevel, masteryFor, recommendation } from '../metrics.js';
+import {
+  html,
+  join,
+  icon,
+  toast,
+  pct,
+  focusOnNavigate,
+  trapModal,
+  confirmSheet,
+  withTransition,
+} from '../ui.js';
 
 let session = null;
 let wakeLock = null;
@@ -32,8 +46,11 @@ function begin(activity, level) {
     stepIndex: 0,
     ready: new Set(),
     startedAt: Date.now(),
-    reps: level.reps,
-    successes: level.reps,
+    // Each entry is one repetition as it happened: true went well, false not.
+    // Totals derive from this, so the numbers are observations, not defaults.
+    repLog: [],
+    reps: 0,
+    successes: 0,
     arousal: null,
     behaviors: new Set(),
     assistance: new Set(),
@@ -41,11 +58,10 @@ function begin(activity, level) {
     note: '',
     saved: null,
     advice: null,
+    milestone: null,
     detailAdded: false,
     sheetOpen: false,
     releaseTrap: null,
-    timer: null,
-    timerLeft: null,
   };
 }
 
@@ -64,18 +80,16 @@ function releaseAwake() {
   }
 }
 
-function stopTimer() {
-  if (session && session.timer) {
-    clearInterval(session.timer);
-    session.timer = null;
-  }
-}
-
 function closeSheet() {
   if (!session) return;
   session.sheetOpen = false;
   refresh();
 }
+
+const syncTotals = () => {
+  session.reps = session.repLog.length;
+  session.successes = session.repLog.filter(Boolean).length;
+};
 
 // ---------------------------------------------------------------------------
 // Screens
@@ -95,7 +109,7 @@ function topBar(label, value, max) {
         aria-valuemax="${max}"
         aria-label="${label}"
       >
-        <span style="transform: scaleX(${max ? (value / max).toFixed(3) : 0})"></span>
+        <span style="transform: scaleX(${max ? Math.min(value / max, 1).toFixed(3) : 0})"></span>
       </div>
       <span class="badge">${label}</span>
     </div>
@@ -142,8 +156,8 @@ function readyScreen(activity, level) {
           : ''}
 
         <p class="section-note" style="margin-top: var(--s-4)">
-          About ${activity.estimatedMinutes} minutes. ${level.reps} repetitions. Stop early if
-          she is still doing well.
+          About ${activity.estimatedMinutes} minutes. Aim for ${level.reps} repetitions and
+          stop early if she is still doing well.
         </p>
       </div>
     </div>
@@ -179,30 +193,6 @@ function stepScreen(activity, level) {
             </div>`
           : ''}
 
-        ${step.timerSeconds
-          ? html`<div class="timer">
-              <output aria-live="off" data-timer-out>${session.timerLeft ?? step.timerSeconds}s</output>
-              <div class="meter"><span data-timer-bar style="width: 100%"></span></div>
-              <button class="btn btn--quiet" type="button" data-timer-toggle>
-                ${session.timer ? 'Stop' : 'Start'}
-              </button>
-            </div>`
-          : ''}
-
-        ${isLast
-          ? html`<div class="rep-counter">
-              <span class="label">
-                Repetitions done
-                <small>Target ${level.reps}</small>
-              </span>
-              <div class="stepper">
-                <button type="button" data-reps="-1" aria-label="One fewer repetition">−</button>
-                <output data-reps-out aria-live="polite">${session.reps}</output>
-                <button type="button" data-reps="1" aria-label="One more repetition">+</button>
-              </div>
-            </div>`
-          : ''}
-
         ${step.helper
           ? html`<details class="disclosure" style="margin-top: var(--s-5)">
               <summary>Why this matters</summary>
@@ -228,8 +218,76 @@ function stepScreen(activity, level) {
           Back
         </button>
         <button class="btn" type="button" data-next>
-          ${isLast ? 'Log session' : 'Next'}
+          ${isLast ? 'Start counting' : 'Next'}
         </button>
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * The live rep tally. This is the moment the app exists for: run a rep, tap
+ * how it went, run another. Two thumb-sized answers, a count that fills
+ * toward the level's target, and nothing to reconstruct from memory later.
+ */
+function practiceScreen(activity, level) {
+  const count = session.repLog.length;
+  const good = session.repLog.filter(Boolean).length;
+  const target = level.reps;
+  const met = count >= target;
+
+  return html`
+    ${topBar('Counting reps', count, target)}
+    <div class="player-scroll">
+      <div class="player-inner">
+        <p class="step-count">Level ${level.number} · ${level.title}</p>
+        <h1 class="step-instruction">Run a rep, then tap how it went.</h1>
+
+        <div class="tally">
+          <p class="tally-count">
+            <b data-tally-n>${count}</b>
+            <span data-tally-label>of ${target}${count > 0 ? ` · ${good} went well` : ''}</span>
+          </p>
+          <div class="meter meter--reward tally-meter" aria-hidden="true">
+            <span
+              data-tally-bar
+              style="transform: scaleX(${Math.min(count / target, 1).toFixed(3)})"
+            ></span>
+          </div>
+          <p class="tally-met" data-tally-met ${met ? '' : 'hidden'}>
+            Target met. Keep going, or finish on a win.
+          </p>
+          <p class="visually-hidden" role="status" data-tally-announce></p>
+        </div>
+
+        <div class="tally-actions">
+          <button class="btn btn--lg tally-good" type="button" data-rep="1">
+            That went well
+          </button>
+          <button class="btn btn--quiet tally-miss" type="button" data-rep="0">
+            Not that one
+          </button>
+          <button
+            class="btn btn--ghost btn--block"
+            type="button"
+            data-rep-undo
+            ${count > 0 ? '' : 'hidden'}
+          >
+            Undo last rep
+          </button>
+        </div>
+
+        <div class="panic-slot">
+          <button class="btn btn--caution panic" type="button" data-panic>
+            Lucy is too excited
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="player-foot">
+      <div class="btn-row">
+        <button class="btn btn--quiet" type="button" data-back-to-steps>Steps</button>
+        <button class="btn" type="button" data-finish-practice>Finish</button>
       </div>
     </div>
   `;
@@ -256,9 +314,8 @@ function fallbackSheet(activity) {
 }
 
 /**
- * One question, four big targets, done. Anything else is optional and lives
- * on the detail screen, because this is the moment the handler still has a
- * leash in one hand and a wound-up dog on the other end of it.
+ * One question, four big targets, done. The reps were counted as they
+ * happened, so how-she-felt is the only thing left worth asking.
  */
 function resultScreen(activity, level) {
   return html`
@@ -329,7 +386,7 @@ function detailScreen(activity, level) {
         </div>
 
         <div class="result-group">
-          <h2>Repetitions</h2>
+          <h2>Correct the counts</h2>
           <div class="rep-counter">
             <span class="label">Total <small>How many you ran</small></span>
             <div class="stepper">
@@ -403,6 +460,7 @@ function doneScreen(activity, level) {
   const saved = session.saved;
   const rate = saved.repetitions ? saved.successfulRepetitions / saved.repetitions : 0;
   const caution = advice.suggest === 'down';
+  const milestone = session.milestone;
 
   return html`
     ${topBar('Done', 1, 1)}
@@ -416,13 +474,26 @@ function doneScreen(activity, level) {
           <p>${advice.body}</p>
         </div>
 
+        ${milestone
+          ? html`<div class="milestone ${milestone.to.id === 'reliable' ? 'milestone--reliable' : ''}">
+              ${icon('spark')}
+              <p>
+                ${milestone.to.id === 'reliable'
+                  ? html`That makes level ${level.number} <strong>Reliable</strong>. Both of
+                      you, on different days.`
+                  : html`Level ${level.number} is now
+                      <strong>${milestone.to.label}</strong>.`}
+              </p>
+            </div>`
+          : ''}
+
         <div class="stat-row">
           <div class="stat">
             <b>${saved.successfulRepetitions}/${saved.repetitions}</b>
             <span>Went well</span>
           </div>
           <div class="stat">
-            <b>${pct(rate)}</b>
+            <b>${pct(saved.repetitions ? rate : null)}</b>
             <span>Success</span>
           </div>
           <div class="stat">
@@ -435,11 +506,6 @@ function doneScreen(activity, level) {
           style="margin-top: var(--s-4)">
           ${session.detailAdded ? 'Edit detail' : 'Add detail'}
         </button>
-        ${session.detailAdded
-          ? ''
-          : html`<p class="section-note" style="margin-top: var(--s-2); text-align: center">
-              Assumed ${saved.repetitions} repetitions, ${saved.successfulRepetitions} went well.
-            </p>`}
 
         ${advice.nextLevel
           ? html`<button class="btn btn--block btn--lg" type="button" data-advance="${advice.nextLevel}"
@@ -477,6 +543,7 @@ function render({ slug }) {
   let body;
   if (session.phase === 'ready') body = readyScreen(activity, level);
   else if (session.phase === 'step') body = stepScreen(activity, level);
+  else if (session.phase === 'practice') body = practiceScreen(activity, level);
   else if (session.phase === 'result') body = resultScreen(activity, level);
   else if (session.phase === 'detail') body = detailScreen(activity, level);
   else body = doneScreen(activity, level);
@@ -485,11 +552,26 @@ function render({ slug }) {
     ${session.sheetOpen ? fallbackSheet(activity) : ''}`;
 }
 
-/** Re-render the player in place without touching the router. */
-function refresh() {
-  const root = document.getElementById('app');
-  root.innerHTML = String(render({ slug: session.slug }));
-  wire(root);
+/**
+ * Re-render the player in place. `direction` choreographs the change:
+ * 'forward' and 'back' slide with the direction of travel; omitted means an
+ * in-place data update with no motion (chip toggles, tally taps).
+ */
+function refresh(direction) {
+  const update = () => {
+    const root = document.getElementById('app');
+    root.innerHTML = String(render({ slug: session.slug }));
+    wire(root);
+  };
+  if (direction) withTransition(update, direction);
+  else update();
+}
+
+/** Fetch the next step's illustration while this one is being read. */
+function preloadUpcoming(activity, level) {
+  const steps = stepsForLevel(activity, level);
+  const next = steps[session.stepIndex + 1];
+  if (next && next.image) new Image().src = IMAGES[next.image].src;
 }
 
 function wire(root) {
@@ -505,15 +587,26 @@ function wire(root) {
     else set.add(value);
   };
 
-  on('[data-exit]', 'click', () => {
-    if (session.phase === 'step' || session.phase === 'result') {
-      if (!confirm('Leave this session? Nothing will be saved.')) return;
-    }
-    stopTimer();
+  const leave = () => {
     releaseAwake();
     const slug = session.slug;
     session = null;
     location.hash = `#/activity/${slug}`;
+  };
+
+  on('[data-exit]', 'click', () => {
+    const unsaved = ['step', 'practice', 'result'].includes(session.phase);
+    if (!unsaved) {
+      leave();
+      return;
+    }
+    confirmSheet({
+      title: 'Leave practice?',
+      body: 'Nothing from this session is saved yet.',
+      confirmLabel: 'Leave',
+      cancelLabel: 'Keep going',
+      onConfirm: leave,
+    });
   });
 
   on('[data-ready]', 'click', (e) => {
@@ -529,30 +622,78 @@ function wire(root) {
     session.stepIndex = 0;
     session.startedAt = Date.now();
     keepAwake();
-    refresh();
+    refresh('forward');
   });
 
   on('[data-next]', 'click', () => {
-    stopTimer();
     if (session.stepIndex < steps.length - 1) {
       session.stepIndex += 1;
-      session.timerLeft = null;
     } else {
-      session.successes = Math.min(session.successes, session.reps);
-      session.phase = 'result';
+      session.phase = 'practice';
     }
-    refresh();
+    refresh('forward');
   });
 
   on('[data-prev]', 'click', () => {
-    stopTimer();
     if (session.stepIndex > 0) {
       session.stepIndex -= 1;
-      session.timerLeft = null;
-      refresh();
+      refresh('back');
     }
   });
 
+  // The tally ---------------------------------------------------------------
+  // Updated in place, never re-rendered: a full refresh would steal focus
+  // from the button on every rep, and the meter's fill could not tween.
+  const updateTally = (announcement) => {
+    syncTotals();
+    const count = session.reps;
+    const good = session.successes;
+    const target = level.reps;
+    const q = (sel) => root.querySelector(sel);
+
+    q('[data-tally-n]').textContent = count;
+    q('[data-tally-label]').textContent =
+      `of ${target}${count > 0 ? ` · ${good} went well` : ''}`;
+    q('[data-tally-bar]').style.transform =
+      `scaleX(${Math.min(count / target, 1).toFixed(3)})`;
+    q('[data-tally-met]').hidden = count < target;
+    q('[data-rep-undo]').hidden = count === 0;
+    q('[data-tally-announce]').textContent = announcement;
+
+    const track = q('.progress-track');
+    track.setAttribute('aria-valuenow', Math.min(count, target));
+    track.querySelector('span').style.transform =
+      `scaleX(${Math.min(count / target, 1).toFixed(3)})`;
+  };
+
+  on('[data-rep]', 'click', (e) => {
+    const good = e.currentTarget.dataset.rep === '1';
+    session.repLog.push(good);
+    updateTally(`${session.repLog.length} of ${level.reps}. ${good ? 'Went well.' : 'Not that one.'}`);
+  });
+
+  on('[data-rep-undo]', 'click', () => {
+    session.repLog.pop();
+    updateTally(`Removed. ${session.repLog.length} counted.`);
+    // If the undo button just vanished under the pointer, park focus safely.
+    if (session.repLog.length === 0) {
+      root.querySelector('.tally-good').focus({ preventScroll: true });
+    }
+  });
+
+  on('[data-back-to-steps]', 'click', () => {
+    session.phase = 'step';
+    session.stepIndex = steps.length - 1;
+    refresh('back');
+  });
+
+  on('[data-finish-practice]', 'click', () => {
+    syncTotals();
+    session.phase = 'result';
+    refresh('forward');
+  });
+
+  // Fallback sheet ------------------------------------------------------------
   on('[data-panic]', 'click', () => {
     session.sheetOpen = true;
     refresh();
@@ -569,41 +710,12 @@ function wire(root) {
     session.phase = 'result';
     session.arousal = 4;
     session.assistance.add('session_ended');
-    refresh();
+    refresh('forward');
   });
 
-  // Timer -------------------------------------------------------------------
-  const step = steps[session.stepIndex];
-  on('[data-timer-toggle]', 'click', (e) => {
-    const total = step.timerSeconds;
-    if (session.timer) {
-      stopTimer();
-      e.currentTarget.textContent = 'Start';
-      return;
-    }
-    session.timerLeft = session.timerLeft ?? total;
-    e.currentTarget.textContent = 'Stop';
-    const out = root.querySelector('[data-timer-out]');
-    const bar = root.querySelector('[data-timer-bar]');
-    session.timer = setInterval(() => {
-      session.timerLeft -= 1;
-      if (out) out.textContent = `${Math.max(session.timerLeft, 0)}s`;
-      if (bar) bar.style.width = `${Math.max((session.timerLeft / total) * 100, 0)}%`;
-      if (session.timerLeft <= 0) {
-        stopTimer();
-        session.timerLeft = null;
-        if (out) {
-          out.textContent = 'Done';
-          out.setAttribute('aria-live', 'polite');
-        }
-        e.currentTarget.textContent = 'Start';
-      }
-    }, 1000);
-  });
-
-  // Counters ----------------------------------------------------------------
+  // Detail-screen count corrections ------------------------------------------
   on('[data-reps]', 'click', (e) => {
-    session.reps = Math.max(1, session.reps + Number(e.currentTarget.dataset.reps));
+    session.reps = Math.max(0, session.reps + Number(e.currentTarget.dataset.reps));
     session.successes = Math.min(session.successes, session.reps);
     root.querySelectorAll('[data-reps-out]').forEach((o) => (o.textContent = session.reps));
     root.querySelectorAll('[data-ok-out]').forEach((o) => (o.textContent = session.successes));
@@ -621,13 +733,10 @@ function wire(root) {
   });
 
   // Result: a single tap both answers the question and saves the session.
+  // The counts are real observations now, so nothing gets zeroed or assumed.
   on('[data-arousal-save]', 'click', (e) => {
     session.arousal = Number(e.currentTarget.dataset.arousalSave);
-    if (session.arousal === 4) {
-      // "Could not complete" means exactly that. Do not assume any successes.
-      session.successes = 0;
-      session.assistance.add('session_ended');
-    }
+    if (session.arousal === 4) session.assistance.add('session_ended');
     saveSession();
   });
 
@@ -686,23 +795,29 @@ function wire(root) {
   }
 
   function saveSession() {
+    // Mastery is recomputed from all sessions, so compare around the insert to
+    // catch the moment a level crosses a threshold — that moment is earned and
+    // deserves acknowledging, once.
+    const before = masteryFor(activity.id, level.number);
     const record = addSession(sessionFields());
+    const after = masteryFor(activity.id, level.number);
+    session.milestone = after.rank > before.rank ? { from: before, to: after } : null;
+
     session.saved = record;
     session.advice = recommendation(activity, level, record);
     session.phase = 'done';
-    stopTimer();
     releaseAwake();
     if (!isStorageOk()) {
       toast('Not saved. Storage is unavailable on this device.');
     }
-    refresh();
+    refresh('forward');
   }
 
   // Detail is a round trip: the session already exists, so this updates it and
   // re-scores the recommendation against the corrected numbers.
   on('[data-detail]', 'click', () => {
     session.phase = 'detail';
-    refresh();
+    refresh('forward');
   });
 
   on('[data-save-detail]', 'click', () => {
@@ -713,7 +828,7 @@ function wire(root) {
     }
     session.detailAdded = true;
     session.phase = 'done';
-    refresh();
+    refresh('back');
   });
 
   // Done --------------------------------------------------------------------
@@ -736,13 +851,15 @@ function wire(root) {
     begin(activity, level);
     session.phase = 'step';
     keepAwake();
-    refresh();
+    refresh('forward');
   });
 
   on('[data-finish]', 'click', () => {
     session = null;
     location.hash = '#/today';
   });
+
+  if (session.phase === 'step') preloadUpcoming(activity, level);
 
   // A sheet is modal: trap it, and never let focus land on the screen behind.
   if (session.releaseTrap) {
@@ -768,7 +885,6 @@ function mount(root) {
 }
 
 export function cancelSession() {
-  stopTimer();
   releaseAwake();
   if (session && session.releaseTrap) session.releaseTrap({ restoreFocus: false });
   session = null;

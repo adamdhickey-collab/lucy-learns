@@ -47,7 +47,12 @@ function render() {
     const last = lastPracticed(a.id);
     return html`<li>
       <a class="activity-card" href="#/activity/${a.slug}">
-        <img src="${img.thumb}" alt="" loading="lazy" />
+        <img
+          src="${img.thumb}"
+          alt=""
+          loading="lazy"
+          style="view-transition-name: card-${a.id}"
+        />
         <div class="body">
           <h3>${a.title}</h3>
           <p>${a.shortPurpose}</p>

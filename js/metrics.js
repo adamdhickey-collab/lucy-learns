@@ -109,6 +109,15 @@ export function recommendation(activity, level, session) {
       suggest: 'down',
     };
   }
+  if (!reps) {
+    // Finished without counting anything — logged, but there is nothing to
+    // score, so do not lecture about success rates that do not exist.
+    return {
+      title: 'Session logged',
+      body: 'No repetitions counted this time. Ready whenever you two are.',
+      suggest: 'stay',
+    };
+  }
   if (tags.includes('nipped')) {
     return {
       title: 'Take the pressure off',
