@@ -31,6 +31,30 @@ Service workers and `localStorage` both need a real origin, so open it over
 
 It then runs full screen, works offline, and keeps its own data.
 
+## First run, and demoing it to someone
+
+On a fresh install the app opens on a four-panel welcome that explains what it
+is, how a session runs, how logging works, and how the two of you share it.
+Nothing is seeded until you answer the last question:
+
+- **Start empty** — no history at all. Your first session is genuinely the
+  first one.
+- **Fill in example data first** — twelve days of made-up practice so Progress
+  has something to show. Removable in one tap.
+
+To hand the app to someone else and have them see it exactly as a new user
+would: **Lucy → Starting over → Reset to a brand new app**. That wipes
+sessions, moments, cue wording, and the weekly goal, then drops you back on the
+welcome screen. It offers to export a copy first.
+
+The same section has two narrower options:
+
+- **Load / Remove example data** — toggle the seeded sessions without touching
+  your real ones.
+- **Delete all logs** — clears sessions and moments but keeps your cue wording.
+
+**Lucy → Settings → How this works** replays the four intro panels any time.
+
 ## Where the data lives
 
 Everything is in `localStorage` under `lucy-learns/v1` on that one device.
@@ -41,9 +65,8 @@ session.
 `Lucy → Export progress` writes a CSV of every session and moment, which is the
 thing to send The Canine Coach.
 
-The app ships with ten seeded example sessions so Progress is readable on first
-open. `Lucy → Clear example data` removes them and keeps anything you logged
-yourself.
+Example data is opt-in, chosen at the end of the welcome and toggleable later
+from `Lucy → Starting over`.
 
 ## What is in here
 
@@ -54,10 +77,11 @@ sw.js                    offline cache
 css/app.css              design tokens, then primitives, then screens
 js/content.js            all training content as data
 js/store.js              localStorage persistence
-js/progress.js           mastery, progression, weekly summary
+js/metrics.js            mastery, progression, weekly summary
 js/ui.js                 escaping, templating, icons
 js/app.js                hash router
 js/views/                one file per screen
+fonts/                   Fraunces + Karla, variable, SIL OFL
 img/                     web-sized illustrations
 images/                  original full-resolution artwork
 icons/                   PWA icons
@@ -66,8 +90,8 @@ scripts/make-icons.mjs   rebuilds the icon set
 
 ### App icon
 
-The icons in `icons/` are generated placeholders. To use real artwork, save a
-square PNG (1024×1024 is ideal) as `icons/source.png` and run:
+Built from `icons/source.png`. To replace the artwork, save a new square PNG
+there and run:
 
 ```bash
 node "/Users/ahickey/dev/claude-local/Lucy Learns/scripts/make-icons.mjs"
@@ -138,7 +162,7 @@ remove its name from that goal's `planned` array in `GOALS`.
 
 ## How progress is calculated
 
-`js/progress.js` holds all of it.
+`js/metrics.js` holds all of it.
 
 Mastery, per level:
 

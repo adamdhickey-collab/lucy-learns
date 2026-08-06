@@ -1924,6 +1924,18 @@ details.disclosure .disclosure-body {
 .setting-row .value {
   color: var(--text-secondary);
   font-size: var(--step--1);
+  display: inline-flex;
+  align-items: center;
+}
+
+.setting-row .value svg {
+  width: 20px;
+  height: 20px;
+  stroke: var(--text-secondary);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .setting-row.danger {
@@ -2128,6 +2140,134 @@ details.disclosure .disclosure-body {
 
 .options--tall .option strong {
   font-size: var(--step-1);
+}
+
+/* =========================================================================
+   Welcome / first run
+   ========================================================================= */
+
+.welcome-inner {
+  padding-top: var(--s-4);
+}
+
+.welcome-figure {
+  border-radius: var(--r-lg);
+}
+
+.welcome-figure img {
+  aspect-ratio: 5 / 4;
+}
+
+.welcome-title {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  line-height: 1.15;
+  font-weight: 600;
+  font-variation-settings: 'SOFT' 40, 'WONK' 1, 'opsz' 44;
+  margin-top: var(--s-2);
+}
+
+.welcome-body {
+  font-size: var(--step-1);
+  color: var(--text-secondary);
+  margin-top: var(--s-3);
+}
+
+.welcome-note {
+  margin-top: var(--s-4);
+  padding: var(--s-3) var(--s-4);
+  background: var(--primary-wash);
+  border-radius: var(--r-md);
+  color: var(--primary-dark);
+  font-size: var(--step--1);
+  font-weight: 600;
+}
+
+.welcome-dots {
+  display: inline-flex;
+  gap: 6px;
+  padding-left: var(--s-2);
+}
+
+.welcome-dots i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  transition: background 0.2s ease, width 0.2s ease;
+}
+
+.welcome-dots i.on {
+  width: 20px;
+  border-radius: var(--r-pill);
+  background: var(--primary);
+}
+
+.welcome-finish {
+  padding-top: var(--s-6);
+}
+
+.welcome-finish h1 {
+  font-size: var(--step-3);
+  margin-top: var(--s-2);
+}
+
+.welcome-finish .eyebrow {
+  font-size: var(--step--1);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--primary-dark);
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  width: 100%;
+  margin-top: var(--s-3);
+  padding: var(--s-4);
+  text-align: left;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  color: inherit;
+}
+
+.choice:hover {
+  border-color: var(--primary);
+  background: var(--primary-wash);
+}
+
+.choice strong {
+  display: block;
+  font-size: var(--step-1);
+  font-weight: 650;
+}
+
+.choice small {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-secondary);
+  font-size: var(--step--1);
+}
+
+.choice svg {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  stroke: var(--primary);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.insight--start {
+  background: var(--reward-wash);
+  color: #7a5c12;
 }
 
 /* --- who is practicing ----------------------------------------------------- */

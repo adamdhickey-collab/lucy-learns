@@ -1,4 +1,4 @@
-import { seedDemoSessions, isStorageOk, onStorageChange } from './store.js';
+import { isStorageOk, isOnboarded, onStorageChange } from './store.js';
 import { ICONS } from './ui.js';
 import today from './views/today.js';
 import activities from './views/activities.js';
@@ -7,8 +7,10 @@ import progressView from './views/progress.js';
 import lucy from './views/lucy.js';
 import moment from './views/moment.js';
 import player, { cancelSession } from './views/player.js';
+import welcome from './views/welcome.js';
 
 const routes = [
+  { pattern: /^#\/welcome$/, view: welcome },
   { pattern: /^#?\/?(today)?$/, view: today },
   { pattern: /^#\/activities$/, view: activities },
   { pattern: /^#\/activity\/([^/]+)$/, view: detail, keys: ['slug'] },
@@ -56,6 +58,14 @@ let currentView = null;
 
 function route({ keepScroll = false } = {}) {
   const hash = location.hash || '#/today';
+
+  // Nothing is reachable before the welcome. Resetting from settings clears the
+  // flag, which drops straight back here.
+  if (!isOnboarded() && hash !== '#/welcome') {
+    location.hash = '#/welcome';
+    return;
+  }
+
   const { view, params } = match(hash);
 
   // Leaving the player mid-session throws the draft away on purpose.
@@ -81,7 +91,6 @@ window.addEventListener('hashchange', () => route());
 // Views ask for a redraw after changing stored data.
 window.addEventListener('app:refresh', () => route({ keepScroll: true }));
 
-seedDemoSessions();
 route();
 
 

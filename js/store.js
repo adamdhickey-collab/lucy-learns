@@ -26,6 +26,9 @@ const emptyState = () => ({
   levelOverrides: {}, // activityId -> level number chosen manually
   weeklyGoal: 5,
   seeded: false,
+  // Has the household been through the welcome? Nothing is seeded until they
+  // choose, so the app can be handed to someone genuinely empty.
+  onboarded: false,
   notes: '',
 });
 
@@ -200,23 +203,35 @@ export function setNotes(text) {
 
 // --- demo data -------------------------------------------------------------
 
-export function clearAll() {
-  state = emptyState();
-  state.seeded = true; // do not re-seed after an explicit wipe
+export const isOnboarded = () => state.onboarded;
+
+export function completeOnboarding() {
+  state.onboarded = true;
   persist();
 }
 
-export function resetToDemo() {
+/**
+ * Back to the very first launch: no sessions, no cue edits, welcome shown
+ * again. This is what "let me show someone the app properly" needs.
+ */
+export function startFresh() {
   state = emptyState();
-  seedDemoSessions();
+  persist();
+}
+
+/** Wipe the logs but keep the household set up and skip the welcome. */
+export function clearAll() {
+  const keep = { commands: state.commands, activeMemberId: state.activeMemberId };
+  state = { ...emptyState(), ...keep, onboarded: true, seeded: true };
+  persist();
 }
 
 /**
  * Realistic practice history so Progress means something on first open.
  * Marked `demo: true` so it can be cleared from the Lucy tab.
  */
-export function seedDemoSessions() {
-  if (state.seeded) return;
+export function seedDemoSessions({ force = false } = {}) {
+  if (state.seeded && !force) return;
   // Rest days and a double-practice day, so the charts look like real life.
   const plan = [
     // [daysAgo, hour, activityId, level, reps, successes, arousal, behaviors, assistance, member]

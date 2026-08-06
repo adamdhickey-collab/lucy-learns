@@ -9,8 +9,11 @@ import {
   hasDemoData,
   clearDemoData,
   clearAll,
+  startFresh,
+  seedDemoSessions,
 } from '../store.js';
-import { html, join, focusHeading, toast, confirmSheet } from '../ui.js';
+import { restart as restartWelcome } from './welcome.js';
+import { html, join, icon, focusHeading, toast, confirmSheet } from '../ui.js';
 
 function render() {
   const state = getState();
@@ -93,8 +96,15 @@ function render() {
       </section>
 
       <section class="section">
-        <h2>Data</h2>
+        <h2>Settings</h2>
         <div class="card">
+          <button class="setting-row" type="button" data-replay>
+            <span>
+              How this works
+              <small>Replay the four-screen intro</small>
+            </span>
+            <span class="value">${icon('arrow')}</span>
+          </button>
           <button class="setting-row" type="button" data-export>
             <span>
               Export progress
@@ -102,18 +112,39 @@ function render() {
             </span>
             <span class="value">${state.sessions.length + state.incidents.length} records</span>
           </button>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Starting over</h2>
+        <p class="section-note" style="margin-bottom: var(--s-3)">
+          Handing the app to someone else, or want a clean run at it?
+        </p>
+        <div class="card">
+          <button class="setting-row" type="button" data-start-fresh>
+            <span>
+              Reset to a brand new app
+              <small>Wipes everything and shows the welcome again, exactly like a first install</small>
+            </span>
+            <span class="value">${icon('arrow')}</span>
+          </button>
           ${hasDemoData()
             ? html`<button class="setting-row" type="button" data-clear-demo>
                 <span>
-                  Clear example data
-                  <small>Remove the seeded sessions and keep your own</small>
+                  Remove example data
+                  <small>Deletes the made-up sessions and keeps your real ones</small>
                 </span>
               </button>`
-            : ''}
+            : html`<button class="setting-row" type="button" data-load-demo>
+                <span>
+                  Load example data
+                  <small>Twelve days of made-up practice, to see what Progress looks like</small>
+                </span>
+              </button>`}
           <button class="setting-row danger" type="button" data-clear-all>
             <span>
-              Delete everything
-              <small>All sessions, moments, and cue edits on this device</small>
+              Delete all logs
+              <small>Clears sessions and moments but keeps your cue wording</small>
             </span>
           </button>
         </div>
@@ -179,6 +210,35 @@ function mount(root) {
 
   on('[data-export]', 'click', downloadExport);
 
+  on('[data-replay]', 'click', () => {
+    restartWelcome();
+    location.hash = '#/welcome';
+  });
+
+  on('[data-start-fresh]', 'click', () => {
+    confirmSheet({
+      title: 'Reset to a brand new app?',
+      body:
+        'Everything goes: sessions, moments, cue wording, and the practice goal. You will land on the welcome screen exactly as if the app had just been installed.',
+      confirmLabel: 'Reset it all',
+      tone: 'danger',
+      extraLabel: 'Export a copy first',
+      onExtra: downloadExport,
+      onConfirm: () => {
+        startFresh();
+        restartWelcome();
+        location.hash = '#/welcome';
+        location.reload();
+      },
+    });
+  });
+
+  on('[data-load-demo]', 'click', () => {
+    seedDemoSessions({ force: true });
+    toast('Example data loaded');
+    location.reload();
+  });
+
   on('[data-clear-demo]', 'click', () => {
     confirmSheet({
       title: 'Remove the example sessions?',
@@ -194,10 +254,10 @@ function mount(root) {
 
   on('[data-clear-all]', 'click', () => {
     confirmSheet({
-      title: 'Delete everything?',
+      title: 'Delete all logs?',
       body:
-        'Every session, moment, and cue edit on this device. This cannot be undone, and there is no copy anywhere else.',
-      confirmLabel: 'Delete it all',
+        'Every session and moment on this device. Your cue wording stays. This cannot be undone, and there is no copy anywhere else.',
+      confirmLabel: 'Delete logs',
       tone: 'danger',
       extraLabel: 'Export a copy first',
       onExtra: downloadExport,

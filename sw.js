@@ -1,6 +1,6 @@
 // Cache the whole app on install so a session works in a hallway with no signal.
 
-const CACHE = 'lucy-learns-v4';
+const CACHE = 'lucy-learns-v5';
 
 const SHELL = [
   './',
@@ -25,6 +25,7 @@ const SHELL = [
   './js/views/progress.js',
   './js/views/lucy.js',
   './js/views/moment.js',
+  './js/views/welcome.js',
   './img/lucy-portrait.jpg',
   './img/dg-01.jpg',
   './img/dg-02.jpg',
@@ -45,7 +46,17 @@ self.addEventListener('install', (event) => {
     caches
       .open(CACHE)
       // addAll is all-or-nothing, so add individually and tolerate misses.
-      .then((cache) => Promise.all(SHELL.map((url) => cache.add(url).catch(() => {}))))
+      // Bypass the HTTP cache on install too, so a new version never
+      // primes itself with the files it was meant to replace.
+      .then((cache) =>
+        Promise.all(
+          SHELL.map((url) =>
+            fetch(url, { cache: 'no-cache' })
+              .then((res) => (res.ok ? cache.put(url, res) : null))
+              .catch(() => {})
+          )
+        )
+      )
       .then(() => self.skipWaiting())
   );
 });
@@ -82,8 +93,12 @@ self.addEventListener('fetch', (event) => {
   // Everything else is network first, so an edit is never masked by the cache.
   // Module imports do not always report destination "script", so this has to be
   // the default branch rather than a list of destinations.
+  //
+  // `cache: 'no-cache'` forces revalidation with the server. Without it the
+  // browser's own HTTP cache answers first, and GitHub Pages sends
+  // max-age=600 — so a fresh deploy would keep serving the old bundle.
   event.respondWith(
-    fetch(request)
+    fetch(request, { cache: 'no-cache' })
       .then((response) => {
         const copy = response.clone();
         caches.open(CACHE).then((cache) => cache.put(request, copy));

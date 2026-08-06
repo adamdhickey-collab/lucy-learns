@@ -91,9 +91,19 @@ function render() {
         </div>
       </section>
 
-      <section class="section">
-        <div class="insight">${icon('spark')}<p>${headlineInsight()}</p></div>
-      </section>
+      ${state.sessions.length
+        ? html`<section class="section">
+            <div class="insight">${icon('spark')}<p>${headlineInsight()}</p></div>
+          </section>`
+        : html`<section class="section">
+            <div class="insight insight--start">
+              ${icon('spark')}
+              <p>
+                Nothing logged yet. Run the session above and it takes about five minutes.
+                Everything else here fills in on its own.
+              </p>
+            </div>
+          </section>`}
 
       <section class="section">
         <div class="card streak-card">
