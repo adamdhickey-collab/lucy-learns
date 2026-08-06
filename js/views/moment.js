@@ -6,7 +6,7 @@ import {
   INCIDENT_HELPERS,
   RECOVERY_BANDS,
 } from '../content.js';
-import { addIncident } from '../store.js';
+import { addIncident, isStorageOk } from '../store.js';
 import { html, join, icon, toast } from '../ui.js';
 
 let draft = null;
@@ -18,8 +18,42 @@ const reset = () => {
     helpers: new Set(),
     recoveryBand: null,
     note: '',
+    when: 'now',
+    customWhen: '',
   };
 };
+
+// Moments usually get logged after the dust settles, so "now" is a default
+// rather than a fact. Recovery trends are built on these timestamps.
+const WHEN_CHOICES = [
+  { id: 'now', label: 'Just now' },
+  { id: 'hours', label: 'Earlier today' },
+  { id: 'yesterday', label: 'Yesterday' },
+  { id: 'custom', label: 'Another time' },
+];
+
+function resolveWhen() {
+  const now = new Date();
+  if (draft.when === 'hours') {
+    now.setHours(now.getHours() - 3);
+    return now.toISOString();
+  }
+  if (draft.when === 'yesterday') {
+    now.setDate(now.getDate() - 1);
+    return now.toISOString();
+  }
+  if (draft.when === 'custom' && draft.customWhen) {
+    const picked = new Date(draft.customWhen);
+    if (!Number.isNaN(picked.getTime())) return picked.toISOString();
+  }
+  return now.toISOString();
+}
+
+/** Value for a datetime-local input, in the browser's own timezone. */
+function localInputValue(date = new Date()) {
+  const offset = date.getTimezoneOffset() * 60000;
+  return new Date(date.getTime() - offset).toISOString().slice(0, 16);
+}
 
 function render() {
   if (!draft) reset();
@@ -50,6 +84,36 @@ function render() {
                 )
               )}
             </div>
+          </div>
+
+          <div class="result-group">
+            <h2>When was this?</h2>
+            <div class="chips">
+              ${join(
+                WHEN_CHOICES.map(
+                  (w) => html`<button
+                    type="button"
+                    class="chip"
+                    data-when="${w.id}"
+                    aria-pressed="${String(draft.when === w.id)}"
+                  >
+                    ${w.label}
+                  </button>`
+                )
+              )}
+            </div>
+            ${draft.when === 'custom'
+              ? html`<div class="field" style="margin-top: var(--s-3)">
+                  <label for="moment-when">Date and time</label>
+                  <input
+                    id="moment-when"
+                    type="datetime-local"
+                    data-custom-when
+                    value="${draft.customWhen || localInputValue()}"
+                    max="${localInputValue()}"
+                  />
+                </div>`
+              : ''}
           </div>
 
           <div class="result-group">
@@ -169,8 +233,22 @@ function mount(root) {
     draft.note = e.currentTarget.value;
   });
 
+  on('[data-when]', 'click', (e) => {
+    const next = e.currentTarget.dataset.when;
+    draft.when = draft.when === next && next !== 'now' ? 'now' : next;
+    if (draft.when === 'custom' && !draft.customWhen) {
+      draft.customWhen = localInputValue();
+    }
+    refresh();
+  });
+
+  on('[data-custom-when]', 'change', (e) => {
+    draft.customWhen = e.currentTarget.value;
+  });
+
   on('[data-save]', 'click', () => {
     addIncident({
+      occurredAt: resolveWhen(),
       context: draft.context,
       responses: [...draft.responses],
       helpers: [...draft.helpers],
@@ -178,7 +256,8 @@ function mount(root) {
       note: draft.note,
     });
     draft = null;
-    toast('Moment saved');
+    if (!isStorageOk()) toast('Not saved. Storage is unavailable on this device.');
+    else toast('Moment saved');
     location.hash = '#/progress';
   });
 

@@ -11,9 +11,15 @@ import {
   ASSISTANCE,
   RECOVERY_BANDS,
 } from '../content.js';
-import { addSession, resolveCue, setLevel } from '../store.js';
-import { currentLevel, recommendation } from '../progress.js';
-import { html, join, icon, raw, toast, pct } from '../ui.js';
+import {
+  addSession,
+  isStorageOk,
+  resolveCue,
+  setLevel,
+  updateSession,
+} from '../store.js';
+import { currentLevel, recommendation } from '../metrics.js';
+import { html, join, icon, toast, pct } from '../ui.js';
 
 let session = null;
 let wakeLock = null;
@@ -35,6 +41,7 @@ function begin(activity, level) {
     note: '',
     saved: null,
     advice: null,
+    detailAdded: false,
     sheetOpen: false,
     timer: null,
     timerLeft: null,
@@ -241,27 +248,30 @@ function fallbackSheet(activity) {
   `;
 }
 
+/**
+ * One question, four big targets, done. Anything else is optional and lives
+ * on the detail screen, because this is the moment the handler still has a
+ * leash in one hand and a wound-up dog on the other end of it.
+ */
 function resultScreen(activity, level) {
-  const needsRecovery =
-    session.arousal >= 3 ||
-    ['barked', 'jumped', 'nipped', 'pulled'].some((b) => session.behaviors.has(b));
-
   return html`
     ${topBar('How did it go', 1, 1)}
     <div class="player-scroll">
       <div class="player-inner">
         <p class="step-count">${activity.title} · Level ${level.number}</p>
         <h1 class="step-instruction">How did Lucy do?</h1>
+        <p class="section-note" style="margin-top: var(--s-3)">
+          One tap saves it. You can add detail after.
+        </p>
 
         <div class="result-group">
-          <div class="options" role="group" aria-label="Overall arousal">
+          <div class="options options--tall" role="group" aria-label="Overall arousal">
             ${join(
               AROUSAL.map(
                 (a) => html`<button
                   type="button"
                   class="option"
-                  data-arousal="${a.value}"
-                  aria-pressed="${String(session.arousal === a.value)}"
+                  data-arousal-save="${a.value}"
                 >
                   <span>
                     <strong>${a.label}</strong>
@@ -272,10 +282,29 @@ function resultScreen(activity, level) {
             )}
           </div>
         </div>
+      </div>
+    </div>
+  `;
+}
+
+/** Everything optional, reached deliberately from the recommendation screen. */
+function detailScreen(activity, level) {
+  const needsRecovery =
+    session.arousal >= 3 ||
+    ['barked', 'jumped', 'nipped', 'pulled'].some((b) => session.behaviors.has(b));
+
+  return html`
+    ${topBar('Add detail', 1, 1)}
+    <div class="player-scroll">
+      <div class="player-inner">
+        <p class="step-count">${activity.title} · Level ${level.number}</p>
+        <h1 class="step-instruction">Anything to add?</h1>
+        <p class="section-note" style="margin-top: var(--s-3)">
+          Already saved. Everything here is optional.
+        </p>
 
         <div class="result-group">
           <h2>What happened?</h2>
-          <p>Tap everything you saw.</p>
           <div class="chips">
             ${join(
               BEHAVIORS.map(
@@ -350,21 +379,14 @@ function resultScreen(activity, level) {
             </div>`
           : ''}
 
-        <div class="result-group">
-          <details class="disclosure">
-            <summary>Add a note</summary>
-            <div class="disclosure-body field" style="padding-top: var(--s-3)">
-              <label for="session-note">Anything worth telling the trainer</label>
-              <textarea id="session-note" rows="3" data-note>${session.note}</textarea>
-            </div>
-          </details>
+        <div class="result-group field">
+          <label for="session-note">A note for the trainer</label>
+          <textarea id="session-note" rows="3" data-note>${session.note}</textarea>
         </div>
       </div>
     </div>
     <div class="player-foot">
-      <button class="btn btn--lg btn--block" type="button" data-save ${session.arousal ? '' : 'disabled'}>
-        ${session.arousal ? 'Save session' : 'Pick how she did'}
-      </button>
+      <button class="btn btn--lg btn--block" type="button" data-save-detail>Done</button>
     </div>
   `;
 }
@@ -401,6 +423,16 @@ function doneScreen(activity, level) {
             <span>Arousal</span>
           </div>
         </div>
+
+        <button class="btn btn--quiet btn--block" type="button" data-detail
+          style="margin-top: var(--s-4)">
+          ${session.detailAdded ? 'Edit detail' : 'Add detail'}
+        </button>
+        ${session.detailAdded
+          ? ''
+          : html`<p class="section-note" style="margin-top: var(--s-2); text-align: center">
+              Assumed ${saved.repetitions} repetitions, ${saved.successfulRepetitions} went well.
+            </p>`}
 
         ${advice.nextLevel
           ? html`<button class="btn btn--block btn--lg" type="button" data-advance="${advice.nextLevel}"
@@ -439,6 +471,7 @@ function render({ slug }) {
   if (session.phase === 'ready') body = readyScreen(activity, level);
   else if (session.phase === 'step') body = stepScreen(activity, level);
   else if (session.phase === 'result') body = resultScreen(activity, level);
+  else if (session.phase === 'detail') body = detailScreen(activity, level);
   else body = doneScreen(activity, level);
 
   return html`<div class="player">${body}</div>
@@ -586,10 +619,15 @@ function wire(root) {
     root.querySelectorAll('[data-ok-out]').forEach((o) => (o.textContent = session.successes));
   });
 
-  // Result choices ----------------------------------------------------------
-  on('[data-arousal]', 'click', (e) => {
-    session.arousal = Number(e.currentTarget.dataset.arousal);
-    refresh();
+  // Result: a single tap both answers the question and saves the session.
+  on('[data-arousal-save]', 'click', (e) => {
+    session.arousal = Number(e.currentTarget.dataset.arousalSave);
+    if (session.arousal === 4) {
+      // "Could not complete" means exactly that. Do not assume any successes.
+      session.successes = 0;
+      session.assistance.add('session_ended');
+    }
+    saveSession();
   });
 
   on('[data-behavior]', 'click', (e) => {
@@ -624,9 +662,9 @@ function wire(root) {
     session.note = e.currentTarget.value;
   });
 
-  on('[data-save]', 'click', () => {
+  function sessionFields() {
     const band = RECOVERY_BANDS.find((r) => r.id === session.recoveryBand);
-    const record = addSession({
+    return {
       activityId: activity.id,
       levelNumber: level.number,
       durationSeconds: Math.round((Date.now() - session.startedAt) / 1000),
@@ -638,16 +676,42 @@ function wire(root) {
       assistanceUsed: session.assistance.size ? [...session.assistance] : ['none'],
       context: {
         location: 'home',
-        trigger: level.number >= 4 && activity.id === 'dg-4' ? 'familiar_guest' : 'imaginary_guest',
+        trigger:
+          level.number >= 4 && activity.id === 'dg-4' ? 'familiar_guest' : 'imaginary_guest',
         distractionLevel: Math.min(level.number, 5),
       },
       note: session.note,
-    });
+    };
+  }
+
+  function saveSession() {
+    const record = addSession(sessionFields());
     session.saved = record;
     session.advice = recommendation(activity, level, record);
     session.phase = 'done';
     stopTimer();
     releaseAwake();
+    if (!isStorageOk()) {
+      toast('Not saved. Storage is unavailable on this device.');
+    }
+    refresh();
+  }
+
+  // Detail is a round trip: the session already exists, so this updates it and
+  // re-scores the recommendation against the corrected numbers.
+  on('[data-detail]', 'click', () => {
+    session.phase = 'detail';
+    refresh();
+  });
+
+  on('[data-save-detail]', 'click', () => {
+    const updated = updateSession(session.saved.id, sessionFields());
+    if (updated) {
+      session.saved = updated;
+      session.advice = recommendation(activity, level, updated);
+    }
+    session.detailAdded = true;
+    session.phase = 'done';
     refresh();
   });
 

@@ -4,7 +4,7 @@ import {
   relativeDay,
   lastPracticed,
   currentLevel,
-} from '../progress.js';
+} from '../metrics.js';
 import { html, join, badge, difficultyDots, focusHeading } from '../ui.js';
 
 function activityCard(activity) {

@@ -5,6 +5,31 @@
    and the app is used in a lit entryway with a leash in one hand.
    ========================================================================= */
 
+/* --- fonts ----------------------------------------------------------------
+   Self-hosted so a session works with no signal. Both are variable, latin
+   subset, SIL Open Font License.
+   Fraunces carries the voice: a soft, slightly wonky serif that sits with the
+   painted illustrations instead of fighting them.
+   Karla handles everything small: a warm grotesque with a tall x-height that
+   stays legible at arm's length with a dog on the other end of the leash.
+   -------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: 'Fraunces';
+  src: url('../fonts/fraunces-latin.woff2') format('woff2-variations');
+  font-weight: 400 700;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Karla';
+  src: url('../fonts/karla-latin.woff2') format('woff2-variations');
+  font-weight: 400 700;
+  font-display: swap;
+  font-style: normal;
+}
+
 :root {
   /* --- color ------------------------------------------------------------ */
   --background: #f7f5ef;
@@ -31,8 +56,8 @@
   --border-strong: #c3ccc9;
 
   /* --- type ------------------------------------------------------------- */
-  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
-    Arial, sans-serif;
+  --font: 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
 
   --step--1: 0.8125rem;
   --step-0: 1rem;
@@ -87,6 +112,26 @@ body {
   overscroll-behavior-y: none;
 }
 
+/* A whisper of paper tooth, so the flat UI shares air with the painted
+   illustrations instead of floating above them. Fixed, so it never scrolls. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23g)' opacity='0.055'/%3E%3C/svg%3E");
+}
+
+/* Only the document flow needs lifting above the grain. The tab bar, player,
+   and sheets are already positioned with higher z-indexes of their own, and
+   giving them `position: relative` here would drop them out of fixed. */
+#app {
+  position: relative;
+  z-index: 1;
+}
+
 h1,
 h2,
 h3,
@@ -100,9 +145,19 @@ h1,
 h2,
 h3,
 h4 {
-  line-height: 1.2;
-  letter-spacing: -0.015em;
-  font-weight: 650;
+  font-family: var(--font-display);
+  line-height: 1.18;
+  letter-spacing: -0.005em;
+  font-weight: 600;
+  /* Fraunces' optical size and softness axes: warmer at display sizes. */
+  font-variation-settings: 'SOFT' 30, 'WONK' 1, 'opsz' 40;
+}
+
+/* Small headings sit closer to the body face so they do not shout. */
+h3,
+h4 {
+  font-variation-settings: 'SOFT' 20, 'WONK' 0, 'opsz' 16;
+  letter-spacing: 0;
 }
 
 button,
@@ -217,6 +272,12 @@ a {
 }
 
 /* --- bottom navigation ---------------------------------------------------- */
+
+/* The class selector would otherwise beat the UA [hidden] rule, so the player
+   could only cover the tab bar rather than remove it from the page. */
+.tabbar[hidden] {
+  display: none;
+}
 
 .tabbar {
   position: fixed;
@@ -523,8 +584,9 @@ a {
 }
 
 .stepper output {
+  font-family: var(--font-display);
   font-size: var(--step-3);
-  font-weight: 650;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
   min-width: 2.25ch;
   text-align: center;
@@ -1264,10 +1326,12 @@ details.disclosure .disclosure-body {
 }
 
 .step-instruction {
+  font-family: var(--font-display);
   font-size: var(--step-3);
-  line-height: 1.25;
-  font-weight: 650;
-  letter-spacing: -0.02em;
+  line-height: 1.18;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-variation-settings: 'SOFT' 30, 'WONK' 1, 'opsz' 48;
 }
 
 .say {
@@ -1291,8 +1355,10 @@ details.disclosure .disclosure-body {
 }
 
 .say .cue {
+  font-family: var(--font-display);
   font-size: var(--step-1);
-  font-weight: 650;
+  font-weight: 600;
+  font-variation-settings: 'SOFT' 40, 'WONK' 1, 'opsz' 20;
 }
 
 .timer {
@@ -1458,6 +1524,59 @@ details.disclosure .disclosure-body {
   stroke-linejoin: round;
 }
 
+/* The emotional peak of the app: the moment a session lands. One considered
+   beat, not a confetti cannon. The ring settles, then the check draws on. */
+.recommend .mark {
+  animation: mark-settle 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.recommend .mark svg polyline,
+.recommend .mark svg path {
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: mark-draw 0.45s cubic-bezier(0.65, 0, 0.35, 1) 0.22s forwards;
+}
+
+.recommend h1 {
+  animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.14s both;
+}
+
+.recommend > p {
+  animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.22s both;
+}
+
+.recommend + .stat-row {
+  animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+}
+
+@keyframes mark-settle {
+  from {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+}
+
+@keyframes mark-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+}
+
+/* Reduced motion still gets the result, just without the choreography. */
+@media (prefers-reduced-motion: reduce) {
+  .recommend .mark svg polyline,
+  .recommend .mark svg path {
+    stroke-dashoffset: 0;
+  }
+}
+
 .recommend .mark--caution {
   background: var(--caution-wash);
   color: var(--caution-text);
@@ -1490,8 +1609,10 @@ details.disclosure .disclosure-body {
 
 .stat b {
   display: block;
+  font-family: var(--font-display);
   font-size: var(--step-2);
   font-variant-numeric: tabular-nums;
+  font-variation-settings: 'SOFT' 20, 'WONK' 0, 'opsz' 28;
 }
 
 .stat span {
@@ -1519,10 +1640,12 @@ details.disclosure .disclosure-body {
 
 .metric b {
   display: block;
+  font-family: var(--font-display);
   font-size: var(--step-4);
   line-height: 1.05;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
+  font-variation-settings: 'SOFT' 20, 'WONK' 0, 'opsz' 60;
 }
 
 .metric span {
@@ -1844,11 +1967,183 @@ details.disclosure .disclosure-body {
   transform: translateX(-50%);
   bottom: calc(var(--nav-h) + var(--s-5));
   z-index: 70;
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  max-width: calc(100vw - var(--s-6));
   background: var(--text-primary);
   color: var(--text-on-dark);
-  padding: var(--s-3) var(--s-4);
+  padding: var(--s-3) var(--s-3) var(--s-3) var(--s-4);
   border-radius: var(--r-pill);
   box-shadow: var(--shadow-lift);
   font-weight: 600;
   animation: sheet-in 0.2s ease;
+}
+
+.toast-action {
+  min-height: 36px;
+  padding: 0 var(--s-3);
+  border: 0;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.16);
+  color: var(--text-on-dark);
+  font-weight: 700;
+  cursor: pointer;
+  flex: none;
+}
+
+.toast-action:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+/* --- destructive + dialog -------------------------------------------------- */
+
+.btn--danger {
+  background: var(--caution-text);
+}
+
+.btn--danger:hover {
+  background: #9c4c36;
+}
+
+.sheet--dialog {
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+}
+
+.sheet--dialog h2 {
+  font-size: var(--step-2);
+}
+
+.sheet--dialog > p {
+  color: var(--text-secondary);
+  margin: var(--s-2) 0 var(--s-4);
+}
+
+@media (min-width: 34rem) {
+  .sheet-backdrop {
+    align-items: center;
+  }
+
+  .sheet--dialog {
+    border-radius: var(--r-lg);
+    margin-bottom: var(--s-6);
+  }
+}
+
+/* --- storage failure banner ------------------------------------------------ */
+
+.storage-warning {
+  position: sticky;
+  top: 0;
+  z-index: 45;
+  margin: 0;
+  padding: var(--s-3) var(--s-4) calc(var(--s-3));
+  padding-top: calc(var(--s-3) + env(safe-area-inset-top));
+  background: var(--caution-text);
+  color: var(--text-on-dark);
+  font-size: var(--step--1);
+  line-height: 1.4;
+}
+
+.storage-warning strong {
+  display: block;
+  font-weight: 700;
+}
+
+/* --- comparison rows ------------------------------------------------------- */
+
+.compare-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-3);
+  padding: var(--s-3) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.compare-row:last-child {
+  border-bottom: 0;
+}
+
+.compare-label {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+}
+
+.compare-value b {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-variant-numeric: tabular-nums;
+  font-variation-settings: 'SOFT' 20, 'WONK' 0, 'opsz' 24;
+}
+
+.compare-value small {
+  color: var(--text-secondary);
+  font-size: var(--step--1);
+  margin-left: 4px;
+}
+
+.compare-delta {
+  flex: none;
+  width: 8.5rem;
+  text-align: right;
+  font-size: var(--step--1);
+  color: var(--text-secondary);
+}
+
+/* Direction is in the words too, so this is reinforcement, not the signal. */
+.compare-delta--better {
+  color: var(--success);
+}
+
+.compare-delta--worse {
+  color: var(--caution-text);
+}
+
+/* --- log rows -------------------------------------------------------------- */
+
+.log-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.log-remove {
+  flex: none;
+  align-self: flex-start;
+  width: 40px;
+  height: 40px;
+}
+
+.log-remove svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* --- taller options for the one-tap result screen -------------------------- */
+
+.options--tall .option {
+  min-height: 76px;
+  padding: var(--s-4);
+}
+
+.options--tall .option strong {
+  font-size: var(--step-1);
+}
+
+/* --- who is practicing ----------------------------------------------------- */
+
+.who-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex: none;
+}
+
+.who-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
 }

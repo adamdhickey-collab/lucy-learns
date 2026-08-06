@@ -10,7 +10,7 @@ import {
   clearDemoData,
   clearAll,
 } from '../store.js';
-import { html, join, focusHeading, toast } from '../ui.js';
+import { html, join, focusHeading, toast, confirmSheet } from '../ui.js';
 
 function render() {
   const state = getState();
@@ -119,11 +119,36 @@ function render() {
         </div>
       </section>
 
+      <div class="card" style="margin-top: var(--s-4)">
+        <div class="card-body">
+          <h3 style="font-size: var(--step-0)">This device only</h3>
+          <p class="section-note" style="margin-top: var(--s-2)">
+            Sessions are saved in this browser and nowhere else. They do not sync between
+            phones, so Adam and Fabiola each build their own log. Export a copy if you want
+            them combined, or before you clear Safari's data.
+          </p>
+        </div>
+      </div>
+
       <p class="section-note" style="margin-top: var(--s-6); text-align: center">
-        Lucy Learns · saved on this device only
+        Lucy Learns
       </p>
     </div>
   `;
+}
+
+function downloadExport() {
+  const csv = exportSummary();
+  // The BOM keeps Excel from mangling the curly quotes in notes.
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `lucy-training-log-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 function mount(root) {
@@ -152,33 +177,36 @@ function mount(root) {
     if (out) out.textContent = next;
   });
 
-  on('[data-export]', 'click', () => {
-    const csv = exportSummary();
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `lucy-learns-${new Date().toISOString().slice(0, 10)}.csv`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  });
+  on('[data-export]', 'click', downloadExport);
 
   on('[data-clear-demo]', 'click', () => {
-    if (confirm('Remove the example sessions? Your own logs stay.')) {
-      clearDemoData();
-      toast('Example data cleared');
-      location.reload();
-    }
+    confirmSheet({
+      title: 'Remove the example sessions?',
+      body: 'The ten seeded sessions go. Anything you logged yourselves stays.',
+      confirmLabel: 'Remove examples',
+      onConfirm: () => {
+        clearDemoData();
+        toast('Example data cleared');
+        location.reload();
+      },
+    });
   });
 
   on('[data-clear-all]', 'click', () => {
-    if (confirm('Delete every session, moment, and cue edit on this device? This cannot be undone.')) {
-      clearAll();
-      toast('All data deleted');
-      location.reload();
-    }
+    confirmSheet({
+      title: 'Delete everything?',
+      body:
+        'Every session, moment, and cue edit on this device. This cannot be undone, and there is no copy anywhere else.',
+      confirmLabel: 'Delete it all',
+      tone: 'danger',
+      extraLabel: 'Export a copy first',
+      onExtra: downloadExport,
+      onConfirm: () => {
+        clearAll();
+        toast('All data deleted');
+        location.reload();
+      },
+    });
   });
 
   focusHeading(root);

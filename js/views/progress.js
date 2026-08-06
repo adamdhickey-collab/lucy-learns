@@ -1,5 +1,11 @@
 import { ACTIVITIES, BEHAVIORS, INCIDENT_CONTEXTS, INCIDENT_RESPONSES } from '../content.js';
-import { getState } from '../store.js';
+import {
+  getState,
+  removeSession,
+  removeIncident,
+  restoreSession,
+  restoreIncident,
+} from '../store.js';
 import {
   weekSummary,
   practiceByDay,
@@ -9,8 +15,18 @@ import {
   successRate,
   sessionsAt,
   relativeDay,
-} from '../progress.js';
-import { html, join, badge, icon, pct, mmss, focusHeading } from '../ui.js';
+} from '../metrics.js';
+import {
+  html,
+  join,
+  badge,
+  icon,
+  pct,
+  mmss,
+  focusHeading,
+  refreshApp,
+  toast,
+} from '../ui.js';
 
 const behaviorLabel = (id) => {
   const b = BEHAVIORS.find((x) => x.id === id);
@@ -22,6 +38,37 @@ function metric(value, label, note) {
     <b>${value}</b>
     <span>${label}</span>
     ${note ? html`<small>${note}</small>` : ''}
+  </div>`;
+}
+
+/**
+ * A written comparison rather than another dashboard tile. Direction is stated
+ * in words, so the arrow is decoration and not the only signal.
+ */
+function compare(label, now, before, unit, lowerIsBetter, format = (n) => n) {
+  if (now == null && before == null) return null;
+  const current = now == null ? 0 : now;
+  const previous = before == null ? 0 : before;
+  const delta = current - previous;
+
+  let direction = 'flat';
+  if (delta !== 0) {
+    const improved = lowerIsBetter ? delta < 0 : delta > 0;
+    direction = improved ? 'better' : 'worse';
+  }
+
+  let phrase;
+  if (delta === 0) phrase = 'Same as last week';
+  else if (before == null || before === 0) phrase = 'New this week';
+  else phrase = `${direction === 'better' ? 'Down' : 'Up'} from ${format(previous)}`;
+
+  return html`<div class="compare-row">
+    <span class="compare-label">${label}</span>
+    <span class="compare-value">
+      <b>${now == null ? '—' : format(current)}</b>
+      ${unit ? html`<small>${unit}</small>` : ''}
+    </span>
+    <span class="compare-delta compare-delta--${direction}">${phrase}</span>
   </div>`;
 }
 
@@ -71,7 +118,7 @@ function render() {
       });
       return html`<div class="log-row">
         <span class="when">${when}</span>
-        <div>
+        <div class="log-body">
           <strong>${activity ? activity.title : 'Session'}</strong>
           <p>
             Level ${s.levelNumber} · ${s.successfulRepetitions}/${s.repetitions} went well ·
@@ -80,6 +127,14 @@ function render() {
           ${tags.length ? html`<div class="tag-line">${join(tags)}</div>` : ''}
           ${s.note ? html`<p>“${s.note}”</p>` : ''}
         </div>
+        <button
+          class="icon-btn log-remove"
+          type="button"
+          data-remove-session="${s.id}"
+          aria-label="Remove this session"
+        >
+          ${icon('trash')}
+        </button>
       </div>`;
     }
     const i = entry.data;
@@ -90,12 +145,20 @@ function render() {
     });
     return html`<div class="log-row">
       <span class="when">${when}</span>
-      <div>
+      <div class="log-body">
         <strong>${context ? context.label : 'Moment'}</strong>
         <p>Real life · not a practice session</p>
         ${tags.length ? html`<div class="tag-line">${join(tags)}</div>` : ''}
         ${i.note ? html`<p>“${i.note}”</p>` : ''}
       </div>
+      <button
+        class="icon-btn log-remove"
+        type="button"
+        data-remove-incident="${i.id}"
+        aria-label="Remove this moment"
+      >
+        ${icon('trash')}
+      </button>
     </div>`;
   });
 
@@ -131,12 +194,25 @@ function render() {
                   'Stayed calm',
                   prior.calmRate !== null ? `${pct(prior.calmRate)} last week` : ''
                 )}
-                ${metric(week.jumps, 'Jumping', `of ${week.count} sessions`)}
-                ${metric(
-                  mmss(week.avgRecovery),
-                  'Average recovery',
-                  prior.avgRecovery ? `${mmss(prior.avgRecovery)} last week` : ''
-                )}
+              </div>
+
+              <div class="card" style="margin-top: var(--s-3)">
+                <div class="card-body">
+                  ${join(
+                    [
+                      compare('Jumping', week.jumps, prior.jumps, 'sessions', true),
+                      compare('Nipping', week.nips, prior.nips, 'sessions', true),
+                      compare(
+                        'Time to settle',
+                        week.avgRecovery,
+                        prior.avgRecovery,
+                        '',
+                        true,
+                        mmss
+                      ),
+                    ].filter(Boolean)
+                  )}
+                </div>
               </div>
             </section>
 
@@ -176,10 +252,44 @@ function render() {
               <a class="btn btn--quiet btn--block" href="#/lucy">Export a summary for the trainer</a>
             </section>
           `}
-    </div>
 
-    <button class="fab" type="button" data-route="#/moment">${icon('plus')} Record moment</button>
+      <section class="section">
+        <button class="btn btn--quiet btn--block" type="button" data-route="#/moment">
+          ${icon('plus')} Record a moment
+        </button>
+      </section>
+    </div>
   `;
 }
 
-export default { render, mount: focusHeading, tab: 'progress' };
+function mount(root, params, options = {}) {
+  const remove = (button, doRemove, restore, noun) => {
+    const id = button.dataset.removeSession || button.dataset.removeIncident;
+    const removed = doRemove(id);
+    if (!removed) return;
+    refreshApp();
+    toast(`${noun} removed`, {
+      label: 'Undo',
+      onAction: () => {
+        restore(removed);
+        refreshApp();
+      },
+    });
+  };
+
+  root.querySelectorAll('[data-remove-session]').forEach((button) => {
+    button.addEventListener('click', () =>
+      remove(button, removeSession, restoreSession, 'Session')
+    );
+  });
+
+  root.querySelectorAll('[data-remove-incident]').forEach((button) => {
+    button.addEventListener('click', () =>
+      remove(button, removeIncident, restoreIncident, 'Moment')
+    );
+  });
+
+  focusHeading(root, params, options);
+}
+
+export default { render, mount, tab: 'progress' };

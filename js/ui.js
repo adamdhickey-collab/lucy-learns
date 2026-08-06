@@ -58,6 +58,10 @@ export const ICONS = {
   spark:
     '<svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M3 12h3M18 12h3M4.9 19.1 7 17M17 7l2.1-2.1"/><circle cx="12" cy="12" r="3"/></svg>',
   check: '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
+  trash:
+    '<svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M10 11v6M14 11v6"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>',
+  clock:
+    '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
   shield:
     '<svg viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.4 3 8.5 7 10 4-1.5 7-5.6 7-10V6l-7-3z"/><path d="M12 9v4"/></svg>',
 };
@@ -81,14 +85,102 @@ export const difficultyDots = (difficulty) => {
 export const refreshApp = () =>
   window.dispatchEvent(new CustomEvent('app:refresh'));
 
-export function toast(message) {
+/**
+ * Transient confirmation. Pass an action to make it undoable — a mis-tap
+ * should never be permanent.
+ */
+export function toast(message, action) {
   document.querySelectorAll('.toast').forEach((t) => t.remove());
   const el = document.createElement('div');
   el.className = 'toast';
   el.setAttribute('role', 'status');
-  el.textContent = message;
+
+  const text = document.createElement('span');
+  text.textContent = message;
+  el.appendChild(text);
+
+  let timer = setTimeout(() => el.remove(), action ? 7000 : 2600);
+
+  if (action) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'toast-action';
+    button.textContent = action.label;
+    button.addEventListener('click', () => {
+      clearTimeout(timer);
+      el.remove();
+      action.onAction();
+    });
+    el.appendChild(button);
+  }
+
   document.body.appendChild(el);
-  setTimeout(() => el.remove(), 2600);
+  return () => {
+    clearTimeout(timer);
+    el.remove();
+  };
+}
+
+/**
+ * Replaces window.confirm for destructive actions. The native dialog is the
+ * one place the app's visual language drops away, and it shows up exactly at
+ * the highest-anxiety moments.
+ */
+export function confirmSheet({
+  title,
+  body,
+  confirmLabel = 'Confirm',
+  cancelLabel = 'Cancel',
+  tone = 'default',
+  extraLabel,
+  onExtra,
+  onConfirm,
+}) {
+  const previous = document.activeElement;
+  const backdrop = document.createElement('div');
+  backdrop.className = 'sheet-backdrop';
+  backdrop.innerHTML = `
+    <div class="sheet sheet--dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+      <h2 id="confirm-title">${esc(title)}</h2>
+      ${body ? `<p>${esc(body)}</p>` : ''}
+      ${
+        extraLabel
+          ? `<button class="btn btn--quiet btn--block" type="button" data-extra>${esc(extraLabel)}</button>`
+          : ''
+      }
+      <div class="btn-row" style="margin-top: var(--s-4)">
+        <button class="btn btn--quiet" type="button" data-cancel>${esc(cancelLabel)}</button>
+        <button class="btn ${tone === 'danger' ? 'btn--danger' : ''}" type="button" data-confirm>
+          ${esc(confirmLabel)}
+        </button>
+      </div>
+    </div>`;
+
+  const close = () => {
+    backdrop.remove();
+    document.removeEventListener('keydown', onKey);
+    if (previous && previous.focus) previous.focus({ preventScroll: true });
+  };
+
+  const onKey = (e) => {
+    if (e.key === 'Escape') close();
+  };
+
+  backdrop.addEventListener('click', (e) => {
+    if (e.target === backdrop) close();
+  });
+  backdrop.querySelector('[data-cancel]').addEventListener('click', close);
+  backdrop.querySelector('[data-confirm]').addEventListener('click', () => {
+    close();
+    onConfirm();
+  });
+  const extra = backdrop.querySelector('[data-extra]');
+  if (extra) extra.addEventListener('click', () => onExtra());
+
+  document.addEventListener('keydown', onKey);
+  document.body.appendChild(backdrop);
+  backdrop.querySelector('[data-confirm]').focus({ preventScroll: true });
+  return close;
 }
 
 export const pct = (value) => (value === null || value === undefined ? '—' : `${Math.round(value * 100)}%`);

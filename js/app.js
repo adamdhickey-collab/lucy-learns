@@ -1,9 +1,9 @@
-import { seedDemoSessions } from './store.js';
+import { seedDemoSessions, isStorageOk, onStorageChange } from './store.js';
 import { ICONS } from './ui.js';
 import today from './views/today.js';
 import activities from './views/activities.js';
 import detail from './views/detail.js';
-import progressView from './views/progressView.js';
+import progressView from './views/progress.js';
 import lucy from './views/lucy.js';
 import moment from './views/moment.js';
 import player, { cancelSession } from './views/player.js';
@@ -94,6 +94,15 @@ const updateOnline = () => {
 window.addEventListener('online', updateOnline);
 window.addEventListener('offline', updateOnline);
 updateOnline();
+
+// A failed write is not a cosmetic problem: the household would keep logging
+// all week and end up with nothing. Say so, loudly and persistently.
+const storageBanner = document.getElementById('storage-warning');
+const updateStorage = (ok) => {
+  storageBanner.hidden = ok;
+};
+onStorageChange(updateStorage);
+updateStorage(isStorageOk());
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {

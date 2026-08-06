@@ -1,6 +1,6 @@
 // Cache the whole app on install so a session works in a hallway with no signal.
 
-const CACHE = 'lucy-learns-v3';
+const CACHE = 'lucy-learns-v4';
 
 const SHELL = [
   './',
@@ -11,18 +11,21 @@ const SHELL = [
   './icons/icon-512.png',
   './icons/icon-maskable-512.png',
   './css/app.css',
+  './fonts/fraunces-latin.woff2',
+  './fonts/karla-latin.woff2',
   './js/app.js',
   './js/ui.js',
   './js/store.js',
   './js/content.js',
-  './js/progress.js',
+  './js/metrics.js',
   './js/views/today.js',
   './js/views/activities.js',
   './js/views/detail.js',
   './js/views/player.js',
-  './js/views/progressView.js',
+  './js/views/progress.js',
   './js/views/lucy.js',
   './js/views/moment.js',
+  './img/lucy-portrait.jpg',
   './img/dg-01.jpg',
   './img/dg-02.jpg',
   './img/dg-03.jpg',
@@ -60,8 +63,8 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) return;
 
-  // Cache first only for the illustrations. They are large and never change.
-  if (request.destination === 'image') {
+  // Cache first for illustrations and fonts. Both are large and never change.
+  if (request.destination === 'image' || request.destination === 'font') {
     event.respondWith(
       caches.match(request).then(
         (hit) =>

@@ -12,7 +12,7 @@ import {
   sessionsAt,
   relativeDay,
   lastPracticed,
-} from '../progress.js';
+} from '../metrics.js';
 import {
   html,
   join,

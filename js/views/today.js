@@ -10,7 +10,7 @@ import {
   lastPracticed,
   masteryFor,
   activityMastery,
-} from '../progress.js';
+} from '../metrics.js';
 import { html, raw, join, icon, badge, focusHeading, refreshApp } from '../ui.js';
 
 const greeting = () => {
@@ -70,7 +70,10 @@ function render() {
             ${week.count === 1 ? 'time' : 'times'} this week
           </p>
         </div>
-        <div class="who" role="group" aria-label="Who is practicing">${join(who)}</div>
+        <div class="who-field">
+          <span class="who-label" id="who-label">Practicing</span>
+          <div class="who" role="group" aria-labelledby="who-label">${join(who)}</div>
+        </div>
       </div>
 
       <section class="hero" aria-labelledby="today-next">

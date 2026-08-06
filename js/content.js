@@ -6,7 +6,7 @@ export const DOG = {
   id: 'lucy',
   name: 'Lucy',
   breed: 'Lab / German Wirehaired Pointer mix',
-  photo: 'img/dg-02.jpg',
+  photo: 'img/lucy-portrait.jpg',
   about: 'Friendly and affectionate. Gets over-aroused around arrivals and unfamiliar people.',
 };
 

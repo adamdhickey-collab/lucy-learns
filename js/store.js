@@ -1,7 +1,19 @@
 // Local-first persistence. Everything lives in localStorage under one key so a
 // future Supabase sync only has to replace this module's read/write functions.
 
-import { DEFAULT_COMMANDS, MEMBERS, ACTIVITIES } from './content.js';
+import {
+  ACTIVITIES,
+  AROUSAL,
+  ASSISTANCE,
+  BEHAVIORS,
+  DEFAULT_COMMANDS,
+  DOG,
+  INCIDENT_CONTEXTS,
+  INCIDENT_HELPERS,
+  INCIDENT_RESPONSES,
+  MEMBERS,
+  RECOVERY_BANDS,
+} from './content.js';
 
 const KEY = 'lucy-learns/v1';
 
@@ -20,6 +32,21 @@ const emptyState = () => ({
 let state = load();
 const listeners = new Set();
 
+/**
+ * Whether the last write to localStorage actually landed. iOS Safari private
+ * browsing and a full quota both throw here, and a session that silently fails
+ * to save is worse than one that never got logged, so this is surfaced in the
+ * UI rather than swallowed.
+ */
+let storageOk = true;
+const storageListeners = new Set();
+
+export const isStorageOk = () => storageOk;
+export const onStorageChange = (fn) => {
+  storageListeners.add(fn);
+  return () => storageListeners.delete(fn);
+};
+
 function load() {
   try {
     const raw = localStorage.getItem(KEY);
@@ -31,12 +58,16 @@ function load() {
 }
 
 function persist() {
+  const wasOk = storageOk;
   try {
     localStorage.setItem(KEY, JSON.stringify(state));
+    storageOk = true;
   } catch {
-    /* private browsing or quota: the app still works for this session */
+    storageOk = false;
   }
+  if (wasOk !== storageOk) storageListeners.forEach((fn) => fn(storageOk));
   listeners.forEach((fn) => fn(state));
+  return storageOk;
 }
 
 export const getState = () => state;
@@ -84,6 +115,41 @@ export function addIncident(incident) {
   state.incidents.unshift(record);
   persist();
   return record;
+}
+
+export function updateSession(id, patch) {
+  const index = state.sessions.findIndex((s) => s.id === id);
+  if (index === -1) return null;
+  state.sessions[index] = { ...state.sessions[index], ...patch };
+  persist();
+  return state.sessions[index];
+}
+
+/** Returns what was removed, so the caller can offer an undo. */
+export function removeSession(id) {
+  const index = state.sessions.findIndex((s) => s.id === id);
+  if (index === -1) return null;
+  const [removed] = state.sessions.splice(index, 1);
+  persist();
+  return { record: removed, index };
+}
+
+export function removeIncident(id) {
+  const index = state.incidents.findIndex((i) => i.id === id);
+  if (index === -1) return null;
+  const [removed] = state.incidents.splice(index, 1);
+  persist();
+  return { record: removed, index };
+}
+
+export function restoreSession({ record, index }) {
+  state.sessions.splice(index, 0, record);
+  persist();
+}
+
+export function restoreIncident({ record, index }) {
+  state.incidents.splice(index, 0, record);
+  persist();
 }
 
 export const sessionsFor = (activityId) =>
@@ -226,42 +292,119 @@ export function clearDemoData() {
 
 // --- export ----------------------------------------------------------------
 
+const labelFrom = (list, id) => {
+  const found = list.find((item) => item.id === id);
+  return found ? found.label : id;
+};
+
+const memberName = (id) => {
+  const member = MEMBERS.find((m) => m.id === id);
+  return member ? member.name : id;
+};
+
+const prettyDate = (iso) =>
+  new Date(iso).toLocaleString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+
+const csvRow = (cells) =>
+  cells.map((cell) => `"${String(cell ?? '').replace(/"/g, '""')}"`).join(',');
+
+/**
+ * A report a trainer can read, not a database dump. Raw enum ids never leave
+ * the app: every code is resolved to the same wording shown on screen.
+ */
 export function exportSummary() {
-  const rows = [
-    ['type', 'date', 'activity', 'level', 'reps', 'successful', 'arousal', 'behaviors', 'assistance', 'by', 'note'],
+  const sessions = [...state.sessions].sort((a, b) =>
+    a.startedAt.localeCompare(b.startedAt)
+  );
+  const incidents = [...state.incidents].sort((a, b) =>
+    a.occurredAt.localeCompare(b.occurredAt)
+  );
+
+  const stamps = [
+    ...sessions.map((s) => s.startedAt),
+    ...incidents.map((i) => i.occurredAt),
+  ].sort();
+
+  const totalReps = sessions.reduce((n, s) => n + (s.repetitions || 0), 0);
+  const goodReps = sessions.reduce((n, s) => n + (s.successfulRepetitions || 0), 0);
+
+  const lines = [
+    csvRow([`${DOG.name} — training log`]),
+    csvRow([DOG.breed]),
+    csvRow([
+      'Range',
+      stamps.length ? `${prettyDate(stamps[0])} to ${prettyDate(stamps[stamps.length - 1])}` : 'No entries yet',
+    ]),
+    csvRow(['Practice sessions', sessions.length]),
+    csvRow(['Real-life moments', incidents.length]),
+    csvRow([
+      'Overall success',
+      totalReps ? `${Math.round((goodReps / totalReps) * 100)}% (${goodReps} of ${totalReps} repetitions)` : 'n/a',
+    ]),
+    csvRow(['Exported', prettyDate(new Date().toISOString())]),
+    '',
+    csvRow([
+      'Type',
+      'When',
+      'Activity or situation',
+      'Level',
+      'Repetitions',
+      'Went well',
+      'Arousal',
+      'What happened',
+      'Help given',
+      'Time to settle',
+      'Practiced by',
+      'Note',
+    ]),
   ];
-  state.sessions.forEach((s) => {
+
+  sessions.forEach((s) => {
     const activity = ACTIVITIES.find((a) => a.id === s.activityId);
-    rows.push([
-      'session',
-      s.startedAt.slice(0, 10),
-      activity ? activity.title : s.activityId,
-      s.levelNumber,
-      s.repetitions,
-      s.successfulRepetitions,
-      s.arousalLevel,
-      (s.behaviorsObserved || []).join(' '),
-      (s.assistanceUsed || []).join(' '),
-      s.completedByUserId,
-      s.note || '',
-    ]);
+    const level = activity && activity.levels.find((l) => l.number === s.levelNumber);
+    const arousal = AROUSAL.find((a) => a.value === s.arousalLevel);
+    lines.push(
+      csvRow([
+        'Practice',
+        prettyDate(s.startedAt),
+        activity ? activity.title : s.activityId,
+        level ? `${level.number} — ${level.title}` : s.levelNumber,
+        s.repetitions,
+        s.successfulRepetitions,
+        arousal ? arousal.label : s.arousalLevel,
+        (s.behaviorsObserved || []).map((id) => labelFrom(BEHAVIORS, id)).join('; '),
+        (s.assistanceUsed || []).map((id) => labelFrom(ASSISTANCE, id)).join('; '),
+        s.recoverySeconds == null ? '' : `${s.recoverySeconds}s`,
+        memberName(s.completedByUserId),
+        s.note || '',
+      ])
+    );
   });
-  state.incidents.forEach((i) => {
-    rows.push([
-      'incident',
-      i.occurredAt.slice(0, 10),
-      i.context,
-      '',
-      '',
-      '',
-      '',
-      (i.responses || []).join(' '),
-      (i.helpers || []).join(' '),
-      i.completedByUserId,
-      i.note || '',
-    ]);
+
+  incidents.forEach((i) => {
+    lines.push(
+      csvRow([
+        'Real life',
+        prettyDate(i.occurredAt),
+        labelFrom(INCIDENT_CONTEXTS, i.context),
+        '',
+        '',
+        '',
+        '',
+        (i.responses || []).map((id) => labelFrom(INCIDENT_RESPONSES, id)).join('; '),
+        (i.helpers || []).map((id) => labelFrom(INCIDENT_HELPERS, id)).join('; '),
+        labelFrom(RECOVERY_BANDS, i.recoveryBand),
+        memberName(i.completedByUserId),
+        i.note || '',
+      ])
+    );
   });
-  return rows
-    .map((r) => r.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
-    .join('\n');
+
+  return lines.join('\n');
 }
