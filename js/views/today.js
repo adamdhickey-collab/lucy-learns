@@ -1,6 +1,8 @@
-import { DOG, MEMBERS, IMAGES, ACTIVITIES, programById } from '../content.js';
+import { DOG, MEMBERS, IMAGES, ACTIVITIES, activityById, programById } from '../content.js';
+import { requestQuickStart } from './player.js';
 import { getState, activeMember, setActiveMember } from '../store.js';
 import {
+  currentLevel,
   suggestedActivity,
   headlineInsight,
   weekSummary,
@@ -32,6 +34,12 @@ function render() {
   const streak = currentStreak();
   const mastery = masteryFor(activity.id, level.number);
   const inProgram = ACTIVITIES.filter((a) => a.programId === program.id);
+
+  // Accelerator for the practiced household: once an activity has history,
+  // offer a path straight into the steps that skips the get-ready checklist.
+  const lastSession = state.sessions[0];
+  const lastActivity = lastSession && activityById(lastSession.activityId);
+  const quickLevel = lastActivity && currentLevel(lastActivity);
 
   const who = MEMBERS.map(
     (m) => html`<button type="button" data-member="${m.id}"
@@ -96,6 +104,18 @@ function render() {
         </div>
       </section>
 
+      ${lastActivity
+        ? html`<button class="quick-row" type="button" data-quick="${lastActivity.slug}">
+            <span>
+              <strong>Jump back in</strong>
+              <small>
+                ${lastActivity.title} · Level ${quickLevel.number}, straight to the steps
+              </small>
+            </span>
+            ${icon('arrow')}
+          </button>`
+        : ''}
+
       ${state.sessions.length
         ? html`<section class="section">
             <div class="insight">${icon('spark')}<p>${headlineInsight()}</p></div>
@@ -150,6 +170,14 @@ function render() {
 }
 
 function mount(root) {
+  const quick = root.querySelector('[data-quick]');
+  if (quick) {
+    quick.addEventListener('click', () => {
+      requestQuickStart();
+      location.hash = `#/play/${quick.dataset.quick}`;
+    });
+  }
+
   root.querySelectorAll('[data-member]').forEach((btn) => {
     btn.addEventListener('click', () => {
       setActiveMember(btn.dataset.member);

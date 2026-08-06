@@ -19,6 +19,7 @@ import {
   addSession,
   isStorageOk,
   resolveCue,
+  sessionsFor,
   setLevel,
   updateSession,
 } from '../store.js';
@@ -37,6 +38,16 @@ import {
 
 let session = null;
 let wakeLock = null;
+
+/**
+ * Set by Today's "jump back in" shortcut: the next time the player opens, it
+ * skips the get-ready checklist and lands on step one. For someone mid-way
+ * through a level, the equipment list is ritual they no longer need.
+ */
+let skipReadyOnce = false;
+export const requestQuickStart = () => {
+  skipReadyOnce = true;
+};
 
 function begin(activity, level) {
   session = {
@@ -77,6 +88,15 @@ function releaseAwake() {
   if (wakeLock) {
     wakeLock.release().catch(() => {});
     wakeLock = null;
+  }
+}
+
+let keyHandler = null;
+
+function detachKeys() {
+  if (keyHandler) {
+    document.removeEventListener('keydown', keyHandler);
+    keyHandler = null;
   }
 }
 
@@ -172,6 +192,10 @@ function stepScreen(activity, level) {
   const step = steps[session.stepIndex];
   const img = step.image ? IMAGES[step.image] : null;
   const isLast = session.stepIndex === steps.length - 1;
+  // "Why this matters" opened zero times is indistinguishable from absent.
+  // On the first-ever run of an activity the reasoning shows inline; once
+  // there is any history it folds away.
+  const firstRun = sessionsFor(activity.id).length === 0;
 
   return html`
     ${topBar(`Step ${session.stepIndex + 1} of ${steps.length}`, session.stepIndex + 1, steps.length)}
@@ -194,7 +218,7 @@ function stepScreen(activity, level) {
           : ''}
 
         ${step.helper
-          ? html`<details class="disclosure" style="margin-top: var(--s-5)">
+          ? html`<details class="disclosure" style="margin-top: var(--s-5)" ${firstRun ? 'open' : ''}>
               <summary>Why this matters</summary>
               <div class="disclosure-body">${step.helper}</div>
             </details>`
@@ -543,6 +567,14 @@ function render({ slug }) {
   if (!session || session.slug !== slug) {
     begin(activity, currentLevel(activity));
   }
+  if (skipReadyOnce) {
+    skipReadyOnce = false;
+    if (session.phase === 'ready') {
+      session.phase = 'step';
+      session.startedAt = Date.now();
+      keepAwake();
+    }
+  }
   const level = levelOf(activity, session.levelNumber);
 
   let body;
@@ -870,6 +902,25 @@ function wire(root) {
   });
 
   if (session.phase === 'step') preloadUpcoming(activity, level);
+
+  // Desktop accelerator: arrow keys walk the steps. Routed through the real
+  // buttons so edge behaviour and transitions stay identical to tapping.
+  detachKeys();
+  if (session.phase === 'step' && !session.sheetOpen) {
+    keyHandler = (e) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      // e.target can be the document itself, which has no .matches.
+      if (e.target instanceof Element && e.target.matches('input, textarea, select')) return;
+      const button = document.querySelector(
+        e.key === 'ArrowRight' ? '[data-next]' : '[data-prev]'
+      );
+      if (button && !button.disabled) {
+        e.preventDefault();
+        button.click();
+      }
+    };
+    document.addEventListener('keydown', keyHandler);
+  }
   if (session.phase === 'ready' && steps[0] && steps[0].image) {
     new Image().src = IMAGES[steps[0].image].src;
   }
@@ -898,6 +949,7 @@ function mount(root) {
 }
 
 export function cancelSession() {
+  detachKeys();
   releaseAwake();
   if (session && session.releaseTrap) session.releaseTrap({ restoreFocus: false });
   session = null;
