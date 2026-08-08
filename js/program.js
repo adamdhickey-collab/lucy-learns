@@ -9,7 +9,7 @@
 // is the same unit the trainer talks in, so the number on the map is the same
 // number in the lesson report.
 
-import { ACTIVITIES, programById } from './content.js';
+import { ACTIVITIES, isAvailable, programById } from './content.js';
 import { MASTERY, masteryFor, currentLevel, sessionsAt } from './metrics.js';
 import { getState } from './store.js';
 
@@ -19,6 +19,7 @@ export const STAGE = {
   active: 'active',
   open: 'open',
   ahead: 'ahead',
+  soon: 'soon',
 };
 
 /**
@@ -81,40 +82,52 @@ export function programProgress(programId) {
   const items = ACTIVITIES.filter((a) => a.programId === programId).map(activityProgress);
 
   const stages = items.map((item, i) => {
-    const earlierUntouched = items.slice(0, i).some((prev) => !prev.started);
+    // Earlier stages that are parked cannot be "started", so they must not make
+    // everything after them read as out of order.
+    const earlierUntouched = items
+      .slice(0, i)
+      .some((prev) => isAvailable(prev.activity) && !prev.started);
     let state;
-    if (item.complete) state = STAGE.complete;
+    if (!isAvailable(item.activity)) state = STAGE.soon;
+    else if (item.complete) state = STAGE.complete;
     else if (item.started) state = STAGE.active;
     else if (earlierUntouched) state = STAGE.ahead;
     else state = STAGE.open;
     return { ...item, index: i, number: i + 1, state, after: i ? items[i - 1].activity : null };
   });
 
-  const cleared = stages.reduce((n, s) => n + s.cleared, 0);
-  const total = stages.reduce((n, s) => n + s.total, 0);
-  const finished = stages.filter((s) => s.state === STAGE.complete).length;
-  const underway = stages.filter((s) => s.state === STAGE.active).length;
+  // Totals count only what can be practiced. A denominator the household has no
+  // way to move is not progress, it is a promise someone else has to keep.
+  const live = stages.filter((s) => s.state !== STAGE.soon);
+  const cleared = live.reduce((n, s) => n + s.cleared, 0);
+  const total = live.reduce((n, s) => n + s.total, 0);
+  const finished = live.filter((s) => s.state === STAGE.complete).length;
+  const underway = live.filter((s) => s.state === STAGE.active).length;
 
   // What Today and the map point at: finish what is open before opening more.
   const focus =
-    stages.find((s) => s.state === STAGE.active) ||
-    stages.find((s) => s.state === STAGE.open) ||
-    stages.find((s) => !s.complete) ||
-    stages[stages.length - 1];
+    live.find((s) => s.state === STAGE.active) ||
+    live.find((s) => s.state === STAGE.open) ||
+    live.find((s) => !s.complete) ||
+    live[live.length - 1] ||
+    stages[0];
 
   return {
     program,
     stages,
+    live,
     cleared,
     total,
     ratio: total ? cleared / total : 0,
     finished,
     underway,
-    remainingStages: stages.length - finished,
-    complete: finished === stages.length,
+    /** How many of the four are not in the app yet. */
+    soon: stages.length - live.length,
+    remainingStages: live.length - finished,
+    complete: live.length > 0 && finished === live.length,
     focus,
     /** The stage after `focus` — the thing the map dangles next. */
-    upNext: stages.find((s) => s.index > focus.index && !s.complete) || null,
+    upNext: live.find((s) => s.index > focus.index && !s.complete) || null,
   };
 }
 
@@ -138,26 +151,32 @@ export function stageFor(activity) {
  * that is the half that actually pulls.
  */
 export function programPitch(prog) {
-  const { cleared, total, finished, stages, focus } = prog;
+  const { cleared, total, finished, live, soon, focus } = prog;
 
-  if (prog.complete) return 'All four finished. This is the whole arrival sequence.';
+  if (prog.complete) {
+    return soon
+      ? `Everything in the app so far is done. ${soon} more ${
+          soon === 1 ? 'activity' : 'activities'
+        } to come.`
+      : 'All four finished. This is the whole arrival sequence.';
+  }
   if (!cleared) {
-    return `${total} levels across ${stages.length} activities. The first one takes five minutes.`;
+    return `${total} levels to work through. The first one takes five minutes.`;
   }
 
   const left = total - cleared;
-  if (left <= 3) return `${left} ${left === 1 ? 'level' : 'levels'} left in the whole program.`;
+  if (left <= 3) {
+    return `${left} ${left === 1 ? 'level' : 'levels'} left in what is open so far.`;
+  }
   if (focus && focus.remaining <= 2 && focus.started) {
     return `${focus.remaining} more ${focus.remaining === 1 ? 'level' : 'levels'} and ${
       focus.activity.title
     } is done.`;
   }
   if (finished) {
-    return `${finished} of ${stages.length} activities finished. ${left} levels to go.`;
+    return `${finished} of ${live.length} activities finished. ${left} levels to go.`;
   }
-  return `${cleared} of ${total} levels cleared. ${
-    stages.length - finished
-  } activities still to finish.`;
+  return `${cleared} of ${total} levels cleared.`;
 }
 
 /**

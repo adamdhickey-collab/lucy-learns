@@ -190,6 +190,13 @@ All content is data. Nothing about a new activity requires touching a screen.
 4. **Nothing else.** The player, the library card, mastery, progression, and the
    progress dashboard all read from that object.
 
+Set `available: false` on an activity to park it. It keeps its place in the
+program map as a "coming soon" station so the shape of the whole sequence stays
+visible, but it cannot be opened, it is left out of the library list and the
+Progress rows, and it does not count toward the level totals. Lookups still see
+it, so any session already logged against it keeps its title in the log, the
+report, and the CSV. Removing the flag is the whole release.
+
 If the new activity belongs to a goal that currently shows a "planned" list,
 remove its name from that goal's `planned` array in `GOALS`.
 
@@ -205,6 +212,9 @@ Mastery, per level:
 | Improving    | 50–74%                                                   |
 | Almost there | 75–89%, or 90%+ with any nipping                         |
 | Reliable     | 90%+ across three sessions, on three or more days, minimal assistance, no jumping or nipping |
+
+Level totals on the program map count only activities that are available; a
+denominator the household cannot move is not progress.
 
 Advancing a level is recommended when the last two sessions each hit 80%+, with
 no nipping and arousal of 3 or lower. The recommendation screen always offers

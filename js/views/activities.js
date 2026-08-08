@@ -1,4 +1,4 @@
-import { GOALS, ACTIVITIES, IMAGES, PROGRAMS } from '../content.js';
+import { GOALS, ACTIVITIES, LIVE_ACTIVITIES, IMAGES, PROGRAMS, TRAINER } from '../content.js';
 import {
   activityMastery,
   relativeDay,
@@ -48,7 +48,10 @@ function activityCard(activity) {
 
 function render() {
   const groups = GOALS.map((goal) => {
-    const items = ACTIVITIES.filter((a) => a.goalId === goal.id);
+    const items = LIVE_ACTIVITIES.filter((a) => a.goalId === goal.id);
+    // Parked activities are named rather than listed, so the library says what
+    // is still to come without offering a card that cannot be opened.
+    const soon = ACTIVITIES.filter((a) => a.goalId === goal.id && a.available === false);
     // A goal backed by a program is not a folder of four things, it is a route
     // with a finish line. Say so before listing the four.
     const program = PROGRAMS.find((p) => p.goalId === goal.id);
@@ -71,6 +74,12 @@ function render() {
           </div>`
         : ''}
       ${body}
+      ${items.length && soon.length
+        ? html`<div class="planned" style="margin-top: var(--s-3)">
+            <p>Still to come from ${TRAINER.name}.</p>
+            <ul>${join(soon.map((a) => html`<li>${a.title}</li>`))}</ul>
+          </div>`
+        : ''}
     </section>`;
   });
 

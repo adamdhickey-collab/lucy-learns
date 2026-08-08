@@ -1,6 +1,6 @@
 // Mastery, progression, and weekly summary calculations.
 
-import { ACTIVITIES, activityById, levelOf } from './content.js';
+import { LIVE_ACTIVITIES, activityById, levelOf } from './content.js';
 import { getState, chosenLevel } from './store.js';
 
 export const MASTERY = {
@@ -267,7 +267,9 @@ export function headlineInsight() {
 /** What Today suggests practicing next. */
 export function suggestedActivity() {
   const state = getState();
-  const scored = ACTIVITIES.map((activity) => {
+  // Only what can be opened: suggesting a parked activity would send the
+  // household to a screen with no way to start.
+  const scored = LIVE_ACTIVITIES.map((activity) => {
     const level = currentLevel(activity);
     const sessions = state.sessions.filter((s) => s.activityId === activity.id);
     const last = sessions.length

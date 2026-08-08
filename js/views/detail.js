@@ -1,8 +1,10 @@
 import {
   activityBySlug,
+  isAvailable,
   IMAGES,
   programById,
   stepsForLevel,
+  TRAINER,
 } from '../content.js';
 import { setLevel, resolveCue, sessionsFor } from '../store.js';
 import {
@@ -33,8 +35,10 @@ import {
  * the last one standing.
  */
 function nextUpCard(prog, stage) {
-  const later = prog.stages.find((s) => s.index > stage.index && !s.complete);
-  const anyOther = prog.stages.find((s) => s.index !== stage.index && !s.complete);
+  // `live` only: pointing someone at an activity that is not in the app yet is
+  // a dead end dressed up as a next step.
+  const later = prog.live.find((s) => s.index > stage.index && !s.complete);
+  const anyOther = prog.live.find((s) => s.index !== stage.index && !s.complete);
   const target = later || anyOther;
 
   if (!target) {
@@ -77,6 +81,42 @@ function render({ slug }) {
 
   const cover = IMAGES[activity.coverImage];
   const program = programById(activity.programId);
+
+  // Parked activities are still reachable by URL — an old bookmark, a shared
+  // link, the back button. Say plainly that it is not here yet rather than
+  // rendering a level picker and a Start button that lead nowhere.
+  if (!isAvailable(activity)) {
+    return html`
+      <div class="detail-hero">
+        <img src="${cover.src}" alt="${cover.alt}" />
+        <button class="backlink" type="button" data-back aria-label="Back">${icon('back')}</button>
+      </div>
+      <div class="detail-body">
+        <a class="detail-crumb" href="#/program/${program.id}">
+          ${icon('book')}
+          <span>${program.title}</span>
+        </a>
+        <h1>${activity.title}</h1>
+        <p class="lede">${activity.shortPurpose}</p>
+
+        <div class="next-up next-up--outcome" style="margin-top: var(--s-5)">
+          <p class="eyebrow">Coming soon</p>
+          <h2>Not in the app yet</h2>
+          <p>
+            ${activity.levels.length} levels are written for this one. It arrives with the
+            next handout from ${TRAINER.name}.
+          </p>
+        </div>
+
+        <section class="section">
+          <a class="btn btn--quiet btn--block" href="#/program/${program.id}">
+            See where this fits
+          </a>
+        </section>
+      </div>
+    `;
+  }
+
   const active = currentLevel(activity);
   const history = sessionsFor(activity.id);
   const rate = successRate(sessionsAt(activity.id, active.number));

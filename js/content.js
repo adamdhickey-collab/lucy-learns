@@ -341,6 +341,7 @@ export const ACTIVITIES = [
     title: 'Stay While the Door Opens',
     programId: 'calm-door-greetings',
     goalId: 'door-routine',
+    available: false,
     shortPurpose: 'Lucy holds her bed while you walk over and open the door.',
     coverImage: 'dg-07',
     estimatedMinutes: 7,
@@ -452,6 +453,7 @@ export const ACTIVITIES = [
     title: 'Doorbell Means Place',
     programId: 'calm-door-greetings',
     goalId: 'door-routine',
+    available: false,
     shortPurpose: 'The doorbell becomes her cue to move away from the door.',
     coverImage: 'dg-06',
     estimatedMinutes: 7,
@@ -531,6 +533,7 @@ export const ACTIVITIES = [
     title: 'Controlled Real Greeting',
     programId: 'calm-door-greetings',
     goalId: 'door-routine',
+    available: false,
     shortPurpose: 'A real guest arrives and Lucy greets on your terms.',
     coverImage: 'dg-11',
     estimatedMinutes: 10,
@@ -605,6 +608,22 @@ export const ACTIVITIES = [
 // ---------------------------------------------------------------------------
 // Lookups
 // ---------------------------------------------------------------------------
+
+/**
+ * What the household can actually open today.
+ *
+ * `available: false` parks an activity without deleting it: it keeps its place
+ * in the program map as a "coming soon" station, so the shape of the whole
+ * arrival sequence stays visible, but it cannot be started and it does not
+ * count toward any total the household is asked to move.
+ *
+ * Lookups deliberately stay on the full ACTIVITIES list. A session logged
+ * against a parked activity still has to render with its real title in the
+ * log, the report, and the CSV.
+ */
+export const LIVE_ACTIVITIES = ACTIVITIES.filter((a) => a.available !== false);
+
+export const isAvailable = (activity) => Boolean(activity) && activity.available !== false;
 
 export const activityBySlug = (slug) => ACTIVITIES.find((a) => a.slug === slug);
 export const activityById = (id) => ACTIVITIES.find((a) => a.id === id);

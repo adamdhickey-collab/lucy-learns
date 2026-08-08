@@ -7,6 +7,7 @@
 
 import {
   activityBySlug,
+  isAvailable,
   IMAGES,
   stepsForLevel,
   levelOf,
@@ -194,10 +195,6 @@ function stepScreen(activity, level) {
   const step = steps[session.stepIndex];
   const img = step.image ? IMAGES[step.image] : null;
   const isLast = session.stepIndex === steps.length - 1;
-  // "Why this matters" opened zero times is indistinguishable from absent.
-  // On the first-ever run of an activity the reasoning shows inline; once
-  // there is any history it folds away.
-  const firstRun = sessionsFor(activity.id).length === 0;
 
   return html`
     ${topBar(`Step ${session.stepIndex + 1} of ${steps.length}`, session.stepIndex + 1, steps.length)}
@@ -219,8 +216,13 @@ function stepScreen(activity, level) {
             </div>`
           : ''}
 
+        ${/* Closed by default, always. It used to spring open on the first run
+              of an activity, which pushed the instruction up the screen and put
+              a paragraph of reasoning between the step and the thumb reaching
+              for Next. The step is the screen; the reasoning is there when it
+              is wanted. */ ''}
         ${step.helper
-          ? html`<details class="disclosure" style="margin-top: var(--s-5)" ${firstRun ? 'open' : ''}>
+          ? html`<details class="disclosure" style="margin-top: var(--s-5)">
               <summary>Why this matters</summary>
               <div class="disclosure-body">${step.helper}</div>
             </details>`
@@ -645,6 +647,18 @@ function doneScreen(activity, level) {
 function render({ slug }) {
   const activity = activityBySlug(slug);
   if (!activity) return html`<div class="screen"><p>Activity not found.</p></div>`;
+  // A parked activity resolves by slug perfectly well, so /play has to check
+  // availability itself rather than trusting that no screen links here.
+  if (!isAvailable(activity)) {
+    return html`<div class="screen">
+      <div class="screen-head">
+        <p class="eyebrow">Coming soon</p>
+        <h1>${activity.title}</h1>
+        <p>This one is not in the app yet. It arrives with the next handout.</p>
+      </div>
+      <a class="btn btn--quiet" href="#/activities">Back to activities</a>
+    </div>`;
+  }
 
   if (!session || session.slug !== slug) {
     begin(activity, currentLevel(activity));
@@ -1054,6 +1068,10 @@ function wire(root) {
 }
 
 function mount(root) {
+  // render() bails before begin() for a missing or parked activity, so there is
+  // no session to wire up. wire() dereferences session immediately and would
+  // throw straight into the error boundary.
+  if (!session) return;
   wire(root);
 }
 

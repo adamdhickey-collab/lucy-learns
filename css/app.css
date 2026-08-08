@@ -2751,8 +2751,26 @@ details.disclosure .disclosure-body {
   box-shadow: 0 0 0 4px var(--primary-wash);
 }
 
-.stage--ahead .stage-node {
+.stage--ahead .stage-node,
+.stage--soon .stage-node {
   border-style: dashed;
+}
+
+/* Not in the app yet. The station is muted but the text stays at full
+   contrast — the last time a stage state was signalled by fading its copy it
+   measured 2.96:1, and this one applies to three of the four. */
+.stage--soon .stage-node {
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+}
+
+.stage--soon .stage-thumb {
+  filter: saturate(0.25);
+  opacity: 0.65;
+}
+
+.stage--soon .stage-rail::before {
+  background: var(--border);
 }
 
 /* --- the stage body ------------------------------------------------------- */

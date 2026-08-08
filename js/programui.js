@@ -78,9 +78,13 @@ const STATE_LABEL = {
   [STAGE.active]: 'In progress',
   [STAGE.open]: 'Ready to start',
   [STAGE.ahead]: 'Comes later',
+  [STAGE.soon]: 'Coming soon',
 };
 
 function stageNote(stage) {
+  if (stage.state === STAGE.soon) {
+    return `${stage.total} levels, not in the app yet`;
+  }
   if (stage.state === STAGE.complete) return 'All levels cleared';
   if (stage.state === STAGE.active) {
     const left = stage.remaining;
@@ -128,42 +132,49 @@ function setupNode() {
  * The map. An ordered, connected list rather than four equal cards, because
  * the whole point is that they are not equal and not interchangeable.
  *
- * Nothing is disabled. A stage marked "Comes later" is still a link, because
- * the trainer outranks the app.
+ * A stage marked "Comes later" is still a link, because the trainer outranks
+ * the app. A stage marked "Coming soon" is not, because there is genuinely
+ * nothing behind it yet — it renders as plain text rather than a dead link.
  */
 export function stageList(prog, { currentActivityId = null, showThumbs = true } = {}) {
   const rows = prog.stages.map((stage) => {
     const img = IMAGES[stage.activity.coverImage];
     const isFocus = stage.activity.id === prog.focus.activity.id;
     const here = stage.activity.id === currentActivityId;
+    const soon = stage.state === STAGE.soon;
+
+    const body = html`
+      <span class="stage-rail" aria-hidden="true">
+        <span class="stage-node">
+          ${stage.state === STAGE.complete ? icon('check') : raw(String(stage.number))}
+        </span>
+      </span>
+      <span class="stage-body">
+        <span class="stage-state">${STATE_LABEL[stage.state]}</span>
+        <span class="stage-top">
+          <strong>${stage.activity.title}</strong>
+          ${showThumbs
+            ? html`<img class="stage-thumb" src="${img.thumb}" alt="" loading="lazy" />`
+            : ''}
+        </span>
+        <span class="stage-purpose">${stage.activity.shortPurpose}</span>
+        ${soon ? '' : html`<span class="stage-meter">
+          ${levelPips(stage)}
+          <span class="stage-count" aria-hidden="true">${stage.cleared}/${stage.total}</span>
+        </span>`}
+        <span class="stage-note">${stageNote(stage)}</span>
+      </span>`;
 
     return html`<li
       class="stage stage--${stage.state}${isFocus && !here ? ' stage--focus' : ''}${
         here ? ' stage--here' : ''
       }"
     >
-      <a href="#/activity/${stage.activity.slug}" ${here ? 'aria-current="true"' : ''}>
-        <span class="stage-rail" aria-hidden="true">
-          <span class="stage-node">
-            ${stage.state === STAGE.complete ? icon('check') : raw(String(stage.number))}
-          </span>
-        </span>
-        <span class="stage-body">
-          <span class="stage-state">${STATE_LABEL[stage.state]}</span>
-          <span class="stage-top">
-            <strong>${stage.activity.title}</strong>
-            ${showThumbs
-              ? html`<img class="stage-thumb" src="${img.thumb}" alt="" loading="lazy" />`
-              : ''}
-          </span>
-          <span class="stage-purpose">${stage.activity.shortPurpose}</span>
-          <span class="stage-meter">
-            ${levelPips(stage)}
-            <span class="stage-count" aria-hidden="true">${stage.cleared}/${stage.total}</span>
-          </span>
-          <span class="stage-note">${stageNote(stage)}</span>
-        </span>
-      </a>
+      ${soon
+        ? html`<div>${body}</div>`
+        : html`<a href="#/activity/${stage.activity.slug}" ${here ? 'aria-current="true"' : ''}>
+            ${body}
+          </a>`}
     </li>`;
   });
 

@@ -10,4 +10,4 @@
  * The 1.12 lineage continues the old hand-bumped cache names, which reached
  * lucy-learns-v11 before this file existed.
  */
-export const APP_VERSION = '1.14.1';
+export const APP_VERSION = '1.15.0';

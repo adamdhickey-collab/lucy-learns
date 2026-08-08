@@ -1,5 +1,6 @@
 import {
   ACTIVITIES,
+  LIVE_ACTIVITIES,
   BEHAVIORS,
   INCIDENT_CONTEXTS,
   INCIDENT_RESPONSES,
@@ -104,7 +105,7 @@ function render() {
     </div>`
   );
 
-  const mastery = ACTIVITIES.map((activity) => {
+  const mastery = LIVE_ACTIVITIES.map((activity) => {
     const level = currentLevel(activity);
     const rate = successRate(sessionsAt(activity.id, level.number));
     return html`<div class="mastery-row">
