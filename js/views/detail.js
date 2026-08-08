@@ -169,12 +169,14 @@ function render({ slug }) {
       <h1>${activity.title}</h1>
       <p class="lede">${activity.shortPurpose}</p>
 
+      ${/* The "0/5" that sat here said exactly what the pips beside it say and
+            what the level list below says a third time. The pips carry the
+            count for screen readers already. */ ''}
       <div class="stage-strip">
         <span class="stage-strip-label">
           Activity ${stage.number} of ${prog.stages.length}
         </span>
         ${levelPips(stage)}
-        <span class="stage-count" aria-hidden="true">${stage.cleared}/${stage.total}</span>
       </div>
 
       ${stage.state === STAGE.ahead
@@ -210,7 +212,7 @@ function render({ slug }) {
             what is above this one, which is the part that gives it somewhere
             to go. */ ''}
       <section class="section">
-        <h2>How solid is level ${active.number}</h2>
+        <h2>How solid is this level</h2>
         <div class="card">
           <div class="card-body">
             ${masteryLadder(masteryFor(activity.id, active.number))}

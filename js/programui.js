@@ -322,7 +322,6 @@ export function routePreview(prog) {
     (stage, i) => html`<li class="route-stop" style="--i: ${i}">
       <span class="route-node">${stage.number}</span>
       <span class="route-label">${stage.activity.shortTitle || stage.number}</span>
-      <span class="route-levels">${stage.total} levels</span>
     </li>`
   );
 
@@ -335,7 +334,6 @@ export function routePreview(prog) {
       <li class="route-stop route-stop--end" style="--i: ${prog.stages.length}">
         <span class="route-node">${icon('spark')}</span>
         <span class="route-label">${outcome ? 'Calm hello' : 'Done'}</span>
-        <span class="route-levels">&nbsp;</span>
       </li>
     </ol>
   </div>`;

@@ -161,7 +161,12 @@ export function programPitch(prog) {
       : 'All four finished. This is the whole arrival sequence.';
   }
   if (!cleared) {
-    return `${total} levels to work through. The first one takes five minutes.`;
+    // Deliberately no count. `total` here is the levels that are actually
+    // open, which is 5 while three activities are parked — and the route panel
+    // one screen earlier showed 23 across four. "5 levels to work through"
+    // right after that reads as a contradiction rather than a smaller scope.
+    // Before anything is practiced there is nothing to count anyway.
+    return 'Four activities, from the first doorbell to a calm hello.';
   }
 
   const left = total - cleared;

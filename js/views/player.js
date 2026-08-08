@@ -206,7 +206,10 @@ function stepScreen(activity, level) {
             </figure>`
           : ''}
 
-        <p class="step-count">Step ${session.stepIndex + 1} of ${steps.length}</p>
+        ${/* The top bar already says "Step 3 of 5" beside a bar showing the
+              same thing. Printing it again here put the identical string on
+              screen twice, and put a second counted series in front of someone
+              who has just been told about levels. */ ''}
         <h1 class="step-instruction">${step.instruction}</h1>
 
         ${step.cue

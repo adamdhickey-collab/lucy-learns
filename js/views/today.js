@@ -77,7 +77,13 @@ function render() {
           <p>${level.setup}</p>
           <div class="meta">
             ${badge(mastery)}
-            <span>Level ${level.number} of ${activity.levels.length}</span>
+            ${/* Not "Level 1 of 5". This sits directly under a card headed
+                  "Activity 1 of 4" and directly beside "5 min", so the of-5
+                  put a third counted series between two others and two
+                  different fives side by side. How many levels the activity
+                  has belongs on the activity screen, where the list shows it
+                  without being counted at. */ ''}
+            <span>Level ${level.number}</span>
             <span>${activity.estimatedMinutes} min</span>
           </div>
           <a class="btn btn--lg btn--block" href="#/play/${activity.slug}">Start session</a>

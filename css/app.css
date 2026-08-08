@@ -3763,14 +3763,6 @@ details.disclosure .disclosure-body {
   color: var(--primary);
 }
 
-/* "5" alone under a station is a number with no unit. */
-.route-levels {
-  margin-top: -6px;
-  font-size: 0.625rem;
-  color: var(--text-secondary);
-  font-variant-numeric: tabular-nums;
-}
-
 /* The finish. Gold, like the outcome node on the map and the card that lands
    when an activity is finished, so arriving somewhere always looks the same. */
 .route-stop--end .route-node {
