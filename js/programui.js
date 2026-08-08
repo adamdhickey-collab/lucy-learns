@@ -209,41 +209,59 @@ function outcomeNode(prog) {
 }
 
 /**
- * One dot per level, grouped by activity, for the whole program at once.
+ * The program as four segments, one per activity, each as wide as its share of
+ * the levels. It replaces a row of twenty-three identical dots, which said how
+ * many levels there were but nothing about what they belonged to: the four
+ * activities were a gap in a row of circles and had to be counted to be seen.
  *
- * This was one dot per activity, which on a program with three of its four
- * parked read as a row of things not available rather than as ground covered.
- * Levels are what the household actually moves, so those are what it counts.
- * The grouping keeps the four activities legible inside it, and the wider gap
- * between groups is the only thing carrying that — no labels needed at 6px.
+ * Width carries the size of each activity, fill carries progress through it,
+ * and the label names it. The one being practiced is raised and titled in the
+ * accent, which is what the caret below the card lines up with.
  *
- * State is shape as well as fill: cleared is solid, the level in hand is
- * ringed, ahead is hollow, and levels inside an activity that is not in the
- * app yet are dashed, matching the map. Twenty-three dots is 216px, which
- * fits the strip on the narrowest phone this ships to.
+ * `shortTitle` exists because a segment is about sixty pixels wide on the
+ * narrowest phone and "Stay While the Door Opens" is not going in it. Read
+ * across, the four are the arrival sequence: Sound, Stay, Place, Greet.
  */
-function levelDots(prog, currentActivityIndex) {
-  const groups = prog.stages.map((stage) => {
-    const dots = stage.levels.map((l) => {
-      // The level in hand, ringed whether or not it is cleared. Gating this on
-      // "not yet cleared" meant that the moment you cleared the level you were
-      // on, the row stopped saying where you were at all — which is most of
-      // the time, since clearing a level is not the same as leaving it.
-      const here =
-        stage.index === currentActivityIndex &&
-        stage.state !== STAGE.soon &&
-        l.level.number === stage.working.number;
-      const state = stage.state === STAGE.soon ? 'soon' : l.cleared ? 'done' : 'ahead';
-      return `<i class="dot dot--${state}${here ? ' dot--here' : ''}"></i>`;
-    });
-    return `<span class="level-group">${dots.join('')}</span>`;
+function programTrack(prog, currentActivityIndex) {
+  const segments = prog.stages.map((stage) => {
+    const active = stage.index === currentActivityIndex && stage.state !== STAGE.soon;
+    const pct = stage.total ? Math.round((stage.cleared / stage.total) * 100) : 0;
+    return html`<span
+      class="track-seg track-seg--${stage.state}${active ? ' track-seg--active' : ''}"
+      style="flex-grow: ${stage.total}"
+    >
+      <span class="track-bar">
+        ${pct ? raw(`<i style="width: ${pct}%"></i>`) : ''}
+      </span>
+      <span class="track-label">${stage.activity.shortTitle || stage.number}</span>
+    </span>`;
   });
 
-  return raw(
-    `<span class="level-dots" role="img" aria-label="${esc(
-      `${prog.cleared} of ${prog.total} levels cleared, across ${prog.stages.length} activities`
-    )}">${groups.join('')}</span>`
-  );
+  const cleared = prog.stages.reduce((n, s) => n + s.cleared, 0);
+  const allLevels = prog.stages.reduce((n, s) => n + s.total, 0);
+
+  return html`<span
+    class="program-track"
+    role="img"
+    aria-label="${prog.cleared} of ${prog.total} levels cleared. ${cleared} of ${allLevels} across the whole program."
+  >
+    ${join(segments)}
+  </span>`;
+}
+
+/**
+ * Where the caret under the card should sit: the centre of the active segment,
+ * as a fraction of the whole track. Computed from level counts rather than
+ * measured, which is a pixel or two out once the gaps are counted and invisible
+ * under a 14px caret.
+ */
+function caretPosition(prog, currentActivityIndex) {
+  const all = prog.stages.reduce((n, s) => n + s.total, 0);
+  if (!all) return null;
+  const index = prog.stages.findIndex((s) => s.index === currentActivityIndex);
+  if (index < 0) return null;
+  const before = prog.stages.slice(0, index).reduce((n, s) => n + s.total, 0);
+  return ((before + prog.stages[index].total / 2) / all) * 100;
 }
 
 /**
@@ -259,7 +277,14 @@ export function programStrip(prog, { stage = null } = {}) {
   // show, so the count comes off rather than reporting 0. The dots stay —
   // an empty row of them is the shape of the job, not a zero.
   const started = prog.cleared > 0;
-  return html`<a class="program-strip" href="#/program/${prog.program.id}">
+  // The caret only exists where something sits underneath for it to point at,
+  // which is Today. On the library and on Progress the strip stands alone.
+  const caret = stage ? caretPosition(prog, stage.index) : null;
+  return html`<a
+    class="program-strip${caret === null ? '' : ' program-strip--points'}"
+    style="${caret === null ? '' : `--caret-x: ${caret.toFixed(2)}%`}"
+    href="#/program/${prog.program.id}"
+  >
     <span class="program-strip-body">
       ${stage
         ? html`<span class="program-strip-where">
@@ -272,7 +297,7 @@ export function programStrip(prog, { stage = null } = {}) {
           ? html`<span class="program-strip-count">${prog.cleared}/${prog.total}</span>`
           : ''}
       </span>
-      ${levelDots(prog, stage ? stage.index : -1)}
+      ${programTrack(prog, stage ? stage.index : -1)}
       <small>${programPitch(prog)}</small>
     </span>
     ${icon('arrow')}

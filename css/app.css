@@ -3139,6 +3139,7 @@ details.disclosure .disclosure-body {
 /* --- Today's compact strip ------------------------------------------------ */
 
 .program-strip {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--s-3);
@@ -3241,55 +3242,103 @@ details.disclosure .disclosure-body {
   color: var(--primary);
 }
 
-/* One dot per level, grouped by activity. The wider gap between groups is the
-   only thing marking where one activity ends and the next begins, which is all
-   the structure this needs at 6px a dot. */
-.level-dots {
+/* The program as four proportional segments. Width is the activity's share of
+   the levels, fill is progress through it, and the label names it. */
+.program-track {
   display: flex;
-  flex-wrap: wrap;
-  gap: 4px 9px;
-  align-items: center;
-  margin: var(--s-1) 0;
+  align-items: flex-end;
+  gap: 5px;
+  margin: var(--s-2) 0 var(--s-1);
 }
 
-.level-group {
-  display: inline-flex;
-  gap: 3px;
-  align-items: center;
+.track-seg {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  flex-basis: 0;
 }
 
-.level-dots .dot {
-  width: 6px;
+.track-bar {
+  display: block;
   height: 6px;
-  border-radius: 50%;
-  border: 1.5px solid var(--border-strong);
-  background: transparent;
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+  box-shadow: inset 0 0 0 1px var(--border);
+  overflow: hidden;
 }
 
-.level-dots .dot--done {
+.track-bar > i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
   background: var(--primary);
-  border-color: var(--primary);
 }
 
-/* Levels inside an activity that is not in the app yet: the same hollow ring,
-   a step lighter. Dashed was the first try, borrowing the map's language, but
-   a dashed border on a 6px circle resolves to about four disconnected arcs —
-   magnified it reads as broken pixels rather than a dot. Weight carries the
-   distinction at this size; the map keeps the dashes where they have room. */
-.level-dots .dot--soon {
-  border-color: var(--border);
+.track-label {
+  font-size: 0.625rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-/* The level in hand. A ring rather than a fill, so it never reads as cleared. */
-.level-dots .dot--here {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2.5px var(--primary-wash);
+.track-seg--complete .track-bar > i {
+  background: var(--success);
+}
+
+/* Not in the app yet: no inner border, so it reads as a placeholder rather
+   than as an empty thing you are failing to fill. */
+.track-seg--soon .track-bar {
+  background: var(--background);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.track-seg--soon .track-label {
+  color: var(--border-strong);
+}
+
+/* The one being practiced. Taller and named in the accent, so the eye lands
+   here first and then follows the caret to the card underneath. */
+.track-seg--active .track-bar {
+  height: 10px;
+  box-shadow: inset 0 0 0 1px var(--primary-wash);
+}
+
+.track-seg--active .track-label {
+  color: var(--primary);
+}
+
+/* A caret on the bottom edge, lined up with the active segment, aimed at the
+   card below. This is the whole connection between "where you are in the
+   program" and "here is today's session" — without it they were two unrelated
+   cards that happened to be stacked. */
+.program-strip--points::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: var(--caret-x, 50%);
+  width: 14px;
+  height: 14px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  border-bottom-right-radius: 3px;
 }
 
 /* The strip is the first thing on Today, so it does not need the full section
-   gap above it pushing it down the screen. */
+   gap above it pushing it down the screen. The bottom margin is not optional:
+   `.section` spaces with margin-top only, and `.hero` has none of its own, so
+   before this the two cards sat flush at a measured 0px apart with the caret
+   nowhere to go. */
 .section--tight {
   margin-top: var(--s-3);
+  margin-bottom: var(--s-5);
 }
 
 @media (hover: hover) {

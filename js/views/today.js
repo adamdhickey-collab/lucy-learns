@@ -140,7 +140,31 @@ function render() {
   `;
 }
 
+/**
+ * Point the caret at the middle of the active segment.
+ *
+ * The fraction the strip is rendered with is a fraction of the *track*, but
+ * the caret is positioned against the *card*, which is wider by its padding
+ * and the arrow column. Applying one as the other put the caret 8px out —
+ * between two segments on a 375px screen, which is exactly the ambiguity the
+ * caret exists to remove. Measured after paint and written back in pixels.
+ */
+function alignCaret(root) {
+  const strip = root.querySelector('.program-strip--points');
+  const active = root.querySelector('.track-seg--active');
+  if (!strip || !active) return;
+  const card = strip.getBoundingClientRect();
+  const seg = active.getBoundingClientRect();
+  if (!card.width || !seg.width) return;
+  strip.style.setProperty('--caret-x', `${Math.round(seg.left + seg.width / 2 - card.left)}px`);
+}
+
 function mount(root) {
+  alignCaret(root);
+  // Layout can settle after first paint — a font swapping in, an image landing
+  // and reflowing the row. Measure once more on the next frame.
+  requestAnimationFrame(() => alignCaret(root));
+
   const quick = root.querySelector('[data-quick]');
   if (quick) {
     quick.addEventListener('click', () => {
