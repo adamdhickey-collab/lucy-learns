@@ -67,6 +67,33 @@ export const ICONS = {
     '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
   shield:
     '<svg viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.4 3 8.5 7 10 4-1.5 7-5.6 7-10V6l-7-3z"/><path d="M12 9v4"/></svg>',
+
+  // --- the four activities of the door program ----------------------------
+  // One mark per activity, used wherever that activity appears: the route on
+  // the welcome, the strip on Today, and the rail on the program map. The
+  // number it replaced said only "which one", and said it in three different
+  // shapes; the mark says which one it is.
+  //
+  // They have to stay apart from each other at 18px, so each is a different
+  // silhouette rather than a different detail: waves, a hand, a low bed, an
+  // upright door.
+
+  // Sound — rings coming off a point. Not a bell, which reads as a
+  // notification rather than a doorbell.
+  'act-sound':
+    '<svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="2"/><path d="M11.5 8.5a5 5 0 0 1 0 7"/><path d="M15.5 5.5a10 10 0 0 1 0 13"/></svg>',
+
+  // Stay — the flat raised palm the handler actually gives.
+  'act-stay':
+    '<svg viewBox="0 0 24 24"><path d="M9.5 12.5V6a1.5 1.5 0 0 1 3 0v5.5"/><path d="M12.5 11.5V5a1.5 1.5 0 0 1 3 0v7"/><path d="M15.5 12V8.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-.5a5 5 0 0 1-3.5-1.5l-2.4-2.4a1.5 1.5 0 0 1 2.1-2.1l1.3 1.3"/></svg>',
+
+  // Place — a mat with a raised back, read as the bed she is sent to.
+  'act-place':
+    '<svg viewBox="0 0 24 24"><rect x="3" y="12" width="18" height="7" rx="3"/><path d="M6.5 12V9.5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2V12"/></svg>',
+
+  // Greet — the door itself, the thing the whole program is about.
+  'act-greet':
+    '<svg viewBox="0 0 24 24"><path d="M6 20V4.5a1.5 1.5 0 0 1 1.5-1.5h9A1.5 1.5 0 0 1 18 4.5V20"/><path d="M4 20h16"/><circle cx="14.5" cy="12" r="1"/></svg>',
 };
 
 export const icon = (name) => raw(ICONS[name] || '');

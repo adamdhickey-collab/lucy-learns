@@ -3209,79 +3209,52 @@ details.disclosure .disclosure-body {
   color: var(--primary);
 }
 
-/* The program as four proportional segments. Width is the activity's share of
-   the levels, fill is progress through it, and the label names it. */
+/* The program as the same row of marks the welcome route draws, one size
+   down. It used to be four proportional pill segments here and four numbered
+   circles there, for the same four activities — so nothing the household
+   learned on the welcome carried over to the screen they actually live on.
+   The shared markup is stageNodes(); only the scale changes. */
 .program-track {
-  display: flex;
-  align-items: flex-end;
-  gap: 5px;
+  display: block;
   margin: var(--s-2) 0 var(--s-1);
 }
 
-.track-seg {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  min-width: 0;
-  flex-basis: 0;
+/* The compact scale. Everything inside is driven off --route-node, so this is
+   the only number that changes between the welcome and Today. */
+.route-line.route-line--compact {
+  --route-node: 26px;
 }
 
-.track-bar {
-  display: block;
-  height: 6px;
-  border-radius: var(--r-pill);
-  background: var(--surface-sunken);
-  box-shadow: inset 0 0 0 1px var(--border);
-  overflow: hidden;
+.route-line.route-line--compact .route-node svg {
+  width: 15px;
+  height: 15px;
 }
 
-.track-bar > i {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: var(--primary);
+/* Marks only, no words. The strip is a summary inside a link that already
+   says "Activity 1 of 4" above it and names the activity in the card below;
+   the welcome taught which mark is which, and the map is one tap away with
+   the full titles. Spelling them out again cost a two-line "CALM HELLO" and
+   pushed Today's primary button under the tab bar, which is a worse trade
+   than a row of marks. The row stays aria-hidden behind the track's own
+   label, so nothing is lost to a screen reader. */
+.route-line.route-line--compact .route-label {
+  display: none;
 }
 
-.track-label {
-  font-size: 0.625rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  font-weight: 700;
-  color: var(--text-secondary);
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+/* The road behind the compact row is shorter than the one on the welcome,
+   because the row itself is narrower and an 8% inset left it stranded well
+   inside the first and last marks. */
+.route-line.route-line--compact::before {
+  left: 11%;
+  right: 11%;
+  /* The welcome draws its road once, on arrival. Today re-renders this strip
+     on every navigation, and re-running the draw each time made a static
+     summary flicker. */
+  animation: none;
 }
 
-.track-seg--complete .track-bar > i {
-  background: var(--success);
-}
-
-/* Not in the app yet: no inner border, so it reads as a placeholder rather
-   than as an empty thing you are failing to fill. */
-.track-seg--soon .track-bar {
-  background: var(--background);
-  box-shadow: inset 0 0 0 1px var(--border);
-}
-
-/* Same weight as the rest. Greying these to --border-strong measured 1.64:1,
-   which is the third time in this app that muting a state by fading its text
-   has failed AA. The empty bar above the label already says "not yet"; the
-   label only has to stay readable. */
-.track-seg--soon .track-label {
-  color: var(--text-secondary);
-}
-
-/* The one being practiced. Taller and named in the accent, so the eye lands
-   here first and then follows the caret to the card underneath. */
-.track-seg--active .track-bar {
-  height: 10px;
-  box-shadow: inset 0 0 0 1px var(--primary-wash);
-}
-
-.track-seg--active .track-label {
-  color: var(--primary);
+.route-line.route-line--compact .route-stop {
+  animation: none;
 }
 
 /* A caret on the bottom edge, lined up with the active segment, aimed at the
@@ -3757,12 +3730,42 @@ details.disclosure .disclosure-body {
   font-variant-numeric: tabular-nums;
 }
 
-/* The first one is where they will actually start, so it is the one that
-   looks live rather than pending. */
-.route-stop:first-child .route-node {
+/* The mark itself. Sized off the node so both scales stay in proportion. */
+.route-node svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Live: where they are, or where they would start. This used to be pinned to
+   :first-child, which was true only on a fresh install — the welcome is the
+   one place this row is guaranteed to be empty. Driven off real state it also
+   holds on Today, where the live activity is whichever one is being worked. */
+.route-stop--active .route-node,
+.route-stop--open .route-node {
   border-color: var(--primary);
   color: var(--primary);
   box-shadow: 0 0 0 4px var(--primary-wash);
+}
+
+/* Finished. Filled, because a cleared activity is the one thing here that is
+   genuinely done, and it carries the check rather than its own mark. */
+.route-stop--complete .route-node {
+  border-color: var(--success);
+  background: var(--success);
+  color: var(--surface);
+}
+
+/* Not in the app yet. Dashed reads as "not built" rather than "not done", and
+   the label keeps full contrast — muting it by fading has failed AA three
+   times in this app already. */
+.route-stop--soon .route-node {
+  border-style: dashed;
+  color: var(--text-secondary);
 }
 
 .route-label {
@@ -3782,14 +3785,21 @@ details.disclosure .disclosure-body {
   min-height: 2.6em;
 }
 
-.route-stop:first-child .route-label {
+.route-stop--active .route-label,
+.route-stop--open .route-label {
   color: var(--primary);
 }
 
+.route-stop--complete .route-label {
+  color: var(--success);
+}
+
 /* The finish. Gold, like the outcome node on the map and the card that lands
-   when an activity is finished, so arriving somewhere always looks the same. */
+   when an activity is finished, so arriving somewhere always looks the same.
+   One column like the rest: the stops used to grow by their level count, which
+   made the same activity a different width on every screen it appeared on. */
 .route-stop--end {
-  flex-grow: 5;
+  flex-grow: 1;
 }
 
 .route-stop--end .route-node {

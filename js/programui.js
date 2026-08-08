@@ -147,7 +147,7 @@ export function stageList(prog, { currentActivityId = null, showThumbs = true } 
     const body = html`
       <span class="stage-rail" aria-hidden="true">
         <span class="stage-node">
-          ${stage.state === STAGE.complete ? icon('check') : raw(String(stage.number))}
+          ${stage.state === STAGE.complete ? icon('check') : icon(stage.activity.icon)}
         </span>
       </span>
       <span class="stage-body">
@@ -223,29 +223,51 @@ function outcomeNode(prog) {
  * narrowest phone and "Stay While the Door Opens" is not going in it. Read
  * across, the four are the arrival sequence: Sound, Stay, Place, Greet.
  */
-function programTrack(prog, currentActivityIndex) {
-  const segments = prog.stages.map((stage) => {
+/**
+ * The four activities as a row of marks, which is the only shape they are ever
+ * drawn in.
+ *
+ * They used to have three: numbered circles on the welcome route, proportional
+ * pill segments on Today, and numbered circles again on the map rail. Same four
+ * things, three silhouettes, so nothing carried over from one screen to the
+ * next and the household had to re-learn the row each time.
+ *
+ * The mark is the activity's icon rather than its position, because the number
+ * was the part that could not survive the change of shape: "3" means nothing
+ * once it is out of the line it was counting. The bed means the bed.
+ *
+ * Every stop is the same width. The old track grew each segment by its level
+ * count, which is honest about how much work each activity holds but makes the
+ * same activity a different size on every screen — the thing being fixed.
+ * The count still appears, as a number, beside the strip.
+ *
+ * Rendered as spans throughout: this goes inside the `<a>` on Today, where a
+ * list would not be valid, and the row is aria-hidden behind the caller's own
+ * label in every case.
+ */
+function stageNodes(prog, { currentActivityIndex = -1, compact = false } = {}) {
+  const stops = prog.stages.map((stage, i) => {
     const active = stage.index === currentActivityIndex && stage.state !== STAGE.soon;
-    // A parked activity contributes nothing to progress anywhere. It could
-    // still hold cleared levels from before it was parked, and filling its
-    // segment from those put earned progress inside a column labelled "coming
-    // soon" — while the headline count, which excludes them, said otherwise.
-    // stageList already suppresses its pips for exactly this reason.
-    const pct =
-      stage.state === STAGE.soon || !stage.total
-        ? 0
-        : Math.round((stage.cleared / stage.total) * 100);
+    const done = stage.state === STAGE.complete;
     return html`<span
-      class="track-seg track-seg--${stage.state}${active ? ' track-seg--active' : ''}"
-      style="flex-grow: ${stage.total}"
+      class="route-stop route-stop--${stage.state}${active ? ' route-stop--active' : ''}"
+      style="--i: ${i}"
     >
-      <span class="track-bar">
-        ${pct ? raw(`<i style="width: ${pct}%"></i>`) : ''}
-      </span>
-      <span class="track-label">${stage.activity.shortTitle || stage.number}</span>
+      <span class="route-node">${done ? icon('check') : icon(stage.activity.icon)}</span>
+      <span class="route-label">${stage.activity.shortTitle || stage.number}</span>
     </span>`;
   });
 
+  return html`<span class="route-line${compact ? ' route-line--compact' : ''}" aria-hidden="true">
+    ${join(stops)}
+    <span class="route-stop route-stop--end" style="--i: ${prog.stages.length}">
+      <span class="route-node">${icon('spark')}</span>
+      <span class="route-label">${prog.program.outcome ? 'Calm hello' : 'Done'}</span>
+    </span>
+  </span>`;
+}
+
+function programTrack(prog, currentActivityIndex) {
   const cleared = prog.stages.reduce((n, s) => n + s.cleared, 0);
   const allLevels = prog.stages.reduce((n, s) => n + s.total, 0);
 
@@ -254,7 +276,7 @@ function programTrack(prog, currentActivityIndex) {
     role="img"
     aria-label="${prog.cleared} of ${prog.total} levels cleared. ${cleared} of ${allLevels} across the whole program."
   >
-    ${join(segments)}
+    ${stageNodes(prog, { currentActivityIndex, compact: true })}
   </span>`;
 }
 
@@ -265,12 +287,12 @@ function programTrack(prog, currentActivityIndex) {
  * under a 14px caret.
  */
 function caretPosition(prog, currentActivityIndex) {
-  const all = prog.stages.reduce((n, s) => n + s.total, 0);
-  if (!all) return null;
   const index = prog.stages.findIndex((s) => s.index === currentActivityIndex);
   if (index < 0) return null;
-  const before = prog.stages.slice(0, index).reduce((n, s) => n + s.total, 0);
-  return ((before + prog.stages[index].total / 2) / all) * 100;
+  // Every stop is now one equal column, the outcome included, so the centre of
+  // the nth is a matter of counting rather than of summing level totals.
+  const columns = prog.stages.length + 1;
+  return ((index + 0.5) / columns) * 100;
 }
 
 /**
@@ -326,24 +348,15 @@ export function programStrip(prog, { stage = null } = {}) {
  * drawn empty. It is the size and shape of the job, not a score.
  */
 export function routePreview(prog) {
-  const stations = prog.stages.map(
-    (stage, i) => html`<li class="route-stop" style="--i: ${i}; flex-grow: ${stage.total}">
-      <span class="route-node">${stage.number}</span>
-      <span class="route-label">${stage.activity.shortTitle || stage.number}</span>
-    </li>`
-  );
-
   const outcome = prog.program.outcome;
   const allLevels = prog.stages.reduce((n, s) => n + s.total, 0);
 
-  return html`<div class="route">
-    <ol class="route-line" aria-label="${prog.stages.length} activities, ${allLevels} levels, ending in ${outcome ? outcome.title : 'the finish'}">
-      ${join(stations)}
-      <li class="route-stop route-stop--end" style="--i: ${prog.stages.length}">
-        <span class="route-node">${icon('spark')}</span>
-        <span class="route-label">${outcome ? 'Calm hello' : 'Done'}</span>
-      </li>
-    </ol>
+  return html`<div
+    class="route"
+    role="img"
+    aria-label="${prog.stages.length} activities, ${allLevels} levels, ending in ${outcome ? outcome.title : 'the finish'}"
+  >
+    ${stageNodes(prog)}
   </div>`;
 }
 

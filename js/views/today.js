@@ -166,7 +166,12 @@ function render() {
  */
 function alignCaret(root) {
   const strip = root.querySelector('.program-strip--points');
-  const active = root.querySelector('.track-seg--active');
+  // The live mark, whichever state put it there. This used to look for
+  // .track-seg--active, which stopped existing when the four proportional
+  // segments became the same row of marks the welcome draws — and a missing
+  // element here fails silently, leaving the caret on its unmeasured
+  // percentage rather than throwing.
+  const active = root.querySelector('.route-stop--active, .route-stop--open');
   if (!strip || !active) return;
   const card = strip.getBoundingClientRect();
   const seg = active.getBoundingClientRect();

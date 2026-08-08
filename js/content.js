@@ -401,6 +401,8 @@ export const ACTIVITIES = [
     programId: 'calm-door-greetings',
     goalId: 'door-routine',
     shortTitle: 'Sound',
+    // The mark this activity carries everywhere it appears. See ICONS.
+    icon: 'act-sound',
     shortPurpose: 'Lucy hears the doorbell and looks to you instead of the door.',
     coverImage: 'dg-03',
     estimatedMinutes: 5,
@@ -497,6 +499,8 @@ export const ACTIVITIES = [
     programId: 'calm-door-greetings',
     goalId: 'door-routine',
     shortTitle: 'Stay',
+    // The mark this activity carries everywhere it appears. See ICONS.
+    icon: 'act-stay',
     available: false,
     shortPurpose: 'Lucy holds her bed while you walk over and open the door.',
     coverImage: 'dg-07',
@@ -611,6 +615,8 @@ export const ACTIVITIES = [
     programId: 'calm-door-greetings',
     goalId: 'door-routine',
     shortTitle: 'Place',
+    // The mark this activity carries everywhere it appears. See ICONS.
+    icon: 'act-place',
     available: false,
     shortPurpose: 'The doorbell becomes her cue to move away from the door.',
     coverImage: 'dg-06',
@@ -692,6 +698,8 @@ export const ACTIVITIES = [
     programId: 'calm-door-greetings',
     goalId: 'door-routine',
     shortTitle: 'Greet',
+    // The mark this activity carries everywhere it appears. See ICONS.
+    icon: 'act-greet',
     available: false,
     shortPurpose: 'A real guest arrives and Lucy greets on your terms.',
     coverImage: 'dg-11',
