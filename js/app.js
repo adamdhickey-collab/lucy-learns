@@ -174,8 +174,6 @@ const SPLASH_FADE_MS = 420;
 
 const splash = document.getElementById('splash');
 if (splash) {
-  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
   const dateSlot = splash.querySelector('#splash-date');
   if (dateSlot) {
     const { year, month, day } = APP_UPDATED;
@@ -187,41 +185,21 @@ if (splash) {
     });
   }
 
-  // The version counts up to itself. Each numeric segment eases from zero to
-  // its real value, so the line settles like an odometer instead of blinking
-  // into existence. It is decoration over a number that is not in doubt, so
-  // it is skipped entirely under reduced motion and always lands exact.
+  // The version is stated, not performed. An earlier pass counted it up from
+  // zero, which animated a number that was never in doubt and had to be
+  // guarded against landing on a version that does not exist. The progress bar
+  // does the work of showing something is happening, and it does it about
+  // something real.
   const versionSlot = splash.querySelector('#splash-version');
-  if (versionSlot) {
-    const parts = APP_VERSION.split('.').map(Number);
-    const final = `Version ${APP_VERSION}`;
+  if (versionSlot) versionSlot.textContent = `Version ${APP_VERSION}`;
 
-    if (reduceMotion || parts.some(Number.isNaN)) {
-      versionSlot.textContent = final;
-    } else {
-      const COUNT_MS = 760;
-      const COUNT_DELAY = 260;
-      const start = performance.now() + COUNT_DELAY;
-      versionSlot.textContent = `Version ${parts.map(() => 0).join('.')}`;
-
-      const tick = (now) => {
-        const t = Math.min(Math.max((now - start) / COUNT_MS, 0), 1);
-        // easeOutCubic: fast at first, then settling onto the value.
-        const eased = 1 - Math.pow(1 - t, 3);
-        versionSlot.textContent = `Version ${parts
-          .map((n) => Math.round(n * eased))
-          .join('.')}`;
-        if (t < 1) requestAnimationFrame(tick);
-        else versionSlot.textContent = final;
-      };
-      requestAnimationFrame(tick);
-      // rAF is dead in a hidden tab and the count would freeze mid-roll on a
-      // wrong number. Land it exactly, regardless.
-      setTimeout(() => {
-        versionSlot.textContent = final;
-      }, COUNT_DELAY + COUNT_MS + 80);
-    }
-  }
+  // Hand the bar the actual numbers. The negative delay is how much of the
+  // hold went on booting, so the fill starts where the load already got to
+  // rather than restarting the clock at first paint, and reaches full exactly
+  // as the splash begins to leave.
+  const elapsed = performance.now();
+  splash.style.setProperty('--splash-hold', `${SPLASH_HOLD_MS}ms`);
+  splash.style.setProperty('--splash-elapsed', `-${Math.round(elapsed)}ms`);
 
   if (!location.search.includes('splash-hold')) {
     let dismissed = false;
@@ -236,7 +214,6 @@ if (splash) {
     // than following it. Timers still fire in a hidden tab where animation
     // frames do not, which is what keeps a backgrounded launch from coming
     // back to a splash that never left.
-    const elapsed = performance.now();
     setTimeout(dismiss, Math.max(SPLASH_HOLD_MS - elapsed, 0));
   }
 }

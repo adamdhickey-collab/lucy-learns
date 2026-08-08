@@ -209,6 +209,24 @@ function outcomeNode(prog) {
 }
 
 /**
+ * One dot per activity, so the whole arc is legible without opening the map.
+ * State is carried by shape as well as fill: done is solid, the one in hand is
+ * ringed, not started is hollow, not yet in the app is dashed.
+ */
+function stageDots(prog, currentIndex) {
+  const dots = prog.stages.map((stage) => {
+    const here = stage.index === currentIndex;
+    return `<i class="dot dot--${stage.state}${here ? ' dot--here' : ''}"></i>`;
+  });
+  const done = prog.stages.filter((s) => s.state === STAGE.complete).length;
+  return raw(
+    `<span class="stage-dots" role="img" aria-label="${esc(
+      `${done} of ${prog.stages.length} activities finished`
+    )}">${dots.join('')}</span>`
+  );
+}
+
+/**
  * The compact form. Program name, position, progress, and the one sentence
  * about what is left, in a single tap target.
  *
@@ -225,6 +243,7 @@ export function programStrip(prog, { stage = null } = {}) {
     <span class="program-strip-body">
       ${stage
         ? html`<span class="program-strip-where">
+            ${stageDots(prog, stage.index)}
             Activity ${stage.number} of ${prog.stages.length}
           </span>`
         : ''}

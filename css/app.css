@@ -2281,6 +2281,19 @@ details.disclosure .disclosure-body {
   z-index: 100;
   background: var(--background);
   transition: opacity 420ms ease-in;
+
+  /* One number drives the badge and everything positioned off it. 60vw is the
+     phone geometry the launch images bake in; on every iPhone portrait that is
+     the smallest of the three, so this resolves to exactly what the generator
+     used. The caps only bite on a desktop window, where 60% of the viewport
+     would otherwise fill the screen. 264px is the size the badge reaches on
+     the largest phone this ships to. */
+  --badge: min(60vw, 60vh, 264px);
+
+  /* Overwritten by app.js with the real hold and how much of it has already
+     elapsed. The fallbacks keep the bar sane if the script never runs. */
+  --splash-hold: 1300ms;
+  --splash-elapsed: 0ms;
 }
 
 /* Position only. This is the geometry the iOS launch image baked in, so it
@@ -2291,13 +2304,67 @@ details.disclosure .disclosure-body {
   position: absolute;
   top: 45%;
   left: 50%;
-  width: 60%;
-  /* 60% of the viewport is the phone geometry the launch images bake in. On a
-     desktop window that same fraction fills the screen, so it is capped at the
-     size it would reach on the largest phone this ships to. */
-  max-width: min(60vh, 264px);
-  aspect-ratio: 1;
+  width: var(--badge);
+  height: var(--badge);
   transform: translate(-50%, -50%);
+}
+
+/* Sits below the badge, offset by half the badge from its centre so the gap
+   holds at any size. Fades in rather than being there at t=0: the launch image
+   has no line, so anything painted immediately would pop at the handoff. */
+.splash-progress {
+  position: absolute;
+  top: calc(45% + var(--badge) / 2 + var(--s-5));
+  left: 50%;
+  width: calc(var(--badge) * 0.42);
+  height: 3px;
+  transform: translateX(-50%);
+  border-radius: var(--r-pill);
+  background: var(--border);
+  overflow: hidden;
+  /* Its own keyframes rather than splash-meta-in, because that one animates
+     `transform` to `none` and would drop the translateX that centres this.
+     Every frame here has to carry the centring through. */
+  animation: splash-progress-in 420ms 260ms ease-out both;
+}
+
+@keyframes splash-progress-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%);
+  }
+}
+
+.splash-progress > span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--primary);
+  transform-origin: left center;
+  /* Linear, because it is reporting time rather than performing. The negative
+     delay starts it wherever the boot already got to, so it reads real
+     elapsed time instead of restarting the clock at first paint. */
+  animation: splash-fill var(--splash-hold) linear var(--splash-elapsed) both;
+}
+
+@keyframes splash-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* The bar has finished its job by the time the splash leaves; fading it with
+   everything else is enough. */
+.splash--done .splash-progress {
+  animation: none;
 }
 
 .splash-mark {
@@ -2388,7 +2455,21 @@ details.disclosure .disclosure-body {
 
   .splash-mark,
   .splash-meta,
+  .splash-progress,
   .splash--done .splash-mark {
+    animation: none;
+    transform: none;
+  }
+
+  /* The slot's centring transform is not decoration, so it is restored after
+     the blanket `transform: none` above. */
+  .splash-progress {
+    transform: translateX(-50%);
+  }
+
+  /* The bar still reports progress, it just does it without sweeping: the
+     fill is simply present, since a static empty track says nothing. */
+  .splash-progress > span {
     animation: none;
     transform: none;
   }
@@ -3150,11 +3231,60 @@ details.disclosure .disclosure-body {
 }
 
 .program-strip-where {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
   font-size: 0.6875rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-weight: 700;
   color: var(--primary);
+}
+
+/* The whole arc at a glance. Four dots is enough to say "one of four, this
+   one", which is what the map costs a tap to answer. */
+.stage-dots {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.stage-dots .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-strong);
+  background: transparent;
+}
+
+.stage-dots .dot--complete {
+  background: var(--success);
+  border-color: var(--success);
+}
+
+.stage-dots .dot--active,
+.stage-dots .dot--open {
+  border-color: var(--primary);
+}
+
+.stage-dots .dot--active {
+  background: var(--primary);
+}
+
+/* Not in the app yet: hollow and dashed, the same language the map uses. */
+.stage-dots .dot--soon {
+  border-style: dashed;
+  border-color: var(--border-strong);
+}
+
+.stage-dots .dot--here {
+  box-shadow: 0 0 0 3px var(--primary-wash);
+}
+
+/* The strip is the first thing on Today, so it does not need the full section
+   gap above it pushing it down the screen. */
+.section--tight {
+  margin-top: var(--s-3);
 }
 
 @media (hover: hover) {

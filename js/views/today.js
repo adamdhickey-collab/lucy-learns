@@ -60,6 +60,15 @@ function render() {
         </div>
       </div>
 
+      ${/* Above the hero on purpose. It used to sit under it, which put it
+            past 537px of illustration and card — off the bottom of the screen
+            on open. "How far through are we" is the question the household
+            arrives with, and it should not cost a scroll or a tap. */ ''}
+      <section class="section section--tight">
+        <h2 class="visually-hidden">Your program</h2>
+        ${programStrip(prog, { stage })}
+      </section>
+
       <section class="hero" aria-labelledby="today-next">
         <img src="${cover.src}" alt="${cover.alt}" />
         <div class="hero-body">
@@ -78,13 +87,6 @@ function render() {
               </button>`
             : ''}
         </div>
-      </section>
-
-      ${/* Directly under the hero, so "where does this sit" is answered before
-            anything else on the page, by one link rather than two. */ ''}
-      <section class="section">
-        <h2 class="visually-hidden">Your program</h2>
-        ${programStrip(prog, { stage })}
       </section>
 
       ${/* One card for the week, not two. The insight sentence and the streak
