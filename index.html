@@ -100,8 +100,15 @@
          Inert to assistive tech: it is decoration over a loading app, and the
          real content is announced when the router paints. -->
     <div id="splash" class="splash" aria-hidden="true">
-      <img class="splash-mark" src="img/splash-mark.jpg" alt="" />
-      <p id="splash-version" class="splash-version"></p>
+      <!-- The slot holds the position the launch image baked in; the img
+           inside it does the scaling, so the two transforms never fight. -->
+      <div class="splash-slot">
+        <img class="splash-mark" src="img/splash-mark.jpg" alt="" />
+      </div>
+      <div class="splash-meta">
+        <p id="splash-version" class="splash-version"></p>
+        <p id="splash-date" class="splash-date"></p>
+      </div>
     </div>
 
     <a class="visually-hidden" href="#app">Skip to content</a>

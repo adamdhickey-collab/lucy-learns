@@ -2279,32 +2279,98 @@ details.disclosure .disclosure-body {
   position: fixed;
   inset: 0;
   z-index: 100;
-  display: grid;
-  place-items: center;
   background: var(--background);
-  /* Opacity only. Transforming or scaling here would make the mark move
-     against the launch image it is standing in for. */
-  transition: opacity 320ms ease-out;
+  transition: opacity 420ms ease-in;
 }
 
-.splash-mark {
+/* Position only. This is the geometry the iOS launch image baked in, so it
+   never moves — the scale animation lives on the img inside it. If the two
+   shared a transform the mark would start somewhere the launch image did not
+   put it, and the handoff would jump. */
+.splash-slot {
   position: absolute;
   top: 45%;
   left: 50%;
   width: 60%;
+  /* 60% of the viewport is the phone geometry the launch images bake in. On a
+     desktop window that same fraction fills the screen, so it is capped at the
+     size it would reach on the largest phone this ships to. */
+  max-width: min(60vh, 264px);
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
+}
+
+.splash-mark {
+  display: block;
+  width: 100%;
+  height: 100%;
   /* The source art is square with cream corners. The launch images mask it to
      the inscribed circle; this has to match or the two disagree at the edge. */
   border-radius: 50%;
+  /* Starts at exactly 1 — the size the launch image is already showing — and
+     drifts in from there, so the first frame is identical and the motion
+     begins after the handoff rather than through it. */
+  animation: splash-breathe 2600ms cubic-bezier(0.16, 0.6, 0.3, 1) both;
+}
+
+@keyframes splash-breathe {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.07);
+  }
+}
+
+/* Leaving: the mark falls back and away as the app comes forward. */
+.splash--done .splash-mark {
+  animation: none;
+  transform: scale(0.93);
+  transition: transform 420ms cubic-bezier(0.4, 0, 0.9, 0.4);
+}
+
+.splash-meta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--s-6) + env(safe-area-inset-bottom));
+  margin: 0;
+  text-align: center;
+  animation: splash-meta-in 520ms 220ms ease-out both;
+}
+
+@keyframes splash-meta-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.splash--done .splash-meta {
+  animation: none;
 }
 
 .splash-version {
-  position: absolute;
-  bottom: calc(var(--s-6) + env(safe-area-inset-bottom));
   margin: 0;
   color: var(--text-secondary);
   font-size: var(--step--1);
+  font-weight: 600;
+  /* Tabular figures so the count-up does not reflow the line as digits land. */
+  font-variant-numeric: tabular-nums;
+}
+
+.splash-date {
+  margin: var(--s-1) 0 0;
+  color: var(--text-secondary);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.75;
 }
 
 .splash--done {
@@ -2312,11 +2378,19 @@ details.disclosure .disclosure-body {
   pointer-events: none;
 }
 
-/* The fade is the whole effect, so it is the one thing reduced motion has to
-   remove rather than shorten. The element is removed either way. */
+/* Reduced motion keeps the splash and drops every part of it that moves. The
+   count-up is disabled in JS to match; the mark simply sits at rest. */
 @media (prefers-reduced-motion: reduce) {
-  .splash {
+  .splash,
+  .splash--done .splash-mark {
     transition: none;
+  }
+
+  .splash-mark,
+  .splash-meta,
+  .splash--done .splash-mark {
+    animation: none;
+    transform: none;
   }
 }
 

@@ -150,6 +150,16 @@ matches on CSS points and pixel ratio, which cannot be derived from the pixel
 size — the 8 Plus is 1242×2208 at 414×736@3x, and guessing by divisibility
 calls it 621×1104@2x, which matches no phone and launches to a blank screen.
 
+The in-app splash holds for a guaranteed minimum, measured from navigation
+start so a slow boot spends its time booting rather than adding the hold on
+top. Tune `SPLASH_HOLD_MS` in `js/app.js`. It dismisses on a timer, never on
+an animation frame: frames do not run while a document is hidden, and a
+backgrounded launch would come back to a splash that never left.
+
+Bump `APP_UPDATED` in `js/version.js` alongside `APP_VERSION`. It is stored as
+`{ year, month, day }` rather than an ISO string because `new Date('2026-08-08')`
+parses as UTC midnight, which renders a day early anywhere west of Greenwich.
+
 `?splash-hold` on any URL keeps the in-app splash up for design review.
 
 ### Illustrations

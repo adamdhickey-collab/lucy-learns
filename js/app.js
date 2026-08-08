@@ -1,5 +1,5 @@
 import { isStorageOk, isOnboarded, onStorageChange } from './store.js';
-import { APP_VERSION } from './version.js';
+import { APP_VERSION, APP_UPDATED } from './version.js';
 import { ICONS, announceScreen, markNavigated, withTransition } from './ui.js';
 import today from './views/today.js';
 import activities from './views/activities.js';
@@ -157,14 +157,71 @@ window.addEventListener('app:refresh', () => route({ keepScroll: true }));
 route();
 
 // --- splash ----------------------------------------------------------------
-// The static splash in index.html covered the blank moment before this module
-// ran. The app is painted underneath it now, so let it go — unless the
-// ?splash-hold debug flag is set, which keeps it up for design review.
+// The static splash in index.html covers the blank moment before this module
+// runs, then hands off to the painted app underneath it.
+//
+// It used to dismiss on the first animation frame, which meant that on any
+// load fast enough to matter — every warm start, every reload — it appeared
+// and vanished inside 20ms. Not a splash, a flicker. HOLD_MS is now a floor
+// the splash is guaranteed to be on screen for, measured from when the page
+// started loading rather than from here, so a slow boot spends its time
+// booting instead of adding the hold on top of it.
+//
+// ?splash-hold on any URL parks it indefinitely for design review.
+
+const SPLASH_HOLD_MS = 1300;
+const SPLASH_FADE_MS = 420;
 
 const splash = document.getElementById('splash');
 if (splash) {
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const dateSlot = splash.querySelector('#splash-date');
+  if (dateSlot) {
+    const { year, month, day } = APP_UPDATED;
+    dateSlot.textContent = new Date(year, month - 1, day).toLocaleDateString(undefined, {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  }
+
+  // The version counts up to itself. Each numeric segment eases from zero to
+  // its real value, so the line settles like an odometer instead of blinking
+  // into existence. It is decoration over a number that is not in doubt, so
+  // it is skipped entirely under reduced motion and always lands exact.
   const versionSlot = splash.querySelector('#splash-version');
-  if (versionSlot) versionSlot.textContent = `Version ${APP_VERSION}`;
+  if (versionSlot) {
+    const parts = APP_VERSION.split('.').map(Number);
+    const final = `Version ${APP_VERSION}`;
+
+    if (reduceMotion || parts.some(Number.isNaN)) {
+      versionSlot.textContent = final;
+    } else {
+      const COUNT_MS = 760;
+      const COUNT_DELAY = 260;
+      const start = performance.now() + COUNT_DELAY;
+      versionSlot.textContent = `Version ${parts.map(() => 0).join('.')}`;
+
+      const tick = (now) => {
+        const t = Math.min(Math.max((now - start) / COUNT_MS, 0), 1);
+        // easeOutCubic: fast at first, then settling onto the value.
+        const eased = 1 - Math.pow(1 - t, 3);
+        versionSlot.textContent = `Version ${parts
+          .map((n) => Math.round(n * eased))
+          .join('.')}`;
+        if (t < 1) requestAnimationFrame(tick);
+        else versionSlot.textContent = final;
+      };
+      requestAnimationFrame(tick);
+      // rAF is dead in a hidden tab and the count would freeze mid-roll on a
+      // wrong number. Land it exactly, regardless.
+      setTimeout(() => {
+        versionSlot.textContent = final;
+      }, COUNT_DELAY + COUNT_MS + 80);
+    }
+  }
 
   if (!location.search.includes('splash-hold')) {
     let dismissed = false;
@@ -172,18 +229,15 @@ if (splash) {
       if (dismissed) return;
       dismissed = true;
       splash.classList.add('splash--done');
-      setTimeout(() => splash.remove(), 400);
+      setTimeout(() => splash.remove(), SPLASH_FADE_MS);
     };
 
-    // A frame lets the app paint underneath before the fade starts, so the
-    // handoff is a dissolve rather than a cut. But requestAnimationFrame does
-    // not fire at all while the document is hidden — a tab restored at
-    // startup, a cmd-clicked link, a phone that locks mid-launch — and on rAF
-    // alone the splash then outlives the app it is covering and the household
-    // comes back to a screen with nothing on it. The timer is the guarantee;
-    // the frame is only the polish.
-    requestAnimationFrame(dismiss);
-    setTimeout(dismiss, 250);
+    // Measured from navigation start, so the hold overlaps the boot rather
+    // than following it. Timers still fire in a hidden tab where animation
+    // frames do not, which is what keeps a backgrounded launch from coming
+    // back to a splash that never left.
+    const elapsed = performance.now();
+    setTimeout(dismiss, Math.max(SPLASH_HOLD_MS - elapsed, 0));
   }
 }
 

@@ -10,4 +10,15 @@
  * The 1.12 lineage continues the old hand-bumped cache names, which reached
  * lucy-learns-v11 before this file existed.
  */
-export const APP_VERSION = '1.17.0';
+export const APP_VERSION = '1.18.0';
+
+/**
+ * The day this build went out, shown under the version on the splash.
+ *
+ * Bumped by hand alongside APP_VERSION. There is no build step to stamp it,
+ * and inventing one to fill in a date would be a worse trade than typing it.
+ * Stored as plain parts rather than an ISO string on purpose: `new Date()` on
+ * "2026-08-08" parses as UTC midnight, which renders as the 7th anywhere west
+ * of Greenwich — including here.
+ */
+export const APP_UPDATED = { year: 2026, month: 8, day: 8 };
