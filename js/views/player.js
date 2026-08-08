@@ -26,6 +26,7 @@ import {
 } from '../store.js';
 import { currentLevel, masteryFor, recommendation } from '../metrics.js';
 import { programProgress, programGain } from '../program.js';
+import { levelPips, masteryLadder } from '../programui.js';
 import {
   html,
   join,
@@ -564,6 +565,26 @@ function stageCelebration(gain) {
   </div>`;
 }
 
+/**
+ * A level crossing the clear line, given its own moment.
+ *
+ * This was a clause inside the program band's sentence: "Level 3 cleared. 7 of
+ * 23 in the program." Clearing a level is the largest thing earnable inside an
+ * activity and the only one that moves the map, so it gets the stamp and the
+ * pips that go with it. It fires exactly when programGain says a level crossed,
+ * which is the same condition the map redraws on.
+ */
+function clearedBanner(gain, level) {
+  if (!gain || gain.clearedLevel === null) return '';
+  const stage = gain.stage;
+  return html`<div class="cleared">
+    <div class="cleared-seal">${icon('check')}</div>
+    <h2>Level ${level.number} cleared</h2>
+    <p>${stage.cleared} of ${stage.total} in ${stage.activity.title}</p>
+    <div class="cleared-pips">${levelPips(stage)}</div>
+  </div>`;
+}
+
 function doneScreen(activity, level) {
   const advice = session.advice;
   const saved = session.saved;
@@ -583,16 +604,18 @@ function doneScreen(activity, level) {
           <p>${advice.body}</p>
         </div>
 
+        ${clearedBanner(session.gain, level)}
+
         ${milestone
-          ? html`<div class="milestone ${milestone.to.id === 'reliable' ? 'milestone--reliable' : ''}">
-              ${icon('spark')}
+          ? html`<div class="milestone-climb">
               <p>
                 ${milestone.to.id === 'reliable'
-                  ? html`That makes level ${level.number} <strong>Reliable</strong>. Both of
-                      you, on different days.`
+                  ? html`That makes level ${level.number} <strong>Reliable</strong>. Three
+                      sessions, three days, barely any help.`
                   : html`Level ${level.number} is now
                       <strong>${milestone.to.label}</strong>.`}
               </p>
+              ${masteryLadder(milestone.to, { from: milestone.from })}
             </div>`
           : ''}
 

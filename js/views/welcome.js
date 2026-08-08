@@ -6,7 +6,7 @@
 // to that array alone: the dots, the "step N of M" label, the Skip target, and
 // the last-panel button copy all follow.
 
-import { DOG, IMAGES, PROGRAMS, TRAINER } from '../content.js';
+import { IMAGES, PROGRAMS, TRAINER } from '../content.js';
 import { completeOnboarding, seedDemoSessions } from '../store.js';
 import { programProgress } from '../program.js';
 import { routePreview } from '../programui.js';

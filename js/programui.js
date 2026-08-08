@@ -6,6 +6,7 @@
 
 import { DOG, IMAGES } from './content.js';
 import { STAGE, programPitch, setupDone } from './program.js';
+import { MASTERY_LADDER } from './metrics.js';
 import { getState } from './store.js';
 import { html, join, raw, icon, esc } from './ui.js';
 
@@ -337,5 +338,46 @@ export function routePreview(prog) {
         <span class="route-levels">&nbsp;</span>
       </li>
     </ol>
+  </div>`;
+}
+
+/**
+ * The mastery ladder, with the current rung marked.
+ *
+ * Learning, Improving, Almost there, Reliable is already a well-shaped four
+ * rung ladder — it is how the trainer talks and how metrics.js scores — but it
+ * only ever surfaced as one small badge, which tells you where you are and
+ * nothing about what is above you. Drawn as rungs it becomes something with a
+ * next step in it.
+ *
+ * Filled means reached, not passed: standing on "Almost there" fills the three
+ * below it because they were genuinely earned on the way. `from` marks the rung
+ * that was just left, so a climb reads as a move rather than a new state.
+ */
+export function masteryLadder(current, { from = null } = {}) {
+  const climbed = from && current.rank > from.rank;
+  const rungs = MASTERY_LADDER.map((rung) => {
+    const reached = current.rank >= rung.rank;
+    const here = current.rank === rung.rank;
+    const gained = climbed && rung.rank > from.rank && rung.rank <= current.rank;
+    return html`<span
+      class="rung${reached ? ' rung--reached' : ''}${here ? ' rung--here' : ''}${
+        gained ? ' rung--gained' : ''
+      }"
+      style="--i: ${rung.rank}"
+    >
+      <span class="rung-bar"></span>
+      <span class="rung-label">${rung.short}</span>
+    </span>`;
+  });
+
+  return html`<div
+    class="ladder${climbed ? ' ladder--climbed' : ''}"
+    role="img"
+    aria-label="${current.rank < 0
+      ? 'Not started'
+      : `${current.label}, rung ${current.rank + 1} of ${MASTERY_LADDER.length}`}"
+  >
+    ${join(rungs)}
   </div>`;
 }

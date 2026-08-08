@@ -252,8 +252,14 @@ Mastery, per level:
 Level totals on the program map count only activities that are available; a
 denominator the household cannot move is not progress.
 
+The four rungs are drawn as a ladder on the activity screen and again after any
+session that changes which one a level stands on, so there is always a visible
+next rung rather than a single badge stating the current one.
+
 Advancing a level is recommended when the last two sessions each hit 80%+, with
-no nipping and arousal of 3 or lower. The recommendation screen always offers
+no nipping and arousal of 3 or lower. Note this is a different bar from
+clearing: a level clears at 75% once, and is recommended for advance at 80%
+twice, so a level can be cleared and still worth repeating. The recommendation screen always offers
 "Stay at level N" — the suggestion never moves anyone on its own.
 
 ## Accessibility notes

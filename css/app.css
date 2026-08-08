@@ -1631,54 +1631,6 @@ details.disclosure .disclosure-body {
   border-radius: var(--r-lg);
 }
 
-/* --- milestone -------------------------------------------------------------- */
-
-.milestone {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--s-3);
-  margin: var(--s-2) 0 var(--s-4);
-  padding: var(--s-3) var(--s-4);
-  background: var(--reward-wash);
-  border-radius: var(--r-md);
-  border-left: 4px solid var(--reward);
-  animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
-}
-
-.milestone p {
-  color: var(--reward-text);
-  font-weight: 550;
-}
-
-.milestone strong {
-  font-weight: 750;
-}
-
-.milestone svg {
-  width: 20px;
-  height: 20px;
-  flex: none;
-  margin-top: 2px;
-  stroke: var(--reward);
-  fill: none;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.milestone--reliable {
-  background: var(--success-wash);
-  border-left-color: var(--success);
-}
-
-.milestone--reliable p {
-  color: var(--success);
-}
-
-.milestone--reliable svg {
-  stroke: var(--success);
-}
-
 /* --- fallback sheet ------------------------------------------------------- */
 
 .sheet-backdrop {
@@ -3856,4 +3808,212 @@ details.disclosure .disclosure-body {
     transform: none;
     opacity: 1;
   }
+}
+
+/* =========================================================================
+   Mastery ladder
+   Four rungs, filled to where this level has actually reached. Same segmented
+   vocabulary as the program track, one scale down, so "how far through the
+   program" and "how solid is this level" look like relatives.
+   ========================================================================= */
+
+.ladder {
+  display: flex;
+  gap: 5px;
+  align-items: flex-end;
+}
+
+.rung {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.rung-bar {
+  display: block;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.rung-label {
+  font-size: 0.625rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rung--reached .rung-bar {
+  background: var(--primary);
+  box-shadow: none;
+}
+
+/* Where this level actually stands. Taller and named in the accent, so the
+   rung you are on is the one the eye lands on and the ones above it read as
+   the thing still to climb. */
+.rung--here .rung-bar {
+  height: 10px;
+}
+
+.rung--here .rung-label {
+  color: var(--primary);
+}
+
+/* Reliable is the top of the ladder and the hardest thing in the app to earn,
+   so arriving there is gold rather than more teal. */
+.ladder .rung:last-child.rung--here .rung-bar {
+  background: var(--reward);
+}
+
+.ladder .rung:last-child.rung--here .rung-label {
+  color: var(--reward-text);
+}
+
+/* A rung gained this session grows into place, so the climb is visible rather
+   than simply already true by the time it is looked at. */
+@media (prefers-reduced-motion: no-preference) {
+  .ladder--climbed .rung--gained .rung-bar {
+    animation: rung-gain 460ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
+    animation-delay: calc(160ms + var(--i) * 90ms);
+    transform-origin: left center;
+  }
+}
+
+@keyframes rung-gain {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* =========================================================================
+   Level cleared
+   The biggest thing earnable inside an activity, which until now landed as a
+   clause in a sentence on the done screen.
+   ========================================================================= */
+
+.cleared {
+  position: relative;
+  margin-top: var(--s-5);
+  padding: var(--s-5) var(--s-4) var(--s-4);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--primary-wash);
+  background: var(--primary-wash);
+  text-align: center;
+}
+
+.cleared-seal {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--text-on-dark);
+}
+
+.cleared-seal svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* One ring, once. It reads as the stamp landing rather than as a thing still
+   loading, which a repeating pulse would. */
+.cleared-seal::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--primary);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cleared-seal {
+    animation: seal-in 520ms cubic-bezier(0.34, 1.5, 0.64, 1) both;
+  }
+
+  .cleared-seal::after {
+    animation: seal-ring 620ms 220ms ease-out both;
+  }
+}
+
+@keyframes seal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes seal-ring {
+  from {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.75);
+  }
+}
+
+.cleared h2 {
+  margin: var(--s-3) 0 var(--s-1);
+  font-size: var(--step-2);
+}
+
+.cleared p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--step--1);
+}
+
+.cleared .pips-row {
+  margin-top: var(--s-4);
+  justify-content: center;
+}
+
+.cleared-pips {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--s-4);
+}
+
+/* The mastery move, when a session changes which rung a level stands on. It
+   replaces a chip that stated the new rung without ever showing the ladder it
+   belonged to. */
+.milestone-climb {
+  margin-top: var(--s-4);
+  padding: var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+}
+
+.milestone-climb p {
+  margin: 0 0 var(--s-4);
+  font-size: var(--step--1);
+  text-align: center;
+}
+
+.milestone-climb strong {
+  font-weight: 700;
 }

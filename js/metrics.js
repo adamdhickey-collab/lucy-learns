@@ -4,12 +4,24 @@ import { LIVE_ACTIVITIES, activityById, levelOf } from './content.js';
 import { getState, chosenLevel } from './store.js';
 
 export const MASTERY = {
-  learning: { id: 'learning', label: 'Learning', rank: 0 },
-  improving: { id: 'improving', label: 'Improving', rank: 1 },
-  almost: { id: 'almost', label: 'Almost there', rank: 2 },
-  reliable: { id: 'reliable', label: 'Reliable', rank: 3 },
-  untouched: { id: 'untouched', label: 'Not started', rank: -1 },
+  learning: { id: 'learning', label: 'Learning', rank: 0, short: 'Learning' },
+  improving: { id: 'improving', label: 'Improving', rank: 1, short: 'Improving' },
+  almost: { id: 'almost', label: 'Almost there', rank: 2, short: 'Almost' },
+  reliable: { id: 'reliable', label: 'Reliable', rank: 3, short: 'Reliable' },
+  untouched: { id: 'untouched', label: 'Not started', rank: -1, short: 'Not started' },
 };
+
+/**
+ * The four earnable rungs in order. "Not started" is deliberately absent: it
+ * is the absence of a rung, not the bottom one, and putting it on the ladder
+ * would make standing at the bottom look like an achievement.
+ */
+export const MASTERY_LADDER = [
+  MASTERY.learning,
+  MASTERY.improving,
+  MASTERY.almost,
+  MASTERY.reliable,
+];
 
 const WATCH = ['barked', 'jumped', 'nipped', 'pulled', 'broke_position'];
 
@@ -142,7 +154,11 @@ export function recommendation(activity, level, session) {
   if (rate >= 0.8) {
     return {
       title: 'Nice progress',
-      body: `${session.successfulRepetitions} of ${reps} reps went well. One more session like that and this level is done.`,
+      // Not "this level is done": clearing a level and being ready to leave it
+      // are two different bars — 75% once, against 80% twice — and the done
+      // screen can show both at the same time. Saying "done" next to a "Level
+      // 4 cleared" stamp made one of them look wrong.
+      body: `${session.successfulRepetitions} of ${reps} reps went well. One more like that and it is time to move up.`,
       suggest: 'stay',
     };
   }

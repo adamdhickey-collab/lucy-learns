@@ -1,5 +1,6 @@
 import {
   activityBySlug,
+  DOG,
   isAvailable,
   IMAGES,
   programById,
@@ -16,7 +17,7 @@ import {
   lastPracticed,
 } from '../metrics.js';
 import { stageFor, STAGE } from '../program.js';
-import { levelPips } from '../programui.js';
+import { levelPips, masteryLadder } from '../programui.js';
 import {
   html,
   raw,
@@ -202,6 +203,24 @@ function render({ slug }) {
             : 'Start at level 1. You can always move down.'}
         </p>
         <div class="level-list">${join(levels)}</div>
+      </section>
+
+      ${/* The ladder for the level being worked. The badge on the level row
+            says which rung it stands on; this says what the rungs are and
+            what is above this one, which is the part that gives it somewhere
+            to go. */ ''}
+      <section class="section">
+        <h2>How solid is level ${active.number}</h2>
+        <div class="card">
+          <div class="card-body">
+            ${masteryLadder(masteryFor(activity.id, active.number))}
+            <p class="section-note" style="margin-top: var(--s-4)">
+              ${history.length
+                ? 'Reliable takes 90% across three sessions, on three different days, without heavy help.'
+                : `Every level starts here. Run a session and ${DOG.name} climbs.`}
+            </p>
+          </div>
+        </div>
       </section>
 
       <section class="section">
