@@ -21,7 +21,6 @@ import {
   addSession,
   isStorageOk,
   resolveCue,
-  sessionsFor,
   setLevel,
   updateSession,
 } from '../store.js';

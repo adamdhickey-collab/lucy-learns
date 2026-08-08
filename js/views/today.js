@@ -1,8 +1,7 @@
-import { DOG, HANDLER, IMAGES, activityById, programById } from '../content.js';
+import { HANDLER, IMAGES, programById } from '../content.js';
 import { requestQuickStart } from './player.js';
 import { getState } from '../store.js';
 import {
-  currentLevel,
   suggestedActivity,
   headlineInsight,
   weekSummary,
@@ -37,11 +36,12 @@ function render() {
   const prog = programProgress(program.id);
   const stage = prog.stages.find((s) => s.activity.id === activity.id);
 
-  // Accelerator for the practiced household: once an activity has history,
-  // offer a path straight into the steps that skips the get-ready checklist.
-  const lastSession = state.sessions[0];
-  const lastActivity = lastSession && activityById(lastSession.activityId);
-  const quickLevel = lastActivity && currentLevel(lastActivity);
+  // Accelerator for the practiced household: skip the get-ready checklist and
+  // land on step one. It used to be a card of its own pointing at the last
+  // session's activity, which was both a second route to the same place the
+  // hero already offers and, once activities could be parked, a link into an
+  // activity that is no longer openable. It hangs off the hero now.
+  const practiced = state.sessions.some((s) => s.activityId === activity.id);
 
   const dots = days.map((d, i) =>
     raw(`<i class="${d.count ? 'on' : ''}${i === days.length - 1 ? ' today' : ''}"></i>`)
@@ -49,16 +49,14 @@ function render() {
 
   return html`
     <div class="screen">
+      ${/* The count that used to live here is the same fact the week card
+            states below, and the insight above that stated it a third time.
+            The greeting is a greeting; the nudge stays only while there is
+            nothing else on the screen to act on. */ ''}
       <div class="today-head">
         <div>
           <h1>${greeting()}, ${HANDLER.name}</h1>
-          <p>
-            ${week.count
-              ? `${DOG.name} has practiced ${week.count} ${
-                  week.count === 1 ? 'time' : 'times'
-                } this week`
-              : 'The first session takes about five minutes'}
-          </p>
+          ${week.count ? '' : html`<p>The first session takes about five minutes</p>`}
         </div>
       </div>
 
@@ -74,6 +72,11 @@ function render() {
             <span>${activity.estimatedMinutes} min</span>
           </div>
           <a class="btn btn--lg btn--block" href="#/play/${activity.slug}">Start session</a>
+          ${practiced
+            ? html`<button class="hero-skip" type="button" data-quick="${activity.slug}">
+                Skip the setup, straight to the steps
+              </button>`
+            : ''}
         </div>
       </section>
 
@@ -84,21 +87,31 @@ function render() {
         ${programStrip(prog, { stage })}
       </section>
 
-      ${lastActivity
-        ? html`<button class="quick-row" type="button" data-quick="${lastActivity.slug}">
-            <span>
-              <strong>Jump back in</strong>
-              <small>
-                ${lastActivity.title} · Level ${quickLevel.number}, straight to the steps
-              </small>
-            </span>
-            ${icon('arrow')}
-          </button>`
-        : ''}
-
+      ${/* One card for the week, not two. The insight sentence and the streak
+            card were separate blocks reporting the same seven days: "5 sessions
+            this week. Goal met." sat directly above "5 of 5 sessions this week".
+            The sentence is the reading, the counts and dots are the evidence
+            for it, so they belong in one place. */ ''}
       ${state.sessions.length
         ? html`<section class="section">
-            <div class="insight">${icon('spark')}<p>${headlineInsight()}</p></div>
+            <h2 class="visually-hidden">This week</h2>
+            <div class="card week-card">
+              <div class="insight">${icon('spark')}<p>${headlineInsight()}</p></div>
+              <div class="week-row">
+                <span>
+                  ${week.count} of ${state.weeklyGoal} sessions${streak
+                    ? ` · ${streak} day${streak === 1 ? '' : 's'} in a row`
+                    : ''}
+                </span>
+                <span
+                  class="week-dots"
+                  role="img"
+                  aria-label="Practice on ${days.filter((d) => d.count).length} of the last 7 days"
+                >
+                  ${join(dots)}
+                </span>
+              </div>
+            </div>
           </section>`
         : html`<section class="section">
             <div class="insight insight--start">
@@ -110,39 +123,16 @@ function render() {
             </div>
           </section>`}
 
-      ${/* A streak card before the first session has nothing to report and two
-            ways to say so. Held back until there is something to count. */ ''}
-      ${week.count
-        ? html`<section class="section">
-            <div class="card streak-card">
-              <div>
-                <h3>${week.count} of ${state.weeklyGoal} sessions this week</h3>
-                <p>
-                  ${streak
-                    ? `${streak} day${streak === 1 ? '' : 's'} in a row`
-                    : 'No streak going right now'}
-                </p>
-              </div>
-              <div
-                class="week-dots"
-                role="img"
-                aria-label="Practice on ${days.filter((d) => d.count).length} of the last 7 days"
-              >
-                ${join(dots)}
-              </div>
-            </div>
-          </section>`
-        : ''}
-
-      <section class="section">
-        <h2>Did something happen?</h2>
-        <p class="section-note" style="margin-bottom: var(--s-3)">
-          Log a real arrival or a walk you did not plan for. It counts.
-        </p>
-        <button class="btn btn--quiet btn--block" type="button" data-route="#/moment">
-          ${icon('plus')} Record a moment
-        </button>
-      </section>
+      ${/* A heading and a paragraph to explain one button was more scaffolding
+            than the action needed. The row says what it is and what it is for
+            in the space the button alone used to take. */ ''}
+      <button class="quick-row" type="button" data-route="#/moment">
+        <span>
+          <strong>Record a moment</strong>
+          <small>A real arrival, or a walk you did not plan for. It counts.</small>
+        </span>
+        ${icon('plus')}
+      </button>
 
     </div>
   `;

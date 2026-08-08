@@ -976,22 +976,28 @@ a.visually-hidden:focus {
   stroke-linejoin: round;
 }
 
-.streak-card {
+/* The week, in one card: the reading on top, the evidence for it underneath.
+   These were two stacked blocks saying the same thing in two registers. */
+.week-card {
+  padding: var(--s-4);
+}
+
+.week-card .insight {
+  padding: 0;
+  background: none;
+  border: 0;
+}
+
+.week-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--s-4);
-  padding: var(--s-4);
-}
-
-.streak-card h3 {
-  font-size: var(--step-0);
-}
-
-.streak-card p {
+  margin-top: var(--s-4);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--border);
   color: var(--text-secondary);
   font-size: var(--step--1);
-  margin-top: 2px;
 }
 
 .week-dots {
@@ -2985,6 +2991,37 @@ details.disclosure .disclosure-body {
    36px link that used to sit between the hero metadata and "Start session" —
    a secondary target in the thumb zone directly above the primary button, and
    a second route to a destination the strip already reached. */
+/* The accelerator, folded into the hero. A quiet second option under the
+   primary button rather than a card of its own further down the page. */
+.hero-skip {
+  display: block;
+  width: 100%;
+  min-height: var(--tap);
+  margin-top: var(--s-2);
+  padding: var(--s-2);
+  border: 0;
+  background: none;
+  color: var(--primary);
+  font-family: var(--font);
+  font-size: var(--step--1);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .hero-skip:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.hero-skip:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
 .program-strip-where {
   font-size: 0.6875rem;
   letter-spacing: 0.08em;
