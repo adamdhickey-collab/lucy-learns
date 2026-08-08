@@ -341,10 +341,6 @@ a.visually-hidden:focus {
   padding: 0 var(--s-4) calc(var(--nav-h) + var(--s-6));
 }
 
-.screen--flush {
-  padding-inline: 0;
-}
-
 .screen-head {
   padding: calc(var(--s-5) + env(safe-area-inset-top)) 0 var(--s-4);
 }
@@ -1478,11 +1474,23 @@ details.disclosure .disclosure-body {
   margin-inline: auto;
 }
 
+/* The instruction used to sit under a "Step 3 of 5" eyebrow, which carried the
+   spacing. With that removed as a duplicate of the top bar, the heading came to
+   rest directly on the image. The gap belongs to the figure, so it holds for
+   whatever follows it. */
 .step-figure {
   border-radius: var(--r-lg);
   overflow: hidden;
   background: var(--surface-sunken);
   border: 1px solid var(--border);
+  margin-bottom: var(--s-5);
+}
+
+/* .player-inner is a flex column, so these margins do not collapse into each
+   other the way they would in normal block flow. Without this the screens that
+   still have an eyebrow would get both. */
+.step-figure + .step-count {
+  margin-top: 0;
 }
 
 .step-figure img {
@@ -2801,9 +2809,11 @@ details.disclosure .disclosure-body {
 
 /* The setup node is a smaller mark than an activity: it is the trailhead, not
    a stage. Same tick, less weight. */
+.stage--setup .stage-rail {
+  --node: 26px;
+}
+
 .stage--setup .stage-node {
-  width: 26px;
-  height: 26px;
   margin-top: 4px;
 }
 
@@ -2815,8 +2825,9 @@ details.disclosure .disclosure-body {
   font-size: var(--step-1);
 }
 
+/* The smaller node plus its 4px nudge. */
 .stage--setup .stage-rail::before {
-  top: 30px;
+  top: calc(var(--node) + 4px);
 }
 
 /* --- the stage list ------------------------------------------------------- */
@@ -2840,7 +2851,11 @@ details.disclosure .disclosure-body {
 
 /* --- the rail: numbered nodes joined by a line ---------------------------- */
 
+/* One number for the node, so the rail that joins them starts exactly where
+   they end. These were separate literals: changing a node size left the line
+   floating or overlapping, with nothing to say why. */
 .stage-rail {
+  --node: 34px;
   position: relative;
   flex: 0 0 auto;
   width: 34px;
@@ -2854,7 +2869,7 @@ details.disclosure .disclosure-body {
 .stage-rail::before {
   content: '';
   position: absolute;
-  top: 34px;
+  top: var(--node);
   bottom: calc(var(--s-4) * -1 - var(--s-3));
   left: 50%;
   width: 2px;
@@ -2877,8 +2892,8 @@ details.disclosure .disclosure-body {
   z-index: 1;
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  width: var(--node);
+  height: var(--node);
   border-radius: 50%;
   background: var(--background);
   border: 2px solid var(--border-strong);
@@ -3663,7 +3678,10 @@ details.disclosure .disclosure-body {
   padding: var(--s-5) 0 var(--s-6);
 }
 
+/* The road is drawn at the vertical centre of the stations, so the node size
+   lives here rather than being halved by hand in two places. */
 .route-line {
+  --route-node: 36px;
   position: relative;
   display: flex;
   align-items: flex-start;
@@ -3678,7 +3696,7 @@ details.disclosure .disclosure-body {
 .route-line::before {
   content: '';
   position: absolute;
-  top: 17px;
+  top: calc(var(--route-node) / 2 - 1px);
   left: 8%;
   right: 8%;
   height: 2px;
@@ -3728,8 +3746,8 @@ details.disclosure .disclosure-body {
 .route-node {
   display: grid;
   place-items: center;
-  width: 36px;
-  height: 36px;
+  width: var(--route-node);
+  height: var(--route-node);
   border-radius: 50%;
   background: var(--surface);
   border: 2px solid var(--border-strong);
@@ -4172,4 +4190,45 @@ details.disclosure .disclosure-body {
 .avatar:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 3px;
+}
+
+/* --- reduced motion, the rest of it ---------------------------------------
+   The blocks above cover the pieces added alongside their own features. This
+   sweeps up everything older that was never guarded: the done screen's whole
+   entrance choreography, the sheet and toast slides, and the transforms that
+   move things rather than recolour them.
+
+   Colour and background transitions stay. Reduced motion asks for less
+   movement, not for state changes to stop being legible — a button that
+   changes colour instantly on press still reads as pressed, whereas a button
+   with no feedback at all reads as broken. */
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet,
+  .toast,
+  .recommend .mark,
+  .recommend .mark svg polyline,
+  .recommend .mark svg path,
+  .recommend h1,
+  .recommend > p,
+  .recommend + .stat-row {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Transforms only. `background 0.15s` on the same shorthand is feedback and
+     is deliberately kept. */
+  .btn,
+  .welcome-dots i {
+    transition-property: background, color, border-color;
+  }
+
+  /* These report a value by moving. Landing on it instantly is still correct;
+     sliding to it is the part reduced motion does not want. */
+  .player-top .progress-track > span,
+  .tally-meter > span,
+  details.disclosure summary::after {
+    transition: none;
+  }
 }

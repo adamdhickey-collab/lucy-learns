@@ -273,7 +273,10 @@ twice, so a level can be cleared and still worth repeating. The recommendation s
 - State is never carried by color alone: chips get a check mark, mastery badges
   get a distinct shape.
 - The screen stays awake during a session via the Wake Lock API where supported.
-- `prefers-reduced-motion` disables the sheet animation and all transitions.
+- `prefers-reduced-motion` drops every entrance animation, the splash zoom, the
+  view transitions, and the progress and tally tweens. What survives is opacity:
+  a control that lights up on press still does, because losing that would cost
+  feedback rather than motion.
 - Focus moves to the screen heading on navigation, so a screen reader is told
   the screen changed. It deliberately does not do this on first paint, where
   the browser already announces the document, and headings never show a focus

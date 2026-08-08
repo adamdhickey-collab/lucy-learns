@@ -141,9 +141,27 @@ export function withTransition(update, type = 'fade') {
   }
   document.documentElement.dataset.vt = type;
   const transition = document.startViewTransition(update);
+
   transition.finished.finally(() => {
     delete document.documentElement.dataset.vt;
   });
+
+  // A ViewTransition hands back three promises and creates all of them up
+  // front, so every one it rejects needs a handler or the browser reports an
+  // unhandled rejection. Abandoning a transition rejects them — and two quick
+  // taps on the tab bar abandons one, which made this a steady trickle of
+  // console errors during ordinary use rather than an edge case.
+  //
+  // Catching `finished` alone is not enough: `ready` rejects on its own when a
+  // transition is skipped before it animates, which is most of them here.
+  //
+  // Nothing is broken when this happens. `update()` runs synchronously inside
+  // startViewTransition, so the DOM is already correct and all that was lost is
+  // the animation.
+  const ignore = () => {};
+  transition.finished.catch(ignore);
+  transition.ready.catch(ignore);
+  transition.updateCallbackDone.catch(ignore);
 }
 
 const FOCUSABLE =
