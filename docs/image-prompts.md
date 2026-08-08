@@ -189,6 +189,30 @@ These are the eleven that stop the same picture repeating. Highest value first.
   down-stay on her grey bed well back in the room, watching but settled.
 - **Alt** — "A handler holds a relaxed conversation in the open doorway while Lucy stays settled on her bed."
 
+### A12 · The other three "too excited" images
+- **Source** `images/Calm Door Greetings/24.png` … `26.png` → `img/dg-24.jpg` … `dg-26.jpg` → keys `dg-24`, `dg-25`, `dg-26`
+- **Replaces** `dg-12`, which is currently the `fallbackImage` for **all four**
+  activities. One picture stands behind four different escalations, and the
+  sheet is the screen someone opens when it is going badly — the moment worth
+  getting right.
+- **Prompts** — one each, all in the same entryway:
+  - **dg-24 (for Doorbell Predicts Rewards)** — The handler has moved Lucy
+    several feet further back from the front door, crouched beside her with a
+    hand resting calmly on her shoulder, feeding a treat. The door is shut and
+    quiet. Distance is the point of the image.
+  - **dg-25 (for Stay While the Door Opens and Doorbell Means Place)** — Lucy
+    lies on her grey bed being fed a treat in place by a handler kneeling right
+    beside the bed. The door is closed in the background, forgotten. Rewarding
+    the position, not the door.
+  - **dg-26 (for Controlled Real Greeting)** — A guest steps back out through
+    the front door with a friendly raised hand, leaving, while the handler
+    stays beside Lucy with a hand in her collar. Nobody is upset; the greeting
+    is simply being ended.
+- **Alt** —
+  - "A handler crouches beside Lucy well back from the closed front door and feeds her a treat."
+  - "A handler kneels beside Lucy's bed and feeds her a treat for staying in place."
+  - "A guest steps back out of the doorway with a friendly wave while a handler stays beside Lucy."
+
 ---
 
 ## Priority B — covers for the four planned programs

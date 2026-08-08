@@ -5,6 +5,7 @@
 
 import {
   ACTIVITIES,
+  LIVE_ACTIVITIES,
   DOG,
   INCIDENT_CONTEXTS,
   PROGRAMS,
@@ -68,7 +69,7 @@ function composeShareText(days) {
     `${sessions.length} practice session${sessions.length === 1 ? '' : 's'}` +
       (rate !== null ? `, ${pct(rate)} of repetitions went well` : ''),
   ];
-  ACTIVITIES.forEach((activity) => {
+  LIVE_ACTIVITIES.forEach((activity) => {
     const mine = sessions.filter((s) => s.activityId === activity.id);
     if (!mine.length) return;
     const level = currentLevel(activity);
@@ -111,7 +112,7 @@ function render() {
           : `steady against the previous ${rangeDays} days`
       : null;
 
-  const skills = ACTIVITIES.map((activity) => {
+  const skills = LIVE_ACTIVITIES.map((activity) => {
     const mine = sessions.filter((s) => s.activityId === activity.id);
     if (!mine.length) return null;
     const level = currentLevel(activity);
@@ -206,10 +207,18 @@ function render() {
 
             <section class="section">
               <h2>Where each skill stands</h2>
+              ${/* live.length, not stages.length. Counting the parked ones in
+                    the denominator told the trainer "0 of 4 activities
+                    finished" for a program where three were never available,
+                    which reads as a household that has barely started. */ ''}
               <p class="section-note" style="margin-bottom: var(--s-3)">
                 ${prog.cleared} of ${prog.total} levels cleared across ${prog.program.title},
-                ${prog.finished} of ${prog.stages.length}
-                ${prog.finished === 1 ? 'activity' : 'activities'} finished.
+                ${prog.finished} of ${prog.live.length}
+                ${prog.live.length === 1 ? 'activity' : 'activities'} finished.${prog.soon
+                  ? ` The other ${prog.soon} ${
+                      prog.soon === 1 ? 'activity is' : 'activities are'
+                    } not in the app yet.`
+                  : ''}
               </p>
               <div class="card">
                 <div class="card-body">${join(skills)}</div>

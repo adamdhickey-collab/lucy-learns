@@ -226,7 +226,15 @@ function outcomeNode(prog) {
 function programTrack(prog, currentActivityIndex) {
   const segments = prog.stages.map((stage) => {
     const active = stage.index === currentActivityIndex && stage.state !== STAGE.soon;
-    const pct = stage.total ? Math.round((stage.cleared / stage.total) * 100) : 0;
+    // A parked activity contributes nothing to progress anywhere. It could
+    // still hold cleared levels from before it was parked, and filling its
+    // segment from those put earned progress inside a column labelled "coming
+    // soon" — while the headline count, which excludes them, said otherwise.
+    // stageList already suppresses its pips for exactly this reason.
+    const pct =
+      stage.state === STAGE.soon || !stage.total
+        ? 0
+        : Math.round((stage.cleared / stage.total) * 100);
     return html`<span
       class="track-seg track-seg--${stage.state}${active ? ' track-seg--active' : ''}"
       style="flex-grow: ${stage.total}"
@@ -319,7 +327,7 @@ export function programStrip(prog, { stage = null } = {}) {
  */
 export function routePreview(prog) {
   const stations = prog.stages.map(
-    (stage, i) => html`<li class="route-stop" style="--i: ${i}">
+    (stage, i) => html`<li class="route-stop" style="--i: ${i}; flex-grow: ${stage.total}">
       <span class="route-node">${stage.number}</span>
       <span class="route-label">${stage.activity.shortTitle || stage.number}</span>
     </li>`

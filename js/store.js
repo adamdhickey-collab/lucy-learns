@@ -229,6 +229,14 @@ export function clearAll() {
 export function seedDemoSessions({ force = false } = {}) {
   if (state.seeded && !force) return;
   // Rest days and a double-practice day, so the charts look like real life.
+  // Every row is dg-1, because it is the only activity in the app. Four of
+  // these used to be dg-2, which was parked three releases ago: the example
+  // history then showed days of practice on something the app labels "coming
+  // soon" and refuses to open, and it showed up in the trainer's report. The
+  // demo is the front door for anyone evaluating this, so it has to describe a
+  // household using the app as it actually exists.
+  //
+  // Rest days and a double-practice day, so the charts look like real life.
   const plan = [
     // [daysAgo, hour, activityId, level, reps, successes, arousal, behaviors, assistance]
     [12, 18, 'dg-1', 1, 5, 2, 3, ['barked', 'looked_at_handler'], ['treat_lure']],
@@ -236,11 +244,11 @@ export function seedDemoSessions({ force = false } = {}) {
     [10, 18, 'dg-1', 1, 5, 5, 2, ['looked_at_handler', 'recovered_quickly'], ['none']],
     [8, 17, 'dg-1', 2, 5, 4, 2, ['looked_at_handler', 'four_paws_down'], ['verbal_cue']],
     [7, 19, 'dg-1', 2, 5, 5, 1, ['looked_at_handler', 'recovered_quickly'], ['none']],
-    [5, 18, 'dg-2', 1, 5, 3, 2, ['went_to_place', 'broke_position'], ['leash_guidance']],
-    [4, 9, 'dg-2', 1, 5, 4, 2, ['went_to_place', 'held_place'], ['verbal_cue']],
-    [4, 19, 'dg-1', 3, 5, 4, 2, ['looked_at_handler'], ['verbal_cue']],
-    [2, 18, 'dg-2', 2, 5, 4, 2, ['went_to_place', 'held_place', 'jumped'], ['verbal_cue']],
-    [1, 18, 'dg-2', 2, 5, 5, 1, ['went_to_place', 'held_place', 'recovered_quickly'], ['none']],
+    [5, 18, 'dg-1', 3, 5, 3, 3, ['looked_at_handler', 'barked'], ['reduced_distance']],
+    [4, 9, 'dg-1', 3, 5, 4, 2, ['looked_at_handler'], ['verbal_cue']],
+    [4, 19, 'dg-1', 3, 5, 5, 2, ['looked_at_handler', 'recovered_quickly'], ['none']],
+    [2, 18, 'dg-1', 4, 5, 3, 2, ['looked_at_handler', 'jumped'], ['treat_lure']],
+    [1, 18, 'dg-1', 4, 5, 4, 1, ['looked_at_handler', 'four_paws_down'], ['verbal_cue']],
   ];
 
   state.sessions = plan
@@ -287,7 +295,7 @@ export function seedDemoSessions({ force = false } = {}) {
     },
   ];
 
-  state.levelOverrides = { 'dg-1': 3, 'dg-2': 2 };
+  state.levelOverrides = { 'dg-1': 4 };
   state.seeded = true;
   persist();
 }
