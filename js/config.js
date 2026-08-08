@@ -19,7 +19,15 @@ export const DOG = {
  * only thing that went away is the UI for choosing between people, and the
  * mastery rule that depended on there being more than one.
  */
-export const HANDLER = { id: 'fabiola', name: 'Fabiola' };
+export const HANDLER = {
+  id: 'fabiola',
+  // `name` is what the app calls her — the greeting, the CSV, the report.
+  name: 'Fabiola',
+  // `fullName` exists only so the avatar can derive initials from it rather
+  // than carrying a hardcoded "FH" that would quietly be wrong for the next
+  // household this is set up for.
+  fullName: 'Fabiola Hickey',
+};
 
 /**
  * The professional behind the program. The app is a companion to their

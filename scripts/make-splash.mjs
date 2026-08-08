@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Builds the iOS startup images ("apple-touch-startup-image") from
-// img/splash-source.png.
+// img/source/splash-source.png.
 //
 //   node scripts/make-splash.mjs
 //   cd splash && for f in *.png; do sips -s format jpeg -s formatOptions 85 \
@@ -38,7 +38,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const SOURCE = resolve(root, 'img/splash-source.png');
+const SOURCE = resolve(root, 'img/source/splash-source.png');
 const OUT_DIR = resolve(root, 'splash');
 
 // Portrait screens of iPhones in current circulation.

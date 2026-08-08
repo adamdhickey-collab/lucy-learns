@@ -4105,3 +4105,71 @@ details.disclosure .disclosure-body {
   color: var(--text-secondary);
   font-size: var(--step--1);
 }
+
+/* --- what one rep is, while you are counting them -------------------------
+   Quiet on purpose. The tally and the two answer buttons are the job here;
+   this is a reference you glance at, so it sits between the instruction and
+   the count without competing with either for the thumb. */
+
+.rep-steps {
+  margin: var(--s-3) 0 var(--s-4);
+  padding: var(--s-3) var(--s-4) var(--s-3) calc(var(--s-4) + 1.1em);
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+  font-size: var(--step--1);
+  line-height: 1.45;
+}
+
+.rep-steps li + li {
+  margin-top: 6px;
+}
+
+/* The practice screen's heading. The step screens give this class the full
+   display size because the instruction is the screen; here it is a label above
+   the real content and competes with the count for the eye. */
+.step-instruction--compact {
+  font-size: var(--step-1);
+  line-height: 1.25;
+}
+
+.rep-cue {
+  color: var(--primary-dark);
+  font-style: normal;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* --- handler avatar -------------------------------------------------------
+   Initials, not a silhouette. Nothing in the app uploads a photo, so a generic
+   person icon would be a placeholder for something that never arrives, and
+   initials read as deliberate where a grey head reads as unfinished. */
+
+.avatar {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: var(--tap);
+  height: var(--tap);
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--text-on-dark);
+  font-size: var(--step--1);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  /* Optical centring: uppercase initials have no descenders, so they sit low
+     in the box by a hair without this. */
+  padding-top: 1px;
+}
+
+@media (hover: hover) {
+  .avatar:hover {
+    background: var(--primary-dark);
+  }
+}
+
+.avatar:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}

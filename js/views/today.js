@@ -14,7 +14,7 @@ import {
 // answer a question Today does not ask.
 import { programProgress } from '../program.js';
 import { programStrip } from '../programui.js';
-import { html, raw, join, icon, badge, focusHeading } from '../ui.js';
+import { html, raw, join, icon, badge, initialsOf, focusHeading } from '../ui.js';
 
 const greeting = () => {
   const hour = new Date().getHours();
@@ -53,11 +53,20 @@ function render() {
             states below, and the insight above that stated it a third time.
             The greeting is a greeting; the nudge stays only while there is
             nothing else on the screen to act on. */ ''}
+      ${/* The corner the person switcher used to occupy. Initials rather than
+            a photo: there is no upload anywhere in the app, so a generic
+            silhouette would be a permanent placeholder for something that
+            never arrives. It links to the Lucy tab, which is where the profile
+            and settings already live, so it goes somewhere rather than being
+            decoration. */ ''}
       <div class="today-head">
         <div>
           <h1>${greeting()}, ${HANDLER.name}</h1>
           ${week.count ? '' : html`<p>The first session takes about five minutes</p>`}
         </div>
+        <a class="avatar" href="#/lucy" aria-label="${HANDLER.fullName}, profile and settings">
+          <span aria-hidden="true">${initialsOf(HANDLER.fullName)}</span>
+        </a>
       </div>
 
       ${/* Above the hero on purpose. It used to sit under it, which put it

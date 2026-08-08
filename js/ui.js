@@ -306,3 +306,21 @@ export function focusHeading(root, _params, options = {}) {
   if (options.isRefresh) return;
   focusOnNavigate(root.querySelector('h1, h2'));
 }
+
+/**
+ * Initials for the avatar, from whatever name we have.
+ *
+ * First and last where there are two words, first letter where there is one,
+ * so a household set up with a single name still gets a sensible mark instead
+ * of a blank circle. Latin-only is a real limitation of taking the first
+ * character of each word, but it matches the audience this install has.
+ */
+export function initialsOf(fullName) {
+  const parts = String(fullName || '')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  if (!parts.length) return '';
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}

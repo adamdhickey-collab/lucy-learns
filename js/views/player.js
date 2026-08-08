@@ -141,7 +141,6 @@ function topBar(label, value, max) {
 
 function readyScreen(activity, level) {
   const cover = IMAGES[activity.coverImage];
-  const cues = [...new Set(stepsForLevel(activity, level).map((s) => s.cue).filter(Boolean))];
 
   return html`
     ${topBar('Get ready', 0, 1)}
@@ -171,14 +170,11 @@ function readyScreen(activity, level) {
           </div>
         </div>
 
-        ${cues.length
-          ? html`<div class="say" style="margin-top: var(--s-5)">
-              <span class="label">Say</span>
-              ${join(cues.map((c) => html`<span class="cue">“${resolveCue(c)}”</span>`))}
-            </div>`
-          : ''}
-
-        <p class="section-note" style="margin-top: var(--s-4)">
+        ${/* No cue list here. Every cue in the level shown together under one
+              "Say" heading read as a line to deliver before starting, when they
+              belong to four separate moments — the bed, the stay, the door, the
+              release. Each one appears on the step that needs it. */ ''}
+        <p class="section-note" style="margin-top: var(--s-5)">
           About ${activity.estimatedMinutes} minutes. Aim for ${level.reps} repetitions and
           stop early if she is still doing well.
         </p>
@@ -267,12 +263,32 @@ function practiceScreen(activity, level) {
   const target = level.reps;
   const met = count >= target;
 
+  // What one repetition actually is, kept on screen while they are counting.
+  // The steps were a walkthrough you paged through once and then left behind,
+  // and by rep four, with a dog on the other end of a leash, the order goes.
+  // "Steps" in the footer still goes back for the full-screen pictures; this is
+  // the version you can glance at without losing your count.
+  const repSteps = stepsForLevel(activity, level).map(
+    (step) => html`<li>
+      ${step.instruction}${step.cue
+        ? html` <em class="rep-cue">“${resolveCue(step.cue)}”</em>`
+        : ''}
+    </li>`
+  );
+
   return html`
     ${topBar('Counting reps', count, target)}
     <div class="player-scroll">
       <div class="player-inner">
         <p class="step-count">Level ${level.number} · ${level.title}</p>
-        <h1 class="step-instruction">Run a rep, then tap how it went.</h1>
+        ${/* Smaller than a step instruction. On the step screens that heading
+              is the whole screen; here the count is, and the list below says
+              what the heading used to. At full size it pushed "Lucy is too
+              excited" past the fold, which is the one control that can never
+              need a scroll. */ ''}
+        <h1 class="step-instruction step-instruction--compact">Run a rep, then tap how it went.</h1>
+
+        <ol class="rep-steps">${join(repSteps)}</ol>
 
         <div class="tally">
           <p class="tally-count">
