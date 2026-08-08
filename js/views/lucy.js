@@ -99,7 +99,7 @@ function render() {
           <button class="setting-row" type="button" data-replay>
             <span>
               How this works
-              <small>Replay the four-screen intro</small>
+              <small>Replay the three-screen intro</small>
             </span>
             <span class="value">${icon('arrow')}</span>
           </button>

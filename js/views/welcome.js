@@ -1,6 +1,10 @@
-// First run. Four short panels, then a choice: start empty or look around
+// First run. Three short panels, then a choice: start empty or look around
 // with example data first. Nothing is seeded until that choice is made, so the
 // app can be handed to someone genuinely blank.
+//
+// Everything below counts off PANELS, so adding or cutting a panel is an edit
+// to that array alone: the dots, the "step N of M" label, the Skip target, and
+// the last-panel button copy all follow.
 
 import { DOG, IMAGES, TRAINER } from '../content.js';
 import { completeOnboarding, seedDemoSessions } from '../store.js';
@@ -32,14 +36,7 @@ const PANELS = [
     eyebrow: 'Logging it',
     title: 'One tap when you finish',
     body: `Answer how ${DOG.name} did and you are done. Add repetitions, behaviours, and notes only if you want to.`,
-    note: 'The app then tells you whether to repeat the level or move up.',
-  },
-  {
-    image: 'dg-11',
-    eyebrow: 'Reading it back',
-    title: 'It tells you when to move up',
-    body: `A level only counts as reliable once ${DOG.name} has held it three times, on three different days, without much help from you.`,
-    note: 'Change the cue words any time on the Lucy tab.',
+    note: 'It then tells you whether to repeat the level or move up.',
   },
 ];
 

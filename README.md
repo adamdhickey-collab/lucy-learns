@@ -48,8 +48,8 @@ It then runs full screen, works offline, and keeps its own data.
 
 ## First run, and demoing it to someone
 
-On a fresh install the app opens on a four-panel welcome that explains what it
-is, how a session runs, how logging works, and how the two of you share it.
+On a fresh install the app opens on a three-panel welcome that explains what it
+is, how a session runs, and how logging works.
 Nothing is seeded until you answer the last question:
 
 - **Start empty** — no history at all. Your first session is genuinely the
@@ -68,7 +68,7 @@ The same section has two narrower options:
   your real ones.
 - **Delete all logs** — clears sessions and moments but keeps your cue wording.
 
-**Lucy → Settings → How this works** replays the four intro panels any time.
+**Lucy → Settings → How this works** replays the three intro panels any time.
 
 ## Where the data lives
 
