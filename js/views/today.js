@@ -1,6 +1,6 @@
-import { DOG, MEMBERS, IMAGES, activityById, programById } from '../content.js';
+import { DOG, HANDLER, IMAGES, activityById, programById } from '../content.js';
 import { requestQuickStart } from './player.js';
-import { getState, activeMember, setActiveMember } from '../store.js';
+import { getState } from '../store.js';
 import {
   currentLevel,
   suggestedActivity,
@@ -15,7 +15,7 @@ import {
 // answer a question Today does not ask.
 import { programProgress } from '../program.js';
 import { programStrip } from '../programui.js';
-import { html, raw, join, icon, badge, focusHeading, refreshApp } from '../ui.js';
+import { html, raw, join, icon, badge, focusHeading } from '../ui.js';
 
 const greeting = () => {
   const hour = new Date().getHours();
@@ -26,7 +26,6 @@ const greeting = () => {
 
 function render() {
   const state = getState();
-  const me = activeMember();
   const next = suggestedActivity();
   const { activity, level } = next;
   const cover = IMAGES[activity.coverImage];
@@ -44,11 +43,6 @@ function render() {
   const lastActivity = lastSession && activityById(lastSession.activityId);
   const quickLevel = lastActivity && currentLevel(lastActivity);
 
-  const who = MEMBERS.map(
-    (m) => html`<button type="button" data-member="${m.id}"
-      aria-pressed="${String(m.id === me.id)}">${m.name}</button>`
-  );
-
   const dots = days.map((d, i) =>
     raw(`<i class="${d.count ? 'on' : ''}${i === days.length - 1 ? ' today' : ''}"></i>`)
   );
@@ -57,7 +51,7 @@ function render() {
     <div class="screen">
       <div class="today-head">
         <div>
-          <h1>${greeting()}, ${me.name}</h1>
+          <h1>${greeting()}, ${HANDLER.name}</h1>
           <p>
             ${week.count
               ? `${DOG.name} has practiced ${week.count} ${
@@ -65,10 +59,6 @@ function render() {
                 } this week`
               : 'The first session takes about five minutes'}
           </p>
-        </div>
-        <div class="who-field">
-          <span class="who-label" id="who-label">Practicing</span>
-          <div class="who" role="group" aria-labelledby="who-label">${join(who)}</div>
         </div>
       </div>
 
@@ -167,12 +157,6 @@ function mount(root) {
     });
   }
 
-  root.querySelectorAll('[data-member]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      setActiveMember(btn.dataset.member);
-      refreshApp();
-    });
-  });
   focusHeading(root);
 }
 

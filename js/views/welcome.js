@@ -36,9 +36,9 @@ const PANELS = [
   },
   {
     image: 'dg-11',
-    eyebrow: 'Both of you',
-    title: 'Switch who is practicing',
-    body: `Every session records who ran it. ${DOG.name} only counts as reliable at a level once you have both done it, on different days.`,
+    eyebrow: 'Reading it back',
+    title: 'It tells you when to move up',
+    body: `A level only counts as reliable once ${DOG.name} has held it three times, on three different days, without much help from you.`,
     note: 'Change the cue words any time on the Lucy tab.',
   },
 ];

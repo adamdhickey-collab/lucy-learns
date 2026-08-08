@@ -73,9 +73,9 @@ The same section has two narrower options:
 ## Where the data lives
 
 Everything is in `localStorage` under `lucy-learns/v1` on that one device.
-Nothing leaves the phone. There is no account and no sync — Adam and Fabiola
-each have their own copy, and the person switcher on Today records who ran a
-session.
+Nothing leaves the phone. There is no account and no sync, so this device holds
+the only copy. The MVP is built for a single handler; sessions still carry a
+`completedByUserId` so a second person can be added later without a migration.
 
 `Lucy → Export progress` writes a CSV of every session and moment, which is the
 thing to send The Canine Coach.
@@ -87,7 +87,7 @@ from `Lucy → Starting over`.
 
 ```
 index.html               app shell
-js/config.js             the household: dog, people, trainer — one file per client
+js/config.js             the household: dog, handler, trainer — one file per client
 manifest.webmanifest     PWA manifest
 sw.js                    offline cache
 css/app.css              design tokens, then primitives, then screens
@@ -141,7 +141,7 @@ app is instructional images, and they need to work read aloud.
 
 ## Setting up a new client
 
-The install is two things: `js/config.js` (the dog, the household members, and
+The install is two things: `js/config.js` (the dog, the handler, and
 the trainer's contact) and the program content in `js/content.js`. Nothing
 about a new client touches a screen. The trainer's name and phone flow into
 the welcome, the Lucy tab, the "too excited" escalation, and the lesson
@@ -204,7 +204,7 @@ Mastery, per level:
 | Learning     | under 50% of reps successful                             |
 | Improving    | 50–74%                                                   |
 | Almost there | 75–89%, or 90%+ with any nipping                         |
-| Reliable     | 90%+ across three sessions, on two or more days, with two different people, minimal assistance, no jumping or nipping |
+| Reliable     | 90%+ across three sessions, on three or more days, minimal assistance, no jumping or nipping |
 
 Advancing a level is recommended when the last two sessions each hit 80%+, with
 no nipping and arousal of 3 or lower. The recommendation screen always offers

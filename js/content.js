@@ -4,7 +4,7 @@
 
 // Who this install belongs to lives in config.js; re-exported here so views
 // keep a single import point for content and configuration alike.
-export { DOG, MEMBERS, TRAINER } from './config.js';
+export { DOG, HANDLER, TRAINER } from './config.js';
 
 // ---------------------------------------------------------------------------
 // Images

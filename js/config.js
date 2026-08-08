@@ -11,10 +11,15 @@ export const DOG = {
   about: 'Friendly and affectionate. Gets over-aroused around arrivals and unfamiliar people.',
 };
 
-export const MEMBERS = [
-  { id: 'adam', name: 'Adam' },
-  { id: 'fabiola', name: 'Fabiola' },
-];
+/**
+ * One handler for the MVP.
+ *
+ * Sessions still carry `completedByUserId`, so the stored shape and the CSV
+ * the trainer receives do not change if a second person is added later. The
+ * only thing that went away is the UI for choosing between people, and the
+ * mastery rule that depended on there being more than one.
+ */
+export const HANDLER = { id: 'fabiola', name: 'Fabiola' };
 
 /**
  * The professional behind the program. The app is a companion to their

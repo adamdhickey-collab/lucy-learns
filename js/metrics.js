@@ -58,11 +58,16 @@ export function masteryFor(activityId, levelNumber) {
   if (rate < 0.9 || nipped > 0) return MASTERY.almost;
 
   // Reliable is deliberately hard: it needs repetition across days and contexts.
+  //
+  // This used to also require two different handlers, because a behaviour that
+  // only holds for one person has not generalised. With a single handler that
+  // clause could never be satisfied and Reliable would be unreachable, so the
+  // spread moved onto the axis that is still available: three separate days
+  // rather than two. The bar stays high, and it stays earnable.
   const recent = sessions.slice(0, 3);
   const days = new Set(recent.map((s) => s.startedAt.slice(0, 10))).size;
-  const people = new Set(recent.map((s) => s.completedByUserId)).size;
   const light = recent.every((s) => !heavyAssist(s));
-  if (recent.length >= 3 && days >= 2 && people >= 2 && light && !nipped && !jumped) {
+  if (recent.length >= 3 && days >= 3 && light && !nipped && !jumped) {
     return MASTERY.reliable;
   }
   return MASTERY.almost;

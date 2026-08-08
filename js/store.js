@@ -11,7 +11,7 @@ import {
   INCIDENT_CONTEXTS,
   INCIDENT_HELPERS,
   INCIDENT_RESPONSES,
-  MEMBERS,
+  HANDLER,
   RECOVERY_BANDS,
 } from './content.js';
 
@@ -19,7 +19,6 @@ const KEY = 'lucy-learns/v1';
 
 const emptyState = () => ({
   version: 1,
-  activeMemberId: MEMBERS[0].id,
   commands: DEFAULT_COMMANDS.map((c) => ({ ...c })),
   sessions: [],
   incidents: [],
@@ -82,15 +81,12 @@ export const subscribe = (fn) => {
 const uid = () =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 
-// --- members ---------------------------------------------------------------
+// --- handler ---------------------------------------------------------------
 
-export const activeMember = () =>
-  MEMBERS.find((m) => m.id === state.activeMemberId) || MEMBERS[0];
-
-export function setActiveMember(id) {
-  state.activeMemberId = id;
-  persist();
-}
+// One handler, from config. Kept as a function so callers do not have to care
+// whether this is stored state or a constant, which is what it becomes again
+// the day a second person is added back.
+export const activeMember = () => HANDLER;
 
 // --- sessions --------------------------------------------------------------
 
@@ -98,7 +94,7 @@ export function addSession(session) {
   const record = {
     id: uid(),
     dogId: 'lucy',
-    completedByUserId: state.activeMemberId,
+    completedByUserId: HANDLER.id,
     startedAt: new Date().toISOString(),
     ...session,
   };
@@ -111,7 +107,7 @@ export function addIncident(incident) {
   const record = {
     id: uid(),
     dogId: 'lucy',
-    completedByUserId: state.activeMemberId,
+    completedByUserId: HANDLER.id,
     occurredAt: new Date().toISOString(),
     ...incident,
   };
@@ -221,7 +217,7 @@ export function startFresh() {
 
 /** Wipe the logs but keep the household set up and skip the welcome. */
 export function clearAll() {
-  const keep = { commands: state.commands, activeMemberId: state.activeMemberId };
+  const keep = { commands: state.commands };
   state = { ...emptyState(), ...keep, onboarded: true, seeded: true };
   persist();
 }
@@ -234,21 +230,21 @@ export function seedDemoSessions({ force = false } = {}) {
   if (state.seeded && !force) return;
   // Rest days and a double-practice day, so the charts look like real life.
   const plan = [
-    // [daysAgo, hour, activityId, level, reps, successes, arousal, behaviors, assistance, member]
-    [12, 18, 'dg-1', 1, 5, 2, 3, ['barked', 'looked_at_handler'], ['treat_lure'], 'adam'],
-    [11, 19, 'dg-1', 1, 5, 3, 3, ['looked_at_handler', 'barked'], ['treat_lure'], 'fabiola'],
-    [10, 18, 'dg-1', 1, 5, 5, 2, ['looked_at_handler', 'recovered_quickly'], ['none'], 'adam'],
-    [8, 17, 'dg-1', 2, 5, 4, 2, ['looked_at_handler', 'four_paws_down'], ['verbal_cue'], 'adam'],
-    [7, 19, 'dg-1', 2, 5, 5, 1, ['looked_at_handler', 'recovered_quickly'], ['none'], 'fabiola'],
-    [5, 18, 'dg-2', 1, 5, 3, 2, ['went_to_place', 'broke_position'], ['leash_guidance'], 'adam'],
-    [4, 9, 'dg-2', 1, 5, 4, 2, ['went_to_place', 'held_place'], ['verbal_cue'], 'adam'],
-    [4, 19, 'dg-1', 3, 5, 4, 2, ['looked_at_handler'], ['verbal_cue'], 'fabiola'],
-    [2, 18, 'dg-2', 2, 5, 4, 2, ['went_to_place', 'held_place', 'jumped'], ['verbal_cue'], 'adam'],
-    [1, 18, 'dg-2', 2, 5, 5, 1, ['went_to_place', 'held_place', 'recovered_quickly'], ['none'], 'fabiola'],
+    // [daysAgo, hour, activityId, level, reps, successes, arousal, behaviors, assistance]
+    [12, 18, 'dg-1', 1, 5, 2, 3, ['barked', 'looked_at_handler'], ['treat_lure']],
+    [11, 19, 'dg-1', 1, 5, 3, 3, ['looked_at_handler', 'barked'], ['treat_lure']],
+    [10, 18, 'dg-1', 1, 5, 5, 2, ['looked_at_handler', 'recovered_quickly'], ['none']],
+    [8, 17, 'dg-1', 2, 5, 4, 2, ['looked_at_handler', 'four_paws_down'], ['verbal_cue']],
+    [7, 19, 'dg-1', 2, 5, 5, 1, ['looked_at_handler', 'recovered_quickly'], ['none']],
+    [5, 18, 'dg-2', 1, 5, 3, 2, ['went_to_place', 'broke_position'], ['leash_guidance']],
+    [4, 9, 'dg-2', 1, 5, 4, 2, ['went_to_place', 'held_place'], ['verbal_cue']],
+    [4, 19, 'dg-1', 3, 5, 4, 2, ['looked_at_handler'], ['verbal_cue']],
+    [2, 18, 'dg-2', 2, 5, 4, 2, ['went_to_place', 'held_place', 'jumped'], ['verbal_cue']],
+    [1, 18, 'dg-2', 2, 5, 5, 1, ['went_to_place', 'held_place', 'recovered_quickly'], ['none']],
   ];
 
   state.sessions = plan
-    .map(([days, hour, activityId, level, reps, ok, arousal, behaviors, assistance, member]) => {
+    .map(([days, hour, activityId, level, reps, ok, arousal, behaviors, assistance]) => {
       const when = new Date();
       when.setDate(when.getDate() - days);
       when.setHours(hour, 15, 0, 0);
@@ -267,7 +263,7 @@ export function seedDemoSessions({ force = false } = {}) {
         assistanceUsed: assistance,
         context: { location: 'home', trigger: 'imaginary_guest', distractionLevel: level },
         note: '',
-        completedByUserId: member,
+        completedByUserId: HANDLER.id,
         demo: true,
       };
     })
@@ -286,7 +282,7 @@ export function seedDemoSessions({ force = false } = {}) {
       helpers: ['leash', 'treats'],
       recoveryBand: '30_60',
       note: 'Neighbor stopped by unannounced. She recovered once she was on her bed.',
-      completedByUserId: 'adam',
+      completedByUserId: HANDLER.id,
       demo: true,
     },
   ];
@@ -312,10 +308,9 @@ const labelFrom = (list, id) => {
   return found ? found.label : id;
 };
 
-const memberName = (id) => {
-  const member = MEMBERS.find((m) => m.id === id);
-  return member ? member.name : id;
-};
+// Single-handler install: anything on record was run by them, including rows
+// written before the app stopped asking who was practicing.
+const memberName = () => HANDLER.name;
 
 const prettyDate = (iso) =>
   new Date(iso).toLocaleString(undefined, {

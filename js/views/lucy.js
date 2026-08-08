@@ -1,11 +1,9 @@
-import { DOG, MEMBERS, PROGRAMS, TRAINER } from '../content.js';
+import { DOG, PROGRAMS, TRAINER } from '../content.js';
 import { downloadCsv } from './report.js';
 import {
   getState,
   updateCommand,
   setWeeklyGoal,
-  setActiveMember,
-  activeMember,
   hasDemoData,
   clearDemoData,
   clearAll,
@@ -18,7 +16,6 @@ import { html, join, icon, focusHeading, toast, confirmSheet } from '../ui.js';
 
 function render() {
   const state = getState();
-  const me = activeMember();
   const program = PROGRAMS[0];
 
   const cues = state.commands.map(
@@ -26,11 +23,6 @@ function render() {
       <label class="situation" for="cue-${c.id}">${c.situation}</label>
       <input id="cue-${c.id}" type="text" value="${c.cue}" data-cue="${c.id}" />
     </div>`
-  );
-
-  const who = MEMBERS.map(
-    (m) => html`<button type="button" data-member="${m.id}"
-      aria-pressed="${String(m.id === me.id)}">${m.name}</button>`
   );
 
   return html`
@@ -50,14 +42,6 @@ function render() {
           </div>
         </div>
       </div>
-
-      <section class="section">
-        <h2>Who is practicing</h2>
-        <p class="section-note" style="margin-bottom: var(--s-3)">
-          Every session records who ran it. That is how “Reliable” gets earned.
-        </p>
-        <div class="who" role="group" aria-label="Active household member">${join(who)}</div>
-      </section>
 
       <section class="section">
         <h2>Commands we use</h2>
@@ -168,9 +152,8 @@ function render() {
         <div class="card-body">
           <h3 style="font-size: var(--step-0)">This device only</h3>
           <p class="section-note" style="margin-top: var(--s-2)">
-            Sessions are saved in this browser and nowhere else. They do not sync between
-            phones, so Adam and Fabiola each build their own log. Export a copy if you want
-            them combined, or before you clear Safari's data.
+            Sessions are saved in this browser and nowhere else. Nothing syncs, so this
+            phone holds the only copy. Export one before you clear Safari's data.
           </p>
         </div>
       </div>
@@ -195,13 +178,6 @@ function mount(root) {
     else e.currentTarget.value = getState().commands.find(
       (c) => c.id === e.currentTarget.dataset.cue
     ).cue;
-  });
-
-  on('[data-member]', 'click', (e) => {
-    setActiveMember(e.currentTarget.dataset.member);
-    root.querySelectorAll('[data-member]').forEach((b) =>
-      b.setAttribute('aria-pressed', String(b.dataset.member === e.currentTarget.dataset.member))
-    );
   });
 
   on('[data-goal]', 'click', (e) => {

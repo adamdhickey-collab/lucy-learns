@@ -116,8 +116,8 @@ function setupNode() {
         <span class="stage-state">Ready</span>
         <span class="stage-top"><strong>Before you start</strong></span>
         <span class="stage-purpose">
-          ${cues} cue words are set and both of you are on the app. Change any of the
-          wording on the ${DOG.name} tab and every activity updates.
+          ${cues} cue words are set and ready to use. Change any of the wording on the
+          ${DOG.name} tab and every activity updates.
         </span>
       </span>
     </div>

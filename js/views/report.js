@@ -7,7 +7,6 @@ import {
   ACTIVITIES,
   DOG,
   INCIDENT_CONTEXTS,
-  MEMBERS,
   PROGRAMS,
   TRAINER,
 } from '../content.js';
@@ -29,11 +28,6 @@ const RANGES = [
   { days: 14, label: 'Two weeks' },
   { days: 30, label: 'Thirty days' },
 ];
-
-const memberName = (id) => {
-  const member = MEMBERS.find((m) => m.id === id);
-  return member ? member.name : id;
-};
 
 const since = (days) => {
   const d = new Date();
@@ -108,11 +102,6 @@ function render() {
   const rate = successRate(sessions);
   const priorRate = successRate(prior);
 
-  const byMember = MEMBERS.map((m) => ({
-    name: m.name,
-    count: sessions.filter((s) => s.completedByUserId === m.id).length,
-  })).filter((m) => m.count > 0);
-
   const trend =
     rate !== null && priorRate !== null
       ? rate - priorRate >= 0.03
@@ -149,7 +138,6 @@ function render() {
       .filter((s) => s.note)
       .map((s) => ({
         at: s.startedAt,
-        who: memberName(s.completedByUserId),
         where: ACTIVITIES.find((a) => a.id === s.activityId)?.title || 'Practice',
         text: s.note,
       })),
@@ -157,7 +145,6 @@ function render() {
       .filter((i) => i.note)
       .map((i) => ({
         at: i.occurredAt,
-        who: memberName(i.completedByUserId),
         where:
           INCIDENT_CONTEXTS.find((c) => c.id === i.context)?.label || 'Real life',
         text: i.note,
@@ -208,9 +195,6 @@ function render() {
                 <div class="metric">
                   <b>${sessions.length}</b>
                   <span>${sessions.length === 1 ? 'Session' : 'Sessions'}</span>
-                  ${byMember.length
-                    ? html`<small>${byMember.map((m) => `${m.name} ${m.count}`).join(' · ')}</small>`
-                    : ''}
                 </div>
                 <div class="metric">
                   <b>${pct(rate)}</b>
@@ -261,7 +245,7 @@ function render() {
                             <span class="when">${relativeDay(new Date(note.at))}</span>
                             <div class="log-body">
                               <strong>${note.where}</strong>
-                              <p>“${note.text}” — ${note.who}</p>
+                              <p>“${note.text}”</p>
                             </div>
                           </div>`
                         )

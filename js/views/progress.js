@@ -137,8 +137,7 @@ function render() {
         <div class="log-body">
           <strong>${activity ? activity.title : 'Session'}</strong>
           <p>
-            Level ${s.levelNumber} · ${s.successfulRepetitions}/${s.repetitions} went well ·
-            ${s.completedByUserId === 'adam' ? 'Adam' : 'Fabiola'}
+            Level ${s.levelNumber} · ${s.successfulRepetitions}/${s.repetitions} went well
           </p>
           ${tags.length ? html`<div class="tag-line">${join(tags)}</div>` : ''}
           ${s.note ? html`<p>“${s.note}”</p>` : ''}
@@ -267,8 +266,8 @@ function render() {
               </div>
               <p class="section-note">
                 A level counts as cleared at 75% success, or once you have moved past it.
-                Reliable is higher still: 90% across three sessions, on two different days,
-                with both of you.
+                Reliable is higher still. 90% across three sessions, on three different
+                days, without heavy help.
               </p>
               <a class="btn btn--quiet btn--block" href="#/program/${prog.program.id}"
                 style="margin-top: var(--s-4)">
