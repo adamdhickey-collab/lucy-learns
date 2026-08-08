@@ -262,7 +262,12 @@ function stageNodes(prog, { currentActivityIndex = -1, compact = false } = {}) {
     ${join(stops)}
     <span class="route-stop route-stop--end" style="--i: ${prog.stages.length}">
       <span class="route-node">${icon('spark')}</span>
-      <span class="route-label">${prog.program.outcome ? 'Calm hello' : 'Done'}</span>
+      ${/* One word, like every other label in the row. "Calm hello" was the
+            only two-word label here, and being the rightmost it wrapped and
+            forced the whole row to reserve a second line. "Goal" also says
+            what this stop is rather than restating the program's name, which
+            the card above it already carries. */ ''}
+      <span class="route-label">${prog.program.outcome ? 'Goal' : 'Done'}</span>
     </span>
   </span>`;
 }

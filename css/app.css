@@ -882,8 +882,11 @@ a.visually-hidden:focus {
   padding: calc(var(--s-5) + env(safe-area-inset-top)) 0 var(--s-4);
 }
 
+/* The same size as every other screen's h1. It sat one step down, which made
+   the one heading that greets the household by name the quietest one in the
+   app. */
 .today-head h1 {
-  font-size: var(--step-2);
+  font-size: var(--step-3);
   text-wrap: balance;
 }
 
@@ -908,7 +911,12 @@ a.visually-hidden:focus {
 
 .hero img {
   width: 100%;
-  aspect-ratio: 16 / 10;
+  /* Today has to fit a greeting, the program row, and a whole activity card
+     with its button above the tab bar on a 812pt phone. The illustration is
+     the one element here that can give up height without losing information,
+     so it is the one that does. Cropped rather than scaled, and the focal
+     point stays where it was. */
+  aspect-ratio: 16 / 7;
   object-fit: cover;
   object-position: center 42%;
   background: var(--surface-sunken);
@@ -3300,15 +3308,25 @@ details.disclosure .disclosure-body {
   height: 15px;
 }
 
-/* Marks only, no words. The strip is a summary inside a link that already
-   says "Activity 1 of 4" above it and names the activity in the card below;
-   the welcome taught which mark is which, and the map is one tap away with
-   the full titles. Spelling them out again cost a two-line "CALM HELLO" and
-   pushed Today's primary button under the tab bar, which is a worse trade
-   than a row of marks. The row stays aria-hidden behind the track's own
-   label, so nothing is lost to a screen reader. */
+/* Every mark says its own name. This row went wordless for a build because
+   spelling the labels out cost a two-line "CALM HELLO" and pushed Today's
+   primary button under the tab bar — but the fix for that was to make the
+   last label one word like the rest, not to drop all five. A mark nobody can
+   name is decoration.
+
+   One line, and never more: these are single words by design, and a wrap here
+   would push the button back down. */
 .route-line.route-line--compact .route-label {
-  display: none;
+  font-size: 0.625rem;
+  letter-spacing: 0.04em;
+  min-height: 0;
+  white-space: nowrap;
+}
+
+/* The mark and its word are one object, so they sit closer to each other than
+   the row does to anything else. */
+.route-line.route-line--compact .route-stop {
+  gap: 3px;
 }
 
 /* The road behind the compact row is shorter than the one on the welcome,
@@ -3850,9 +3868,10 @@ details.disclosure .disclosure-body {
      lets a long label sail past the station's width instead of wrapping.
      "Calm hello" reached within 2px of the screen edge that way. */
   max-width: 100%;
-  /* Two lines reserved whether or not a label uses them, so the one that does
-     wrap does not shove its own level count out of line with the rest. */
-  min-height: 2.6em;
+  /* Every label is a single word now, so nothing wraps and nothing needs a
+     second line held open for it. This used to reserve 2.6em for the sake of
+     "Calm hello", which left an empty line under all five. */
+  white-space: nowrap;
 }
 
 .route-stop--active .route-label,
@@ -3889,13 +3908,10 @@ details.disclosure .disclosure-body {
   stroke-linejoin: round;
 }
 
-/* The only two-word label, and the rightmost, so on the narrowest phone it ran
-   to within a few pixels of the screen edge while every other station sat
-   comfortably inside its own. Narrow enough to break after the first word; the
-   reserved second line means nothing below it moves. */
+/* Gold, like the node above it. The width cap this used to carry was there to
+   break "Calm hello" after its first word; the label is one word now. */
 .route-stop--end .route-label {
   color: var(--reward-text);
-  max-width: 7ch;
 }
 
 /* The staggered arrival is the whole effect, so reduced motion drops it
