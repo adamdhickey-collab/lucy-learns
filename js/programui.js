@@ -303,3 +303,39 @@ export function programStrip(prog, { stage = null } = {}) {
     ${icon('arrow')}
   </a>`;
 }
+
+/**
+ * The route, drawn once before anything has been practiced.
+ *
+ * Games show you the board before you play. The welcome used to explain the
+ * app in prose and then drop the household onto Today, where the shape of what
+ * they had signed up for had to be inferred from a strip and a card. This is
+ * the same four activities the map and the track use, from the same data, laid
+ * out as a road with the finish line on the end of it.
+ *
+ * Nothing here is progress — on first run there is none — so every station is
+ * drawn empty. It is the size and shape of the job, not a score.
+ */
+export function routePreview(prog) {
+  const stations = prog.stages.map(
+    (stage, i) => html`<li class="route-stop" style="--i: ${i}">
+      <span class="route-node">${stage.number}</span>
+      <span class="route-label">${stage.activity.shortTitle || stage.number}</span>
+      <span class="route-levels">${stage.total} levels</span>
+    </li>`
+  );
+
+  const outcome = prog.program.outcome;
+  const allLevels = prog.stages.reduce((n, s) => n + s.total, 0);
+
+  return html`<div class="route">
+    <ol class="route-line" aria-label="${prog.stages.length} activities, ${allLevels} levels, ending in ${outcome ? outcome.title : 'the finish'}">
+      ${join(stations)}
+      <li class="route-stop route-stop--end" style="--i: ${prog.stages.length}">
+        <span class="route-node">${icon('spark')}</span>
+        <span class="route-label">${outcome ? 'Calm hello' : 'Done'}</span>
+        <span class="route-levels">&nbsp;</span>
+      </li>
+    </ol>
+  </div>`;
+}

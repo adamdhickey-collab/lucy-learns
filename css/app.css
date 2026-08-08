@@ -3298,8 +3298,12 @@ details.disclosure .disclosure-body {
   box-shadow: inset 0 0 0 1px var(--border);
 }
 
+/* Same weight as the rest. Greying these to --border-strong measured 1.64:1,
+   which is the third time in this app that muting a state by fading its text
+   has failed AA. The empty bar above the label already says "not yet"; the
+   label only has to stay readable. */
 .track-seg--soon .track-label {
-  color: var(--border-strong);
+  color: var(--text-secondary);
 }
 
 /* The one being practiced. Taller and named in the accent, so the eye lands
@@ -3693,5 +3697,163 @@ details.disclosure .disclosure-body {
 
   .screen {
     padding-bottom: 0;
+  }
+}
+
+/* =========================================================================
+   The route
+   Shown once, on the last welcome panel: the whole program as a road with the
+   finish line on the end. Same four activities as the map and the track, from
+   the same data, drawn empty because nothing has been practiced yet.
+   ========================================================================= */
+
+.route {
+  padding: var(--s-5) 0 var(--s-6);
+}
+
+.route-line {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* The road itself, behind the stations. Drawn left to right once, so the eye
+   travels the route in the direction it will be walked. */
+.route-line::before {
+  content: '';
+  position: absolute;
+  top: 17px;
+  left: 8%;
+  right: 8%;
+  height: 2px;
+  background: var(--border-strong);
+  transform-origin: left center;
+  animation: route-draw 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes route-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.route-stop {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-2);
+  /* Each station lands after the road reaches it. --i is its place in line. */
+  animation: route-stop-in 460ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
+  animation-delay: calc(260ms + var(--i) * 110ms);
+}
+
+@keyframes route-stop-in {
+  from {
+    opacity: 0;
+    transform: translateY(9px) scale(0.86);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.route-node {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--border-strong);
+  color: var(--text-secondary);
+  font-size: var(--step--1);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The first one is where they will actually start, so it is the one that
+   looks live rather than pending. */
+.route-stop:first-child .route-node {
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-wash);
+}
+
+.route-label {
+  font-size: 0.625rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-align: center;
+  line-height: 1.3;
+  /* The column centres its children, which sizes them to their content and
+     lets a long label sail past the station's width instead of wrapping.
+     "Calm hello" reached within 2px of the screen edge that way. */
+  max-width: 100%;
+  /* Two lines reserved whether or not a label uses them, so the one that does
+     wrap does not shove its own level count out of line with the rest. */
+  min-height: 2.6em;
+}
+
+.route-stop:first-child .route-label {
+  color: var(--primary);
+}
+
+/* "5" alone under a station is a number with no unit. */
+.route-levels {
+  margin-top: -6px;
+  font-size: 0.625rem;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The finish. Gold, like the outcome node on the map and the card that lands
+   when an activity is finished, so arriving somewhere always looks the same. */
+.route-stop--end .route-node {
+  border-style: solid;
+  border-color: var(--reward);
+  background: var(--reward-wash);
+  color: var(--reward-text);
+}
+
+.route-stop--end .route-node svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* The only two-word label, and the rightmost, so on the narrowest phone it ran
+   to within a few pixels of the screen edge while every other station sat
+   comfortably inside its own. Narrow enough to break after the first word; the
+   reserved second line means nothing below it moves. */
+.route-stop--end .route-label {
+  color: var(--reward-text);
+  max-width: 7ch;
+}
+
+/* The staggered arrival is the whole effect, so reduced motion drops it
+   entirely rather than shortening it. The route is still there to read. */
+@media (prefers-reduced-motion: reduce) {
+  .route-line::before,
+  .route-stop {
+    animation: none;
+    transform: none;
+    opacity: 1;
   }
 }

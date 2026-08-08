@@ -6,8 +6,10 @@
 // to that array alone: the dots, the "step N of M" label, the Skip target, and
 // the last-panel button copy all follow.
 
-import { DOG, IMAGES, TRAINER } from '../content.js';
+import { DOG, IMAGES, PROGRAMS, TRAINER } from '../content.js';
 import { completeOnboarding, seedDemoSessions } from '../store.js';
+import { programProgress } from '../program.js';
+import { routePreview } from '../programui.js';
 import { html, join, icon, raw, focusOnNavigate, withTransition } from '../ui.js';
 
 let step = 0;
@@ -32,11 +34,15 @@ const PANELS = [
     note: 'Tap "Lucy is too excited" any time to make it easier.',
   },
   {
-    image: 'dg-04',
-    eyebrow: 'Logging it',
-    title: 'One tap when you finish',
-    body: `Answer how ${DOG.name} did and you are done. Add repetitions, behaviours, and notes only if you want to.`,
-    note: 'It then tells you whether to repeat the level or move up.',
+    // The board, not a picture. It is the last thing before the choice to
+    // begin, which is the position it earns: the household has been told what
+    // this is and how a session runs, and now they see the whole route they
+    // are about to start down.
+    route: true,
+    eyebrow: 'The route',
+    title: 'Four activities, one calm hello',
+    body: `Each one builds on the last, from the first doorbell to a guest actually at the door. Log a session in one tap and this fills in as you go.`,
+    note: 'It tells you when to repeat a level and when to move up.',
   },
 ];
 
@@ -99,9 +105,11 @@ function render() {
 
       <div class="player-scroll">
         <div class="player-inner welcome-inner">
-          <figure class="step-figure welcome-figure">
-            <img src="${image.src}" alt="${image.alt}" />
-          </figure>
+          ${panel.route
+            ? routePreview(programProgress(PROGRAMS[0].id))
+            : html`<figure class="step-figure welcome-figure">
+                <img src="${image.src}" alt="${image.alt}" />
+              </figure>`}
           <p class="step-count">${panel.eyebrow}</p>
           <h1 class="welcome-title">${panel.title}</h1>
           <p class="welcome-body">${panel.body}</p>
@@ -168,8 +176,10 @@ function mount(root) {
 
   // The welcome runs before the service worker has cached anything, so fetch
   // the next panel's illustration while this one is being read.
+  // The route panel has no illustration to fetch, and IMAGES[undefined] would
+  // throw here rather than politely doing nothing.
   const next = PANELS[step + 1];
-  if (next) new Image().src = IMAGES[next.image].src;
+  if (next && next.image) new Image().src = IMAGES[next.image].src;
 
   focusOnNavigate(root.querySelector('h1'));
 }
