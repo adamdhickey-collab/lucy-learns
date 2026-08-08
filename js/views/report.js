@@ -8,8 +8,10 @@ import {
   DOG,
   INCIDENT_CONTEXTS,
   MEMBERS,
+  PROGRAMS,
   TRAINER,
 } from '../content.js';
+import { programProgress } from '../program.js';
 import { getState, exportSummary } from '../store.js';
 import {
   activityMastery,
@@ -100,6 +102,9 @@ function composeShareText(days) {
 function render() {
   const { sessions, incidents } = inRange(rangeDays);
   const prior = priorRange(rangeDays);
+  // The trainer set the program; the report should say how far through it the
+  // household actually is, in the same unit the handout uses.
+  const prog = programProgress(PROGRAMS[0].id);
   const rate = successRate(sessions);
   const priorRate = successRate(prior);
 
@@ -217,6 +222,11 @@ function render() {
 
             <section class="section">
               <h2>Where each skill stands</h2>
+              <p class="section-note" style="margin-bottom: var(--s-3)">
+                ${prog.cleared} of ${prog.total} levels cleared across ${prog.program.title},
+                ${prog.finished} of ${prog.stages.length}
+                ${prog.finished === 1 ? 'activity' : 'activities'} finished.
+              </p>
               <div class="card">
                 <div class="card-body">${join(skills)}</div>
               </div>

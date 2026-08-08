@@ -13,6 +13,7 @@ import {
   seedDemoSessions,
 } from '../store.js';
 import { restart as restartWelcome } from './welcome.js';
+import { APP_VERSION } from '../version.js';
 import { html, join, icon, focusHeading, toast, confirmSheet } from '../ui.js';
 
 function render() {
@@ -175,7 +176,7 @@ function render() {
       </div>
 
       <p class="section-note" style="margin-top: var(--s-6); text-align: center">
-        Lucy Learns · training program by ${TRAINER.name}
+        Lucy Learns ${APP_VERSION} · training program by ${TRAINER.name}
       </p>
     </div>
   `;

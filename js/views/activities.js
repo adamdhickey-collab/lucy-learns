@@ -1,15 +1,20 @@
-import { GOALS, ACTIVITIES, IMAGES } from '../content.js';
+import { GOALS, ACTIVITIES, IMAGES, PROGRAMS } from '../content.js';
 import {
   activityMastery,
   relativeDay,
   lastPracticed,
   currentLevel,
 } from '../metrics.js';
+import { programProgress, stageFor } from '../program.js';
+import { programStrip, levelPips } from '../programui.js';
 import { html, join, badge, difficultyDots, focusHeading } from '../ui.js';
 
 function activityCard(activity) {
   const img = IMAGES[activity.coverImage];
   const level = currentLevel(activity);
+  // The card carries its own standing in the program, so the library and the
+  // map never disagree about how far along something is.
+  const { stage } = stageFor(activity);
   return html`<li>
     <a class="activity-card" href="#/activity/${activity.slug}">
       <img
@@ -30,6 +35,12 @@ function activityCard(activity) {
         <div class="meta">
           <span>${relativeDay(lastPracticed(activity.id))}</span>
         </div>
+        <div class="card-progress">
+          ${levelPips(stage)}
+          <span class="stage-count">
+            ${stage.complete ? 'All levels cleared' : `${stage.cleared} of ${stage.total} cleared`}
+          </span>
+        </div>
       </div>
     </a>
   </li>`;
@@ -38,6 +49,10 @@ function activityCard(activity) {
 function render() {
   const groups = GOALS.map((goal) => {
     const items = ACTIVITIES.filter((a) => a.goalId === goal.id);
+    // A goal backed by a program is not a folder of four things, it is a route
+    // with a finish line. Say so before listing the four.
+    const program = PROGRAMS.find((p) => p.goalId === goal.id);
+
     const body = items.length
       ? html`<ul class="activity-list">${join(items.map(activityCard))}</ul>`
       : html`<div class="planned">
@@ -50,6 +65,11 @@ function render() {
         <h2>${goal.title}</h2>
         <p>${goal.blurb}</p>
       </header>
+      ${program
+        ? html`<div style="margin-bottom: var(--s-4)">
+            ${programStrip(programProgress(program.id))}
+          </div>`
+        : ''}
       ${body}
     </section>`;
   });

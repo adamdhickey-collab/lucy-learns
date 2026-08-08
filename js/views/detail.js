@@ -13,8 +13,11 @@ import {
   relativeDay,
   lastPracticed,
 } from '../metrics.js';
+import { stageFor, STAGE } from '../program.js';
+import { levelPips } from '../programui.js';
 import {
   html,
+  raw,
   join,
   badge,
   icon,
@@ -23,6 +26,45 @@ import {
   focusHeading,
   refreshApp,
 } from '../ui.js';
+
+/**
+ * What this activity is for, one step up. Sits at the bottom of the screen so
+ * finishing here has somewhere to go: the next stage, or the payoff if this is
+ * the last one standing.
+ */
+function nextUpCard(prog, stage) {
+  const later = prog.stages.find((s) => s.index > stage.index && !s.complete);
+  const anyOther = prog.stages.find((s) => s.index !== stage.index && !s.complete);
+  const target = later || anyOther;
+
+  if (!target) {
+    const outcome = prog.program.outcome;
+    return html`<section class="section">
+      <div class="next-up next-up--outcome">
+        <p class="eyebrow">${outcome.eyebrow}</p>
+        <h2>${outcome.title}</h2>
+        <p>${outcome.body}</p>
+      </div>
+    </section>`;
+  }
+
+  return html`<section class="section">
+    <a class="next-up" href="#/activity/${target.activity.slug}">
+      <div>
+        <p class="eyebrow">
+          ${stage.complete ? 'Next in the program' : `Also in ${prog.program.title}`}
+        </p>
+        <h2>${target.activity.title}</h2>
+        <p>${target.activity.shortPurpose}</p>
+        <span class="next-up-meta">
+          ${levelPips(target)}
+          <span class="stage-count" aria-hidden="true">${target.cleared}/${target.total}</span>
+        </span>
+      </div>
+      ${icon('arrow')}
+    </a>
+  </section>`;
+}
 
 function render({ slug }) {
   const activity = activityBySlug(slug);
@@ -39,15 +81,20 @@ function render({ slug }) {
   const history = sessionsFor(activity.id);
   const rate = successRate(sessionsAt(activity.id, active.number));
 
+  const { program: prog, stage } = stageFor(activity);
+
   const levels = activity.levels.map((level) => {
     const mastery = masteryFor(activity.id, level.number);
+    const cleared = stage.levels[level.number - 1].cleared;
     return html`<button
       type="button"
-      class="level-row"
+      class="level-row ${cleared ? 'level-row--cleared' : ''}"
       data-level="${level.number}"
       aria-pressed="${String(level.number === active.number)}"
     >
-      <span class="n" aria-hidden="true">${level.number}</span>
+      <span class="n" aria-hidden="true">
+        ${cleared ? icon('check') : raw(String(level.number))}
+      </span>
       <span class="txt">
         <strong>${level.title}</strong>
         <small>${level.setup}</small>
@@ -74,9 +121,30 @@ function render({ slug }) {
     </div>
 
     <div class="detail-body">
-      <p class="section-note">${program.title}</p>
+      <a class="detail-crumb" href="#/program/${program.id}">
+        ${icon('book')}
+        <span>${program.title}</span>
+      </a>
       <h1>${activity.title}</h1>
       <p class="lede">${activity.shortPurpose}</p>
+
+      <div class="stage-strip">
+        <span class="stage-strip-label">
+          Activity ${stage.number} of ${prog.stages.length}
+        </span>
+        ${levelPips(stage)}
+        <span class="stage-count" aria-hidden="true">${stage.cleared}/${stage.total}</span>
+      </div>
+
+      ${stage.state === STAGE.ahead
+        ? html`<p class="stage-warn">
+            ${icon('shield')}
+            <span>
+              Most households run ${stage.after.title} first. Start here only if your
+              trainer said to.
+            </span>
+          </p>`
+        : ''}
 
       <div class="meta" style="margin-top: var(--s-4)">
         <span>${activity.estimatedMinutes} min</span>
@@ -132,6 +200,8 @@ function render({ slug }) {
           </div>
         </details>
       </section>
+
+      ${nextUpCard(prog, stage)}
     </div>
 
     <div class="sticky-action">

@@ -1,6 +1,12 @@
 // Cache the whole app on install so a session works in a hallway with no signal.
+//
+// The cache is named after the ?v= query on the registration URL, which
+// app.js sets from js/version.js. Bumping APP_VERSION changes the URL, the
+// browser treats that as a new service worker, and the activate step below
+// clears every cache that does not match. One constant rotates everything.
 
-const CACHE = 'lucy-learns-v11';
+const VERSION = new URL(self.location.href).searchParams.get('v') || 'dev';
+const CACHE = `lucy-learns-${VERSION}`;
 
 const SHELL = [
   './',
@@ -17,8 +23,12 @@ const SHELL = [
   './js/ui.js',
   './js/store.js',
   './js/content.js',
+  './js/version.js',
   './js/config.js',
   './js/metrics.js',
+  './js/program.js',
+  './js/programui.js',
+  './js/views/program.js',
   './js/views/today.js',
   './js/views/activities.js',
   './js/views/detail.js',
@@ -29,6 +39,7 @@ const SHELL = [
   './js/views/welcome.js',
   './js/views/report.js',
   './img/lucy-portrait.jpg',
+  './img/splash-mark.jpg',
   './img/thumb-dg-01.jpg',
   './img/thumb-dg-02.jpg',
   './img/thumb-dg-03.jpg',

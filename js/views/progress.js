@@ -1,4 +1,12 @@
-import { ACTIVITIES, BEHAVIORS, INCIDENT_CONTEXTS, INCIDENT_RESPONSES } from '../content.js';
+import {
+  ACTIVITIES,
+  BEHAVIORS,
+  INCIDENT_CONTEXTS,
+  INCIDENT_RESPONSES,
+  PROGRAMS,
+} from '../content.js';
+import { programProgress } from '../program.js';
+import { programHeader, programStrip } from '../programui.js';
 import {
   getState,
   removeSession,
@@ -85,6 +93,7 @@ function render() {
   const prior = weekSummary(1);
   const days = practiceByDay();
   const max = Math.max(1, ...days.map((d) => d.count));
+  const prog = programProgress(PROGRAMS[0].id);
 
   const bars = days.map(
     (d) => html`<div class="bar ${d.count ? '' : 'bar--empty'}">
@@ -184,12 +193,22 @@ function render() {
 
       ${empty
         ? html`<div class="card">
-            <div class="empty">
-              <h3>Nothing logged yet</h3>
-              <p>Finish one session and this fills in. Nine sessions is enough to see a trend.</p>
-              <a class="btn btn--quiet" href="#/today" style="margin-top: var(--s-4)">Go practice</a>
+              <div class="empty">
+                <h3>Nothing logged yet</h3>
+                <p>Finish one session and this fills in. Nine sessions is enough to see a trend.</p>
+                <a class="btn btn--quiet" href="#/today" style="margin-top: var(--s-4)">Go practice</a>
+              </div>
             </div>
-          </div>`
+            ${/* "How far through are we" is the question this screen exists to
+                  answer, and it is the one a household asks before they have
+                  logged anything. Answer it rather than showing only a blank. */ ''}
+            <section class="section">
+              <h2>What you are working through</h2>
+              <p class="section-note" style="margin-bottom: var(--s-3)">
+                ${prog.program.blurb}
+              </p>
+              ${programStrip(prog)}
+            </section>`
         : html`
             <div class="insight">${icon('spark')}<p>${headlineInsight()}</p></div>
 
@@ -242,14 +261,19 @@ function render() {
             </section>
 
             <section class="section">
-              <h2>Where each skill stands</h2>
+              ${programHeader(prog, { eyebrow: 'How far through' })}
               <div class="card">
                 <div class="card-body">${join(mastery)}</div>
               </div>
               <p class="section-note">
-                Reliable needs 90% success across three sessions, on two different days, with both
-                of you.
+                A level counts as cleared at 75% success, or once you have moved past it.
+                Reliable is higher still: 90% across three sessions, on two different days,
+                with both of you.
               </p>
+              <a class="btn btn--quiet btn--block" href="#/program/${prog.program.id}"
+                style="margin-top: var(--s-4)">
+                See the program map
+              </a>
             </section>
 
             <section class="section">

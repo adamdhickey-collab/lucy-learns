@@ -214,6 +214,15 @@ export const PROGRAMS = [
     coverImage: 'dg-01',
     blurb:
       'Four activities that rebuild the whole arrival sequence, from the first sound to a calm hello.',
+    // The finish line, written out. It sits at the bottom of the program map so
+    // the four activities read as one job with an end, not four errands.
+    outcome: {
+      title: 'A calm hello, every time',
+      eyebrow: 'What finishing looks like',
+      body:
+        'Someone knocks. Lucy looks at you, goes to her bed, and stays there while you open the door. She greets the guest when you say so, with four paws on the floor.',
+      note: 'Finish all four activities and you have the whole sequence, not one piece of it.',
+    },
     source: {
       label: 'The Canine Coach handout',
       note:

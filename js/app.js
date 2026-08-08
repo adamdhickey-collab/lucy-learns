@@ -1,4 +1,5 @@
 import { isStorageOk, isOnboarded, onStorageChange } from './store.js';
+import { APP_VERSION } from './version.js';
 import { ICONS, announceScreen, markNavigated, withTransition } from './ui.js';
 import today from './views/today.js';
 import activities from './views/activities.js';
@@ -9,11 +10,13 @@ import moment from './views/moment.js';
 import player, { cancelSession } from './views/player.js';
 import welcome from './views/welcome.js';
 import report from './views/report.js';
+import program from './views/program.js';
 
 const routes = [
   { pattern: /^#\/welcome$/, view: welcome },
   { pattern: /^#?\/?(today)?$/, view: today },
   { pattern: /^#\/activities$/, view: activities },
+  { pattern: /^#\/program\/([^/]+)$/, view: program, keys: ['id'] },
   { pattern: /^#\/activity\/([^/]+)$/, view: detail, keys: ['slug'] },
   { pattern: /^#\/play\/([^/]+)$/, view: player, keys: ['slug'] },
   { pattern: /^#\/progress$/, view: progressView },
@@ -153,6 +156,24 @@ window.addEventListener('app:refresh', () => route({ keepScroll: true }));
 
 route();
 
+// --- splash ----------------------------------------------------------------
+// The static splash in index.html covered the blank moment before this module
+// ran. The app is painted underneath it now, so let it go — unless the
+// ?splash-hold debug flag is set, which keeps it up for design review.
+
+const splash = document.getElementById('splash');
+if (splash) {
+  const versionSlot = splash.querySelector('#splash-version');
+  if (versionSlot) versionSlot.textContent = `Version ${APP_VERSION}`;
+
+  if (!location.search.includes('splash-hold')) {
+    requestAnimationFrame(() => {
+      splash.classList.add('splash--done');
+      setTimeout(() => splash.remove(), 400);
+    });
+  }
+}
+
 
 // --- offline ---------------------------------------------------------------
 
@@ -175,7 +196,7 @@ updateStorage(isStorageOk());
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(() => {
+    navigator.serviceWorker.register(`sw.js?v=${APP_VERSION}`).catch(() => {
       /* offline support is a bonus, not a requirement */
     });
   });

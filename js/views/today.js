@@ -1,4 +1,4 @@
-import { DOG, MEMBERS, IMAGES, ACTIVITIES, activityById, programById } from '../content.js';
+import { DOG, MEMBERS, IMAGES, activityById, programById } from '../content.js';
 import { requestQuickStart } from './player.js';
 import { getState, activeMember, setActiveMember } from '../store.js';
 import {
@@ -8,11 +8,13 @@ import {
   weekSummary,
   practiceByDay,
   currentStreak,
-  relativeDay,
-  lastPracticed,
   masteryFor,
-  activityMastery,
 } from '../metrics.js';
+// Today shows the strip, not the map. The map lives on the program screen one
+// tap away, and rendering it here too made this screen 3.2 viewports tall to
+// answer a question Today does not ask.
+import { programProgress } from '../program.js';
+import { programStrip } from '../programui.js';
 import { html, raw, join, icon, badge, focusHeading, refreshApp } from '../ui.js';
 
 const greeting = () => {
@@ -33,7 +35,8 @@ function render() {
   const days = practiceByDay();
   const streak = currentStreak();
   const mastery = masteryFor(activity.id, level.number);
-  const inProgram = ACTIVITIES.filter((a) => a.programId === program.id);
+  const prog = programProgress(program.id);
+  const stage = prog.stages.find((s) => s.activity.id === activity.id);
 
   // Accelerator for the practiced household: once an activity has history,
   // offer a path straight into the steps that skips the get-ready checklist.
@@ -50,37 +53,17 @@ function render() {
     raw(`<i class="${d.count ? 'on' : ''}${i === days.length - 1 ? ' today' : ''}"></i>`)
   );
 
-  const cards = inProgram.map((a) => {
-    const img = IMAGES[a.coverImage];
-    const last = lastPracticed(a.id);
-    return html`<li>
-      <a class="activity-card" href="#/activity/${a.slug}">
-        <img
-          src="${img.thumb}"
-          alt=""
-          loading="lazy"
-          style="view-transition-name: card-${a.id}"
-        />
-        <div class="body">
-          <h3>${a.title}</h3>
-          <p>${a.shortPurpose}</p>
-          <div class="meta">
-            ${badge(activityMastery(a.id))}
-            ${last ? html`<span>${relativeDay(last)}</span>` : ''}
-          </div>
-        </div>
-      </a>
-    </li>`;
-  });
-
   return html`
     <div class="screen">
       <div class="today-head">
         <div>
           <h1>${greeting()}, ${me.name}</h1>
           <p>
-            ${DOG.name} has practiced ${week.count}
-            ${week.count === 1 ? 'time' : 'times'} this week
+            ${week.count
+              ? `${DOG.name} has practiced ${week.count} ${
+                  week.count === 1 ? 'time' : 'times'
+                } this week`
+              : 'The first session takes about five minutes'}
           </p>
         </div>
         <div class="who-field">
@@ -102,6 +85,13 @@ function render() {
           </div>
           <a class="btn btn--lg btn--block" href="#/play/${activity.slug}">Start session</a>
         </div>
+      </section>
+
+      ${/* Directly under the hero, so "where does this sit" is answered before
+            anything else on the page, by one link rather than two. */ ''}
+      <section class="section">
+        <h2 class="visually-hidden">Your program</h2>
+        ${programStrip(prog, { stage })}
       </section>
 
       ${lastActivity
@@ -130,25 +120,29 @@ function render() {
             </div>
           </section>`}
 
-      <section class="section">
-        <div class="card streak-card">
-          <div>
-            <h3>${week.count} of ${state.weeklyGoal} sessions this week</h3>
-            <p>
-              ${streak
-                ? `${streak} day${streak === 1 ? '' : 's'} in a row`
-                : 'No streak going right now'}
-            </p>
-          </div>
-          <div
-            class="week-dots"
-            role="img"
-            aria-label="Practice on ${days.filter((d) => d.count).length} of the last 7 days"
-          >
-            ${join(dots)}
-          </div>
-        </div>
-      </section>
+      ${/* A streak card before the first session has nothing to report and two
+            ways to say so. Held back until there is something to count. */ ''}
+      ${week.count
+        ? html`<section class="section">
+            <div class="card streak-card">
+              <div>
+                <h3>${week.count} of ${state.weeklyGoal} sessions this week</h3>
+                <p>
+                  ${streak
+                    ? `${streak} day${streak === 1 ? '' : 's'} in a row`
+                    : 'No streak going right now'}
+                </p>
+              </div>
+              <div
+                class="week-dots"
+                role="img"
+                aria-label="Practice on ${days.filter((d) => d.count).length} of the last 7 days"
+              >
+                ${join(dots)}
+              </div>
+            </div>
+          </section>`
+        : ''}
 
       <section class="section">
         <h2>Did something happen?</h2>
@@ -160,11 +154,6 @@ function render() {
         </button>
       </section>
 
-      <section class="section">
-        <h2>${program.title}</h2>
-        <p class="section-note">${program.blurb}</p>
-        <ul class="activity-list" style="margin-top: var(--s-3)">${join(cards)}</ul>
-      </section>
     </div>
   `;
 }

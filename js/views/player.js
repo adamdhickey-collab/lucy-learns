@@ -25,6 +25,7 @@ import {
   updateSession,
 } from '../store.js';
 import { currentLevel, masteryFor, recommendation } from '../metrics.js';
+import { programProgress, programGain } from '../program.js';
 import {
   html,
   join,
@@ -490,6 +491,78 @@ function detailScreen(activity, level) {
   `;
 }
 
+/**
+ * What this session did to the program.
+ *
+ * The bar is rendered at the width it had *before* the session and moved to
+ * its new width on mount, so the household watches the thing advance instead
+ * of being told it did. It is the only animation in the app that carries
+ * information rather than choreography.
+ */
+function programBand(gain, before) {
+  if (!gain) return '';
+  const prog = gain.program;
+  const from = Math.round(before.ratio * 100);
+  const to = Math.round(prog.ratio * 100);
+  const moved = gain.clearedLevel !== null;
+
+  return html`<div class="program-band ${moved ? 'program-band--moved' : ''}">
+    <div class="program-band-top">
+      <span>${prog.program.title}</span>
+      <b data-count-to="${prog.cleared}">${moved ? before.cleared : prog.cleared}</b>
+    </div>
+    <div
+      class="meter"
+      role="img"
+      aria-label="${prog.cleared} of ${prog.total} levels cleared in ${prog.program.title}"
+    >
+      <span style="width: ${Math.max(from, before.cleared ? 4 : 0)}%" data-grow-to="${to}"></span>
+    </div>
+    <p>
+      ${moved
+        ? `Level ${gain.clearedLevel} cleared. ${prog.cleared} of ${prog.total} in the program.`
+        : `${prog.cleared} of ${prog.total} levels cleared.`}
+    </p>
+  </div>`;
+}
+
+/** The one that is worth stopping for: a whole activity finished. */
+function stageCelebration(gain) {
+  if (!gain) return '';
+  const prog = gain.program;
+
+  if (gain.completedProgram) {
+    const outcome = prog.program.outcome;
+    return html`<div class="finale finale--program">
+      ${icon('spark')}
+      <p class="eyebrow">All four finished</p>
+      <h2>${outcome.title}</h2>
+      <p>${outcome.note}</p>
+      <a class="btn btn--block" href="#/progress" style="margin-top: var(--s-4)"
+        >See the whole picture</a
+      >
+    </div>`;
+  }
+
+  if (!gain.completedActivity) return '';
+  const next = gain.upNext;
+  return html`<div class="finale">
+    ${icon('spark')}
+    <p class="eyebrow">Activity ${gain.stage.number} of ${prog.stages.length} finished</p>
+    <h2>${gain.stage.activity.title} is done</h2>
+    ${next
+      ? html`<p>
+            Every level cleared. Next in the program is
+            <strong>${next.activity.title}</strong>. ${next.activity.shortPurpose}
+          </p>
+          <a class="btn btn--block" href="#/activity/${next.activity.slug}"
+            style="margin-top: var(--s-4)"
+            >Open ${next.activity.title}</a
+          >`
+      : html`<p>Every level cleared.</p>`}
+  </div>`;
+}
+
 function doneScreen(activity, level) {
   const advice = session.advice;
   const saved = session.saved;
@@ -536,6 +609,9 @@ function doneScreen(activity, level) {
             <span>Arousal</span>
           </div>
         </div>
+
+        ${programBand(session.gain, session.programBefore)}
+        ${stageCelebration(session.gain)}
 
         <button class="btn btn--quiet btn--block" type="button" data-detail
           style="margin-top: var(--s-4)">
@@ -615,6 +691,23 @@ function preloadUpcoming(activity, level) {
   const steps = stepsForLevel(activity, level);
   const next = steps[session.stepIndex + 1];
   if (next && next.image) new Image().src = IMAGES[next.image].src;
+}
+
+/**
+ * Move the program bar from where it was to where it is, one frame after the
+ * screen paints. Under prefers-reduced-motion the CSS transition is off, so
+ * this just sets the final value and the count lands immediately.
+ */
+function animateProgramBand(root) {
+  const fill = root.querySelector('.program-band [data-grow-to]');
+  if (!fill) return;
+  const count = root.querySelector('.program-band [data-count-to]');
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      fill.style.width = `${Math.max(Number(fill.dataset.growTo), 4)}%`;
+      if (count) count.textContent = count.dataset.countTo;
+    });
+  });
 }
 
 function wire(root) {
@@ -847,9 +940,14 @@ function wire(root) {
     // catch the moment a level crosses a threshold — that moment is earned and
     // deserves acknowledging, once.
     const before = masteryFor(activity.id, level.number);
+    // Same trick one level up: snapshot the program so the done screen can say
+    // what this session did to the whole arc, not just to this level.
+    const programBefore = programProgress(activity.programId);
     const record = addSession(sessionFields());
     const after = masteryFor(activity.id, level.number);
     session.milestone = after.rank > before.rank ? { from: before, to: after } : null;
+    session.gain = programGain(activity, level.number, programBefore);
+    session.programBefore = programBefore;
 
     session.saved = record;
     session.advice = recommendation(activity, level, record);
@@ -873,6 +971,9 @@ function wire(root) {
     if (updated) {
       session.saved = updated;
       session.advice = recommendation(activity, level, updated);
+      // Corrected numbers can cross or un-cross a level, so the program band
+      // has to be re-scored against the same pre-session snapshot.
+      session.gain = programGain(activity, level.number, session.programBefore);
     }
     session.detailAdded = true;
     session.phase = 'done';
@@ -906,6 +1007,8 @@ function wire(root) {
     session = null;
     location.hash = '#/today';
   });
+
+  animateProgramBand(root);
 
   if (session.phase === 'step') preloadUpcoming(activity, level);
 

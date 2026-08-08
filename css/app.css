@@ -394,8 +394,12 @@ a.visually-hidden:focus {
   margin: 0;
 }
 
+/* Full tap height like everything else. It was trimmed to 40px to sit neatly
+   beside the heading; the negative margin buys that back visually without
+   shrinking the target under the 48px the rest of the app holds to. */
 .section-head-row .btn {
-  min-height: 40px;
+  min-height: var(--tap);
+  margin-block: calc(var(--s-2) * -1);
   padding-inline: var(--s-3);
 }
 
@@ -1158,6 +1162,12 @@ a.visually-hidden:focus {
   background: var(--surface-sunken);
 }
 
+/* The program screen leads with numbers, not a picture. The illustration sets
+   the scene and then gets out of the way. */
+.detail-hero--short img {
+  aspect-ratio: 21 / 9;
+}
+
 .backlink {
   position: absolute;
   top: calc(var(--s-3) + env(safe-area-inset-top));
@@ -1329,6 +1339,35 @@ a.visually-hidden:focus {
 .sticky-action > * {
   max-width: var(--page-max);
   margin-inline: auto;
+}
+
+/* Naming the destination above the button keeps the label to one line, which
+   matters when the destination is called "Stay While the Door Opens". */
+/* Two lines need an opaque bar, not the single-button gradient: the hint would
+   otherwise sit in the transparent half and collide with the page behind it.
+   The fade moves to a strip above the bar instead. */
+.sticky-action--stacked {
+  padding-top: var(--s-4);
+  background: var(--background);
+}
+
+.sticky-action--stacked::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: var(--s-6);
+  pointer-events: none;
+  background: linear-gradient(to top, var(--background), rgba(247, 245, 239, 0));
+}
+
+.sticky-hint {
+  margin: 0 0 var(--s-2);
+  text-align: center;
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--text-secondary);
 }
 
 details.disclosure {
@@ -2578,6 +2617,746 @@ details.disclosure .disclosure-body {
 
 .report-range {
   margin-top: var(--s-2);
+}
+
+/* =========================================================================
+   Program arc
+   The four activities as one connected route with a finish line, so the
+   household can see the shape of the thing they signed up for.
+   ========================================================================= */
+
+.program-head {
+  margin-bottom: var(--s-4);
+}
+
+.program-head h1,
+.program-head h2 {
+  margin: var(--s-1) 0 var(--s-3);
+  font-size: var(--step-3);
+  line-height: 1.15;
+}
+
+.program-tally {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  margin-bottom: var(--s-2);
+}
+
+.program-tally b {
+  font-family: var(--font-display);
+  font-size: var(--step-4);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.program-tally span {
+  color: var(--text-secondary);
+  font-size: var(--step--1);
+}
+
+.program-head .meter {
+  height: 10px;
+}
+
+/* The bar animates from wherever it was to wherever it is. Cheap, but it is
+   the only place the app shows movement toward the far goal. */
+.program-head .meter > span,
+.program-strip .meter > span {
+  transition: width 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.program-pitch {
+  margin: var(--s-3) 0 0;
+  color: var(--text-secondary);
+  font-size: var(--step--1);
+}
+
+/* Before the first session the pitch is the whole header, so it gets room. */
+.program-head--fresh .program-pitch {
+  margin-top: 0;
+  font-size: var(--step-0);
+  color: var(--text-primary);
+}
+
+/* The setup node is a smaller mark than an activity: it is the trailhead, not
+   a stage. Same tick, less weight. */
+.stage--setup .stage-node {
+  width: 26px;
+  height: 26px;
+  margin-top: 4px;
+}
+
+.stage--setup .stage-node svg {
+  width: 14px;
+}
+
+.stage--setup .stage-top strong {
+  font-size: var(--step-1);
+}
+
+.stage--setup .stage-rail::before {
+  top: 30px;
+}
+
+/* --- the stage list ------------------------------------------------------- */
+
+.stage-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.stage > a,
+.stage > div {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-3) var(--s-4) 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* --- the rail: numbered nodes joined by a line ---------------------------- */
+
+.stage-rail {
+  position: relative;
+  flex: 0 0 auto;
+  width: 34px;
+  align-self: stretch;
+  display: flex;
+  justify-content: center;
+}
+
+/* The connector runs from this node down to the next one. The last item in
+   the list has no one to connect to, so it does not draw one. */
+.stage-rail::before {
+  content: '';
+  position: absolute;
+  top: 34px;
+  bottom: calc(var(--s-4) * -1 - var(--s-3));
+  left: 50%;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--border-strong);
+}
+
+.stage:last-child .stage-rail::before {
+  display: none;
+}
+
+/* A finished stage darkens the line below it, so the completed run reads as
+   one continuous stretch of road rather than four unrelated ticks. */
+.stage--complete .stage-rail::before {
+  background: var(--success);
+}
+
+.stage-node {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--background);
+  border: 2px solid var(--border-strong);
+  color: var(--text-secondary);
+  font-size: var(--step--1);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.stage-node svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.stage--complete .stage-node {
+  background: var(--success);
+  border-color: var(--success);
+  color: var(--text-on-dark);
+}
+
+.stage--active .stage-node,
+.stage--open.stage--focus .stage-node {
+  background: var(--surface);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* Where you are right now. A ring, not a color swap, so it survives being
+   printed and being colorblind. */
+.stage--here .stage-node {
+  box-shadow: 0 0 0 4px var(--primary-wash);
+}
+
+.stage--ahead .stage-node {
+  border-style: dashed;
+}
+
+/* --- the stage body ------------------------------------------------------- */
+
+.stage-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  padding-top: var(--s-1);
+}
+
+.stage-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.stage-top strong {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.stage-state {
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.stage--complete .stage-state {
+  color: var(--success);
+}
+
+.stage--active .stage-state,
+.stage--open.stage--focus .stage-state {
+  color: var(--primary);
+}
+
+.stage-purpose {
+  color: var(--text-secondary);
+  font-size: var(--step--1);
+  line-height: 1.45;
+}
+
+/* A later stage is signalled by the dashed node and its "Comes later" label,
+   not by fading the text. The fade this replaces measured 2.96:1 — well under
+   AA — and on a fresh install it applied to three of the four activities, so
+   most of the map was unreadable in the lit entryway this app is used in. */
+
+.stage-meter {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-top: var(--s-1);
+}
+
+.stage-count {
+  font-size: var(--step--1);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+
+.stage-note {
+  font-size: var(--step--1);
+  color: var(--text-secondary);
+}
+
+.stage--active .stage-note {
+  color: var(--primary-dark);
+  font-weight: 600;
+}
+
+.stage-thumb {
+  flex: 0 0 auto;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--r-sm);
+  object-fit: cover;
+  background: var(--surface-sunken);
+}
+
+.stage--ahead .stage-thumb {
+  filter: saturate(0.35);
+  opacity: 0.7;
+}
+
+/* --- level pips ----------------------------------------------------------- */
+
+.pips-row {
+  display: inline-flex;
+  gap: 3px;
+  align-items: center;
+}
+
+.pips-row i {
+  width: 14px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-strong);
+}
+
+/* Cleared is teal everywhere, including inside a finished stage. Green was
+   doing double duty here — it means "this whole stage is done", which is what
+   the node and the state label already say, and having a cleared level change
+   colour depending on its neighbours made one idea look like two. */
+.pips-row i.on {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+/* The level being worked right now: a half-filled pip, so "in progress" is a
+   shape and not a hue. */
+.pips-row i.live {
+  border-color: var(--primary);
+  background: linear-gradient(90deg, var(--primary) 50%, transparent 50%);
+}
+
+/* --- the finish line ------------------------------------------------------ */
+
+.stage--outcome > div {
+  padding-bottom: var(--s-3);
+}
+
+.stage--outcome .stage-node {
+  border-style: dashed;
+  border-color: var(--reward);
+  background: var(--reward-wash);
+  color: var(--reward-text);
+}
+
+.stage--outcome .stage-node svg {
+  stroke-width: 2;
+}
+
+.stage--outcome .stage-top strong {
+  font-size: var(--step-2);
+}
+
+.stage--outcome-won .stage-node {
+  border-style: solid;
+  background: var(--reward);
+  color: var(--reward-text);
+}
+
+/* --- Today's compact strip ------------------------------------------------ */
+
+.program-strip {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-card);
+  color: inherit;
+  text-decoration: none;
+}
+
+.program-strip-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.program-strip-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-2);
+}
+
+.program-strip-top strong {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 600;
+}
+
+.program-strip-count {
+  font-size: var(--step--1);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.program-strip small {
+  color: var(--text-secondary);
+  font-size: var(--step--1);
+}
+
+.program-strip svg {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* "Activity N of M", the first line inside the strip. It replaces a separate
+   36px link that used to sit between the hero metadata and "Start session" —
+   a secondary target in the thumb zone directly above the primary button, and
+   a second route to a destination the strip already reached. */
+.program-strip-where {
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+@media (hover: hover) {
+  .program-strip:hover {
+    border-color: var(--border-strong);
+    background: var(--primary-wash);
+  }
+
+  .stage > a:hover .stage-top strong {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.stage > a:focus-visible,
+.program-strip:focus-visible,
+.detail-crumb:focus-visible,
+.next-up:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: var(--r-md);
+}
+
+/* --- the activity screen's place in the sequence -------------------------- */
+
+/* 48px tall like every other target in the app, and pulled left by its own
+   padding so the label still lines up with the heading beneath it. */
+.detail-crumb {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: var(--tap);
+  margin: calc(var(--s-3) * -1) 0 0 calc(var(--s-2) * -1);
+  padding: 0 var(--s-2);
+  color: var(--primary);
+  font-size: var(--step--1);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* The "book" glyph, not the back chevron: this link goes forward to a screen
+   you may never have opened. A left-pointing arrow next to it was a lie. */
+.detail-crumb svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.stage-strip {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-3);
+  margin-top: var(--s-4);
+  padding: var(--s-3);
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+}
+
+.stage-strip-label {
+  font-size: var(--step--1);
+  font-weight: 700;
+}
+
+/* Library cards carry the same pips as the map, so a card and a stage never
+   tell different stories about the same activity. */
+.card-progress {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--s-1) var(--s-2);
+  margin-top: var(--s-3);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--border);
+}
+
+
+/* Running an activity out of order is allowed and sometimes correct. Say what
+   the usual order is, then get out of the way. */
+.stage-warn {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-2);
+  margin: var(--s-3) 0 0;
+  padding: var(--s-3);
+  border-radius: var(--r-md);
+  background: var(--caution-wash);
+  color: var(--caution-text);
+  font-size: var(--step--1);
+  line-height: 1.45;
+}
+
+.stage-warn svg {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* A cleared level keeps its number slot but swaps in a tick, so the level list
+   doubles as a checklist without adding a column.
+   Teal, not green: the tick means "behind you", which is not the same claim as
+   the mastery badge sitting next to it. A level can be ticked and still say
+   "Improving", and those two facts must not look like they disagree. */
+.level-row--cleared .n {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--text-on-dark);
+}
+
+.level-row .n svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* --- what to do after this one -------------------------------------------- */
+
+.next-up {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+  color: inherit;
+  text-decoration: none;
+}
+
+.next-up > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.next-up .eyebrow {
+  margin: 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.next-up h2 {
+  margin: var(--s-1) 0 var(--s-2);
+  font-size: var(--step-2);
+}
+
+.next-up p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--step--1);
+  line-height: 1.45;
+}
+
+.next-up-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-top: var(--s-3);
+}
+
+.next-up > svg {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.next-up--outcome {
+  display: block;
+  border-color: var(--reward);
+  background: var(--reward-wash);
+}
+
+.next-up--outcome .eyebrow {
+  color: var(--reward-text);
+}
+
+.next-up--outcome p {
+  color: var(--text-primary);
+}
+
+/* --- the program band on the done screen ---------------------------------- */
+
+.program-band {
+  margin-top: var(--s-5);
+  padding: var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+}
+
+.program-band-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin-bottom: var(--s-2);
+}
+
+.program-band-top span {
+  font-size: var(--step--1);
+  font-weight: 700;
+}
+
+.program-band-top b {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.program-band .meter {
+  background: var(--border);
+}
+
+.program-band .meter > span {
+  transition: width 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.program-band p {
+  margin: var(--s-2) 0 0;
+  color: var(--text-secondary);
+  font-size: var(--step--1);
+}
+
+.program-band--moved .program-band-top b {
+  animation: band-pop 500ms 700ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes band-pop {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.22);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* --- finishing an activity, and finishing the program --------------------- */
+
+.finale {
+  position: relative;
+  margin-top: var(--s-4);
+  padding: var(--s-5) var(--s-4) var(--s-4);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--reward);
+  background: var(--reward-wash);
+  text-align: center;
+}
+
+.finale > svg {
+  width: 32px;
+  height: 32px;
+  fill: none;
+  stroke: var(--reward-text);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.finale .eyebrow {
+  margin: var(--s-2) 0 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--reward-text);
+}
+
+.finale h2 {
+  margin: var(--s-1) 0 var(--s-2);
+  font-size: var(--step-3);
+  line-height: 1.15;
+}
+
+.finale p {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: var(--step-0);
+  line-height: 1.5;
+}
+
+.finale--program {
+  border-width: 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .finale {
+    animation: finale-in 520ms 250ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+@keyframes finale-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .program-head .meter > span,
+  .program-strip .meter > span,
+  .program-band .meter > span {
+    transition: none;
+  }
+
+  .program-band--moved .program-band-top b {
+    animation: none;
+  }
 }
 
 /* Handed across a table or printed for the file: the report is a document. */
