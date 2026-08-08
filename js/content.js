@@ -71,6 +71,79 @@ export const IMAGES = withThumb({
     src: 'img/dg-12.jpg',
     alt: 'A handler feeds Lucy a treat at a comfortable distance from the barely-open front door while a guest waits outside.',
   },
+  'dg-13': {
+    src: 'img/dg-13.jpg',
+    alt: 'Lucy lies on her bed while a handler takes a single step away from her toward the closed front door.',
+  },
+  'dg-14': {
+    src: 'img/dg-14.jpg',
+    alt: 'Lucy holds her bed while a handler pauses halfway across the room and glances back at her.',
+  },
+  'dg-15': {
+    src: 'img/dg-15.jpg',
+    alt: 'A handler rests a hand on the front door handle while Lucy holds her bed across the room.',
+  },
+  'dg-16': {
+    src: 'img/dg-16.jpg',
+    alt: 'The front door is open a few inches onto daylight while Lucy stays lying on her bed.',
+  },
+  'dg-17': {
+    src: 'img/dg-17.jpg',
+    alt: 'A handler feeds Lucy two small treats from an open palm while Lucy looks up at her hand.',
+  },
+  'dg-18': {
+    src: 'img/dg-18.jpg',
+    alt: 'Lucy stands relaxed on a loose leash beside her handler in a quiet moment between repetitions.',
+  },
+  'dg-19': {
+    src: 'img/dg-19.jpg',
+    alt: 'Lucy steps up off her bed as her handler releases her from the stay.',
+  },
+  'dg-20': {
+    src: 'img/dg-20.jpg',
+    alt: 'A handler knocks on the door frame while standing right beside Lucy with the leash under her foot.',
+  },
+  'dg-21': {
+    src: 'img/dg-21.jpg',
+    alt: 'A guest stands just inside the open front door without approaching while Lucy stays on her bed.',
+  },
+  'dg-22': {
+    src: 'img/dg-22.jpg',
+    alt: 'A guest sits in an armchair ignoring Lucy while she settles on her bed a few feet away.',
+  },
+  'dg-23': {
+    src: 'img/dg-23.jpg',
+    alt: 'A handler holds a relaxed conversation in the open doorway while Lucy stays settled on her bed.',
+  },
+  'dg-24': {
+    src: 'img/dg-24.jpg',
+    alt: 'A handler crouches beside Lucy well back from the closed front door and feeds her a treat.',
+  },
+  'dg-25': {
+    src: 'img/dg-25.jpg',
+    alt: 'A handler kneels beside Lucy’s bed and feeds her a treat for staying in place.',
+  },
+  'dg-26': {
+    src: 'img/dg-26.jpg',
+    alt: 'A guest steps back out of the doorway with a friendly wave while a handler stays beside Lucy.',
+  },
+  // Covers for the programs that are named but not written yet.
+  'cg-01': {
+    src: 'img/cg-01.jpg',
+    alt: 'Lucy stands with all four paws on the floor, looking up at a person who keeps their hands to themselves.',
+  },
+  'sr-01': {
+    src: 'img/sr-01.jpg',
+    alt: 'Lucy lies fully relaxed on her mat while the household carries on around her.',
+  },
+  'wp-01': {
+    src: 'img/wp-01.jpg',
+    alt: 'Lucy walks on a loose leash looking up at her handler as a stranger passes by on the pavement.',
+  },
+  'fd-01': {
+    src: 'img/fd-01.jpg',
+    alt: 'Lucy turns her head toward her handler at the sound of her name while a distraction sits behind her.',
+  },
 });
 
 // ---------------------------------------------------------------------------
@@ -128,6 +201,7 @@ export const PLANNED_ACTIVITIES = [
   {
     id: 'planned-greeting',
     goalId: 'calm-greetings',
+    coverImage: 'cg-01',
     title: 'Four Paws on the Floor',
     shortPurpose: 'Nobody gets touched until all four feet are down.',
     note: 'The door routine handles arrivals. This one handles the jump itself.',
@@ -135,6 +209,7 @@ export const PLANNED_ACTIVITIES = [
   {
     id: 'planned-settle',
     goalId: 'settle-recovery',
+    coverImage: 'sr-01',
     title: 'Settle on a Mat',
     shortPurpose: 'Lucy lies down and stays down while the room carries on without her.',
     note: 'The skill underneath the bed work, taken away from the door.',
@@ -142,6 +217,7 @@ export const PLANNED_ACTIVITIES = [
   {
     id: 'planned-walk',
     goalId: 'walks-public',
+    coverImage: 'wp-01',
     title: 'People Passing on Walks',
     shortPurpose: 'Someone walks by and Lucy keeps walking with you.',
     note: 'The same arousal as a doorbell, somewhere you cannot close the door.',
@@ -149,6 +225,7 @@ export const PLANNED_ACTIVITIES = [
   {
     id: 'planned-name',
     goalId: 'foundation',
+    coverImage: 'fd-01',
     title: 'Name Response Around Distractions',
     shortPurpose: 'Her name turns her head no matter what else is happening.',
     note: 'Every other activity leans on this one.',
@@ -334,7 +411,7 @@ export const ACTIVITIES = [
       'One sound per repetition. Never repeat the bell to get a reaction.',
       'Talk to her calmly through this if you want to. Keep it low key, nothing exciting.',
     ],
-    fallbackImage: 'dg-12',
+    fallbackImage: 'dg-24',
     fallbackSteps: FALLBACK_STEPS,
     steps: [
       {
@@ -354,12 +431,13 @@ export const ACTIVITIES = [
       },
       {
         instruction: 'Give two treats right away.',
-        image: 'dg-04',
+        image: 'dg-17',
         helper:
           'You are paying for the sound, not for good behavior. Feed even if she barked, so the bell starts to mean food instead of alarm.',
       },
       {
         instruction: 'Let her settle, then go again.',
+        image: 'dg-18',
         helper: 'A few quiet seconds between reps keeps her under threshold.',
       },
     ],
@@ -368,6 +446,7 @@ export const ACTIVITIES = [
         number: 1,
         title: 'You make the sound',
         setup: 'You knock or ring while standing right next to Lucy.',
+        overrides: { 1: { image: 'dg-20' } },
         reps: 5,
         successCriteria: ['No barking on 4 of 5 sounds', 'Turns toward you', 'Takes treats easily'],
       },
@@ -429,7 +508,7 @@ export const ACTIVITIES = [
       'If she breaks position twice in a row, drop back a level.',
       'A boundary works as well as a bed. If you use one, cue “Back” instead of “Go to bed”.',
     ],
-    fallbackImage: 'dg-12',
+    fallbackImage: 'dg-25',
     fallbackSteps: FALLBACK_STEPS,
     steps: [
       { instruction: 'Send Lucy to her bed.', cue: 'Go to bed', image: 'dg-06' },
@@ -444,7 +523,7 @@ export const ACTIVITIES = [
         image: 'dg-07',
         helper: 'Deliver the treat between her paws so the bed becomes the paying spot.',
       },
-      { instruction: 'Release, then reset for the next rep.', cue: 'Okay' },
+      { instruction: 'Release, then reset for the next rep.', cue: 'Okay', image: 'dg-19' },
     ],
     levels: [
       {
@@ -453,7 +532,7 @@ export const ACTIVITIES = [
         setup: 'Take a single step toward the door and come straight back.',
         reps: 5,
         successCriteria: ['Stays on the bed', 'No creeping forward'],
-        overrides: { 2: { instruction: 'Take one step toward the door.', image: 'dg-07' } },
+        overrides: { 2: { instruction: 'Take one step toward the door.', image: 'dg-13' } },
       },
       {
         number: 2,
@@ -461,7 +540,7 @@ export const ACTIVITIES = [
         setup: 'Walk halfway, pause, then return.',
         reps: 5,
         successCriteria: ['Stays on the bed', 'Waits for the release'],
-        overrides: { 2: { instruction: 'Walk halfway to the door, then pause.', image: 'dg-07' } },
+        overrides: { 2: { instruction: 'Walk halfway to the door, then pause.', image: 'dg-14' } },
       },
       {
         number: 3,
@@ -469,7 +548,7 @@ export const ACTIVITIES = [
         setup: 'Walk all the way over and put your hand on the handle.',
         reps: 5,
         successCriteria: ['Stays while you touch the handle'],
-        overrides: { 2: { instruction: 'Walk over and touch the door handle.', image: 'dg-07' } },
+        overrides: { 2: { instruction: 'Walk over and touch the door handle.', image: 'dg-15' } },
       },
       {
         number: 4,
@@ -477,7 +556,7 @@ export const ACTIVITIES = [
         setup: 'Open the door a few inches, then close it.',
         reps: 5,
         successCriteria: ['Stays as the door moves', 'No rushing when it opens'],
-        overrides: { 2: { instruction: 'Open the door a few inches, then close it.', image: 'dg-07' } },
+        overrides: { 2: { instruction: 'Open the door a few inches, then close it.', image: 'dg-16' } },
       },
       {
         number: 5,
@@ -506,7 +585,7 @@ export const ACTIVITIES = [
         overrides: {
           2: {
             instruction: 'Chat with an imaginary guest for twenty seconds.',
-            image: 'dg-08',
+            image: 'dg-23',
             helper: 'Use your real greeting voice. The excitement in your tone is the hard part.',
           },
         },
@@ -542,7 +621,7 @@ export const ACTIVITIES = [
       'Keep the whole sequence smooth before you add a pretend visitor.',
       'If she needs the lure three reps in a row, stay at this level.',
     ],
-    fallbackImage: 'dg-12',
+    fallbackImage: 'dg-25',
     fallbackSteps: FALLBACK_STEPS,
     steps: [
       { instruction: 'Ring or knock once.', image: 'dg-03' },
@@ -554,7 +633,7 @@ export const ACTIVITIES = [
         image: 'dg-07',
         helper: 'Walking away right after she lands teaches her the bed is where the job happens.',
       },
-      { instruction: 'Release and reset.', cue: 'Okay' },
+      { instruction: 'Release and reset.', cue: 'Okay', image: 'dg-19' },
     ],
     levels: [
       {
@@ -625,7 +704,7 @@ export const ACTIVITIES = [
       'Pet the chest, never the top of the head.',
       'If she pulls ahead on the way over, step on the leash or put gentle downward pressure on her collar.',
     ],
-    fallbackImage: 'dg-12',
+    fallbackImage: 'dg-26',
     fallbackSteps: FALLBACK_STEPS,
     steps: [
       { instruction: 'Leash Lucy and settle her on her bed.', image: 'dg-09' },
@@ -658,6 +737,7 @@ export const ACTIVITIES = [
         reps: 3,
         endAfterStep: 6,
         successCriteria: ['Holds the bed while the guest enters', 'Settles within a few seconds'],
+        overrides: { 5: { instruction: 'Guest steps inside and stands still by the door.', image: 'dg-21' } },
       },
       {
         number: 3,
@@ -666,7 +746,7 @@ export const ACTIVITIES = [
         reps: 3,
         endAfterStep: 6,
         successCriteria: ['Holds the bed while the guest moves through the room'],
-        overrides: { 5: { instruction: 'Guest walks in, sits down, and ignores her.', image: 'dg-09' } },
+        overrides: { 5: { instruction: 'Guest walks in, sits down, and ignores her.', image: 'dg-22' } },
       },
       {
         number: 4,
