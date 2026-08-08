@@ -4009,3 +4009,90 @@ details.disclosure .disclosure-body {
 .milestone-climb strong {
   font-weight: 700;
 }
+
+/* --- named but not built --------------------------------------------------
+   Same card geometry as a real activity so the library reads as one list, but
+   flat and unlinked. It is a <div>, not an <a>: a card that looks tappable and
+   is not is worse than no card at all. */
+
+.activity-card--planned {
+  background: transparent;
+  border-style: dashed;
+  box-shadow: none;
+  cursor: default;
+  align-items: flex-start;
+}
+
+.planned-mark {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+}
+
+.planned-mark svg {
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.planned-tag {
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+/* Escapes the two-line clamp that .activity-card puts on its blurb. This is a
+   sentence, not a summary, and it was being cut mid-word. */
+.planned-note {
+  display: block;
+  margin: var(--s-2) 0 0;
+  color: var(--text-secondary);
+  font-size: var(--step--1);
+  font-style: italic;
+  overflow: visible;
+}
+
+/* --- the two ways to answer a door you are not ready for ------------------ */
+
+.branch + .branch {
+  margin-top: var(--s-5);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--border);
+}
+
+.branch h3 {
+  margin: 0 0 var(--s-2);
+  font-size: var(--step-0);
+}
+
+.branch ol {
+  margin: 0;
+  padding-left: 1.15em;
+  color: var(--text-secondary);
+  font-size: var(--step--1);
+  line-height: 1.5;
+}
+
+.branch li + li {
+  margin-top: var(--s-2);
+}
+
+.goal-empty {
+  margin: 0;
+  padding: var(--s-4);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--r-lg);
+  color: var(--text-secondary);
+  font-size: var(--step--1);
+}

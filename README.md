@@ -175,6 +175,11 @@ cd "/Users/ahickey/dev/claude-local/Lucy Learns" && for f in images/*/*.png; do 
 Every image key in `js/content.js` carries alt text. Keep writing it — the whole
 app is instructional images, and they need to work read aloud.
 
+`docs/image-prompts.md` holds the house style, the character sheets, and a
+ready-to-paste prompt plus target filename for every image the app still wants.
+Twelve illustrations currently cover fifty-odd distinct moments, so several are
+reused heavily: `dg-07` alone stands in for twelve.
+
 ## Setting up a new client
 
 The install is two things: `js/config.js` (the dog, the handler, and

@@ -87,31 +87,71 @@ export const GOALS = [
     id: 'calm-greetings',
     title: 'Calm greetings',
     blurb: 'Four paws down when someone approaches or arrives.',
-    planned: ['Four paws on the floor', 'Sit for petting', 'Permission to greet'],
   },
   {
     id: 'impulse-control',
     title: 'Impulse control',
     blurb: 'Pause, listen, and make a calmer choice while excited.',
-    planned: ['Place and settle', 'Wait for food', 'Leave it', 'Wait at doors'],
   },
   {
     id: 'walks-public',
     title: 'Walks and public encounters',
     blurb: 'Stay with your handler when the world gets interesting.',
-    planned: ['Name response around distractions', 'People passing on walks', 'Calm greeting outside the home'],
   },
   {
     id: 'settle-recovery',
     title: 'Settle and recovery',
     blurb: 'Come back down after getting excited.',
-    planned: ['Recovery after excitement', 'Settle on a mat'],
   },
   {
     id: 'foundation',
     title: 'Foundation skills',
     blurb: 'The basics everything else is built on.',
-    planned: ['Recall', 'Calm leash attachment'],
+  },
+];
+
+/**
+ * The next four programs, named but not built.
+ *
+ * Deliberately a separate shape from ACTIVITIES rather than an activity with
+ * `available: false`. A parked activity is written content waiting for a
+ * release — it has levels, steps and safety notes, and every screen can render
+ * it. These have none of that yet, and giving them an empty `levels` array so
+ * they could sit in the same list would put objects into the progress maths
+ * that cannot answer the questions it asks. They are placeholders, so they are
+ * shaped like placeholders and cannot be opened.
+ *
+ * Chosen for the dog described in config.js: over-aroused at arrivals and
+ * around unfamiliar people. Each one is the next real problem after the door.
+ */
+export const PLANNED_ACTIVITIES = [
+  {
+    id: 'planned-greeting',
+    goalId: 'calm-greetings',
+    title: 'Four Paws on the Floor',
+    shortPurpose: 'Nobody gets touched until all four feet are down.',
+    note: 'The door routine handles arrivals. This one handles the jump itself.',
+  },
+  {
+    id: 'planned-settle',
+    goalId: 'settle-recovery',
+    title: 'Settle on a Mat',
+    shortPurpose: 'Lucy lies down and stays down while the room carries on without her.',
+    note: 'The skill underneath the bed work, taken away from the door.',
+  },
+  {
+    id: 'planned-walk',
+    goalId: 'walks-public',
+    title: 'People Passing on Walks',
+    shortPurpose: 'Someone walks by and Lucy keeps walking with you.',
+    note: 'The same arousal as a doorbell, somewhere you cannot close the door.',
+  },
+  {
+    id: 'planned-name',
+    goalId: 'foundation',
+    title: 'Name Response Around Distractions',
+    shortPurpose: 'Her name turns her head no matter what else is happening.',
+    note: 'Every other activity leans on this one.',
   },
 ];
 
@@ -228,6 +268,40 @@ export const PROGRAMS = [
       note:
         'Practice long before real guests arrive. Start with invisible guests, repeat easy sessions, and build muscle memory.',
     },
+
+    /**
+     * From the handout's last section, "Answering the door before your dog is
+     * reliable". It is the only part of the handout the app had nowhere to put:
+     * every activity is practice, and this is what to do when a real guest is
+     * at the door and the practice is not finished yet. The "Lucy is too
+     * excited" sheet is a different thing again — that is how to make a session
+     * easier mid-rep, not how to answer an actual door.
+     */
+    management: {
+      title: 'Before she is reliable',
+      intro:
+        'A real guest is at the door and the routine is not finished yet. Do not test it. Manage it.',
+      branches: [
+        {
+          when: 'If someone else is home',
+          steps: [
+            'They answer the door.',
+            'You stay next to Lucy and hold the “Back” or “Stay”.',
+            'Reward her for holding it while the door is busy.',
+          ],
+        },
+        {
+          when: 'If you are on your own',
+          steps: [
+            'Call Lucy, then take her with you calmly, on leash or with a hand in her collar.',
+            'Unlatch the door and say “Just a minute!” through it.',
+            'Walk her to her spot and hold the stay.',
+            'Now say “Come in!”',
+            'Stay with her until she is calm, then escort the guest over for a controlled greeting.',
+          ],
+        },
+      ],
+    },
   },
 ];
 
@@ -258,6 +332,7 @@ export const ACTIVITIES = [
     safetyNotes: [
       'Stop while Lucy is still succeeding, not after she fails.',
       'One sound per repetition. Never repeat the bell to get a reaction.',
+      'Talk to her calmly through this if you want to. Keep it low key, nothing exciting.',
     ],
     fallbackImage: 'dg-12',
     fallbackSteps: FALLBACK_STEPS,
@@ -352,6 +427,7 @@ export const ACTIVITIES = [
     safetyNotes: [
       'Go back to her to reward. Never call her off the bed to get the treat.',
       'If she breaks position twice in a row, drop back a level.',
+      'A boundary works as well as a bed. If you use one, cue “Back” instead of “Go to bed”.',
     ],
     fallbackImage: 'dg-12',
     fallbackSteps: FALLBACK_STEPS,
@@ -547,6 +623,7 @@ export const ACTIVITIES = [
       'Brief your guest first. No eye contact, no reaching, no high voices.',
       'If Lucy cannot settle, end the greeting. That is a real result, not a failure.',
       'Pet the chest, never the top of the head.',
+      'If she pulls ahead on the way over, step on the leash or put gentle downward pressure on her collar.',
     ],
     fallbackImage: 'dg-12',
     fallbackSteps: FALLBACK_STEPS,

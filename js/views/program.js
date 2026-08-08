@@ -7,7 +7,7 @@
 import { IMAGES, programById } from '../content.js';
 import { programProgress, STAGE } from '../program.js';
 import { programHeader, stageList } from '../programui.js';
-import { html, icon, focusHeading } from '../ui.js';
+import { html, join, icon, focusHeading } from '../ui.js';
 
 function render({ id }) {
   const program = programById(id);
@@ -39,6 +39,31 @@ function render({ id }) {
         </p>
         ${stageList(prog)}
       </section>
+
+      ${/* The handout's last section. Everything above is practice; this is
+            what to do when a guest is actually at the door and the practice is
+            not finished. It sits on the program screen because it belongs to
+            the whole routine rather than to any one activity. */ ''}
+      ${program.management
+        ? html`<section class="section">
+            <h2>${program.management.title}</h2>
+            <p class="section-note" style="margin-bottom: var(--s-3)">
+              ${program.management.intro}
+            </p>
+            <div class="card">
+              <div class="card-body">
+                ${join(
+                  program.management.branches.map(
+                    (branch) => html`<div class="branch">
+                      <h3>${branch.when}</h3>
+                      <ol>${join(branch.steps.map((step) => html`<li>${step}</li>`))}</ol>
+                    </div>`
+                  )
+                )}
+              </div>
+            </div>
+          </section>`
+        : ''}
 
       <section class="section" style="padding-bottom: var(--s-4)">
         <details class="disclosure">

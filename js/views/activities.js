@@ -1,4 +1,12 @@
-import { GOALS, ACTIVITIES, LIVE_ACTIVITIES, IMAGES, PROGRAMS, TRAINER } from '../content.js';
+import {
+  GOALS,
+  ACTIVITIES,
+  LIVE_ACTIVITIES,
+  PLANNED_ACTIVITIES,
+  IMAGES,
+  PROGRAMS,
+  TRAINER,
+} from '../content.js';
 import {
   activityMastery,
   relativeDay,
@@ -7,7 +15,7 @@ import {
 } from '../metrics.js';
 import { programProgress, stageFor } from '../program.js';
 import { programStrip, levelPips } from '../programui.js';
-import { html, join, badge, difficultyDots, focusHeading } from '../ui.js';
+import { html, join, badge, icon, difficultyDots, focusHeading } from '../ui.js';
 
 function activityCard(activity) {
   const img = IMAGES[activity.coverImage];
@@ -46,6 +54,27 @@ function activityCard(activity) {
   </li>`;
 }
 
+/**
+ * A program that is named but not written yet. Not a link, and it says so in
+ * words as well as in styling: a card that looks tappable and is not is worse
+ * than no card.
+ */
+function plannedCard(activity) {
+  return html`<li>
+    <div class="activity-card activity-card--planned">
+      <div class="planned-mark" aria-hidden="true">${icon('clock')}</div>
+      <div class="body">
+        <h3>${activity.title}</h3>
+        <p>${activity.shortPurpose}</p>
+        <div class="meta">
+          <span class="planned-tag">Not written yet</span>
+        </div>
+        <p class="planned-note">${activity.note}</p>
+      </div>
+    </div>
+  </li>`;
+}
+
 function render() {
   const groups = GOALS.map((goal) => {
     const items = LIVE_ACTIVITIES.filter((a) => a.goalId === goal.id);
@@ -56,12 +85,21 @@ function render() {
     // with a finish line. Say so before listing the four.
     const program = PROGRAMS.find((p) => p.goalId === goal.id);
 
+    // Named but not built. A card so the shape of the library is visible, and
+    // a <div> rather than an <a> so there is nothing to tap and be disappointed
+    // by. Previously a bare bullet list of titles.
+    const planned = PLANNED_ACTIVITIES.filter((a) => a.goalId === goal.id);
+
     const body = items.length
       ? html`<ul class="activity-list">${join(items.map(activityCard))}</ul>`
-      : html`<div class="planned">
-          <p>Nothing here yet. These land as handouts arrive from The Canine Coach.</p>
-          <ul>${join((goal.planned || []).map((p) => html`<li>${p}</li>`))}</ul>
-        </div>`;
+      : planned.length
+        ? html`<ul class="activity-list">${join(planned.map(plannedCard))}</ul>`
+        // Neither built nor named yet. A heading over nothing reads as broken,
+        // so the goal says plainly that it is a goal and not a gap.
+        : html`<p class="goal-empty">
+            Nothing here yet. This one arrives with a later handout from
+            ${TRAINER.name}.
+          </p>`;
 
     return html`<section class="goal-group">
       <header>
