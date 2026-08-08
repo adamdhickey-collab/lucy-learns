@@ -3241,44 +3241,49 @@ details.disclosure .disclosure-body {
   color: var(--primary);
 }
 
-/* The whole arc at a glance. Four dots is enough to say "one of four, this
-   one", which is what the map costs a tap to answer. */
-.stage-dots {
+/* One dot per level, grouped by activity. The wider gap between groups is the
+   only thing marking where one activity ends and the next begins, which is all
+   the structure this needs at 6px a dot. */
+.level-dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 9px;
+  align-items: center;
+  margin: var(--s-1) 0;
+}
+
+.level-group {
   display: inline-flex;
-  gap: 4px;
+  gap: 3px;
   align-items: center;
 }
 
-.stage-dots .dot {
-  width: 8px;
-  height: 8px;
+.level-dots .dot {
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   border: 1.5px solid var(--border-strong);
   background: transparent;
 }
 
-.stage-dots .dot--complete {
-  background: var(--success);
-  border-color: var(--success);
-}
-
-.stage-dots .dot--active,
-.stage-dots .dot--open {
+.level-dots .dot--done {
+  background: var(--primary);
   border-color: var(--primary);
 }
 
-.stage-dots .dot--active {
-  background: var(--primary);
+/* Levels inside an activity that is not in the app yet: the same hollow ring,
+   a step lighter. Dashed was the first try, borrowing the map's language, but
+   a dashed border on a 6px circle resolves to about four disconnected arcs —
+   magnified it reads as broken pixels rather than a dot. Weight carries the
+   distinction at this size; the map keeps the dashes where they have room. */
+.level-dots .dot--soon {
+  border-color: var(--border);
 }
 
-/* Not in the app yet: hollow and dashed, the same language the map uses. */
-.stage-dots .dot--soon {
-  border-style: dashed;
-  border-color: var(--border-strong);
-}
-
-.stage-dots .dot--here {
-  box-shadow: 0 0 0 3px var(--primary-wash);
+/* The level in hand. A ring rather than a fill, so it never reads as cleared. */
+.level-dots .dot--here {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2.5px var(--primary-wash);
 }
 
 /* The strip is the first thing on Today, so it does not need the full section

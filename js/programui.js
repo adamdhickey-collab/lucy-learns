@@ -209,20 +209,40 @@ function outcomeNode(prog) {
 }
 
 /**
- * One dot per activity, so the whole arc is legible without opening the map.
- * State is carried by shape as well as fill: done is solid, the one in hand is
- * ringed, not started is hollow, not yet in the app is dashed.
+ * One dot per level, grouped by activity, for the whole program at once.
+ *
+ * This was one dot per activity, which on a program with three of its four
+ * parked read as a row of things not available rather than as ground covered.
+ * Levels are what the household actually moves, so those are what it counts.
+ * The grouping keeps the four activities legible inside it, and the wider gap
+ * between groups is the only thing carrying that — no labels needed at 6px.
+ *
+ * State is shape as well as fill: cleared is solid, the level in hand is
+ * ringed, ahead is hollow, and levels inside an activity that is not in the
+ * app yet are dashed, matching the map. Twenty-three dots is 216px, which
+ * fits the strip on the narrowest phone this ships to.
  */
-function stageDots(prog, currentIndex) {
-  const dots = prog.stages.map((stage) => {
-    const here = stage.index === currentIndex;
-    return `<i class="dot dot--${stage.state}${here ? ' dot--here' : ''}"></i>`;
+function levelDots(prog, currentActivityIndex) {
+  const groups = prog.stages.map((stage) => {
+    const dots = stage.levels.map((l) => {
+      // The level in hand, ringed whether or not it is cleared. Gating this on
+      // "not yet cleared" meant that the moment you cleared the level you were
+      // on, the row stopped saying where you were at all — which is most of
+      // the time, since clearing a level is not the same as leaving it.
+      const here =
+        stage.index === currentActivityIndex &&
+        stage.state !== STAGE.soon &&
+        l.level.number === stage.working.number;
+      const state = stage.state === STAGE.soon ? 'soon' : l.cleared ? 'done' : 'ahead';
+      return `<i class="dot dot--${state}${here ? ' dot--here' : ''}"></i>`;
+    });
+    return `<span class="level-group">${dots.join('')}</span>`;
   });
-  const done = prog.stages.filter((s) => s.state === STAGE.complete).length;
+
   return raw(
-    `<span class="stage-dots" role="img" aria-label="${esc(
-      `${done} of ${prog.stages.length} activities finished`
-    )}">${dots.join('')}</span>`
+    `<span class="level-dots" role="img" aria-label="${esc(
+      `${prog.cleared} of ${prog.total} levels cleared, across ${prog.stages.length} activities`
+    )}">${groups.join('')}</span>`
   );
 }
 
@@ -235,15 +255,14 @@ function stageDots(prog, currentIndex) {
  * that had been sitting directly above Today's primary button.
  */
 export function programStrip(prog, { stage = null } = {}) {
-  const percent = Math.round(prog.ratio * 100);
   // Same rule as programHeader: before the first session there is no score to
-  // show, so the count and the empty bar come off rather than reporting 0/23.
+  // show, so the count comes off rather than reporting 0. The dots stay —
+  // an empty row of them is the shape of the job, not a zero.
   const started = prog.cleared > 0;
   return html`<a class="program-strip" href="#/program/${prog.program.id}">
     <span class="program-strip-body">
       ${stage
         ? html`<span class="program-strip-where">
-            ${stageDots(prog, stage.index)}
             Activity ${stage.number} of ${prog.stages.length}
           </span>`
         : ''}
@@ -253,11 +272,7 @@ export function programStrip(prog, { stage = null } = {}) {
           ? html`<span class="program-strip-count">${prog.cleared}/${prog.total}</span>`
           : ''}
       </span>
-      ${started
-        ? html`<span class="meter" aria-hidden="true">
-            <span style="width: ${Math.max(percent, 4)}%"></span>
-          </span>`
-        : ''}
+      ${levelDots(prog, stage ? stage.index : -1)}
       <small>${programPitch(prog)}</small>
     </span>
     ${icon('arrow')}
