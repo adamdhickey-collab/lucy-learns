@@ -2267,6 +2267,59 @@ details.disclosure .disclosure-body {
 
 /* --- storage failure banner ------------------------------------------------ */
 
+/* =========================================================================
+   Splash
+   The last thing the OS shows and the first thing the app shows, holding the
+   same mark in the same place on the same background. Geometry is duplicated
+   in scripts/make-splash.mjs, which bakes it into the iOS launch images: 60%
+   of viewport width, centred at 45% height. Change one, change both.
+   ========================================================================= */
+
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: var(--background);
+  /* Opacity only. Transforming or scaling here would make the mark move
+     against the launch image it is standing in for. */
+  transition: opacity 320ms ease-out;
+}
+
+.splash-mark {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  width: 60%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  /* The source art is square with cream corners. The launch images mask it to
+     the inscribed circle; this has to match or the two disagree at the edge. */
+  border-radius: 50%;
+}
+
+.splash-version {
+  position: absolute;
+  bottom: calc(var(--s-6) + env(safe-area-inset-bottom));
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--step--1);
+}
+
+.splash--done {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* The fade is the whole effect, so it is the one thing reduced motion has to
+   remove rather than shorten. The element is removed either way. */
+@media (prefers-reduced-motion: reduce) {
+  .splash {
+    transition: none;
+  }
+}
+
 .storage-warning {
   position: sticky;
   top: 0;

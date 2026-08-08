@@ -167,10 +167,23 @@ if (splash) {
   if (versionSlot) versionSlot.textContent = `Version ${APP_VERSION}`;
 
   if (!location.search.includes('splash-hold')) {
-    requestAnimationFrame(() => {
+    let dismissed = false;
+    const dismiss = () => {
+      if (dismissed) return;
+      dismissed = true;
       splash.classList.add('splash--done');
       setTimeout(() => splash.remove(), 400);
-    });
+    };
+
+    // A frame lets the app paint underneath before the fade starts, so the
+    // handoff is a dissolve rather than a cut. But requestAnimationFrame does
+    // not fire at all while the document is hidden — a tab restored at
+    // startup, a cmd-clicked link, a phone that locks mid-launch — and on rAF
+    // alone the splash then outlives the app it is covering and the household
+    // comes back to a screen with nothing on it. The timer is the guarantee;
+    // the frame is only the polish.
+    requestAnimationFrame(dismiss);
+    setTimeout(dismiss, 250);
   }
 }
 

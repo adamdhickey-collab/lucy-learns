@@ -126,6 +126,32 @@ circle never clips the subject.
 
 Bump `CACHE` in `sw.js` so installed copies pick up the change.
 
+### Splash screen
+
+Two halves that have to agree. `index.html` carries a `#splash` div that the
+browser paints before `js/app.js` parses, so the first frame is the mark rather
+than an empty page; `app.js` fades it out and removes it. `splash/` holds the
+iOS `apple-touch-startup-image` files, which the OS shows while a Home Screen
+launch boots.
+
+Both put the mark at 60% of viewport width, centred at 45% of height, on
+`--background`. The geometry lives in `css/app.css` and in
+`scripts/make-splash.mjs` and has to be changed in both.
+
+To rebuild after replacing `img/splash-source.png`:
+
+```bash
+cd "/Users/ahickey/dev/claude-local/Lucy Learns" && node scripts/make-splash.mjs && cd splash && for f in *.png; do sips -s format jpeg -s formatOptions 85 "$f" --out "${f%.png}.jpg"; done && rm *.png
+```
+
+The script also writes `splash/links.html`, the matching `<link>` tags. Paste
+them into `index.html` and delete the file. Do not hand-edit those tags: iOS
+matches on CSS points and pixel ratio, which cannot be derived from the pixel
+size — the 8 Plus is 1242×2208 at 414×736@3x, and guessing by divisibility
+calls it 621×1104@2x, which matches no phone and launches to a blank screen.
+
+`?splash-hold` on any URL keeps the in-app splash up for design review.
+
 ### Illustrations
 
 `images/Calm Door Greetings/01.png` … `12.png` are the originals (~2.2 MB each).
