@@ -221,7 +221,7 @@ function stepScreen(activity, level) {
               for Next. The step is the screen; the reasoning is there when it
               is wanted. */ ''}
         ${step.helper
-          ? html`<details class="disclosure" style="margin-top: var(--s-5)">
+          ? html`<details class="disclosure">
               <summary>Why this matters</summary>
               <div class="disclosure-body">${step.helper}</div>
             </details>`
@@ -376,7 +376,7 @@ function resultScreen(activity, level) {
       <div class="player-inner">
         <p class="step-count">${activity.title} · Level ${level.number}</p>
         <h1 class="step-instruction">How did Lucy do?</h1>
-        <p class="section-note" style="margin-top: var(--s-3)">
+        <p class="section-note">
           One tap saves it. You can add detail after.
         </p>
 
@@ -420,7 +420,7 @@ function detailScreen(activity, level) {
       <div class="player-inner">
         <p class="step-count">${activity.title} · Level ${level.number}</p>
         <h1 class="step-instruction">Anything to add?</h1>
-        <p class="section-note" style="margin-top: var(--s-3)">
+        <p class="section-note">
           Already saved. Everything here is optional.
         </p>
 

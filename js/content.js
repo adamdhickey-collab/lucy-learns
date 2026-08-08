@@ -329,8 +329,13 @@ export const PROGRAMS = [
     title: 'Calm Door Greetings',
     goalId: 'door-routine',
     coverImage: 'dg-01',
+    // Says what the pitch above it does not. On the program screen this sits
+    // directly under programPitch, which on a fresh program reads "Four
+    // activities, from the first doorbell to a calm hello" — so opening this
+    // with the same count and closing it with the same hello left the screen
+    // saying one thing twice. This names the four pieces instead.
     blurb:
-      'Four activities that rebuild the whole arrival sequence, from the first sound to a calm hello.',
+      'The sound, the wait, the bed, the guest. Each one rebuilds a piece of what happens when someone arrives.',
     // The finish line, written out. It sits at the bottom of the program map so
     // the four activities read as one job with an end, not four errands.
     outcome: {

@@ -926,6 +926,35 @@ a.visually-hidden:focus {
   color: var(--primary-dark);
 }
 
+/* The eyebrow carrying the activity's mark. Inline-flex rather than a floated
+   or absolutely placed icon so the mark sits on the text baseline row and
+   wraps with it on a narrow screen. */
+.eyebrow--marked {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.eyebrow-mark {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+}
+
+.eyebrow-mark svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .hero-body h2 {
   font-size: var(--step-2);
   margin: var(--s-2) 0 var(--s-1);
@@ -1483,14 +1512,65 @@ details.disclosure .disclosure-body {
   overflow: hidden;
   background: var(--surface-sunken);
   border: 1px solid var(--border);
-  margin-bottom: var(--s-5);
 }
 
 /* .player-inner is a flex column, so these margins do not collapse into each
    other the way they would in normal block flow. Without this the screens that
    still have an eyebrow would get both. */
-.step-figure + .step-count {
-  margin-top: 0;
+/* Spacing between the player's blocks belongs to the container.
+   ------------------------------------------------------------------------
+   It used to belong to whichever element happened to sit between two others,
+   which meant deleting an element silently deleted a gap: removing the
+   duplicated "Step 3 of 5" eyebrow left the heading resting on the photo at
+   0px, and that was the fourth time in this app that a removal took spacing
+   with it.
+
+   `gap` would be the obvious tool and is not, because these blocks do not
+   share one rhythm: an eyebrow sits 8px from its heading and 24px from the
+   figure above it. A gap can only be made smaller for a pair by giving that
+   pair a negative margin, which trades a silent failure for an unreadable
+   one. `> * + *` states the rhythm once and lets a pair name its own value,
+   positively.
+
+   The rule is "between any two children", so it cannot be removed along with
+   a child. */
+.player-inner > * + * {
+  margin-top: var(--s-5);
+}
+
+/* An eyebrow belongs to the heading beneath it, not to the block above. */
+.player-inner > .step-count + .step-instruction {
+  margin-top: var(--s-2);
+}
+
+/* A heading and the thing that immediately explains it. */
+.player-inner > .step-instruction + .rep-steps,
+.player-inner > .step-instruction + .section-note,
+.player-inner > .welcome-title + .welcome-body {
+  margin-top: var(--s-3);
+}
+
+.player-inner > .step-instruction + .say,
+.player-inner > .step-count + .welcome-title,
+.player-inner > .welcome-body + .welcome-note,
+.player-inner > .welcome-note + .welcome-partner,
+.player-inner > .cleared + .milestone-climb,
+.player-inner > .program-band + .btn {
+  margin-top: var(--s-4);
+}
+
+/* The rep list and the counter are separate jobs, so this is the one seam on
+   the screen that opens wider than the base. It measured 40px before, which
+   was --s-4 and --s-5 stacking in a flex column rather than a chosen number;
+   this is the nearest step on the scale. */
+.player-inner > .rep-steps + .tally {
+  margin-top: var(--s-6);
+}
+
+/* Pinned to the bottom of the screen, whatever precedes it. This has to come
+   after the rule above, which would otherwise replace the auto. */
+.player-inner > .panic-slot {
+  margin-top: auto;
 }
 
 .step-figure img {
@@ -1505,7 +1585,6 @@ details.disclosure .disclosure-body {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-secondary);
-  margin: var(--s-5) 0 var(--s-2);
 }
 
 .step-instruction {
@@ -1523,7 +1602,6 @@ details.disclosure .disclosure-body {
   align-items: baseline;
   gap: var(--s-2);
   flex-wrap: wrap;
-  margin-top: var(--s-4);
   padding: var(--s-3) var(--s-4);
   background: var(--reward-wash);
   border-radius: var(--r-md);
@@ -1583,7 +1661,6 @@ details.disclosure .disclosure-body {
 /* --- the rep tally --------------------------------------------------------- */
 
 .tally {
-  margin-top: var(--s-5);
   text-align: center;
 }
 
@@ -1625,7 +1702,6 @@ details.disclosure .disclosure-body {
 .tally-actions {
   display: grid;
   gap: var(--s-2);
-  margin-top: var(--s-5);
 }
 
 .tally-good {
@@ -1689,7 +1765,6 @@ details.disclosure .disclosure-body {
 /* --- result --------------------------------------------------------------- */
 
 .result-group {
-  margin-top: var(--s-5);
 }
 
 .result-group > h2 {
@@ -1818,7 +1893,6 @@ details.disclosure .disclosure-body {
 .stat-row {
   display: flex;
   gap: var(--s-3);
-  margin-top: var(--s-5);
 }
 
 .stat-row .stat {
@@ -2555,17 +2629,14 @@ details.disclosure .disclosure-body {
   line-height: 1.15;
   font-weight: 600;
   font-variation-settings: 'SOFT' 40, 'WONK' 1, 'opsz' 44;
-  margin-top: var(--s-2);
 }
 
 .welcome-body {
   font-size: var(--step-1);
   color: var(--text-secondary);
-  margin-top: var(--s-3);
 }
 
 .welcome-note {
-  margin-top: var(--s-4);
   padding: var(--s-3) var(--s-4);
   background: var(--primary-wash);
   border-radius: var(--r-md);
@@ -2733,7 +2804,6 @@ details.disclosure .disclosure-body {
 }
 
 .welcome-partner {
-  margin-top: var(--s-4);
   color: var(--text-secondary);
   font-size: var(--step--1);
   text-align: center;
@@ -4031,7 +4101,6 @@ details.disclosure .disclosure-body {
    replaces a chip that stated the new rung without ever showing the ladder it
    belonged to. */
 .milestone-climb {
-  margin-top: var(--s-4);
   padding: var(--s-4);
   border-radius: var(--r-md);
   background: var(--surface-sunken);
@@ -4140,7 +4209,12 @@ details.disclosure .disclosure-body {
    the count without competing with either for the thumb. */
 
 .rep-steps {
-  margin: var(--s-3) 0 var(--s-4);
+  /* The reset covers p and figure but not ol, so dropping this element's own
+     margin in favour of the container's rhythm handed it back the browser
+     default — a 1em bottom margin that showed up as a 45px seam where 32 was
+     intended. The container owns the spacing; this only has to stop
+     contributing its own. */
+  margin: 0;
   padding: var(--s-3) var(--s-4) var(--s-3) calc(var(--s-4) + 1.1em);
   border-radius: var(--r-md);
   background: var(--surface-sunken);

@@ -81,7 +81,15 @@ function render() {
       <section class="hero" aria-labelledby="today-next">
         <img src="${cover.src}" alt="${cover.alt}" />
         <div class="hero-body">
-          <p class="eyebrow">Today’s homework</p>
+          ${/* The activity's own mark, named. The strip above shows the four
+                marks without labels so it stays a summary rather than a
+                board, which leaves nothing on this screen to say which mark
+                is which. Naming it here teaches the row directly above it and
+                gives the activity a face of its own. */ ''}
+          <p class="eyebrow eyebrow--marked">
+            <span class="eyebrow-mark">${icon(activity.icon)}</span>
+            Today’s homework · ${activity.shortTitle}
+          </p>
           <h2 id="today-next">${activity.title}</h2>
           <p>${level.setup}</p>
           <div class="meta">
