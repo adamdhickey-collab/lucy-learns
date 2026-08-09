@@ -169,7 +169,7 @@ route();
 //
 // ?splash-hold on any URL parks it indefinitely for design review.
 
-const SPLASH_HOLD_MS = 3000;
+const SPLASH_HOLD_MS = 5000;
 const SPLASH_FADE_MS = 420;
 
 const splash = document.getElementById('splash');

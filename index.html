@@ -108,7 +108,20 @@
       <!-- Fills across the hold. app.js hands it the real duration and how
            much of it has already gone, so it tracks actual elapsed time rather
            than miming it. -->
-      <div class="splash-progress"><span></span></div>
+      <!-- The bar fills; a paw walks it. Five seconds is long enough to be
+           looked at, and a plain sliver of teal was not worth looking at. -->
+      <div class="splash-progress">
+        <span></span>
+        <i class="splash-paw" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <ellipse cx="6.6" cy="10.4" rx="1.9" ry="2.4"/>
+            <ellipse cx="10.6" cy="7.4" rx="2" ry="2.6"/>
+            <ellipse cx="15.1" cy="7.7" rx="2" ry="2.6"/>
+            <ellipse cx="18.6" cy="11.2" rx="1.9" ry="2.3"/>
+            <path d="M12.4 12.6c2.6 0 4.8 1.7 5.3 3.8.5 2-1 3.7-3.1 3.7-1 0-1.6-.4-2.2-.4s-1.2.4-2.2.4c-2.1 0-3.6-1.7-3.1-3.7.5-2.1 2.7-3.8 5.3-3.8z"/>
+          </svg>
+        </i>
+      </div>
       <div class="splash-meta">
         <p id="splash-version" class="splash-version"></p>
         <p id="splash-date" class="splash-date"></p>

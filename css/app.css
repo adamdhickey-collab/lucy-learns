@@ -2411,6 +2411,74 @@ details.disclosure .disclosure-body {
   animation: splash-fill var(--splash-hold) linear var(--splash-elapsed) both;
 }
 
+/* The paw that walks the bar.
+   ------------------------------------------------------------------------
+   Same clock as the fill, so it rides the leading edge rather than miming it:
+   one duration, one negative delay, both taken from --splash-hold. It is
+   translated by its own container's width, so it lands exactly at the end.
+
+   The bob is two steps a second, deliberately slower than a real dog and
+   slower than the walk, so it reads as an amble rather than a scurry. */
+.splash-paw {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  margin-top: -8px;
+  margin-left: -8px;
+  color: var(--primary);
+  animation: splash-paw-walk var(--splash-hold) linear var(--splash-elapsed) both;
+}
+
+.splash-paw svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: splash-paw-step 500ms ease-in-out infinite;
+}
+
+@keyframes splash-paw-walk {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* Lifts and sets down, with a slight tilt on the lift. */
+@keyframes splash-paw-step {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-2.5px) rotate(-7deg);
+  }
+}
+
+/* The bar has to be able to hold the paw outside its own rounded ends. */
+.splash-progress {
+  overflow: visible;
+}
+
+.splash-progress > span {
+  border-radius: var(--r-pill);
+}
+
+/* Reduced motion gets the bar and no walker: the paw is motion for its own
+   sake, which is exactly what this setting is asking us not to do. */
+@media (prefers-reduced-motion: reduce) {
+  .splash-paw {
+    display: none;
+  }
+}
+
 @keyframes splash-fill {
   from {
     transform: scaleX(0);
