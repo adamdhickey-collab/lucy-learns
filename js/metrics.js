@@ -102,8 +102,20 @@ export function activityMastery(activityId) {
  * Two sessions at 80%+, no nipping, at most one jump each, arousal 3 or lower.
  */
 export function readyToAdvance(activityId, levelNumber) {
-  const sessions = sessionsAt(activityId, levelNumber).slice(0, 2);
-  if (sessions.length < 2) return false;
+  // One clean session, not two.
+  //
+  // The bar itself is unchanged — 80% of reps, calm, no nipping — but it used
+  // to have to be cleared twice in a row before the app would move. That meant
+  // a household could have a genuinely good session and watch the level sit
+  // exactly where it was, which is the opposite of the feedback a good session
+  // should get. The quality gate is doing the real work here; the repeat count
+  // was mostly making progress feel unavailable.
+  //
+  // A level is still not "mastered" on one session — that is what the mastery
+  // ladder tracks, and it still wants sessions across separate days. This only
+  // decides which level to queue next.
+  const sessions = sessionsAt(activityId, levelNumber).slice(0, 1);
+  if (!sessions.length) return false;
   return sessions.every((s) => {
     const reps = s.repetitions || 0;
     const rate = reps ? (s.successfulRepetitions || 0) / reps : 0;
@@ -146,7 +158,7 @@ export function recommendation(activity, level, session) {
     const next = levelOf(activity, level.number + 1);
     return {
       title: 'Ready for the next step',
-      body: `${pct}% success two sessions running. ${next.setup}`,
+      body: `${pct}% success, calm throughout. ${next.setup}`,
       suggest: 'up',
       nextLevel: next.number,
     };
@@ -158,7 +170,7 @@ export function recommendation(activity, level, session) {
       // are two different bars — 75% once, against 80% twice — and the done
       // screen can show both at the same time. Saying "done" next to a "Level
       // 4 cleared" stamp made one of them look wrong.
-      body: `${session.successfulRepetitions} of ${reps} reps went well. One more like that and it is time to move up.`,
+      body: `${session.successfulRepetitions} of ${reps} reps went well. Keep her calm through a whole session and the next level opens.`,
       suggest: 'stay',
     };
   }

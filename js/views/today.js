@@ -8,6 +8,7 @@ import {
   practiceByDay,
   currentStreak,
   masteryFor,
+  currentLevel,
 } from '../metrics.js';
 // Today shows the strip, not the map. The map lives on the program screen one
 // tap away, and rendering it here too made this screen 3.2 viewports tall to
@@ -25,7 +26,25 @@ const greeting = () => {
 
 function render() {
   const state = getState();
-  const next = suggestedActivity();
+  // suggestedActivity() scores every open activity by the mastery of its
+  // current level. That is a sensible ranking on its own, but the strip
+  // directly above the hero draws the program's own `focus` — finish what is
+  // underway before opening more — and the two disagreed as soon as more than
+  // one activity had been practiced. The demo showed it plainly: the strip had
+  // Sound finished with a check and Stay ringed as next, while the card below
+  // it said to practice Sound. One screen, two answers to "what now".
+  //
+  // The strip wins, because it is the one that shows its reasoning. The
+  // ranking still decides when the program's focus is finished or when the
+  // activity belongs to no program.
+  const suggestion = suggestedActivity();
+  const focusProg = programProgress(suggestion.activity.programId);
+  const focusActivity =
+    focusProg && !focusProg.complete ? focusProg.focus.activity : suggestion.activity;
+  const next =
+    focusActivity.id === suggestion.activity.id
+      ? suggestion
+      : { activity: focusActivity, level: currentLevel(focusActivity) };
   const { activity, level } = next;
   const cover = IMAGES[activity.coverImage];
   const program = programById(activity.programId);

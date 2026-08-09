@@ -228,27 +228,31 @@ export function clearAll() {
  */
 export function seedDemoSessions({ force = false } = {}) {
   if (state.seeded && !force) return;
-  // Rest days and a double-practice day, so the charts look like real life.
-  // Every row is dg-1, because it is the only activity in the app. Four of
-  // these used to be dg-2, which was parked three releases ago: the example
-  // history then showed days of practice on something the app labels "coming
-  // soon" and refuses to open, and it showed up in the trainer's report. The
-  // demo is the front door for anyone evaluating this, so it has to describe a
-  // household using the app as it actually exists.
+  // Twelve days across three of the four activities.
   //
-  // Rest days and a double-practice day, so the charts look like real life.
+  // Every row used to be dg-1, correctly, because it was the only activity in
+  // the app. All four are open now, and a demo that only ever practices the
+  // first one shows a household permanently stuck on it — the map stays empty,
+  // no activity is ever finished, and nothing downstream of "you cleared one"
+  // is reachable. This walks the arc instead: the first activity finished, the
+  // second underway, the third just started.
+  //
+  // Rest days and a double-practice day, so the charts look like real life,
+  // and early sessions that went badly, so progress reads as earned.
   const plan = [
     // [daysAgo, hour, activityId, level, reps, successes, arousal, behaviors, assistance]
     [12, 18, 'dg-1', 1, 5, 2, 3, ['barked', 'looked_at_handler'], ['treat_lure']],
     [11, 19, 'dg-1', 1, 5, 3, 3, ['looked_at_handler', 'barked'], ['treat_lure']],
-    [10, 18, 'dg-1', 1, 5, 5, 2, ['looked_at_handler', 'recovered_quickly'], ['none']],
-    [8, 17, 'dg-1', 2, 5, 4, 2, ['looked_at_handler', 'four_paws_down'], ['verbal_cue']],
-    [7, 19, 'dg-1', 2, 5, 5, 1, ['looked_at_handler', 'recovered_quickly'], ['none']],
-    [5, 18, 'dg-1', 3, 5, 3, 3, ['looked_at_handler', 'barked'], ['reduced_distance']],
-    [4, 9, 'dg-1', 3, 5, 4, 2, ['looked_at_handler'], ['verbal_cue']],
-    [4, 19, 'dg-1', 3, 5, 5, 2, ['looked_at_handler', 'recovered_quickly'], ['none']],
-    [2, 18, 'dg-1', 4, 5, 3, 2, ['looked_at_handler', 'jumped'], ['treat_lure']],
-    [1, 18, 'dg-1', 4, 5, 4, 1, ['looked_at_handler', 'four_paws_down'], ['verbal_cue']],
+    [10, 18, 'dg-1', 2, 5, 5, 2, ['looked_at_handler', 'recovered_quickly'], ['none']],
+    [9, 17, 'dg-1', 3, 5, 4, 2, ['looked_at_handler', 'four_paws_down'], ['verbal_cue']],
+    [8, 19, 'dg-1', 4, 5, 5, 1, ['looked_at_handler', 'recovered_quickly'], ['none']],
+    [7, 18, 'dg-1', 5, 5, 3, 3, ['looked_at_handler', 'barked'], ['reduced_distance']],
+    [6, 9, 'dg-1', 5, 5, 5, 2, ['looked_at_handler', 'recovered_quickly'], ['none']],
+    [5, 19, 'dg-2', 1, 4, 2, 3, ['jumped', 'looked_at_handler'], ['treat_lure']],
+    [4, 18, 'dg-2', 1, 4, 4, 2, ['looked_at_handler', 'four_paws_down'], ['none']],
+    [3, 18, 'dg-2', 2, 4, 3, 2, ['looked_at_handler'], ['verbal_cue']],
+    [2, 19, 'dg-2', 3, 4, 4, 2, ['looked_at_handler', 'recovered_quickly'], ['none']],
+    [1, 18, 'dg-3', 1, 5, 3, 2, ['looked_at_handler', 'jumped'], ['treat_lure']],
   ];
 
   state.sessions = plan
