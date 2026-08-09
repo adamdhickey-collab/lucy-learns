@@ -661,14 +661,13 @@ function doneScreen(activity, level) {
           ${session.detailAdded ? 'Edit detail' : 'Add detail'}
         </button>
 
-        ${session.advanced
-          ? html`<div class="level-moved" style="margin-top: var(--s-5)">
-              <p><strong>Level ${session.advanced}</strong> is queued for next time.</p>
-              <button class="btn btn--ghost btn--block" type="button" data-stay>
-                Stay at level ${level.number} instead
-              </button>
-            </div>`
-          : ''}
+        ${/* Say what actually happens next, both halves of it.
+              This used to promise "Level 2 is queued for next time" and then
+              Today would open a different activity entirely, because clearing
+              a level also hands the focus to whatever has been left alone
+              longest. Each half was right and together they made the app
+              contradict itself one screen later. */ ''}
+        ${session.advanced ? levelMovedNotice(activity, level, session) : ''}
       </div>
     </div>
     <div class="player-foot">
@@ -678,6 +677,34 @@ function doneScreen(activity, level) {
       </div>
     </div>
   `;
+}
+
+/**
+ * What the household should expect next, after a session that earned a level.
+ *
+ * Two facts, and they are not the same fact: the level this activity will
+ * open on when they come back to it, and which activity the program is
+ * actually pointing at now.
+ */
+function levelMovedNotice(activity, level, session) {
+  const prog = programProgress(activity.programId);
+  const nextActivity = prog.focus.activity;
+  const movedOn = nextActivity.id !== activity.id;
+
+  return html`<div class="level-moved" style="margin-top: var(--s-5)">
+    <p>
+      <strong>${activity.shortTitle} level ${session.advanced}</strong> is saved
+      for when you come back to it.
+    </p>
+    ${movedOn
+      ? html`<p class="level-moved-next">
+          Up next: <strong>${nextActivity.title}</strong>.
+        </p>`
+      : ''}
+    <button class="btn btn--ghost btn--block" type="button" data-stay>
+      Stay at level ${level.number} instead
+    </button>
+  </div>`;
 }
 
 // ---------------------------------------------------------------------------

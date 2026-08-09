@@ -4413,3 +4413,31 @@ details.disclosure .disclosure-body {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
+/* --- what happens next, after a level is earned --------------------------- */
+.level-moved {
+  text-align: center;
+}
+
+.level-moved p {
+  color: var(--text-secondary);
+}
+
+.level-moved strong {
+  color: var(--text-primary);
+}
+
+/* The activity the program has actually moved to. Accented because it is the
+   instruction — the line above it is a receipt for something already done. */
+.level-moved-next {
+  margin-top: var(--s-2);
+  color: var(--primary-dark);
+}
+
+.level-moved-next strong {
+  color: var(--primary-dark);
+}
+
+.level-moved .btn {
+  margin-top: var(--s-4);
+}

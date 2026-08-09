@@ -50,6 +50,14 @@ export function activityProgress(activity) {
 
   const cleared = levels.filter((l) => l.cleared).length;
   const started = levels.some((l) => l.mastery !== MASTERY.untouched);
+  // Halfway through a level: this one has been practiced and has not been
+  // cleared. The rotation in programProgress will not move off an activity in
+  // this state, so a level that needs another go gets it.
+  const workingEntry = levels.find((l) => l.level.number === currentLevel(activity).number);
+  const midLevel =
+    !!workingEntry &&
+    !workingEntry.cleared &&
+    sessionsAt(activity.id, workingEntry.level.number).length > 0;
   // When this activity was last practiced. Drives the rotation in
   // programProgress: the household is pointed at whatever they have left
   // alone longest, so the four activities take turns.
@@ -67,6 +75,7 @@ export function activityProgress(activity) {
     ratio: cleared / levels.length,
     started,
     lastAt,
+    midLevel,
     complete: cleared === levels.length,
     // The level to open next: the one being worked, unless it is already
     // cleared and there is unfinished ground above it.
@@ -134,7 +143,15 @@ export function programProgress(programId) {
     .filter((s) => !s.complete && s.state !== STAGE.ahead)
     .sort((a, b) => a.lastAt - b.lastAt || a.index - b.index);
 
+  // Rotate on a cleared level, not on every session. Moving after each session
+  // regardless meant a level that went badly was abandoned rather than
+  // repeated — the app would shuffle the household to the next activity in the
+  // middle of the one thing they had not managed yet. An activity holds the
+  // focus until its live level is behind it.
+  const midway = rotation.find((s) => s.midLevel);
+
   const focus =
+    midway ||
     rotation[0] ||
     live.find((s) => !s.complete) ||
     live[live.length - 1] ||
