@@ -153,31 +153,37 @@ export const IMAGES = withThumb({
 export const GOALS = [
   {
     id: 'door-routine',
+    icon: 'goal-door',
     title: 'Door routine',
     blurb: 'Knock or doorbell means look at me and go to your bed.',
   },
   {
     id: 'calm-greetings',
+    icon: 'goal-greeting',
     title: 'Calm greetings',
     blurb: 'Four paws down when someone approaches or arrives.',
   },
   {
     id: 'impulse-control',
+    icon: 'goal-impulse',
     title: 'Impulse control',
     blurb: 'Pause, listen, and make a calmer choice while excited.',
   },
   {
     id: 'walks-public',
+    icon: 'goal-walk',
     title: 'Walks and public encounters',
     blurb: 'Stay with your handler when the world gets interesting.',
   },
   {
     id: 'settle-recovery',
+    icon: 'goal-settle',
     title: 'Settle and recovery',
     blurb: 'Come back down after getting excited.',
   },
   {
     id: 'foundation',
+    icon: 'goal-foundation',
     title: 'Foundation skills',
     blurb: 'The basics everything else is built on.',
   },
@@ -200,6 +206,7 @@ export const GOALS = [
 export const PLANNED_ACTIVITIES = [
   {
     id: 'planned-greeting',
+    icon: 'plan-fourpaws',
     goalId: 'calm-greetings',
     coverImage: 'cg-01',
     title: 'Four Paws on the Floor',
@@ -208,6 +215,7 @@ export const PLANNED_ACTIVITIES = [
   },
   {
     id: 'planned-settle',
+    icon: 'plan-mat',
     goalId: 'settle-recovery',
     coverImage: 'sr-01',
     title: 'Settle on a Mat',
@@ -216,6 +224,7 @@ export const PLANNED_ACTIVITIES = [
   },
   {
     id: 'planned-walk',
+    icon: 'plan-walkpeople',
     goalId: 'walks-public',
     coverImage: 'wp-01',
     title: 'People Passing on Walks',
@@ -224,6 +233,7 @@ export const PLANNED_ACTIVITIES = [
   },
   {
     id: 'planned-name',
+    icon: 'plan-name',
     goalId: 'foundation',
     coverImage: 'fd-01',
     title: 'Name Response Around Distractions',

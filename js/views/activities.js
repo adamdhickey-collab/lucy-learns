@@ -62,7 +62,10 @@ function activityCard(activity) {
 function plannedCard(activity) {
   return html`<li>
     <div class="activity-card activity-card--planned">
-      <div class="planned-mark" aria-hidden="true">${icon('clock')}</div>
+      ${/* Its own mark rather than a clock. All four showed the same clock,
+            which said "later" four times and said nothing about which one this
+            is — the same bare-title problem the route had. */ ''}
+      <div class="planned-mark" aria-hidden="true">${icon(activity.icon || 'clock')}</div>
       <div class="body">
         <h3>${activity.title}</h3>
         <p>${activity.shortPurpose}</p>
@@ -103,7 +106,10 @@ function render() {
 
     return html`<section class="goal-group">
       <header>
-        <h2>${goal.title}</h2>
+        <h2 class="goal-title">
+          <span class="goal-mark" aria-hidden="true">${icon(goal.icon)}</span>
+          ${goal.title}
+        </h2>
         <p>${goal.blurb}</p>
       </header>
       ${program

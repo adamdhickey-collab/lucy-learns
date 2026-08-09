@@ -4367,3 +4367,35 @@ details.disclosure .disclosure-body {
     transition: none;
   }
 }
+
+/* --- library marks --------------------------------------------------------
+   The goal heading carries the same kind of mark the route does, at heading
+   scale. Inline-flex so the mark sits on the heading's own line and wraps with
+   it rather than hanging in the margin. */
+.goal-title {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+
+.goal-mark {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  color: var(--primary-dark);
+}
+
+.goal-mark svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
