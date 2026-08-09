@@ -158,7 +158,12 @@ export function recommendation(activity, level, session) {
     const next = levelOf(activity, level.number + 1);
     return {
       title: 'Ready for the next step',
-      body: `${pct}% success, calm throughout. ${next.setup}`,
+      // No preview of the next level's setup here. The done screen states
+      // which activity the program is actually pointing at, and that is often
+      // a different one — describing what level 2 involves directly above
+      // "up next: Stay While the Door Opens" put two different futures on the
+      // same screen. This is the verdict; the notice below it is the plan.
+      body: `${pct}% success, calm throughout.`,
       suggest: 'up',
       nextLevel: next.number,
     };

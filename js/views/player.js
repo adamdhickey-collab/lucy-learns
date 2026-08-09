@@ -625,6 +625,19 @@ function doneScreen(activity, level) {
 
         ${clearedBanner(session.gain, level)}
 
+        ${/* Directly under the verdict, because it is the instruction on this
+              screen and everything below it is a receipt. It sat last, after
+              the stats, the program band and the detail button, which put the
+              one line telling the household where to go next below the fold on
+              a 812pt phone.
+
+              It says both halves of what happens: the level this activity will
+              open on when they return, and which activity the program is
+              pointing at now. Those are not the same fact, and promising only
+              the first made the app contradict itself one screen later. */ ''}
+        ${session.advanced ? levelMovedNotice(activity, level, session) : ''}
+
+
         ${milestone
           ? html`<div class="milestone-climb">
               <p>
@@ -661,13 +674,6 @@ function doneScreen(activity, level) {
           ${session.detailAdded ? 'Edit detail' : 'Add detail'}
         </button>
 
-        ${/* Say what actually happens next, both halves of it.
-              This used to promise "Level 2 is queued for next time" and then
-              Today would open a different activity entirely, because clearing
-              a level also hands the focus to whatever has been left alone
-              longest. Each half was right and together they made the app
-              contradict itself one screen later. */ ''}
-        ${session.advanced ? levelMovedNotice(activity, level, session) : ''}
       </div>
     </div>
     <div class="player-foot">
