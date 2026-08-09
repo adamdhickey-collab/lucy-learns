@@ -2333,7 +2333,13 @@ details.disclosure .disclosure-body {
      used. The caps only bite on a desktop window, where 60% of the viewport
      would otherwise fill the screen. 264px is the size the badge reaches on
      the largest phone this ships to. */
-  --badge: min(60vw, 60vh, 264px);
+  --badge: min(50vw, 50vh, 220px);
+
+  /* Where the badge sits. Named because the meta and the bar are stacked
+     underneath it and all three have to move together — and because
+     scripts/make-splash.mjs bakes the same two numbers into the iOS launch
+     images. Change one, change the other, and regenerate. */
+  --badge-y: 34%;
 
   /* Overwritten by app.js with the real hold and how much of it has already
      elapsed. The fallbacks keep the bar sane if the script never runs. */
@@ -2347,7 +2353,7 @@ details.disclosure .disclosure-body {
    put it, and the handoff would jump. */
 .splash-slot {
   position: absolute;
-  top: 45%;
+  top: var(--badge-y);
   left: 50%;
   width: var(--badge);
   height: var(--badge);
@@ -2359,9 +2365,11 @@ details.disclosure .disclosure-body {
    has no line, so anything painted immediately would pop at the handoff. */
 .splash-progress {
   position: absolute;
-  top: calc(45% + var(--badge) / 2 + var(--s-5));
+  /* Under the meta, which is itself under the badge. The 3.4em clears both
+     lines of version and date at their own size. */
+  top: calc(var(--badge-y) + var(--badge) / 2 + var(--s-5) + 3.4em);
   left: 50%;
-  width: calc(var(--badge) * 0.42);
+  width: calc(var(--badge) * 0.5);
   height: 3px;
   transform: translateX(-50%);
   border-radius: var(--r-pill);
@@ -2445,7 +2453,10 @@ details.disclosure .disclosure-body {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: calc(var(--s-6) + env(safe-area-inset-bottom));
+  /* Directly under the badge rather than pinned to the bottom of the screen,
+     so the mark, the build it is showing, and the bar reporting the wait read
+     as one centred stack instead of three things at three heights. */
+  top: calc(var(--badge-y) + var(--badge) / 2 + var(--s-5));
   margin: 0;
   text-align: center;
   animation: splash-meta-in 520ms 220ms ease-out both;

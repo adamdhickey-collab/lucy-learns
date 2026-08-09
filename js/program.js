@@ -50,6 +50,12 @@ export function activityProgress(activity) {
 
   const cleared = levels.filter((l) => l.cleared).length;
   const started = levels.some((l) => l.mastery !== MASTERY.untouched);
+  // When this activity was last practiced. Drives the rotation in
+  // programProgress: the household is pointed at whatever they have left
+  // alone longest, so the four activities take turns.
+  const lastAt = getState()
+    .sessions.filter((s) => s.activityId === activity.id)
+    .reduce((newest, s) => Math.max(newest, new Date(s.startedAt).getTime()), 0);
   const working = currentLevel(activity);
   const nextUncleared = levels.find((l) => !l.cleared);
 
@@ -60,6 +66,7 @@ export function activityProgress(activity) {
     total: levels.length,
     ratio: cleared / levels.length,
     started,
+    lastAt,
     complete: cleared === levels.length,
     // The level to open next: the one being worked, unless it is already
     // cleared and there is unfinished ground above it.
@@ -104,10 +111,31 @@ export function programProgress(programId) {
   const finished = live.filter((s) => s.state === STAGE.complete).length;
   const underway = live.filter((s) => s.state === STAGE.active).length;
 
-  // What Today and the map point at: finish what is open before opening more.
+  // What Today and the map point at.
+  //
+  // This used to be "finish what is open before opening more", which is a
+  // reasonable rule and made the app feel like one long corridor: the first
+  // activity holds the focus for all five of its levels, so the second is
+  // fifteen sessions away and the fourth is barely a rumour. A household
+  // cannot care about an arc they never see.
+  //
+  // So the focus rotates. Among the activities that are actually unlocked and
+  // unfinished, it points at whichever has been left alone longest — which
+  // means a never-practiced one first, then the least recently practiced. Do a
+  // level of Sound and the app moves you to Stay; do a level there and it
+  // moves you to Place.
+  //
+  // This does not break the stacking the handout insists on. `ahead` is
+  // excluded, and a stage only stops being `ahead` once the one before it has
+  // been *started* — which is exactly what "each one assumes the one before it
+  // is starting to hold" asks for. Nothing here jumps a household into the
+  // real greeting before the door has ever been opened.
+  const rotation = live
+    .filter((s) => !s.complete && s.state !== STAGE.ahead)
+    .sort((a, b) => a.lastAt - b.lastAt || a.index - b.index);
+
   const focus =
-    live.find((s) => s.state === STAGE.active) ||
-    live.find((s) => s.state === STAGE.open) ||
+    rotation[0] ||
     live.find((s) => !s.complete) ||
     live[live.length - 1] ||
     stages[0];

@@ -67,8 +67,8 @@ const SCREENS = [
 ];
 
 // Same geometry as the in-app splash in app.css.
-const ART_WIDTH_FRACTION = 0.6;
-const ART_CENTER_Y = 0.45;
+const ART_WIDTH_FRACTION = 0.5;
+const ART_CENTER_Y = 0.34;
 
 // The app's --background. Keep these in step: the whole point of the launch
 // image is that the boot and the first paint are the same colour.
