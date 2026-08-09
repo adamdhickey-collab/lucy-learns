@@ -3393,25 +3393,29 @@ details.disclosure .disclosure-body {
 
    So the circles stay and the strokes go. Each mark sits on a soft disc of the
    page colour, which reads as a seat rather than a target, and where the
-   household is now is carried by fill instead of by an outline. */
-.route-line--compact .route-node {
+   household is now is carried by fill instead of by an outline.
+
+   Applied at both scales. Scoping this to the compact strip left the welcome
+   route drawing outlined rings for the same five marks Today drew as discs —
+   which is the split this whole row was introduced to close. */
+.route-line .route-node {
   border: 0;
   background: var(--surface-sunken);
   box-shadow: none;
 }
 
 /* Where they are. Tinted rather than ringed. */
-.route-line--compact .route-stop--next .route-node {
+.route-line .route-stop--next .route-node {
   background: var(--primary-wash);
   color: var(--primary);
 }
 
-.route-line--compact .route-stop--complete .route-node {
+.route-line .route-stop--complete .route-node {
   color: var(--success);
 }
 
 /* The finish keeps its gold, as a wash rather than a border. */
-.route-line--compact .route-stop--end .route-node {
+.route-line .route-stop--end .route-node {
   background: var(--reward-wash);
   color: var(--reward-text);
 }
