@@ -640,11 +640,19 @@ function doneScreen(activity, level) {
 
         ${milestone
           ? html`<div class="milestone-climb">
+              ${/* Name the axis, because there are two and they were being
+                    stated as if they were one. Directly above this the screen
+                    says "Level 2 cleared", and this used to answer "Level 2 is
+                    now Almost there" — which reads as a contradiction rather
+                    than as a second measure.
+                    Cleared means the level is behind them and the next one is
+                    open. This is how consistent it has been so far, which is
+                    what the ladder underneath is a picture of. */ ''}
               <p>
                 ${milestone.to.id === 'reliable'
-                  ? html`That makes level ${level.number} <strong>Reliable</strong>. Three
-                      sessions, three days, barely any help.`
-                  : html`Level ${level.number} is now
+                  ? html`Held up over time: <strong>Reliable</strong>. Three sessions, three
+                      days, barely any help.`
+                  : html`Held up over time so far:
                       <strong>${milestone.to.label}</strong>.`}
               </p>
               ${masteryLadder(milestone.to, { from: milestone.from })}

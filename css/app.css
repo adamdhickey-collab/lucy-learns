@@ -2411,78 +2411,6 @@ details.disclosure .disclosure-body {
   animation: splash-fill var(--splash-hold) linear var(--splash-elapsed) both;
 }
 
-/* The paw that walks the bar.
-   ------------------------------------------------------------------------
-   Same clock as the fill, so it rides the leading edge rather than miming it:
-   one duration, one negative delay, both taken from --splash-hold. It is
-   translated by its own container's width, so it lands exactly at the end.
-
-   The bob is two steps a second, deliberately slower than a real dog and
-   slower than the walk, so it reads as an amble rather than a scurry. */
-.splash-paw {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 16px;
-  height: 16px;
-  margin-top: -8px;
-  margin-left: -8px;
-  color: var(--primary);
-  animation: splash-paw-walk var(--splash-hold) linear var(--splash-elapsed) both;
-}
-
-.splash-paw svg {
-  width: 100%;
-  height: 100%;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  animation: splash-paw-step 500ms ease-in-out infinite;
-}
-
-/* `left`, not `translateX`. A percentage translate resolves against the
-   element's own width, so the paw travelled its own 16px and then sat there
-   while the bar filled past it. A percentage `left` resolves against the
-   containing block, which is the bar — which is what "walk the bar" means. */
-@keyframes splash-paw-walk {
-  from {
-    left: 0%;
-  }
-  to {
-    left: 100%;
-  }
-}
-
-/* Lifts and sets down, with a slight tilt on the lift. */
-@keyframes splash-paw-step {
-  0%,
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-2.5px) rotate(-7deg);
-  }
-}
-
-/* The bar has to be able to hold the paw outside its own rounded ends. */
-.splash-progress {
-  overflow: visible;
-}
-
-.splash-progress > span {
-  border-radius: var(--r-pill);
-}
-
-/* Reduced motion gets the bar and no walker: the paw is motion for its own
-   sake, which is exactly what this setting is asking us not to do. */
-@media (prefers-reduced-motion: reduce) {
-  .splash-paw {
-    display: none;
-  }
-}
-
 @keyframes splash-fill {
   from {
     transform: scaleX(0);
@@ -3456,36 +3384,35 @@ details.disclosure .disclosure-body {
   gap: 3px;
 }
 
-/* Marks, not controls.
+/* Discs, not controls.
    ------------------------------------------------------------------------
-   The whole strip is one link to the program map, but five outlined circles
+   The whole strip is one link to the program map, but five *outlined* circles
    with icons in them read as five buttons — so tapping "Place" looked like it
-   would open Place and instead opened a menu. A circle with a border is a
-   button affordance; on Today these are a summary of where the household is.
+   would open Place and instead opened a menu. The outline is what does it: a
+   bordered circle is a button, a filled one is a token.
 
-   So the rings come off everywhere except the current activity. One ring left
-   on the screen still answers "where am I", and it now means something rather
-   than being the shape all five happen to share. The card's arrow stays the
-   only thing that looks tappable, because it is the only thing that is. */
+   So the circles stay and the strokes go. Each mark sits on a soft disc of the
+   page colour, which reads as a seat rather than a target, and where the
+   household is now is carried by fill instead of by an outline. */
 .route-line--compact .route-node {
-  border-color: transparent;
-  background: transparent;
+  border: 0;
+  background: var(--surface-sunken);
   box-shadow: none;
 }
 
-/* The exception, and the whole point of the row. */
+/* Where they are. Tinted rather than ringed. */
 .route-line--compact .route-stop--next .route-node {
-  border-color: var(--primary);
-  background: var(--surface);
+  background: var(--primary-wash);
+  color: var(--primary);
 }
 
-/* Finished: the check carries it. A filled disc here was the most
-   button-like mark of the five. */
 .route-line--compact .route-stop--complete .route-node {
   color: var(--success);
 }
 
+/* The finish keeps its gold, as a wash rather than a border. */
 .route-line--compact .route-stop--end .route-node {
+  background: var(--reward-wash);
   color: var(--reward-text);
 }
 
