@@ -3384,6 +3384,39 @@ details.disclosure .disclosure-body {
   gap: 3px;
 }
 
+/* Marks, not controls.
+   ------------------------------------------------------------------------
+   The whole strip is one link to the program map, but five outlined circles
+   with icons in them read as five buttons — so tapping "Place" looked like it
+   would open Place and instead opened a menu. A circle with a border is a
+   button affordance; on Today these are a summary of where the household is.
+
+   So the rings come off everywhere except the current activity. One ring left
+   on the screen still answers "where am I", and it now means something rather
+   than being the shape all five happen to share. The card's arrow stays the
+   only thing that looks tappable, because it is the only thing that is. */
+.route-line--compact .route-node {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* The exception, and the whole point of the row. */
+.route-line--compact .route-stop--next .route-node {
+  border-color: var(--primary);
+  background: var(--surface);
+}
+
+/* Finished: the check carries it. A filled disc here was the most
+   button-like mark of the five. */
+.route-line--compact .route-stop--complete .route-node {
+  color: var(--success);
+}
+
+.route-line--compact .route-stop--end .route-node {
+  color: var(--reward-text);
+}
+
 /* The road behind the compact row is shorter than the one on the welcome,
    because the row itself is narrower and an 8% inset left it stranded well
    inside the first and last marks. */

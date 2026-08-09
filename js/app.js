@@ -177,12 +177,15 @@ if (splash) {
   const dateSlot = splash.querySelector('#splash-date');
   if (dateSlot) {
     const { year, month, day } = APP_UPDATED;
-    dateSlot.textContent = new Date(year, month - 1, day).toLocaleDateString(undefined, {
+    // Labelled, because a bare date under a version number is ambiguous —
+    // it could as easily be today's date or an expiry as the build date.
+    const stamp = new Date(year, month - 1, day).toLocaleDateString(undefined, {
       weekday: 'short',
       month: 'short',
       day: 'numeric',
       year: 'numeric',
     });
+    dateSlot.textContent = `Last updated ${stamp}`;
   }
 
   // The version is stated, not performed. An earlier pass counted it up from
