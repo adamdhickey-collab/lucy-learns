@@ -606,6 +606,7 @@ export const ACTIVITIES = [
         successCriteria: ['Holds the bed while a real person is visible'],
         overrides: {
           2: { instruction: 'Open the door to a familiar person waiting outside.', image: 'dg-09' },
+          4: { instruction: 'Release her, and your helper steps back outside.', image: 'dg-26' },
         },
       },
     ],
@@ -721,7 +722,7 @@ export const ACTIVITIES = [
       { instruction: 'Your guest rings the bell.', image: 'dg-03' },
       { instruction: 'Send her to her bed.', cue: 'Go to bed', image: 'dg-06' },
       { instruction: 'Open the door. The guest stays put.', image: 'dg-09' },
-      { instruction: 'Reward her for holding the bed.', image: 'dg-07' },
+      { instruction: 'Reward her for holding the bed.', image: 'dg-12' },
       { instruction: 'Bring the guest in and let Lucy settle.', image: 'dg-09' },
       { instruction: 'Walk her over on a loose leash.', cue: 'Go say hi', image: 'dg-10' },
       {
