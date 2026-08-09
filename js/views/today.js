@@ -179,7 +179,7 @@ function alignCaret(root) {
   // segments became the same row of marks the welcome draws — and a missing
   // element here fails silently, leaving the caret on its unmeasured
   // percentage rather than throwing.
-  const active = root.querySelector('.route-stop--active, .route-stop--open');
+  const active = root.querySelector('.route-stop--active, .route-stop--next');
   if (!strip || !active) return;
   const card = strip.getBoundingClientRect();
   const seg = active.getBoundingClientRect();

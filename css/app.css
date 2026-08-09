@@ -2963,8 +2963,9 @@ details.disclosure .disclosure-body {
   color: var(--success);
 }
 
-.stage--active .stage-mark,
-.stage--open .stage-mark {
+/* Same single-next rule as the route: only the stage the program actually
+   points at is named in the accent. */
+.stage--next .stage-mark {
   color: var(--primary);
 }
 
@@ -3863,12 +3864,13 @@ details.disclosure .disclosure-body {
   stroke-linejoin: round;
 }
 
-/* Live: where they are, or where they would start. This used to be pinned to
-   :first-child, which was true only on a fresh install — the welcome is the
-   one place this row is guaranteed to be empty. Driven off real state it also
-   holds on Today, where the live activity is whichever one is being worked. */
-.route-stop--active .route-node,
-.route-stop--open .route-node {
+/* Live: the single thing to do next.
+   ------------------------------------------------------------------------
+   This was pinned to :first-child, then to state — and state was wrong the
+   moment more than one activity was unparked, because "in progress" and
+   "ready to start" both qualified and the row lit two rings pointing in two
+   directions. One class, set on one stop by stageNodes(). */
+.route-stop--next .route-node {
   border-color: var(--primary);
   color: var(--primary);
   box-shadow: 0 0 0 4px var(--primary-wash);
@@ -3908,8 +3910,7 @@ details.disclosure .disclosure-body {
   white-space: nowrap;
 }
 
-.route-stop--active .route-label,
-.route-stop--open .route-label {
+.route-stop--next .route-label {
   color: var(--primary);
 }
 

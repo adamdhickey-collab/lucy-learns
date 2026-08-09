@@ -140,7 +140,7 @@ function setupNode() {
 export function stageList(prog, { currentActivityId = null, showThumbs = true } = {}) {
   const rows = prog.stages.map((stage) => {
     const img = IMAGES[stage.activity.coverImage];
-    const isFocus = stage.activity.id === prog.focus.activity.id;
+    const isFocus = !prog.complete && stage.activity.id === prog.focus.activity.id;
     const here = stage.activity.id === currentActivityId;
     const soon = stage.state === STAGE.soon;
 
@@ -174,8 +174,8 @@ export function stageList(prog, { currentActivityId = null, showThumbs = true } 
 
     return html`<li
       class="stage stage--${stage.state}${isFocus && !here ? ' stage--focus' : ''}${
-        here ? ' stage--here' : ''
-      }"
+        isFocus && stage.state !== STAGE.complete ? ' stage--next' : ''
+      }${here ? ' stage--here' : ''}"
     >
       ${soon
         ? html`<div>${body}</div>`
@@ -252,11 +252,21 @@ function outcomeNode(prog) {
  * label in every case.
  */
 function stageNodes(prog, { currentActivityIndex = -1, compact = false } = {}) {
+  // Exactly one stop reads as "next". The live ring used to be painted by
+  // state, and once more than one activity was unparked two states qualified
+  // at once — the one in progress and the first one merely open — so the row
+  // lit up twice and pointed in two directions. `focus` is already the single
+  // answer to what to do next: whatever is underway, or failing that the first
+  // thing open.
+  const nextId = prog.complete ? null : prog.focus.activity.id;
   const stops = prog.stages.map((stage, i) => {
     const active = stage.index === currentActivityIndex && stage.state !== STAGE.soon;
     const done = stage.state === STAGE.complete;
+    const isNext = !done && stage.activity.id === nextId;
     return html`<span
-      class="route-stop route-stop--${stage.state}${active ? ' route-stop--active' : ''}"
+      class="route-stop route-stop--${stage.state}${active ? ' route-stop--active' : ''}${
+        isNext ? ' route-stop--next' : ''
+      }"
       style="--i: ${i}"
     >
       <span class="route-node">${done ? icon('check') : icon(stage.activity.icon)}</span>
