@@ -2442,12 +2442,16 @@ details.disclosure .disclosure-body {
   animation: splash-paw-step 500ms ease-in-out infinite;
 }
 
+/* `left`, not `translateX`. A percentage translate resolves against the
+   element's own width, so the paw travelled its own 16px and then sat there
+   while the bar filled past it. A percentage `left` resolves against the
+   containing block, which is the bar — which is what "walk the bar" means. */
 @keyframes splash-paw-walk {
   from {
-    transform: translateX(0);
+    left: 0%;
   }
   to {
-    transform: translateX(100%);
+    left: 100%;
   }
 }
 
