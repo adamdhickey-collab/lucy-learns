@@ -57,6 +57,20 @@ export const ICONS = {
   plus: '<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
   spark:
     '<svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M3 12h3M18 12h3M4.9 19.1 7 17M17 7l2.1-2.1"/><circle cx="12" cy="12" r="3"/></svg>',
+
+  // The end of the route. A sun said "nice day" rather than "this is what you
+  // are working towards"; the thing at the end of this program is the dog
+  // herself, greeting someone calmly. A paw is the one mark in the set that is
+  // unmistakably Lucy, and it survives being 15px wide in the Today strip,
+  // which a dog silhouette or a rosette does not.
+  paw:
+    '<svg viewBox="0 0 24 24">' +
+    '<ellipse cx="6.6" cy="10.4" rx="1.9" ry="2.4"/>' +
+    '<ellipse cx="10.6" cy="7.4" rx="2" ry="2.6"/>' +
+    '<ellipse cx="15.1" cy="7.7" rx="2" ry="2.6"/>' +
+    '<ellipse cx="18.6" cy="11.2" rx="1.9" ry="2.3"/>' +
+    '<path d="M12.4 12.6c2.6 0 4.8 1.7 5.3 3.8.5 2-1 3.7-3.1 3.7-1 0-1.6-.4-2.2-.4s-1.2.4-2.2.4c-2.1 0-3.6-1.7-3.1-3.7.5-2.1 2.7-3.8 5.3-3.8z"/>' +
+    '</svg>',
   check: '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
   trash:
     '<svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M10 11v6M14 11v6"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>',

@@ -2903,7 +2903,8 @@ details.disclosure .disclosure-body {
   font-size: var(--step-1);
 }
 
-/* The smaller node plus its 4px nudge. */
+/* The smaller node plus its 4px nudge. The setup row has no word under its
+   node, so it does not need the label clearance the others do. */
 .stage--setup .stage-rail::before {
   top: calc(var(--node) + 4px);
 }
@@ -2936,10 +2937,41 @@ details.disclosure .disclosure-body {
   --node: 34px;
   position: relative;
   flex: 0 0 auto;
-  width: 34px;
+  /* Wide enough for the longest label under the node ("PLACE", "GREET") at
+     the size below. The node itself stays 34px and centred. */
+  width: 46px;
   align-self: stretch;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* The word under the mark. Same job and same voice as .route-label, one size
+   down because the rail is a column rather than a row. */
+.stage-mark {
+  margin-top: 3px;
+  font-size: 0.5625rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.stage--complete .stage-mark {
+  color: var(--success);
+}
+
+.stage--active .stage-mark,
+.stage--open .stage-mark {
+  color: var(--primary);
+}
+
+/* The setup and outcome rows are not activities and have no short name. */
+.stage--setup .stage-mark,
+.stage--outcome .stage-mark {
+  display: none;
 }
 
 /* The connector runs from this node down to the next one. The last item in
@@ -2947,7 +2979,9 @@ details.disclosure .disclosure-body {
 .stage-rail::before {
   content: '';
   position: absolute;
-  top: var(--node);
+  /* Clears the node *and* the word under it. Starting at the node alone drew
+     the line straight through "PLACE". */
+  top: calc(var(--node) + 17px);
   bottom: calc(var(--s-4) * -1 - var(--s-3));
   left: 50%;
   width: 2px;

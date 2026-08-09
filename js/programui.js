@@ -145,10 +145,16 @@ export function stageList(prog, { currentActivityId = null, showThumbs = true } 
     const soon = stage.state === STAGE.soon;
 
     const body = html`
+      ${/* The mark, named. On the route and the Today strip every mark carries
+            its word; here it sat alone beside the activity's full title, so
+            the waves next to "Doorbell Predicts Rewards" looked like they
+            belonged to something else entirely. Same word as everywhere
+            else — this is the row that teaches the other two. */ ''}
       <span class="stage-rail" aria-hidden="true">
         <span class="stage-node">
           ${stage.state === STAGE.complete ? icon('check') : icon(stage.activity.icon)}
         </span>
+        <span class="stage-mark">${stage.activity.shortTitle || stage.number}</span>
       </span>
       <span class="stage-body">
         <span class="stage-state">${STATE_LABEL[stage.state]}</span>
@@ -193,7 +199,7 @@ function outcomeNode(prog) {
   return html`<li class="stage stage--outcome ${prog.complete ? 'stage--outcome-won' : ''}">
     <div>
       <span class="stage-rail" aria-hidden="true">
-        <span class="stage-node">${icon('spark')}</span>
+        <span class="stage-node">${icon('paw')}</span>
       </span>
       <span class="stage-body">
         <span class="stage-state">${outcome.eyebrow}</span>
@@ -261,7 +267,7 @@ function stageNodes(prog, { currentActivityIndex = -1, compact = false } = {}) {
   return html`<span class="route-line${compact ? ' route-line--compact' : ''}" aria-hidden="true">
     ${join(stops)}
     <span class="route-stop route-stop--end" style="--i: ${prog.stages.length}">
-      <span class="route-node">${icon('spark')}</span>
+      <span class="route-node">${icon('paw')}</span>
       ${/* One word, like every other label in the row. "Calm hello" was the
             only two-word label here, and being the rightmost it wrapped and
             forced the whole row to reserve a second line. "Goal" also says

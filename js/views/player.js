@@ -661,14 +661,13 @@ function doneScreen(activity, level) {
           ${session.detailAdded ? 'Edit detail' : 'Add detail'}
         </button>
 
-        ${advice.nextLevel
-          ? html`<button class="btn btn--block btn--lg" type="button" data-advance="${advice.nextLevel}"
-                style="margin-top: var(--s-5)">
-              Move to level ${advice.nextLevel}
-            </button>
-            <button class="btn btn--ghost btn--block" type="button" data-stay style="margin-top: var(--s-2)">
-              Stay at level ${level.number}
-            </button>`
+        ${session.advanced
+          ? html`<div class="level-moved" style="margin-top: var(--s-5)">
+              <p><strong>Level ${session.advanced}</strong> is queued for next time.</p>
+              <button class="btn btn--ghost btn--block" type="button" data-stay>
+                Stay at level ${level.number} instead
+              </button>
+            </div>`
           : ''}
       </div>
     </div>
@@ -1006,6 +1005,23 @@ function wire(root) {
 
     session.saved = record;
     session.advice = recommendation(activity, level, record);
+
+    // Act on the recommendation instead of describing it.
+    //
+    // The app already worked out that this level is behind them — two sessions
+    // at 80% or better, calm, no nipping — and then left the level exactly
+    // where it was until someone tapped a button. Miss the button and the next
+    // session silently repeats the level you had just outgrown, which reads as
+    // the program standing still.
+    //
+    // Nothing logged changes: the session that was just saved keeps the level
+    // it was actually practiced at. This moves the *next* session only, and the
+    // done screen offers to put it back.
+    if (session.advice.nextLevel) {
+      setLevel(activity.id, session.advice.nextLevel);
+      session.advanced = session.advice.nextLevel;
+    }
+
     session.phase = 'done';
     releaseAwake();
     if (!isStorageOk()) {
@@ -1036,14 +1052,6 @@ function wire(root) {
   });
 
   // Done --------------------------------------------------------------------
-  on('[data-advance]', 'click', (e) => {
-    const next = Number(e.currentTarget.dataset.advance);
-    setLevel(activity.id, next);
-    toast(`Moved to level ${next}`);
-    session = null;
-    location.hash = `#/activity/${activity.slug}`;
-  });
-
   on('[data-stay]', 'click', () => {
     setLevel(activity.id, level.number);
     toast(`Staying at level ${level.number}`);
