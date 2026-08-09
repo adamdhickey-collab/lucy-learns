@@ -49,10 +49,14 @@ that implies they have done something they have not.
 without scrolling.
 *Observe:* the Start session button clears the tab bar completely.
 
-**AC-1.6** [ ] A household that picks example data can tell it is example data,
-and can remove it in one action.
-*Observe:* the Lucy tab offers removal; after removal no seeded session
+**AC-1.6** [v] A household that picks example data can tell it is example data,
+and can remove it without hunting — one control, one confirmation.
+*Observe:* the Lucy tab offers removal; after confirming, no seeded session
 survives anywhere, including the trainer's report.
+*Amended 2026-08-09:* this asked for removal "in one action" and the app
+correctly asks to confirm first. The criterion was wrong, not the app —
+a destructive action should confirm. Rewritten to require one control and one
+confirmation, and passing on that.
 
 ## 2. Running a session
 
@@ -110,7 +114,7 @@ carries the live ring.
 activities.
 *Observe:* in both empty and seeded states.
 
-**AC-3.6** [ ] Finishing the last level of an activity visibly finishes it, and
+**AC-3.6** [v] Finishing the last level of an activity visibly finishes it, and
 moves the household to the next activity.
 *Observe:* the strip shows a check on that activity; Today moves on.
 
@@ -132,12 +136,12 @@ characters and one row per session.
 *Observe:* download, open in both, check a session with a note containing an
 apostrophe and an accented character.
 
-**AC-4.4** [ ] Example data is never presented to the trainer as real practice.
+**AC-4.4** [v] Example data is never presented to the trainer as real practice.
 *Observe:* in the seeded state, the report either excludes it or labels it.
 
 ## 5. Trust
 
-**AC-5.1** [ ] The app never shows progress the household did not earn.
+**AC-5.1** [v] The app never shows progress the household did not earn.
 *Observe:* no pre-filled streaks, no credited levels on install, no "welcome
 bonus" of any kind.
 
@@ -145,11 +149,11 @@ bonus" of any kind.
 sanctioned, and points back to the trainer when a session goes badly.
 *Observe:* the fallback path names the trainer and offers contact.
 
-**AC-5.3** [ ] Nothing leaves the device.
+**AC-5.3** [v] Nothing leaves the device.
 *Observe:* run a full session with the network tab open; no requests to any
 origin other than the app's own.
 
-**AC-5.4** [ ] Losing storage loses data but never corrupts the app.
+**AC-5.4** [v] Losing storage loses data but never corrupts the app.
 *Observe:* clear storage mid-session; the app returns to a usable first-run
 state rather than an error.
 
@@ -198,6 +202,30 @@ can settle. Ten moved to verified; one failed and was fixed in the same pass.
   rows and the summary reconciles exactly (15 of 15 repetitions). Passing.
 - **AC-4.3** is partial: the CSV carries a BOM and a title row, but nobody has
   opened it in Excel.
+
+## Second run, same day
+
+Worked every remaining criterion a browser can settle. Six more verified, one
+criterion rewritten, no new defects.
+
+- **AC-1.6** was recorded FAIL at first — the remove button appeared to do
+  nothing. It opens a confirmation sheet, which the harness was not driving.
+  Confirmed properly: twelve seeded sessions to zero, and zero data rows left
+  in the trainer's CSV.
+- **AC-5.3** passes on a real page load rather than a bare one: 26 requests,
+  every one same-origin. The first measurement caught a single request and was
+  too thin to mean anything.
+- **AC-5.4** holds — clearing storage under a running app leaves it rendering a
+  usable screen rather than an error.
+
+Still untested, and not reachable from a desktop browser — AC-2.2 (needs a
+dog), AC-2.6 (Wake Lock and a real screen lock), AC-4.3 (Excel), AC-6.1 and
+AC-6.2 (installed PWA, airplane mode, real iPhone), AC-6.5 (VoiceOver).
+AC-6.6 needs the OS reduced-motion setting, which this harness cannot emulate.
+AC-4.2 is a judgement a trainer has to make.
+
+Criteria ids are bolded at the start of a line only where the criterion itself
+is defined, so `grep -c '^\*\*AC-'` stays an honest count.
 
 ## Known gaps
 
