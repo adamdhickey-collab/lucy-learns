@@ -1456,9 +1456,12 @@ details.disclosure .disclosure-body {
   transition: transform 0.25s ease;
 }
 
+/* --tap, like everything else. This was 44px — Apple's minimum rather than
+   this app's — and it is the close button on the player, which is the one
+   control a handler reaches for with a dog on the other arm. */
 .icon-btn {
-  width: 44px;
-  height: 44px;
+  width: var(--tap);
+  height: var(--tap);
   flex: none;
   display: grid;
   place-items: center;
