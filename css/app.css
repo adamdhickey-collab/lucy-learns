@@ -1578,10 +1578,11 @@ details.disclosure .disclosure-body {
   margin-top: var(--s-6);
 }
 
-/* Pinned to the bottom of the screen, whatever precedes it. This has to come
-   after the rule above, which would otherwise replace the auto. */
+/* A wider seam than the base rhythm: this is the one control on the screen
+   that is not part of the sequence, so it reads better with air around it.
+   It no longer needs `auto` — .panic-slot is sticky now. */
 .player-inner > .panic-slot {
-  margin-top: auto;
+  margin-top: var(--s-6);
 }
 
 .step-figure img {
@@ -1659,10 +1660,24 @@ details.disclosure .disclosure-body {
 }
 
 /* Always within thumb reach at the bottom of the step, whatever the step holds. */
+/* The escape hatch. It has to be in thumb reach on every step without a
+   scroll, which it used to get by being pushed to the bottom of a full-height
+   column with `margin-top: auto`. On a step with a short instruction and no
+   cue that left a 126px hole between the disclosure and the button, and the
+   screen read as unfinished rather than as deliberately spaced.
+
+   Sticky does the same job from the other end: it sits directly under the
+   content when there is little of it, and pins to the bottom of the scrollport
+   when there is a lot. Same guarantee, no hole. */
 .panic-slot {
-  margin-top: auto;
-  padding-top: var(--s-6);
+  position: sticky;
+  bottom: 0;
+  padding-top: var(--s-4);
+  padding-bottom: var(--s-3);
   flex: none;
+  /* It stops being flush with the page once it overlaps a scrolled step, so it
+     carries the page colour with it rather than letting text run underneath. */
+  background: var(--background);
 }
 
 .panic {
