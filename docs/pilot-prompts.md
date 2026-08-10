@@ -395,3 +395,46 @@ cd "/Users/ahickey/dev/claude-local/Lucy Learns/img/pilot" && for f in pilot-*.p
 Under the naming scheme proposed in the audit (§3.8) the approved five would
 eventually land as `door-sound-01-setup`, `door-greet-07-approach`,
 `door-greet-08-petting`, `door-greet-08-jumping` and `door-cover`.
+
+---
+
+## The loop, in four commands
+
+`scripts/pilot.mjs` exists because three things in the ChatGPT round-trip each
+cost a wasted cycle: copying a prompt out of a blockquote and taking the `> `
+with it, downloads landing as `ChatGPT Image Aug 10, 2026, 11_08_57 AM (5).png`
+with nothing to say which scene they are, and the same batch being re-added
+twice without anyone noticing until five images had been described back.
+
+```bash
+node scripts/pilot.mjs prompt 3a
+```
+Prints the prompt and puts it on the clipboard, markdown stripped. Scenes `1`–`5`
+get Block A and Block B in front of them; round 3 ids (`3a`, `3b`, `3c`) do not,
+because they are edits — it prints the file to attach instead.
+
+```bash
+node scripts/pilot.mjs add door-cover
+```
+Takes the newest ChatGPT image out of `~/Downloads`, names it, and files it in
+the current round. **Refuses anything whose bytes already exist anywhere under
+`img/`** and names the twin, which is the check that catches a re-added batch.
+Prints the dimensions and whether it is 4:3. Pass a path as a second argument to
+add a specific file instead of the newest.
+
+```bash
+node scripts/pilot.mjs check
+```
+Every image in the current round: dimensions, ratio, a flag on anything that is
+not 4:3, and a warning on any duplicate. Writes all four crops from §2 of the
+audit into `crops/` so the cover tests do not have to be remembered.
+
+```bash
+node scripts/pilot.mjs sheet
+```
+Builds `sheet.html` — all of them side by side with their dimensions, for
+reviewing in one go rather than one file at a time.
+
+Rounds are folders: `img/pilot/round-1/`, `round-2/`, and so on. `add`, `check`
+and `sheet` all use the highest-numbered one unless given a path. Start a new
+round by making the folder.
