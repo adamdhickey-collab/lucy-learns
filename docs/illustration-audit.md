@@ -844,8 +844,9 @@ harness. They are the first images in the project to match the settled spec.
   current `dg-01` has, reproduced in its replacement.
 - **The blue tag is missing.** All five show a bare purple collar; the eighteen
   existing collar images carry a small round blue tag, and it is in the original
-  character sheet. Either add it to the block or drop it from the spec, but not
-  one of each.
+  character sheet. **Settled: the tag stays**, and it is now in the character
+  block. That is why Scene 1 is being re-run despite passing on everything else
+  — the tag has to be in every frame or in none.
 
 ### Not yet answered
 
