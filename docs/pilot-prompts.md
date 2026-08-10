@@ -1018,6 +1018,213 @@ drawing one.
 
 ---
 
+## Batch 3 — dg-3 Doorbell Means Place
+
+Four to draw, one to re-run, and the smallest batch left — because three of
+dg-3's seven pictures already arrived with batches 1 and 2.
+
+| Step | Image | State |
+| --- | --- | --- |
+| 1 Ring or knock once | `door-sound-02-self` | live, batch 1 |
+| 2 Say her name | `door-sound-03-name` | live, batch 1 |
+| 3 Send her to her bed | `door-place-03-send` | live, batch 2 — **re-run, see below** |
+| 4 Reward her twice on the bed | `dg-25` | draw |
+| 5 Walk toward the door, then come back | `dg-07` | draw |
+| 6 Release and reset | `dg-19` | draw |
+| L5 override — imaginary visitor | `dg-08` | draw |
+
+### These are dg-2's pictures more than they are dg-3's
+
+Run the "what else is on screen" check and this batch turns out to be mostly
+about the *next* activity. All four are shared with dg-2 Stay While the Door
+Opens, which is batch 4:
+
+- **`dg-25` is dg-2's activity cover** as well as its step 4, and the "Lucy is
+  too excited" sheet for **both** dg-2 and dg-3. That is four crops: the 16:7
+  Today band, the 84 and 56px squares, and the 16:10 fallback sheet. §5 already
+  records "the same square-crop weakness as `dg-24`, though less severe", and
+  `dg-24` is the one whose thumbnail landed on floorboards. So it is briefed as
+  a cover, with the composition rule and the real-band check.
+- **`dg-07`** is dg-2's step 3 and **`dg-19`** its step 5. **`dg-08`** is the
+  rehearsal override at dg-2 L5 and L6.
+
+So they are named into dg-2's step numbering — `door-stay-03-cross`,
+`door-stay-04-pay`, `door-stay-05-release`, `door-stay-03-pretend` — which
+already has `door-stay-02-cue` in it. After this batch, dg-2 has five of its
+eleven done before batch 4 starts.
+
+**Keep `dg-25` as the fallback for both activities.** Batch 2 moved dg-4's
+fallback off `dg-26` because that key was doing an ending and a de-escalation at
+once. This is not that case: the sheet reads "feed her on her bed for staying
+there", and paying her on the bed is exactly what this picture shows.
+
+### The re-run, and why it belongs here
+
+`door-place-03-send` shipped with the thin mat, on the known-drift list, and the
+note said to fold it into the next batch touching the same activity. **This is
+that batch**, and there is a second reason now: every one of these four is a bed
+picture, drawn against the pinned Block B mattress. Leave `door-place-03-send`
+as it is and dg-3 gets a thin mat at step 3 and a mattress at step 4 — adjacent
+steps, the same failure the pinning was meant to end. It also clears dg-4's
+steps 3 and 4.
+
+Nothing about the brief changes; Scene 16 already carries both the composition
+fix and the pinned bed. Just run it again.
+
+### One thing to decide at install, not now
+
+`dg-25` is a reward picture doing cover duty for dg-2, which is the arrangement
+batch 2 replaced for dg-4 with a purpose-made cover. The difference is that
+`dg-11`'s replacement had **demonstrably** failed the 16:7 band, and this one has
+not been drawn yet. So: brief it as a cover, test it at the real band and the
+56px square, and only if it fails does batch 4 owe dg-2 a dedicated cover. Do
+not spend that generation in advance.
+
+Attach `door-greet-04-open.png` — same room, the bed at the right depth, the
+mattress the pinned Block B now describes, and Lucy settled on it.
+
+### Scene 23 — Paying her on the bed
+*Replaces `dg-25`. dg-2's activity cover, its step 4, dg-3's step 4, and the
+"Lucy is too excited" sheet for both — so it takes the 16:7 band, both squares
+and the 16:10 sheet. **The flag:** §5 records the same square-crop weakness as
+`dg-24`, less severe. The picture itself is right; §5 calls the coiled leash on
+the floor "a nice touch that survives to the new style", so keep it.*
+
+> Interior entry hall, three-quarter view, **well back from the closed front
+> door**. Lucy lies on her bed, front legs extended, **head forward taking a
+> treat, her body completely unmoved** — she is being paid for staying, not for
+> coming. All four feet stay on the bed.
+>
+> The handler **kneels on the floor beside the bed**, back straight, **the treat
+> pinched between finger and thumb and delivered low, down between Lucy's front
+> paws** — the bed is the paying spot and the picture has to say so. The mustard
+> pouch is at her hip.
+>
+> The black leash is clipped to her collar and **lies coiled loose on the floor**
+> beside the bed.
+>
+> Background: the closed front door small in the background, the doormat, one
+> wall plane. Nothing else.
+>
+> **Composition, and this matters as much as the action: this is an activity
+> cover. Group Lucy, the bed and the kneeling handler together in the middle of
+> the frame, and leave a clear margin of empty wall above the handler's head and
+> clear floor below the bed.** A wide letterbox band across the middle must hold
+> the handler's face, the treat hand and Lucy's head; a centred square must hold
+> all three of those too. **Do not let the handler's head run up to the top edge
+> of the frame** — a wide crop will slice her face.
+>
+> The single thing this image must make obvious: the treat arrives down at the
+> bed, and she has not moved to get it.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 24 — Crossing to the door while she holds
+*Replaces `dg-07`. It was the most-used image in the app at 30 references and
+carried three different actions; §7.4 took two of them away, so it now has one
+job — "move toward the door" — and should show only that. **The fix:** the alt
+text claims she glances back and she does not. Draw the glance, or drop the
+claim; this brief draws it.*
+
+> Interior entry hall, side view, **the bed well back from the closed front
+> door with clear floor between them** — the distance between bed and door is
+> half the subject.
+>
+> Lucy **lies on her bed holding the down, front legs extended, head up and eyes
+> tracking the handler.** She is holding, not settling to sleep, and she is not
+> rising. Her feet have not moved.
+>
+> The handler is **partway across the room, walking away toward the door,
+> three-quarter rear view**, arms relaxed and empty, **glancing back over her
+> shoulder at Lucy.** She is mid-stride, not standing still.
+>
+> The black leash is clipped to Lucy's collar and trails slack on the floor
+> behind the handler — nobody is holding it.
+>
+> Background: the closed front door ahead of the handler, the doormat, her bed,
+> one wall plane. Nothing else.
+>
+> The single thing this image must make obvious: she is staying put while the
+> handler walks away.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 25 — Release and reset
+*Replaces `dg-19`, 14 references. **The fix, and it is the whole reason this
+brief is careful:** §5 records that its composition is nearly the mirror of
+`dg-06` — "go to your bed" — so two of the most-used images in the app read
+almost identically and mean opposite things. `door-place-03-send` now has Lucy
+stepping **onto** the bed with the handler's **pointing hand behind her**. This
+one has to be unmistakably the other thing.*
+
+> Interior entry hall, side view. Lucy is **stepping off her bed toward the
+> handler — front feet down on the floorboards, hind feet still on the bed**,
+> head up and eyes on the handler. The stay is over and she has been invited
+> off.
+>
+> The handler stands **facing her, leaning very slightly forward, both hands
+> open, low and turned upward in a welcoming release gesture**, face relaxed.
+> **Neither hand is pointing at anything** — no pointing finger anywhere in the
+> frame, because the pointing gesture means the opposite instruction and belongs
+> to a different picture.
+>
+> The black leash is clipped to her collar and lies slack across the floor.
+>
+> Background: the closed front door, the doormat, her bed, one wall plane.
+> Nothing else.
+>
+> The single thing this image must make obvious: she is coming off the bed,
+> invited, toward open hands.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 26 — Greeting nobody at the open door
+*Replaces `dg-08`, 3 references. **The fix:** the current one paints the
+imaginary visitor as a translucent blue figure baked into the artwork. It reads
+as a ghost, and the style rules out symbols outright. There is no visitor in this
+picture — the whole point of the rehearsal is that the porch is empty. §5 also
+notes the bed sits against the door and should be a few feet back.*
+
+> Interior entry hall, three-quarter view. The **front door is standing fully
+> open onto a completely empty porch** — daylight, the porch floor, nothing and
+> nobody beyond it. **There is no visitor of any kind in this image: no person,
+> no silhouette, no outline, no translucent or ghosted figure.**
+>
+> The handler stands **in the open doorway, three-quarters away from camera, one
+> hand resting on the edge of the door, head turned out toward the empty porch**
+> as though talking to someone who is not there. Her other hand holds the leash
+> slack.
+>
+> Lucy lies on her bed **several feet back from the door, not against it**, head
+> up, watching the handler, **not rising**. The leash runs from her collar across
+> the floor to the handler's hand with obvious slack in it.
+>
+> Background: the open front door, the doormat, the empty porch beyond, her bed,
+> one wall plane. Nothing else.
+>
+> The single thing this image must make obvious: the door is wide open onto
+> nobody, and she is still on her bed.
+>
+> Landscape 4:3, wider than tall.
+
+### When batch 3 is done
+
+Install the four with the `door-place-03-send` re-run, and dg-3 Doorbell Means
+Place is complete — the third of four activities. Four keys retire: `dg-07`,
+`dg-08`, `dg-19`, `dg-25`.
+
+**Check what it does to dg-2 before opening the PR.** All four are shared, so
+batch 4's activity picks up its cover, its steps 3, 4 and 5, and its L5–L6
+rehearsal override in this release. That leaves dg-2 with six to draw rather than
+eleven, and it means dg-2 will be a mix — five new, six painted — until batch 4
+lands. That is the accepted cost of sharing, the same as dg-3 got from batch 1;
+what is *not* acceptable is a mix inside dg-3, which is why the re-run is in.
+
+Run `node scripts/pilot.mjs verify` before opening the PR, and test Scene 23 at
+the real 42% band, both squares and the 16:10 fallback sheet.
+
+---
+
 ## The crop tests, and how to re-run them
 
 Round 2 cleared these. Re-run them on any replacement before approving it:
