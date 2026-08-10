@@ -77,9 +77,9 @@ Consequences for the new art:
 
 | Family | Files | Character |
 | --- | --- | --- |
-| **A — Inked semi-realistic** | dg-01, 08, 09, 10, 11, 12 | Crisp linework, cool cream walls, Lucy in a **purple harness**, guest in brown plaid, handler in grey sneakers |
+| **A — Inked semi-realistic** | dg-01, 08, 09, 10, 11, 12 | Crisp linework, cool cream walls, Lucy in a **purple harness she does not own**, guest in brown plaid, handler in grey sneakers |
 | **B — Graphic close-up** | dg-02, 03, 04, 06 | Heavier outline, flatter fill, bodies cropped by the frame, saturated skin tones (dg-03 is markedly orange) |
-| **C — Matte painterly** | dg-05, 07, 13–26, cg-01, sr-01, wp-01, fd-01 | Soft matte rendering, yellower walls, framed landscape paintings, Lucy in a **collar only**, handler in grey-navy slip-ons |
+| **C — Matte painterly** | dg-05, 07, 13–26, cg-01, sr-01, wp-01, fd-01 | Soft matte rendering, yellower walls, framed landscape paintings, Lucy in a **collar only — the correct equipment**, handler in grey-navy slip-ons |
 | **D — Cartoon sticker** | lucy-portrait, splash-mark | Outlined cartoon badge with a baked-in green checkmark |
 
 Family C is the largest and `dg-07` is the closest thing in the library to the
@@ -89,18 +89,19 @@ target style — flat, uncluttered, one action, generous empty space.
 
 The old character sheet allowed "purple collar **or** harness with a round blue
 tag", and that *or* is the root of the worst continuity break in the set. The
-real Lucy wears **the harness, only** — no collar — and the leash clips at the
-**chest ring on the front of the harness**, not the back. Everything below is
+real Lucy wears **a flat purple collar with a round blue tag, and no harness**,
+with the leash clipped to the ring on the collar at her neck. Everything below is
 measured against that.
 
 - **Equipment changes mid-session.** Running Doorbell Predicts Rewards at level 1
-  shows, in order: harness (`dg-02`) → collar only (`dg-20`) → harness (`dg-04`)
-  → collar only (`dg-17`) → collar only (`dg-18`). Five steps, three equipment
-  changes, one continuous five-minute session.
-- **Two-thirds of the library is off-spec on equipment.** Only dg-01 – dg-12 show
-  a harness at all, and all twelve add a collar alongside it. dg-13 – dg-26 and
-  all four planned covers show a collar and no harness. Not one of the 30 shows
-  the harness on its own.
+  shows, in order: harness (`dg-02`) → collar (`dg-20`) → harness (`dg-04`) →
+  collar (`dg-17`) → collar (`dg-18`). Five steps, three equipment changes, one
+  continuous five-minute session — and the two harness frames are the wrong ones.
+- **Twelve images put her in a harness she does not wear.** dg-01 – dg-12 all
+  show a purple harness, most with a collar underneath it as well. The other
+  eighteen — dg-13 – dg-26 and all four planned covers — show the collar alone,
+  which is right. Most of the library is already correct; it is the first twelve
+  that have to change.
 - **Coat changes.** Smooth-coated Labrador in dg-01, 05, 09, 23; distinctly
   wirehaired and scruffy in dg-02, 17, 19, 25.
 - **Off-sheet markings.** `fd-01` gives Lucy a white blaze up the muzzle and
@@ -109,35 +110,35 @@ measured against that.
   differently.
 - **Size drift.** `dg-13` reads as a noticeably smaller, younger dog.
 
-### 3.3 Every leash in the app is clipped in the wrong place
+### 3.3 Six of the ten leashes are attached to a harness that should not be there
 
-The leash attaches at the **chest ring on the front of the harness** — the
-front-clip position, where the line comes off Lucy's chest and turns her toward
-the handler when it tightens. Ten of the 30 images show an attached leash, and
-where the clip is visible it sits on the back of the harness or on the collar.
-**None shows a chest attachment.**
+The leash clips to the ring on Lucy's **collar**, at her neck. Ten of the 30
+images show an attached leash: four get it right, and six run the line to a
+harness she does not wear.
 
 | Image | Leash shown | Attaches at | Correct |
 | --- | --- | --- | --- |
+| dg-18 | deep J, best-drawn arc in the set | collar | ✓ |
+| dg-20 | under the handler's foot | collar | ✓ |
+| dg-26 | short, hand at her neck | collar | ✓ |
+| wp-01 | loose-leash walk | collar | ✓ |
 | dg-01 | slack to handler's hand | back of harness | ✗ |
 | dg-02 | held in hand | back of harness | ✗ |
 | dg-08 | slack, handler at door | back of harness | ✗ |
-| dg-10 | walking, loose J | **top of harness, between the shoulder blades** — clearest and most wrong | ✗ |
+| dg-10 | walking, loose J | **top of harness, between the shoulder blades** | ✗ |
 | dg-11 | looped in handler's hand | back of harness | ✗ |
 | dg-12 | slack behind her | back of harness | ✗ |
-| dg-18 | deep J, best-drawn arc in the set | collar | ✗ |
-| dg-20 | under the handler's foot | collar | ✗ |
-| dg-26 | short, hand at her neck | collar | ✗ |
-| wp-01 | loose-leash walk | collar | ✗ |
 | dg-25 | coiled on the floor, unattached | — | n/a |
 
-This matters more than a prop detail. A front-clip line runs forward and across
-the dog's chest; a back-clip line runs up and over her spine. They sit at
-different angles, drape differently, and behave differently under tension — so
-every leash in the set has to be redrawn from the attachment outward, not
-re-coloured. It also changes what the picture teaches: `dg-10` is the "walk her
-over on a loose leash" image, and it currently demonstrates the opposite of the
-equipment the household is using.
+This is more than a prop swap. A line anchored at the neck leaves from a
+different point, at a different angle, and drapes differently from one anchored
+between the shoulder blades, so the six wrong ones are a redraw from the
+attachment outward rather than a recolour. It also changes what the picture
+teaches: `dg-10` is the "walk her over on a loose leash" image, and it currently
+demonstrates equipment the household does not own.
+
+The four correct ones are the reference. `dg-18` has the best-drawn leash arc in
+the library and should be the benchmark for the rest.
 
 ### 3.4 The humans drift too
 
@@ -222,10 +223,10 @@ take `-easier`.
 Every entry: file facts, where it renders, what it must communicate, the body
 language it needs, its type, alt text now and recommended, flags, priority.
 
-**Equipment applies to all thirty and is not repeated per entry:** Lucy wears
-the purple harness and no collar, and any leash clips to the chest ring on the
-front of it. Every image in the library currently breaks one or both — see §3.2
-and §3.3 — so treat it as a standing correction rather than a per-image flag.
+**Equipment applies to all thirty and is not repeated per entry:** Lucy wears a
+flat purple collar with a round blue tag and no harness, and any leash clips to
+the ring on that collar. dg-01 – dg-12 all break it; the other eighteen already
+comply. See §3.2 and §3.3 rather than looking for a per-image flag.
 
 "Refs" counts every step across every level that resolves to this image, plus
 covers and fallbacks. `→` marks the gap between what the step says and what the
@@ -451,7 +452,7 @@ picture shows.
 - **Type** Reward
 - **Alt now** "A handler feeds Lucy two small treats from an open palm while Lucy looks up at her hand."
 - **Alt better** *(unchanged — accurate)*
-- **Flags** Family C, wirehaired coat, collar and no harness — two steps after `dg-02` shows a harness. Duplicates `dg-04`'s open-palm gesture; the library has three feeding images (17, 24, 25) with no clear division of labour
+- **Flags** Family C, wirehaired coat. Equipment is correct here — collar, no harness — which makes `dg-02` two steps earlier the wrong one. Duplicates `dg-04`'s open-palm gesture; the library has three feeding images (17, 24, 25) with no clear division of labour
 - **Priority** P1 — for the equipment continuity break, not the content
 
 ### dg-18 — Settling between repetitions
@@ -486,7 +487,7 @@ picture shows.
 - **Activity** dg-1 Doorbell Predicts Rewards, level 1
 - **Must communicate** The handler makes the sound while standing right next to Lucy, hands free because the leash is underfoot
 - **Lucy** Standing beside the handler's leg, head up toward the door, alert, not lunging
-- **Human** Facing the door frame, **knuckles to the frame mid-knock**, leash running from the harness chest ring down to under the near shoe with a visible loop on the floor
+- **Human** Facing the door frame, **knuckles to the frame mid-knock**, leash running from the ring on her collar down to under the near shoe with a visible loop on the floor
 - **Type** Setup / correct technique
 - **Alt now** "A handler knocks on the door frame while standing right beside Lucy with the leash under her foot."
 - **Alt better** *(unchanged — accurate)*
@@ -564,7 +565,7 @@ picture shows.
 - **Activity** dg-2 Stay While the Door Opens (L8), dg-4 Controlled Real Greeting (fallback)
 - **Must communicate** The session ends calmly: the helper steps back out, Lucy is released and stays settled
 - **Lucy** Sitting at the handler's side, on leash, watching the departing guest without rising
-- **Human** Handler standing beside her holding the leash short at the chest ring, pouch at the waist; guest stepping out with a small backward wave
+- **Human** Handler standing beside her holding the leash short at the collar, pouch at the waist; guest stepping out with a small backward wave
 - **Type** Result
 - **Alt now** "A guest steps back out of the doorway with a friendly wave while a handler stays beside Lucy."
 - **Alt better** *(unchanged — accurate)*
@@ -672,11 +673,11 @@ also cover all seven crops and both squares.
 >
 > **Lucy** — medium-large black Labrador / German Wirehaired Pointer mix. Glossy
 > black coat with a slight scruff at the muzzle, white blaze on the chest, white
-> toes on all four paws, soft floppy ears. **She wears a purple harness and
-> nothing else — no collar, in any image, ever.** Where a leash is attached it
-> clips to the **ring on the front of the harness, at her chest**, so the line
-> comes forward off her chest and never runs over her back or shoulders.
-> No white on the face. Accurate canine body language; never anthropomorphised.
+> toes on all four paws, soft floppy ears. **She wears a flat purple collar with
+> a small round blue tag, and no harness — never a harness, in any image.**
+> Where a leash is attached it clips to the ring on that collar, at the front of
+> her neck. No white on the face. Accurate canine body language; never
+> anthropomorphised.
 >
 > **Handler** — woman in her thirties, dark hair in a ponytail, olive-green
 > hoodie, dark navy jeans, grey sneakers, mustard-yellow treat pouch clipped at
@@ -689,11 +690,10 @@ also cover all seven crops and both squares.
 > front door with a small window, woven doormat. Nothing else unless the
 > individual brief names it.
 
-The equipment lines are the most important thing in that block. Harness-only
-with a front chest clip is how Lucy is actually walked, and **no existing image
-gets it right** — every one of the thirty adds a collar, and all ten leashed
-images clip at the back or the neck. The pilot is where that gets fixed for
-good, which is also why two of the five were chosen for their leashes.
+The equipment lines are the most important thing in that block. A flat collar
+with the leash at her neck is how Lucy is actually walked, and twelve of the
+thirty put her in a harness instead. The pilot is where that gets settled for the
+whole set, which is also why two of the five were chosen for their leashes.
 
 ### 6.1 Simple training setup → replaces `dg-02`
 The starting position for Doorbell Predicts Rewards, and the correction of the
@@ -702,9 +702,9 @@ set's clearest instruction error.
 > Interior entry hall, three-quarter view. Lucy sits at the handler's left side
 > facing a closed charcoal front door, calm, ears neutral. The handler stands
 > beside her in profile, cropped at the shoulders, **the black leash clipped to
-> the ring on the front of Lucy's harness at her chest, running forward and down
-> to under the near shoe with a loose loop of slack on the floor. Both of the
-> handler's hands are empty and relaxed.** Mustard treat pouch at the hip.
+> the ring on Lucy's collar, running down and forward to under the near shoe with
+> a loose loop of slack on the floor. Both of the handler's hands are empty and
+> relaxed.** Mustard treat pouch at the hip.
 > Background: the door, the doormat, one baseboard line. Nothing else.
 
 **Tests** — partial-figure cropping, leash-under-foot as a readable technique,
@@ -717,10 +717,9 @@ motion.
 > Interior entry hall, side view, both figures moving left to right. The handler
 > walks toward the open front door; Lucy walks at her side with her shoulder
 > level with the handler's knee — **not ahead of it**. The leash clips at the
-> chest ring on the front of the harness and runs forward and up to the
-> handler's near hand, held low and short, with a clear J of slack hanging
-> between them — **the line never crosses her back or shoulders.** Lucy's head
-> is up, ears forward, tail level. The guest
+> ring on her collar and runs up to the handler's near hand, held low and short,
+> with a clear J of slack hanging between them — **the line stays clear of her
+> back and shoulders.** Lucy's head is up, ears forward, tail level. The guest
 > stands still in the open doorway, feet together, hands at his sides, body
 > turned slightly away. Background: door, doormat, one wall plane.
 
@@ -735,8 +734,8 @@ cover, so it takes both squares.
 > down, weight back, head level. The guest is **crouched to one side of her,
 > palm flat on her chest — not over her head**, eyes soft, shoulders turned
 > slightly away. The handler stands just behind Lucy holding the leash in a
-> loose loop at hip height; the line runs back to the chest ring at the front of
-> the harness, passing beside Lucy rather than over her. **All three subjects grouped tightly enough that a
+> loose loop at hip height; the line runs back to the ring on her collar, passing
+> beside Lucy rather than over her. **All three subjects grouped tightly enough that a
 > centred square crop contains Lucy's head, the guest's hand and the handler's
 > leash hand.** Background: door edge and floor only.
 
@@ -759,7 +758,8 @@ scene twice and proves the style can hold a character across a pair.
 > No X, no cross, no red circle, no border, no text.
 
 **Tests** — whether an error can be read as an error without any symbol, and
-whether coral-as-warning works at this saturation. **Decision this pilot
+whether coral-as-warning works at this saturation. **Round 1 answered both yes
+— see §7.** **Decision this pilot
 forces:** the app has no paired-figure component. Either `.step-figure` gains a
 two-up variant with HTML labels, or the pair becomes two consecutive steps.
 Worth settling on the strength of the pilot rather than in advance.
@@ -774,8 +774,7 @@ and the one carrying the widest crop range.
 > Interior entry hall, wide three-quarter view. Lucy sits square on her grey bed
 > several feet inside the room, **watching the handler rather than the guest**,
 > ears neutral. The handler stands side-on near the bed with the leash slack in
-> the low near hand, the line running to the chest ring on the front of the
-> harness. The guest stands in the open doorway with daylight behind
+> the low near hand, the line running to the ring on her collar. The guest stands in the open doorway with daylight behind
 > him, feet still, hands at his sides. **All three inside a horizontal band
 > across the middle 60% of the frame** so the 21:9 and 16:7 crops hold. Reduce
 > the background to: the open door with daylight beyond, the doormat, one wall
@@ -796,12 +795,74 @@ warm cream ground, and the most aggressive crop in the app (21:9) alongside the
 
 ---
 
-## 7. What has to be decided before production
+## 7. Pilot round 1 — results
 
-1. ~~**Harness or collar.**~~ **Settled: harness only, no collar, leash clipped
-   at the chest ring on the front.** Carried into the shared character block in
-   §6. Every one of the thirty existing images is off-spec against it, so this
-   is a whole-set correction rather than a list of fixes.
+Five images, one per scene, in `img/pilot/`. Nothing has been cropped, resized,
+or installed; no `IMAGES` key points at any of them.
+
+| File | Scene | Delivered | Verdict |
+| --- | --- | --- | --- |
+| `pilot-1-setup.png` | 6.1 setup | 1448 × 1086 (4:3) | **Keep** |
+| `pilot-2-leash.png` | 6.2 loose leash | 1448 × 1086 (4:3) | Re-run — body position |
+| `pilot-3-greeting.png` | 6.3 greeting | 1254 × 1254 (square) | Re-run — ratio |
+| `pilot-4-jumping.png` | 6.4 jumping | 1254 × 1254 (square) | Re-run — ratio, character |
+| `pilot-5-cover.png` | 6.5 cover | 1536 × 1024 (3:2) | Re-run — character, gaze |
+
+### What the style test settled
+
+**The style works.** Flat vector forms, crisp edges, warm cream ground, muted
+palette, restrained backgrounds — consistent across all five, and the shared
+door / doormat / baseboard vocabulary repeats without drifting.
+
+**No text, and no symbols.** Not a letter, number, checkmark, cross or arrow in
+any of the five. The constraint held without a fight.
+
+**A warning reads without a symbol.** Scene 4 was the risky one: whether an
+error could be shown as an error using nothing but colour and posture. The taut
+coral leash is the only red in the frame and it works. That answers the open
+question in §3.6 — the pair does not need a ✓/✗ treatment, and the two-up
+component can carry plain HTML labels or none at all.
+
+**Equipment is right in all five** — flat purple collar, leash at the neck, no
+harness. They are the first images in the project to match the settled spec.
+
+### What has to be fixed in round 2
+
+- **Ratio.** Scenes 1 and 2 came back at exactly 4:3 and need nothing but a
+  resize. Scenes 3 and 4 came back square, and that is not a crop worth making:
+  both compositions use the full height, so taking 25% out of it either cuts the
+  guest's head or everyone's feet. Scene 5 is 3:2 and trims cleanly from the
+  right. **Re-run 3 and 4 at 4:3** — the model held the ratio for 1 and 2, so it
+  can.
+- **The guest grows a beard in Scene 5.** Clean-shaven in 2, 3 and 4.
+- **Lucy is a different dog in Scene 4** — smoother coat, no scruff on the
+  muzzle, different head shape. That is the one pair where continuity is the
+  whole point, since it is the same scene twice.
+- **Scene 2: she is ahead of the handler's knee**, which the brief called out by
+  name. As drawn it reads closer to pulling than to walking with.
+- **Scene 5: she watches the guest, not the handler** — the same fault the
+  current `dg-01` has, reproduced in its replacement.
+- **The blue tag is missing.** All five show a bare purple collar; the eighteen
+  existing collar images carry a small round blue tag, and it is in the original
+  character sheet. **Settled: the tag stays**, and it is now in the character
+  block. That is why Scene 1 is being re-run despite passing on everything else
+  — the tag has to be in every frame or in none.
+
+### Not yet answered
+
+Neither square crop nor cover behaviour has been tested, because the two cover
+candidates (Scenes 3 and 5) are the two that need re-running. Until an approved
+cover exists at 4:3, the 16:7 Today band and the 56px map thumb from §2 are
+still unproven — and they are the constraint most likely to send an image back.
+
+---
+
+## 8. What has to be decided before production
+
+1. ~~**Harness or collar.**~~ **Settled: a flat purple collar with a round blue
+   tag, no harness, leash clipped to the collar ring at her neck.** Carried into
+   the shared character block in §6. Eighteen of the thirty already comply;
+   dg-01 – dg-12 are the ones that have to change.
 2. **Splitting the overloaded images.** `dg-07` → 3, `dg-09` → 3, `dg-03` → 2.
    That is +6 illustrations and edits to `content.js`. Alternatively, repoint
    the reward step at `dg-25`, which needs no new art.
