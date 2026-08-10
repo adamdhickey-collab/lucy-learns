@@ -140,9 +140,12 @@ door panel, which reads as holding the door shut.
 > boots. Relaxed, hands at his sides, never leaning over the dog. The same man,
 > with the same face, in every image.
 >
-> **Props, only where a scene names them:** a flat grey rectangular dog bed, a
-> black leash, a charcoal panelled front door with a small window, a woven
-> doormat, pale warm oak floorboards, cream walls with a white baseboard.
+> **Props, only where a scene names them:** **her bed — a rectangular grey
+> mattress-style dog bed, deep and clearly cushioned, roughly a hand's depth,
+> with a piped edge and soft quilting on the top surface. It is a mattress, not
+> a thin mat, and it is the same bed in every image** — a black leash, a charcoal
+> panelled front door with a small window, a woven doormat, pale warm oak
+> floorboards, cream walls with a white baseboard.
 
 ---
 
@@ -762,6 +765,15 @@ guest's face, which four of these scenes need.
 **The leash is named in every brief**, including the ones where it does nothing.
 See the batch 1 note above for what skipping that cost.
 
+**Her bed is now pinned in Block B, for the same reason.** It used to read "a
+flat grey rectangular dog bed", and "flat" was doing damage: scenes 17–20 came
+back with a deep quilted mattress, `door-place-03-send` came back twice with a
+thin mat, and batch 1's `door-sound-03-name-distant` is a thin mat too. Steps 3
+and 4 of this activity are adjacent, so the bed changed shape mid-session. Block
+B now describes the mattress the majority of the library already draws — deep,
+piped, quilted. Two images are on the wrong side of that line and are listed
+under "known drift" below.
+
 ### Scene 16 — Send her to her bed
 *Replaces `dg-06`, 22 references — the second most-used image in the app, and
 dg-3's activity cover, so it takes the 16:7 band and the 56px square too.
@@ -787,10 +799,13 @@ anywhere in frame, though every step that uses it is about the door.*
 > uses this picture is about the door.
 >
 > **Composition, and this matters as much as the action: this is an activity
-> cover as well as a step. Put Lucy and the bed together in the centre of the
-> frame, inside the middle horizontal band, with clear space above and below.** A
-> square crop taken from the middle must contain Lucy and the bed she is stepping
-> onto.
+> cover as well as a step. Put Lucy, the bed and the handler together in the
+> middle of the frame, and leave a clear margin of empty wall above the
+> handler's head and clear floor below the bed.** Everything that matters —
+> the handler's face, the pointing hand, Lucy, and the bed she is stepping onto
+> — must fit inside a wide letterbox band across the middle *and* inside a
+> centred square. **Do not let the handler's head run up to the top edge of the
+> frame**; a wide crop will slice her face.
 >
 > The single thing this image must make obvious: she is arriving on the bed,
 > sent there from behind.
@@ -958,25 +973,48 @@ hold". That is the whole problem this scene exists to solve.*
 >
 > Landscape 4:3, wider than tall.
 
-### When batch 2 is done
+### Batch 2 is done — installed at 1.53.0
 
-Install all seven together with `door-greet-07-approach`, and Controlled Real
-Greeting joins Doorbell Predicts Rewards as an activity that runs start to finish
-in one style. Nine keys retire: `dg-06`, `dg-09`, `dg-10`, `dg-11`, `dg-12`,
-`dg-21`, `dg-22`, `dg-26` — and check `dg-06`'s other homes before deleting it,
-because dg-2 step 1 and dg-3 step 3 both draw it and both will now get the new
-picture early. That is intended, and it is the same thing that happened to dg-3
-when batch 1 redrew `dg-20` and `dg-04`.
+All seven shipped with `door-greet-07-approach`, and Controlled Real Greeting
+joins Doorbell Predicts Rewards as an activity that runs start to finish in one
+style — **all eight steps, all five levels, cover and fallback, with no `dg-NN`
+left anywhere in it.** Eight keys retired: `dg-06`, `dg-09`, `dg-10`, `dg-11`,
+`dg-12`, `dg-21`, `dg-22`, `dg-26`.
 
-**One decision left open.** `dg-26` currently serves as both the ending of dg-2
-L8 and the "Lucy is too excited" sheet for dg-4, and those say different things.
-Scene 21 draws the ending. For the fallback, the cheapest correct answer is
-probably to point `fallbackImage` at `door-sound-cover` — "Take the pressure
-off" is already a de-escalation picture, drawn for exactly that message, and
-§7.4's best fix was this same move: repoint a key at a correct picture that
-already exists rather than draw a new one. Decide it at install time.
+`dg-06`'s other homes came along as intended: dg-2 step 1 and dg-3 step 3 both
+draw `door-place-03-send` now, and dg-3's cover with them. Same early inheritance
+dg-3 got from batch 1.
 
-Run `node scripts/pilot.mjs verify` before opening the PR.
+**Scene 16 took two goes and still is not perfect.** The first had the right bed
+and a face sliced across the eyes by the Today band; the second fixed the crop
+and came back with a thin mat. Round 10's is installed and the bed is on the
+drift list below. What the round cost was worth it for two things that outlast
+it: the real-band check (above) and the pinned bed in Block B.
+
+### Known drift
+
+Two installed or approved images draw her bed as a thin mat rather than the
+mattress Block B now pins:
+
+- **`door-sound-03-name-distant`** (batch 1, shipped at 1.52.0). It is the only
+  bed in dg-1, so nothing sits beside it to contradict it — low priority.
+- **`door-place-03-send`** (batch 2, shipped at 1.53.0 — round 10's). This one
+  *does* have neighbours: dg-4 steps 3 and 4 are adjacent and step 4 has the
+  mattress. Installed knowingly rather than spend a third generation on it.
+
+Neither is worth a round on its own. Fold them into the next batch that touches
+the same activity, or into batch 4 — dg-2 is eleven images and most of them are
+on the bed, so the mattress has to be right there anyway.
+
+**The `dg-26` decision, settled.** It was serving as both the ending of dg-2 L8
+and the "Lucy is too excited" sheet for dg-4, which say different things. Scene
+21 took the ending as `door-greet-09-leaves`. The fallback went to
+`door-sound-cover` rather than to new art: the sheet's own copy reads "move Lucy
+farther from the door / keep her on leash and stay beside her / feed her on her
+bed", and that picture — a handler crouched beside her, well back from the door,
+hand on her shoulder — is already exactly that. §7.4's best fix was this same
+move, repointing a key at a correct picture that already exists instead of
+drawing one.
 
 ---
 
@@ -986,6 +1024,17 @@ Round 2 cleared these. Re-run them on any replacement before approving it:
 
 ```bash
 cd "/Users/ahickey/dev/claude-local/Lucy Learns/img/pilot/round-2" && for f in *.png; do sips -c 634 1448 "$f" --out "/tmp/${f%.png}-today-16x7.png"; sips -c 1086 1086 "$f" --out "/tmp/${f%.png}-sq.png"; sips -Z 56 "/tmp/${f%.png}-sq.png" --out "/tmp/${f%.png}-thumb56.png"; done
+```
+
+**The Today band is not centred.** `object-position: center 42%`
+([app.css](../css/app.css)) shifts it up, so what a household actually sees is
+**y 190–824** of a 1086px master, not the y 226–860 that `sips -c 634 1448`
+produces. Thirty-six pixels, and it is the difference between a clean crop below
+the chin and a face sliced across the eyes — which is exactly what it did to the
+first `door-place-03-send`. Check the real band on any cover before approving it:
+
+```bash
+sips <file>.png --cropToHeightWidth 634 1448 --cropOffset 190 0 --out /tmp/real-today.png
 ```
 
 | Crop | Applies to | Command |
