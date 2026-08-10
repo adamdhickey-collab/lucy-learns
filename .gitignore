@@ -1,2 +1,7 @@
 .DS_Store
 **/.DS_Store
+
+# Local agent and editor config: the dev-server entry that serves this folder
+# on a port, and whatever else lands beside it. Machine-specific, and nothing
+# here is needed to build, serve, or read the app.
+.claude/
