@@ -8,8 +8,8 @@ app, with the filename each one has to land under.
 > moving away from, and the character sheet gets Lucy's equipment wrong: it
 > offers "purple collar **or** harness", and that *or* is why the current set
 > changes equipment three times inside a single five-minute session. Lucy wears
-> **the harness only, no collar**, and the leash clips to the **ring on the
-> front of the harness at her chest**, never the back. Do not generate from the
+> **a flat purple collar with a round blue tag, and no harness**, with the leash
+> clipped to the ring on that collar at her neck. Do not generate from the
 > character sheet below. This file stays as the record of how today's set was
 > made.
 

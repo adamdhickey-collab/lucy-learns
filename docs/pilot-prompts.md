@@ -35,9 +35,9 @@ sips -c 1024 1365 raw.png --out cropped.png && sips -Z 1100 -s format jpeg -s fo
 ```
 
 **Reject and regenerate if:** any letter, number, word, checkmark, cross or
-arrow appears; the leash runs over Lucy's back or attaches at her neck; she has
-a collar; there is white on her face; the background gains furniture nobody
-asked for; or it comes back as two panels.
+arrow appears; Lucy is wearing a harness; the leash runs over her back; there is
+white on her face; the background gains furniture nobody asked for; the image
+comes back square rather than landscape; or it comes back as two panels.
 
 ---
 
@@ -70,10 +70,9 @@ asked for; or it comes back as two panels.
 > floppy ears, a white blaze on her chest, white toes on all four paws, and no
 > white anywhere on her face.
 >
-> She wears **a purple harness and nothing else — no collar, in any image,
-> ever.** When a leash is attached it clips to the metal ring on the **front of
-> the harness, at the centre of her chest**, so the line comes forward off her
-> chest. **The leash must never run over her back, shoulders or neck.**
+> She wears **a flat purple collar with a small round blue tag, and no harness —
+> never a harness, in any image, ever.** When a leash is attached it clips to the
+> metal ring on the collar, at the front of her neck under her chin.
 >
 > She is an adult dog with accurate, real canine body language — never
 > anthropomorphised, never given human expressions.
@@ -102,8 +101,8 @@ other four.*
 >
 > The handler stands beside her in profile, **cropped by the top of the frame at
 > the shoulders** so only her body from the shoulders down is visible. The black
-> leash is clipped to the ring on the front of Lucy's harness at her chest and
-> runs forward and down to **under the handler's near shoe**, with a loose loop
+> leash is clipped to the ring on Lucy's collar and runs down and forward to
+> **under the handler's near shoe**, with a loose loop
 > of slack lying on the floor. **Both of the handler's hands are empty, open and
 > relaxed at her sides.** The mustard treat pouch is clipped at her hip.
 >
@@ -121,10 +120,9 @@ other four.*
 >
 > Lucy walks at the handler's side with her shoulder level with the handler's
 > knee — **not ahead of it**. Head up, ears forward, tail level, relaxed gait.
-> The black leash clips at the ring on the front of her harness at her chest and
-> runs **forward and up** to the handler's near hand, held low and short, with a
-> clear J of slack hanging between them. **The line never crosses her back or
-> shoulders.**
+> The black leash clips to the ring on her collar and runs up to the handler's
+> near hand, held low and short, with a clear J of slack hanging between them.
+> **The line stays clear of her back and shoulders.**
 >
 > The handler walks in profile, near arm low with the leash, far arm relaxed.
 > The guest stands still in the open doorway, feet together, hands at his sides,
@@ -147,8 +145,7 @@ others.*
 > palm flat on her chest — **not over her head**. His eyes are soft and his
 > shoulders are turned slightly away from her. The handler stands just behind
 > Lucy holding the leash in a loose loop at hip height; the line runs back to
-> the ring on the front of the harness at Lucy's chest, passing beside her
-> rather than over her.
+> the ring on Lucy's collar, passing beside her rather than over her.
 >
 > **Composition: group all three subjects tightly together, centred, so that a
 > square crop taken from the middle of the frame still contains Lucy's head, the
@@ -170,9 +167,8 @@ Scene 3 attached.*
 >
 > **Lucy is up on her hind legs with both front paws planted on the guest's
 > chest**, mouth open, ears back, weight thrown forward, front feet clearly off
-> the floor. The black leash — still clipped to the ring at the front of her
-> harness — is **pulled tight in a straight line** from her chest to the
-> handler's hand.
+> the floor. The black leash — still clipped to the ring on her collar — is
+> **pulled tight in a straight line** from her neck to the handler's hand.
 >
 > The guest leans back away from her, both arms raised out to the sides and away
 > from the dog, face turned aside. The handler's arm is extended, taking the
@@ -197,8 +193,7 @@ it takes the widest crops in the app, so keep everything central.*
 > room, **watching the handler rather than the guest**, ears neutral, calm.
 >
 > The handler stands side-on near the bed with the leash slack in her low near
-> hand, the line running to the ring on the front of the harness at Lucy's
-> chest. The guest stands in the open doorway with pale daylight behind him,
+> hand, the line running to the ring on Lucy's collar. The guest stands in the open doorway with pale daylight behind him,
 > feet still, hands at his sides, not leaning in.
 >
 > **Composition: place all three inside a horizontal band across the middle 60%
