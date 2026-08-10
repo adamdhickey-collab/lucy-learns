@@ -23,26 +23,6 @@ const withThumb = (images) => {
 };
 
 export const IMAGES = withThumb({
-  'dg-01': {
-    src: 'img/dg-01.jpg',
-    alt: 'Lucy sits on her bed a few feet inside the entryway while a visitor stands in the open doorway and a handler holds a loose leash.',
-  },
-  'dg-02': {
-    src: 'img/dg-02.jpg',
-    alt: 'Lucy sits calmly beside the front door on a leash while a handler holds a treat pouch.',
-  },
-  'dg-04': {
-    src: 'img/dg-04.jpg',
-    alt: 'Lucy turns away from the door to look up at her handler, who is offering two small treats.',
-  },
-  'dg-05': {
-    src: 'img/dg-05.jpg',
-    alt: 'Lucy near the front door turning toward a handler who is calling her cheerfully from the next room.',
-  },
-  'dg-06': {
-    src: 'img/dg-06.jpg',
-    alt: 'Lucy moving away from the doorway toward her dog bed while a handler points calmly to the bed.',
-  },
   'dg-07': {
     src: 'img/dg-07.jpg',
     alt: 'Lucy lying on her bed holding position while a handler walks toward the closed front door and glances back.',
@@ -50,22 +30,6 @@ export const IMAGES = withThumb({
   'dg-08': {
     src: 'img/dg-08.jpg',
     alt: 'A handler stands at the open front door greeting an imaginary visitor, shown as a faint silhouette, while Lucy stays on her bed.',
-  },
-  'dg-09': {
-    src: 'img/dg-09.jpg',
-    alt: 'A familiar guest waits patiently outside the open front door while Lucy stays on her bed several feet away.',
-  },
-  'dg-10': {
-    src: 'img/dg-10.jpg',
-    alt: 'A handler walks Lucy on a loose short leash from her bed toward a familiar visitor in the entryway.',
-  },
-  'dg-11': {
-    src: 'img/dg-11.jpg',
-    alt: 'Lucy sits calmly while a visitor gently pets her chest and a handler stands beside her holding a loose leash.',
-  },
-  'dg-12': {
-    src: 'img/dg-12.jpg',
-    alt: 'A handler feeds Lucy a treat at a comfortable distance from the barely-open front door while a guest waits outside.',
   },
   'dg-13': {
     src: 'img/dg-13.jpg',
@@ -83,45 +47,17 @@ export const IMAGES = withThumb({
     src: 'img/dg-16.jpg',
     alt: 'The front door is open a few inches onto daylight while Lucy stays lying on her bed.',
   },
-  'dg-17': {
-    src: 'img/dg-17.jpg',
-    alt: 'A handler feeds Lucy two small treats from an open palm while Lucy looks up at her hand.',
-  },
-  'dg-18': {
-    src: 'img/dg-18.jpg',
-    alt: 'Lucy stands relaxed on a loose leash beside her handler in a quiet moment between repetitions.',
-  },
   'dg-19': {
     src: 'img/dg-19.jpg',
     alt: 'Lucy steps up off her bed as her handler releases her from the stay.',
-  },
-  'dg-20': {
-    src: 'img/dg-20.jpg',
-    alt: 'A handler knocks on the door frame while standing right beside Lucy with the leash under her foot.',
-  },
-  'dg-21': {
-    src: 'img/dg-21.jpg',
-    alt: 'A guest stands just inside the open front door without approaching while Lucy stays on her bed.',
-  },
-  'dg-22': {
-    src: 'img/dg-22.jpg',
-    alt: 'A guest sits in an armchair ignoring Lucy while she settles on her bed a few feet away.',
   },
   'dg-23': {
     src: 'img/dg-23.jpg',
     alt: 'A handler holds a relaxed conversation in the open doorway while Lucy stays settled on her bed.',
   },
-  'dg-24': {
-    src: 'img/dg-24.jpg',
-    alt: 'A handler crouches beside Lucy well back from the closed front door and feeds her a treat.',
-  },
   'dg-25': {
     src: 'img/dg-25.jpg',
     alt: 'A handler kneels beside Lucy’s bed and feeds her a treat for staying in place.',
-  },
-  'dg-26': {
-    src: 'img/dg-26.jpg',
-    alt: 'A guest steps back out of the doorway with a friendly wave while a handler stays beside Lucy.',
   },
   // --- the two moments the set never had a picture for ---------------------
   //
@@ -159,11 +95,13 @@ export const IMAGES = withThumb({
   // most-referenced image in the app.
   //
   // Fourteen references, and seven of them wanted neither panel: "Ring or knock
-  // once" is the handler making the sound, which `dg-20` already shows properly
-  // — beside Lucy, leash under the foot. Those now point there, which also
-  // fixes the §5 complaint that the one image demonstrating the leash-underfoot
-  // technique appeared at exactly one level while `dg-02` taught it wrongly six
-  // times over.
+  // once" is the handler making the sound, which the step-2 picture already
+  // shows properly — beside Lucy, leash under the foot. Those now point there,
+  // which also fixes the §5 complaint that the one image demonstrating the
+  // leash-underfoot technique appeared at exactly one level while the setup
+  // shot taught it wrongly six times over. (Both were `dg-20` and `dg-02` when
+  // this was written; batch 1 redrew them as `door-sound-02-self` and
+  // `door-sound-01-setup`.)
   //
   // These two take the rest, and with them drawn `dg-03` is gone from the app
   // entirely — key, files and precache. The hand in both is deliberately
@@ -191,10 +129,11 @@ export const IMAGES = withThumb({
   // painted on: the style rules those out, and round 1 of the pilot proved they
   // are not needed.
   //
-  // `dg-11` keeps the activity cover. This pair renders at step 8 only. The
-  // cover crops to 16:7 on Today and to a 56px square on the map, and the
-  // petting frame loses the guest's head to the 16:7 band (§7.2) — no reason to
-  // take that on when the painted cover is doing the job.
+  // This pair renders at step 8 only, and deliberately does not cover the
+  // activity: the cover crops to 16:7 on Today and to a 56px square on the map,
+  // and the petting frame loses the guest's head to the 16:7 band (§7.2). It
+  // used to be `dg-11`'s job for that reason; batch 2 drew `door-greet-cover`
+  // to take it properly rather than leave a painted cover on a redrawn activity.
   'door-greet-08-petting': {
     src: 'img/door-greet-08-petting.jpg',
     alt: 'Lucy sits with all four paws on the floor while a crouching guest rests an open palm on her chest and her handler holds the leash slack behind her.',
@@ -202,6 +141,142 @@ export const IMAGES = withThumb({
   'door-greet-08-jumping': {
     src: 'img/door-greet-08-jumping.jpg',
     alt: 'Lucy rears up with both front paws on the guest’s chest, mouth open and ears back, while he leans away and the leash pulls tight.',
+  },
+
+  // --- batch 1: the whole of Doorbell Predicts Rewards ----------------------
+  //
+  // The first activity to be restyled end to end. The unit is the activity
+  // rather than the reference count on purpose: while the library is half
+  // redrawn, every session is a mix, and a household notices that inside a
+  // five-minute run far more than it notices one picture being newer than
+  // another. Finish what one activity touches, install it together, and that
+  // session is consistent even while the rest of the app is not.
+  //
+  // Each is also a fix, not only a restyle — §5 of the audit had a defect
+  // recorded against most of what these replace:
+  //
+  //   `dg-04` already had treats in an open palm, which is the *next* step's
+  //   job, so the beat it existed to show was skipped. `door-sound-03-name`
+  //   has the handler's hands empty.
+  //
+  //   `dg-05` had Lucy facing the door, away from the handler calling her —
+  //   it illustrated the step failing. She now turns toward the voice, and is
+  //   large enough in frame to read on a phone, which the old one was not.
+  //
+  //   `dg-24` put Lucy hard left with two-thirds empty hallway, so the 56px
+  //   square landed on floorboards. `door-sound-cover` centres the pair in the
+  //   middle band; the square now holds her head, the hand on her shoulder and
+  //   the treat.
+  //
+  // The leash is in every one of them, including the four that are not about
+  // the leash. The briefs originally named it only where it did something, and
+  // the first generation came back with Lucy in nothing but her collar —
+  // correctly, since nothing had asked. Run the five steps in order like that
+  // and the leash appears, vanishes for two steps, and returns.
+  'door-cover': {
+    src: 'img/door-cover.jpg',
+    alt: 'Lucy sits on her bed a few feet inside the entryway while a visitor stands in the open doorway and a handler holds a loose leash.',
+  },
+  'door-sound-01-setup': {
+    src: 'img/door-sound-01-setup.jpg',
+    alt: 'Lucy sits beside her handler near the closed front door with the leash running down under the handler’s shoe.',
+  },
+  'door-sound-02-self': {
+    src: 'img/door-sound-02-self.jpg',
+    alt: 'A handler knocks on the door frame while standing right beside Lucy with the leash under her foot.',
+  },
+  'door-sound-03-name': {
+    src: 'img/door-sound-03-name.jpg',
+    alt: 'Lucy turns away from the door to look up at her handler, who crouches beside her at her level with both hands empty.',
+  },
+  'door-sound-03-name-distant': {
+    src: 'img/door-sound-03-name-distant.jpg',
+    alt: 'Lucy sits on her bed near the front door and turns her head toward her handler, who is beckoning from the far end of the hallway.',
+  },
+  'door-sound-04-treats': {
+    src: 'img/door-sound-04-treats.jpg',
+    alt: 'A handler feeds Lucy two small treats from a flat open palm while Lucy takes them from her hand.',
+  },
+  'door-sound-05-settle': {
+    src: 'img/door-sound-05-settle.jpg',
+    alt: 'Lucy stands relaxed on a slack leash beside her handler in a quiet moment between repetitions, with nothing being asked of her.',
+  },
+  'door-sound-cover': {
+    src: 'img/door-sound-cover.jpg',
+    alt: 'A handler crouches beside Lucy well back from the closed front door, one hand resting on her shoulder and the other offering a treat.',
+  },
+
+  // --- batch 2: the whole of Controlled Real Greeting -----------------------
+  //
+  // Same unit as batch 1 — the activity, not the reference count. Three of this
+  // activity's pictures were already new (`door-greet-01-settle`,
+  // `door-sound-02-bell`, and the petting/jumping pair at step 8), and
+  // `door-greet-07-approach` had been approved since round 3 and never wired
+  // up, which is the same trap `door-sound-01-setup` was in.
+  //
+  // The §5 defects these close:
+  //
+  //   `dg-06` had the direction backwards — Lucy already standing on the bed,
+  //   facing off it, walking toward the pointing hand, on a step that says send
+  //   her to it. Twenty-two references, the second most-used image in the app.
+  //   `door-place-03-send` has her mid-stride onto the bed with the pointing
+  //   hand behind her, and puts the door in frame, which the old one never did.
+  //
+  //   `dg-09` had no handler and no leash anywhere in it, on a step whose whole
+  //   instruction is to hold her on the bed on one.
+  //
+  //   `dg-12` showed no treat at all, and the handler bending from the waist
+  //   over the dog — the posture the trainer's guidance specifically avoids.
+  //
+  //   `dg-22` was the most cluttered composition in the library: two seated
+  //   figures, sofa, armchair, side table, rug, plant, framed picture, doormat
+  //   and door. It is now armchair, sofa, bed, wall and floor.
+  //
+  // `door-greet-cover` is new rather than a redraw. `dg-11` was the activity
+  // cover and the approved art that replaced it at step 8 loses the guest's
+  // head to the 16:7 Today band (§7.2). That was an acceptable trade for a step
+  // image; it is not for a cover, now that batch 1 has shown a cover drawn to an
+  // explicit composition constraint passes all three crops first time. Here the
+  // guest's head, the hand on Lucy's chest and her four-paws-down sit inside the
+  // band, and the centred square holds all three figures whole.
+  //
+  // dg-4's fallback moved off `dg-26` entirely. That key was doing an ending and
+  // a de-escalation at once, which are different messages. The "Lucy is too
+  // excited" sheet reads "move Lucy farther from the door / keep her on leash
+  // and stay beside her / feed her on her bed", and `door-sound-cover` is that
+  // picture already — so the fallback points there and `door-greet-09-leaves`
+  // keeps the ending, which is its one real job.
+  'door-place-03-send': {
+    src: 'img/door-place-03-send.jpg',
+    alt: 'Lucy steps onto her bed as her handler points to it from behind her, near the closed front door.',
+  },
+  'door-greet-04-open': {
+    src: 'img/door-greet-04-open.jpg',
+    alt: 'Lucy sits on her bed on a slack leash while her handler stands beside her holding it and a guest waits outside the open door.',
+  },
+  'door-greet-05-reward': {
+    src: 'img/door-greet-05-reward.jpg',
+    alt: 'A handler crouches to feed Lucy a treat on her bed while a guest waits at the open door.',
+  },
+  'door-greet-06-enter': {
+    src: 'img/door-greet-06-enter.jpg',
+    alt: 'A guest stands just inside the closed front door looking at the handler, while Lucy lies on her bed on a slack leash.',
+  },
+  'door-greet-06-seated': {
+    src: 'img/door-greet-06-seated.jpg',
+    alt: 'A guest sits in an armchair and the handler sits on a sofa, neither looking at Lucy, while she lies settled on her bed between them.',
+  },
+  'door-greet-07-approach': {
+    src: 'img/door-greet-07-approach.jpg',
+    alt: 'A handler walks Lucy toward a waiting guest with the leash short and slack between them.',
+  },
+  'door-greet-09-leaves': {
+    src: 'img/door-greet-09-leaves.jpg',
+    alt: 'A guest steps back out through the open door with a small wave while Lucy stays sitting at her handler’s side on leash.',
+  },
+  'door-greet-cover': {
+    src: 'img/door-greet-cover.jpg',
+    alt: 'Lucy sits with all four paws down while a crouching guest rests an open palm on her chest and her handler holds the leash in a loose loop behind her.',
   },
 
   // Covers for the programs that are named but not written yet.
@@ -415,7 +490,7 @@ export const PROGRAMS = [
     id: 'calm-door-greetings',
     title: 'Calm Door Greetings',
     goalId: 'door-routine',
-    coverImage: 'dg-01',
+    coverImage: 'door-cover',
     // Says what the pitch above it does not. On the program screen this sits
     // directly under programPitch, which on a fresh program reads "Four
     // activities, from the first doorbell to a calm hello" — so opening this
@@ -496,7 +571,7 @@ export const ACTIVITIES = [
     // The mark this activity carries everywhere it appears. See ICONS.
     icon: 'act-sound',
     shortPurpose: 'Lucy hears the doorbell and looks to you instead of the door.',
-    coverImage: 'dg-24',
+    coverImage: 'door-sound-cover',
     estimatedMinutes: 5,
     difficulty: 'beginner',
     equipment: ['Lucy on leash', 'Small high-value treats', 'Doorbell or a door to knock on'],
@@ -505,33 +580,33 @@ export const ACTIVITIES = [
       'One sound per repetition. Never repeat the bell to get a reaction.',
       'Talk to her calmly through this if you want to. Keep it low key, nothing exciting.',
     ],
-    fallbackImage: 'dg-24',
+    fallbackImage: 'door-sound-cover',
     fallbackSteps: FALLBACK_STEPS,
     steps: [
       {
         instruction: 'Stand near the door with Lucy on leash.',
-        image: 'dg-02',
+        image: 'door-sound-01-setup',
         helper: 'Step lightly on the leash so both hands stay free.',
       },
       {
         instruction: 'Ring or knock once.',
-        image: 'dg-20',
+        image: 'door-sound-02-self',
         helper: 'One sound only, then wait. Let her hear it before you say anything.',
       },
       {
         instruction: 'Say her name in a bright, happy voice.',
         cue: 'Lucy!',
-        image: 'dg-04',
+        image: 'door-sound-03-name',
       },
       {
         instruction: 'Give two treats right away.',
-        image: 'dg-17',
+        image: 'door-sound-04-treats',
         helper:
           'You are paying for the sound, not for good behavior. Feed even if she barked, so the bell starts to mean food instead of alarm.',
       },
       {
         instruction: 'Let her settle, then go again.',
-        image: 'dg-18',
+        image: 'door-sound-05-settle',
         helper: 'A few quiet seconds between reps keeps her under threshold.',
       },
     ],
@@ -567,7 +642,7 @@ export const ACTIVITIES = [
         reps: 5,
         successCriteria: ['Comes to you after the sound', 'No charging the door'],
         overrides: {
-          2: { instruction: 'Call her name from a few feet away.', cue: 'Lucy!', image: 'dg-05' },
+          2: { instruction: 'Call her name from a few feet away.', cue: 'Lucy!', image: 'door-sound-03-name-distant' },
         },
       },
       {
@@ -577,7 +652,7 @@ export const ACTIVITIES = [
         reps: 5,
         successCriteria: ['Leaves the door and finds you', 'Arrives without barking'],
         overrides: {
-          2: { instruction: 'Call her name from another room.', cue: 'Lucy!', image: 'dg-05' },
+          2: { instruction: 'Call her name from another room.', cue: 'Lucy!', image: 'door-sound-03-name-distant' },
         },
       },
     ],
@@ -606,7 +681,7 @@ export const ACTIVITIES = [
     fallbackImage: 'dg-25',
     fallbackSteps: FALLBACK_STEPS,
     steps: [
-      { instruction: 'Send Lucy to her bed.', cue: 'Go to bed', image: 'dg-06' },
+      { instruction: 'Send Lucy to her bed.', cue: 'Go to bed', image: 'door-place-03-send' },
       {
         instruction: 'Cue the stay and hold her eye for one beat.',
         cue: 'Stay',
@@ -694,8 +769,8 @@ export const ACTIVITIES = [
         reps: 4,
         successCriteria: ['Holds the bed while a real person is visible'],
         overrides: {
-          2: { instruction: 'Open the door to a familiar person waiting outside.', image: 'dg-09' },
-          4: { instruction: 'Release her, and your helper steps back outside.', image: 'dg-26' },
+          2: { instruction: 'Open the door to a familiar person waiting outside.', image: 'door-greet-04-open' },
+          4: { instruction: 'Release her, and your helper steps back outside.', image: 'door-greet-09-leaves' },
         },
       },
     ],
@@ -712,7 +787,7 @@ export const ACTIVITIES = [
     // The mark this activity carries everywhere it appears. See ICONS.
     icon: 'act-place',
     shortPurpose: 'The doorbell becomes her cue to move away from the door.',
-    coverImage: 'dg-06',
+    coverImage: 'door-place-03-send',
     estimatedMinutes: 7,
     difficulty: 'intermediate',
     equipment: ['Lucy on leash', 'Her bed', 'Small treats', 'Doorbell or a door to knock on'],
@@ -723,9 +798,9 @@ export const ACTIVITIES = [
     fallbackImage: 'dg-25',
     fallbackSteps: FALLBACK_STEPS,
     steps: [
-      { instruction: 'Ring or knock once.', image: 'dg-20' },
-      { instruction: 'Say her name brightly.', cue: 'Lucy!', image: 'dg-04' },
-      { instruction: 'Send her to her bed.', cue: 'Go to bed', image: 'dg-06' },
+      { instruction: 'Ring or knock once.', image: 'door-sound-02-self' },
+      { instruction: 'Say her name brightly.', cue: 'Lucy!', image: 'door-sound-03-name' },
+      { instruction: 'Send her to her bed.', cue: 'Go to bed', image: 'door-place-03-send' },
       { instruction: 'Reward her twice on the bed.', image: 'dg-25' },
       {
         instruction: 'Walk toward the door, then come back.',
@@ -741,7 +816,7 @@ export const ACTIVITIES = [
         setup: 'Lead her to the bed with a treat in your hand.',
         reps: 5,
         successCriteria: ['Follows to the bed', 'Settles once she arrives'],
-        overrides: { 2: { instruction: 'Lead her to the bed with a treat.', image: 'dg-06' } },
+        overrides: { 2: { instruction: 'Lead her to the bed with a treat.', image: 'door-place-03-send' } },
       },
       {
         number: 2,
@@ -749,7 +824,7 @@ export const ACTIVITIES = [
         setup: 'Point to the bed and treat only after she arrives.',
         reps: 5,
         successCriteria: ['Goes to the bed on a point', 'No hand in front of her nose'],
-        overrides: { 2: { instruction: 'Point to the bed. Treat after she lands.', image: 'dg-06' } },
+        overrides: { 2: { instruction: 'Point to the bed. Treat after she lands.', image: 'door-place-03-send' } },
       },
       {
         number: 3,
@@ -794,7 +869,7 @@ export const ACTIVITIES = [
     // The mark this activity carries everywhere it appears. See ICONS.
     icon: 'act-greet',
     shortPurpose: 'A real guest arrives and Lucy greets on your terms.',
-    coverImage: 'dg-11',
+    coverImage: 'door-greet-cover',
     estimatedMinutes: 10,
     difficulty: 'advanced',
     equipment: ['Lucy on leash', 'Her bed', 'Small treats', 'A patient familiar guest'],
@@ -804,16 +879,16 @@ export const ACTIVITIES = [
       'Pet the chest, never the top of the head.',
       'If she pulls ahead on the way over, step on the leash or put gentle downward pressure on her collar.',
     ],
-    fallbackImage: 'dg-26',
+    fallbackImage: 'door-sound-cover',
     fallbackSteps: FALLBACK_STEPS,
     steps: [
       { instruction: 'Leash Lucy and settle her on her bed.', image: 'door-greet-01-settle' },
       { instruction: 'Your guest rings the bell.', image: 'door-sound-02-bell' },
-      { instruction: 'Send her to her bed.', cue: 'Go to bed', image: 'dg-06' },
-      { instruction: 'Open the door. The guest stays put.', image: 'dg-09' },
-      { instruction: 'Reward her for holding the bed.', image: 'dg-12' },
-      { instruction: 'Bring the guest in and let Lucy settle.', image: 'dg-21' },
-      { instruction: 'Walk her over on a loose leash.', cue: 'Go say hi', image: 'dg-10' },
+      { instruction: 'Send her to her bed.', cue: 'Go to bed', image: 'door-place-03-send' },
+      { instruction: 'Open the door. The guest stays put.', image: 'door-greet-04-open' },
+      { instruction: 'Reward her for holding the bed.', image: 'door-greet-05-reward' },
+      { instruction: 'Bring the guest in and let Lucy settle.', image: 'door-greet-06-enter' },
+      { instruction: 'Walk her over on a loose leash.', cue: 'Go say hi', image: 'door-greet-07-approach' },
       {
         instruction: 'Ask for a sit, then allow calm petting.',
         cue: 'Sit',
@@ -854,7 +929,7 @@ export const ACTIVITIES = [
         reps: 3,
         endAfterStep: 6,
         successCriteria: ['Holds the bed while the guest moves through the room'],
-        overrides: { 5: { instruction: 'Guest walks in, sits down, and ignores her.', image: 'dg-22' } },
+        overrides: { 5: { instruction: 'Guest walks in, sits down, and ignores her.', image: 'door-greet-06-seated' } },
       },
       {
         number: 4,

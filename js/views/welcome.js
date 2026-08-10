@@ -20,22 +20,22 @@ export const restart = () => {
 
 const PANELS = [
   {
-    image: 'dg-01',
+    image: 'door-cover',
     eyebrow: 'Welcome',
     title: 'Practice with Lucy, five minutes at a time',
     body: `This turns The Canine Coach's handouts into short guided sessions, so you both practice the same way and can see whether it is working.`,
     note: 'It supports your trainer. It does not replace one.',
   },
   {
-    // Was the dg-03 diptych, which is retired. dg-20 rather than one of the two
-    // images that replaced it: this panel sits one swipe after panel 1, so a
-    // new-style illustration here would put the style change on the welcome,
-    // where a household meets the app for the first time and has nothing to
-    // read it against. dg-20 is painted like its neighbour and is still a true
-    // picture of a session step — and it happens to show the leash under a foot
-    // while the copy beside it talks about running a session one-handed.
-    // Revisit when the restyle reaches the rest of the library.
-    image: 'dg-20',
+    // Was the dg-03 diptych, then `dg-20` — kept in the old style on purpose,
+    // because a new-style picture one swipe after an old-style panel 1 puts the
+    // restyle on the first screen a household ever sees, with nothing to read it
+    // against. Batch 1 settles that by moving both panels at once: panel 1 is
+    // now `door-cover` and this is the redrawn `door-sound-02-self`, so the
+    // welcome is internally consistent again. It still shows the leash under a
+    // foot while the copy beside it talks about running a session one-handed,
+    // which is why this step is the one that belongs here.
+    image: 'door-sound-02-self',
     eyebrow: 'How a session goes',
     title: 'One instruction at a time',
     body: 'No handout to reread. Each step fills the screen with a picture, the exact words to say, and nothing else. You can run it one-handed with a leash in the other.',
