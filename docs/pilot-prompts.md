@@ -534,6 +534,17 @@ style without correcting what they say would be a waste of twenty-five rounds.
 Six images. With `door-sound-01-setup` already approved and the bell and knock
 already live, these complete the activity.
 
+**The leash is in every one of these.** The first draft of these briefs named it
+only in Scenes 10 and 13, and the first generation of Scene 11 came back with
+Lucy wearing nothing but her collar — correctly, since nothing had asked for a
+leash. But `dg-1` lists "Lucy on leash" as equipment, the approved step-1 setup
+trails it under the handler's shoe, and Scene 10 makes the leash-under-foot the
+entire subject. Run the five steps in order with the leash named in only two of
+them and it appears, vanishes for two steps, and comes back. A household notices
+that inside a five-minute session; it is the exact inconsistency batching by
+activity exists to prevent. So every brief below states where the leash is, even
+when it is doing nothing.
+
 ### Scene 10 — You make the sound
 *Replaces `dg-20`, 9 references — the most-used image in the batch, and the only
 one in the library that shows the leash-under-foot technique the copy keeps
@@ -562,7 +573,8 @@ show.*
 
 > Interior entry hall, three-quarter view. Lucy sits near the closed front door
 > and **turns her head fully away from the door to look up at the handler** —
-> the turn is the entire subject of the picture. Mouth relaxed, ears soft.
+> the turn is the entire subject of the picture. Mouth relaxed, ears soft. The
+> black leash is clipped to her collar and lies slack across the floor.
 >
 > The handler crouches side-on at her level, face toward her, **both hands empty
 > and at rest.** No treat, no pouch in her hand, nothing being offered — the
@@ -580,7 +592,8 @@ show.*
 belong.*
 
 > Interior entry hall, close three-quarter view. Lucy stands or sits facing the
-> handler, head forward, taking food from an open hand, body loose and easy.
+> handler, head forward, taking food from an open hand, body loose and easy. The
+> black leash is clipped to her collar and lies slack across the floor.
 >
 > The handler crouches at her level with a **flat open palm holding two small
 > treats, clearly two and clearly visible**, the mustard pouch at her hip and her
@@ -620,7 +633,8 @@ door, away from the handler — it shows the step failing.*
 > Interior entry hall opening onto a hallway, three-quarter view. Lucy sits on
 > her flat grey bed near the closed front door and **turns her head back over her
 > shoulder, toward the handler and away from the door.** That turn is the whole
-> subject.
+> subject. The black leash is clipped to her collar and **trails loose along the
+> floor behind her** — nobody is holding it, because the handler is a room away.
 >
 > The handler stands well back — a doorway or hall away, small in the frame,
 > side-on — with one hand raised in a small beckon, calm and unhurried.
@@ -645,7 +659,9 @@ floorboards.*
 
 > Interior entry hall, three-quarter view, **well back from a closed front door**.
 > Lucy sits leaning slightly into the handler, calm and settled, taking a treat.
-> A small round blue tag hangs from her purple collar.
+> A small round blue tag hangs from her purple collar. The black leash is clipped
+> to her collar and lies slack on the floor, **kept low and out of the middle of
+> the frame** — see the composition note below.
 >
 > The handler crouches beside her, **one hand resting on Lucy's shoulder and the
 > other offering a treat**, her body turned away from the door. This is a step
@@ -665,11 +681,30 @@ floorboards.*
 >
 > Landscape 4:3, wider than tall.
 
-### When batch 1 is done
+### Batch 1 is done — installed at 1.52.0
 
-Install all six together with `door-sound-01-setup`, and Doorbell Predicts
-Rewards becomes the first activity a household can run start to finish in one
-style. Run `node scripts/pilot.mjs verify` before opening the PR.
+All six shipped together with `door-sound-01-setup`, and Doorbell Predicts
+Rewards is the first activity a household can run start to finish in one style.
+Eight keys retired: `dg-01`, `dg-02`, `dg-04`, `dg-05`, `dg-17`, `dg-18`,
+`dg-20`, `dg-24`.
+
+**`dg-01` came along, and that was not optional.** Welcome panel 2 had been
+holding `dg-20` deliberately, in the old style, so that it matched panel 1's
+`dg-01` — see the comment in `js/views/welcome.js`. Repointing panel 2 alone
+would have put the restyle one swipe after an old-style panel on the first
+screen a household ever sees. Panel 1 had approved art waiting as `door-cover`,
+so both moved in the same release and the welcome stayed internally consistent.
+**Every batch from here needs the same question asked before it lands: what
+else is on screen beside these, and does it move too?**
+
+Two things worth carrying forward to batch 2:
+
+- **Name the leash in every brief, including the ones it is doing nothing in.**
+  §7 has the long version. It cost a full sitting of five generations.
+- **The two treats are legible at native size and blur to one smudge at 1x.**
+  They resolve on any retina phone, and the step copy says "two" regardless, so
+  this was accepted rather than redrawn. If a future scene hangs its whole
+  meaning on a detail that small, draw it bigger instead.
 
 ---
 

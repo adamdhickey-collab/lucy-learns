@@ -23,22 +23,6 @@ const withThumb = (images) => {
 };
 
 export const IMAGES = withThumb({
-  'dg-01': {
-    src: 'img/dg-01.jpg',
-    alt: 'Lucy sits on her bed a few feet inside the entryway while a visitor stands in the open doorway and a handler holds a loose leash.',
-  },
-  'dg-02': {
-    src: 'img/dg-02.jpg',
-    alt: 'Lucy sits calmly beside the front door on a leash while a handler holds a treat pouch.',
-  },
-  'dg-04': {
-    src: 'img/dg-04.jpg',
-    alt: 'Lucy turns away from the door to look up at her handler, who is offering two small treats.',
-  },
-  'dg-05': {
-    src: 'img/dg-05.jpg',
-    alt: 'Lucy near the front door turning toward a handler who is calling her cheerfully from the next room.',
-  },
   'dg-06': {
     src: 'img/dg-06.jpg',
     alt: 'Lucy moving away from the doorway toward her dog bed while a handler points calmly to the bed.',
@@ -83,21 +67,9 @@ export const IMAGES = withThumb({
     src: 'img/dg-16.jpg',
     alt: 'The front door is open a few inches onto daylight while Lucy stays lying on her bed.',
   },
-  'dg-17': {
-    src: 'img/dg-17.jpg',
-    alt: 'A handler feeds Lucy two small treats from an open palm while Lucy looks up at her hand.',
-  },
-  'dg-18': {
-    src: 'img/dg-18.jpg',
-    alt: 'Lucy stands relaxed on a loose leash beside her handler in a quiet moment between repetitions.',
-  },
   'dg-19': {
     src: 'img/dg-19.jpg',
     alt: 'Lucy steps up off her bed as her handler releases her from the stay.',
-  },
-  'dg-20': {
-    src: 'img/dg-20.jpg',
-    alt: 'A handler knocks on the door frame while standing right beside Lucy with the leash under her foot.',
   },
   'dg-21': {
     src: 'img/dg-21.jpg',
@@ -110,10 +82,6 @@ export const IMAGES = withThumb({
   'dg-23': {
     src: 'img/dg-23.jpg',
     alt: 'A handler holds a relaxed conversation in the open doorway while Lucy stays settled on her bed.',
-  },
-  'dg-24': {
-    src: 'img/dg-24.jpg',
-    alt: 'A handler crouches beside Lucy well back from the closed front door and feeds her a treat.',
   },
   'dg-25': {
     src: 'img/dg-25.jpg',
@@ -159,11 +127,13 @@ export const IMAGES = withThumb({
   // most-referenced image in the app.
   //
   // Fourteen references, and seven of them wanted neither panel: "Ring or knock
-  // once" is the handler making the sound, which `dg-20` already shows properly
-  // — beside Lucy, leash under the foot. Those now point there, which also
-  // fixes the §5 complaint that the one image demonstrating the leash-underfoot
-  // technique appeared at exactly one level while `dg-02` taught it wrongly six
-  // times over.
+  // once" is the handler making the sound, which the step-2 picture already
+  // shows properly — beside Lucy, leash under the foot. Those now point there,
+  // which also fixes the §5 complaint that the one image demonstrating the
+  // leash-underfoot technique appeared at exactly one level while the setup
+  // shot taught it wrongly six times over. (Both were `dg-20` and `dg-02` when
+  // this was written; batch 1 redrew them as `door-sound-02-self` and
+  // `door-sound-01-setup`.)
   //
   // These two take the rest, and with them drawn `dg-03` is gone from the app
   // entirely — key, files and precache. The hand in both is deliberately
@@ -202,6 +172,69 @@ export const IMAGES = withThumb({
   'door-greet-08-jumping': {
     src: 'img/door-greet-08-jumping.jpg',
     alt: 'Lucy rears up with both front paws on the guest’s chest, mouth open and ears back, while he leans away and the leash pulls tight.',
+  },
+
+  // --- batch 1: the whole of Doorbell Predicts Rewards ----------------------
+  //
+  // The first activity to be restyled end to end. The unit is the activity
+  // rather than the reference count on purpose: while the library is half
+  // redrawn, every session is a mix, and a household notices that inside a
+  // five-minute run far more than it notices one picture being newer than
+  // another. Finish what one activity touches, install it together, and that
+  // session is consistent even while the rest of the app is not.
+  //
+  // Each is also a fix, not only a restyle — §5 of the audit had a defect
+  // recorded against most of what these replace:
+  //
+  //   `dg-04` already had treats in an open palm, which is the *next* step's
+  //   job, so the beat it existed to show was skipped. `door-sound-03-name`
+  //   has the handler's hands empty.
+  //
+  //   `dg-05` had Lucy facing the door, away from the handler calling her —
+  //   it illustrated the step failing. She now turns toward the voice, and is
+  //   large enough in frame to read on a phone, which the old one was not.
+  //
+  //   `dg-24` put Lucy hard left with two-thirds empty hallway, so the 56px
+  //   square landed on floorboards. `door-sound-cover` centres the pair in the
+  //   middle band; the square now holds her head, the hand on her shoulder and
+  //   the treat.
+  //
+  // The leash is in every one of them, including the four that are not about
+  // the leash. The briefs originally named it only where it did something, and
+  // the first generation came back with Lucy in nothing but her collar —
+  // correctly, since nothing had asked. Run the five steps in order like that
+  // and the leash appears, vanishes for two steps, and returns.
+  'door-cover': {
+    src: 'img/door-cover.jpg',
+    alt: 'Lucy sits on her bed a few feet inside the entryway while a visitor stands in the open doorway and a handler holds a loose leash.',
+  },
+  'door-sound-01-setup': {
+    src: 'img/door-sound-01-setup.jpg',
+    alt: 'Lucy sits beside her handler near the closed front door with the leash running down under the handler’s shoe.',
+  },
+  'door-sound-02-self': {
+    src: 'img/door-sound-02-self.jpg',
+    alt: 'A handler knocks on the door frame while standing right beside Lucy with the leash under her foot.',
+  },
+  'door-sound-03-name': {
+    src: 'img/door-sound-03-name.jpg',
+    alt: 'Lucy turns away from the door to look up at her handler, who crouches beside her at her level with both hands empty.',
+  },
+  'door-sound-03-name-distant': {
+    src: 'img/door-sound-03-name-distant.jpg',
+    alt: 'Lucy sits on her bed near the front door and turns her head toward her handler, who is beckoning from the far end of the hallway.',
+  },
+  'door-sound-04-treats': {
+    src: 'img/door-sound-04-treats.jpg',
+    alt: 'A handler feeds Lucy two small treats from a flat open palm while Lucy takes them from her hand.',
+  },
+  'door-sound-05-settle': {
+    src: 'img/door-sound-05-settle.jpg',
+    alt: 'Lucy stands relaxed on a slack leash beside her handler in a quiet moment between repetitions, with nothing being asked of her.',
+  },
+  'door-sound-cover': {
+    src: 'img/door-sound-cover.jpg',
+    alt: 'A handler crouches beside Lucy well back from the closed front door, one hand resting on her shoulder and the other offering a treat.',
   },
 
   // Covers for the programs that are named but not written yet.
@@ -415,7 +448,7 @@ export const PROGRAMS = [
     id: 'calm-door-greetings',
     title: 'Calm Door Greetings',
     goalId: 'door-routine',
-    coverImage: 'dg-01',
+    coverImage: 'door-cover',
     // Says what the pitch above it does not. On the program screen this sits
     // directly under programPitch, which on a fresh program reads "Four
     // activities, from the first doorbell to a calm hello" — so opening this
@@ -496,7 +529,7 @@ export const ACTIVITIES = [
     // The mark this activity carries everywhere it appears. See ICONS.
     icon: 'act-sound',
     shortPurpose: 'Lucy hears the doorbell and looks to you instead of the door.',
-    coverImage: 'dg-24',
+    coverImage: 'door-sound-cover',
     estimatedMinutes: 5,
     difficulty: 'beginner',
     equipment: ['Lucy on leash', 'Small high-value treats', 'Doorbell or a door to knock on'],
@@ -505,33 +538,33 @@ export const ACTIVITIES = [
       'One sound per repetition. Never repeat the bell to get a reaction.',
       'Talk to her calmly through this if you want to. Keep it low key, nothing exciting.',
     ],
-    fallbackImage: 'dg-24',
+    fallbackImage: 'door-sound-cover',
     fallbackSteps: FALLBACK_STEPS,
     steps: [
       {
         instruction: 'Stand near the door with Lucy on leash.',
-        image: 'dg-02',
+        image: 'door-sound-01-setup',
         helper: 'Step lightly on the leash so both hands stay free.',
       },
       {
         instruction: 'Ring or knock once.',
-        image: 'dg-20',
+        image: 'door-sound-02-self',
         helper: 'One sound only, then wait. Let her hear it before you say anything.',
       },
       {
         instruction: 'Say her name in a bright, happy voice.',
         cue: 'Lucy!',
-        image: 'dg-04',
+        image: 'door-sound-03-name',
       },
       {
         instruction: 'Give two treats right away.',
-        image: 'dg-17',
+        image: 'door-sound-04-treats',
         helper:
           'You are paying for the sound, not for good behavior. Feed even if she barked, so the bell starts to mean food instead of alarm.',
       },
       {
         instruction: 'Let her settle, then go again.',
-        image: 'dg-18',
+        image: 'door-sound-05-settle',
         helper: 'A few quiet seconds between reps keeps her under threshold.',
       },
     ],
@@ -567,7 +600,7 @@ export const ACTIVITIES = [
         reps: 5,
         successCriteria: ['Comes to you after the sound', 'No charging the door'],
         overrides: {
-          2: { instruction: 'Call her name from a few feet away.', cue: 'Lucy!', image: 'dg-05' },
+          2: { instruction: 'Call her name from a few feet away.', cue: 'Lucy!', image: 'door-sound-03-name-distant' },
         },
       },
       {
@@ -577,7 +610,7 @@ export const ACTIVITIES = [
         reps: 5,
         successCriteria: ['Leaves the door and finds you', 'Arrives without barking'],
         overrides: {
-          2: { instruction: 'Call her name from another room.', cue: 'Lucy!', image: 'dg-05' },
+          2: { instruction: 'Call her name from another room.', cue: 'Lucy!', image: 'door-sound-03-name-distant' },
         },
       },
     ],
@@ -723,8 +756,8 @@ export const ACTIVITIES = [
     fallbackImage: 'dg-25',
     fallbackSteps: FALLBACK_STEPS,
     steps: [
-      { instruction: 'Ring or knock once.', image: 'dg-20' },
-      { instruction: 'Say her name brightly.', cue: 'Lucy!', image: 'dg-04' },
+      { instruction: 'Ring or knock once.', image: 'door-sound-02-self' },
+      { instruction: 'Say her name brightly.', cue: 'Lucy!', image: 'door-sound-03-name' },
       { instruction: 'Send her to her bed.', cue: 'Go to bed', image: 'dg-06' },
       { instruction: 'Reward her twice on the bed.', image: 'dg-25' },
       {
