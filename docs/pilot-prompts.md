@@ -434,6 +434,52 @@ bed" — the image it replaces has neither a handler nor a leash in it.*
 >
 > Landscape 4:3, wider than tall.
 
+## Scene 8 — The doorbell
+
+*New. Fills `door-sound-02-bell`, six references, currently rendering the old
+diptych as a stand-in. Attach `door-stay-02-cue.png` or any approved image.*
+
+> Exterior view of a closed charcoal panelled front door with a small
+> four-pane window, seen straight on from the porch. **A hand and forearm enter
+> from the right edge of the frame, one finger pressing a round doorbell button
+> mounted on the door frame.** The press is the whole action.
+>
+> Through the door's window, **Lucy is visible inside**: head and shoulders
+> only, head up, ears forward, alert to the sound. A small round blue tag hangs
+> from her purple collar.
+>
+> The sleeve on the forearm is **plain and unbranded — not the guest's checked
+> shirt.** This hand is sometimes a helper and sometimes the guest, and it has
+> to work for both.
+>
+> Background: the door, its frame, the woven doormat below, and a plain porch
+> wall. No garden, no view, no plants.
+>
+> The single thing this image must make obvious: the bell is being pressed, and
+> she has heard it.
+>
+> Landscape 4:3, wider than tall. One single scene — **not two panels.**
+
+## Scene 9 — The knock
+
+*New. Fills `door-sound-02-knock`, one reference. Generate straight after Scene
+8 in the same conversation, with the approved Scene 8 attached — these two are a
+matched pair and should differ only in the hand.*
+
+> Same door, same camera, same distance, same light, same window and doormat as
+> the previous image. Lucy is visible through the window in the same position,
+> head up, ears forward.
+>
+> Change one thing: **the hand is knocking instead of pressing the bell** —
+> knuckles against the door panel, mid-knock, wrist relaxed. The doorbell button
+> is still on the frame, untouched.
+>
+> The sleeve stays plain and unbranded.
+>
+> The single thing this image must make obvious: the door is being knocked on.
+>
+> Landscape 4:3, wider than tall. One single scene — **not two panels.**
+
 ### Landing these two
 
 They are the only images in the app whose alt text and picture disagree, and

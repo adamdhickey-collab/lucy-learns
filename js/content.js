@@ -155,6 +155,33 @@ export const IMAGES = withThumb({
     alt: 'A handler crouches beside Lucy’s bed clipping the leash to her collar, well back from the closed front door.',
   },
 
+  // --- the diptych, taken apart -------------------------------------------
+  //
+  // `dg-03` put a doorbell press and a knock side by side in one file: two
+  // actions in one frame, which breaks the one-action rule, renders as half of
+  // each at 84px, and drew Lucy differently in each panel. It was the third
+  // most-referenced image in the app.
+  //
+  // Fourteen references, and seven of them wanted neither panel: "Ring or knock
+  // once" is the handler making the sound, which `dg-20` already shows properly
+  // — beside Lucy, leash under the foot. Those now point there, which also
+  // fixes the §5 complaint that the one image demonstrating the leash-underfoot
+  // technique appeared at exactly one level while `dg-02` taught it wrongly six
+  // times over.
+  //
+  // These two take the rest. Both `src` values are stand-ins pointing at the
+  // diptych until the artwork exists — see the note on door-stay-02-cue above
+  // for how that resolves. `dg-03` itself is now referenced by no step; its key
+  // and files stay only because they are what the stand-ins load.
+  'door-sound-02-bell': {
+    src: 'img/dg-03.jpg',
+    alt: 'A hand presses the doorbell beside the closed front door while Lucy watches from inside.',
+  },
+  'door-sound-02-knock': {
+    src: 'img/dg-03.jpg',
+    alt: 'A hand knocks on the closed front door while Lucy watches from inside.',
+  },
+
   // Covers for the programs that are named but not written yet.
   'cg-01': {
     src: 'img/cg-01.jpg',
@@ -466,7 +493,7 @@ export const ACTIVITIES = [
       },
       {
         instruction: 'Ring or knock once.',
-        image: 'dg-03',
+        image: 'dg-20',
         helper: 'One sound only, then wait. Let her hear it before you say anything.',
       },
       {
@@ -491,7 +518,7 @@ export const ACTIVITIES = [
         number: 1,
         title: 'You make the sound',
         setup: 'You knock or ring while standing right next to Lucy.',
-        overrides: { 1: { image: 'dg-20' } },
+        // The base step draws dg-20 now, which is this level's picture exactly.
         reps: 5,
         successCriteria: ['No barking on 4 of 5 sounds', 'Turns toward you', 'Takes treats easily'],
       },
@@ -501,7 +528,7 @@ export const ACTIVITIES = [
         setup: 'A helper knocks nearby while you stay with Lucy.',
         reps: 5,
         successCriteria: ['No barking on 4 of 5 sounds', 'Turns toward you before the treat'],
-        overrides: { 1: { instruction: 'Have your helper knock nearby.', image: 'dg-03' } },
+        overrides: { 1: { instruction: 'Have your helper knock nearby.', image: 'door-sound-02-knock' } },
       },
       {
         number: 3,
@@ -509,7 +536,7 @@ export const ACTIVITIES = [
         setup: 'A helper rings the actual doorbell from the porch.',
         reps: 5,
         successCriteria: ['No barking on 4 of 5 rings', 'Recovers within a few seconds'],
-        overrides: { 1: { instruction: 'Helper rings the real doorbell from outside.', image: 'dg-03' } },
+        overrides: { 1: { instruction: 'Helper rings the real doorbell from outside.', image: 'door-sound-02-bell' } },
       },
       {
         number: 4,
@@ -674,7 +701,7 @@ export const ACTIVITIES = [
     fallbackImage: 'dg-25',
     fallbackSteps: FALLBACK_STEPS,
     steps: [
-      { instruction: 'Ring or knock once.', image: 'dg-03' },
+      { instruction: 'Ring or knock once.', image: 'dg-20' },
       { instruction: 'Say her name brightly.', cue: 'Lucy!', image: 'dg-04' },
       { instruction: 'Send her to her bed.', cue: 'Go to bed', image: 'dg-06' },
       { instruction: 'Reward her twice on the bed.', image: 'dg-25' },
@@ -759,7 +786,7 @@ export const ACTIVITIES = [
     fallbackSteps: FALLBACK_STEPS,
     steps: [
       { instruction: 'Leash Lucy and settle her on her bed.', image: 'door-greet-01-settle' },
-      { instruction: 'Your guest rings the bell.', image: 'dg-03' },
+      { instruction: 'Your guest rings the bell.', image: 'door-sound-02-bell' },
       { instruction: 'Send her to her bed.', cue: 'Go to bed', image: 'dg-06' },
       { instruction: 'Open the door. The guest stays put.', image: 'dg-09' },
       { instruction: 'Reward her for holding the bed.', image: 'dg-12' },
