@@ -371,6 +371,70 @@ regeneration wearing a disguise.
 
 ---
 
+## Scene 6 — Cue the stay
+
+*New. Fills `door-stay-02-cue`, which currently renders `dg-07` as a stand-in.
+Attach an approved image as the style reference — `door-sound-01-setup.png` is
+the cleanest.*
+
+> Interior entry hall, three-quarter view. Lucy lies on her flat grey bed a few
+> feet inside the room, **front legs extended, head up and eyes locked on the
+> handler** — holding a position, not resting. A small round blue tag hangs from
+> her purple collar.
+>
+> The handler stands facing her a step away, side-on to camera, with **one flat
+> open palm raised at chest height** in a clear stay signal. Her weight is even,
+> her other arm relaxed at her side. She has not started moving yet.
+>
+> Background: the closed charcoal front door well behind her, the woven doormat,
+> one wall plane, oak floor. Nothing else.
+>
+> The single thing this image must make obvious: the signal has just been given
+> and neither of them has moved.
+>
+> Landscape 4:3, wider than tall.
+
+## Scene 7 — Leash on, settled on the bed
+
+*New. Fills `door-greet-01-settle`, which currently renders `dg-09` as a
+stand-in. This is the step whose instruction is "Leash Lucy and settle her on her
+bed" — the image it replaces has neither a handler nor a leash in it.*
+
+> Interior entry hall, three-quarter view. Lucy is settling onto her flat grey
+> bed, well back from a **closed** charcoal front door. **No guest, and nothing
+> visible outside.** A small round blue tag hangs from her purple collar.
+>
+> The handler crouches beside the bed with **the leash clipped to the ring on
+> the collar**, the line falling slack from her hand to the floor. Her other hand
+> rests lightly on Lucy's shoulder, guiding her down. Mustard treat pouch at her
+> hip.
+>
+> This is the quiet setup before anything happens: no bell, no visitor, nobody at
+> the door.
+>
+> Background: the closed door, the doormat, one wall plane, oak floor. Nothing
+> else.
+>
+> The single thing this image must make obvious: the leash is on and she is being
+> settled, before the session starts.
+>
+> Landscape 4:3, wider than tall.
+
+### Landing these two
+
+They are the only images in the app whose alt text and picture disagree, and
+that resolves the moment they exist:
+
+```bash
+node scripts/pilot.mjs add door-stay-02-cue
+```
+
+Then point the key at the real file in `js/content.js` — `src: 'img/dg-07.jpg'`
+becomes `src: 'img/door-stay-02-cue.jpg'` — resize to 1100px, build the thumb,
+and add both filenames to the precache list in `sw.js`.
+
+---
+
 ## The crop tests, and how to re-run them
 
 Round 2 cleared these. Re-run them on any replacement before approving it:

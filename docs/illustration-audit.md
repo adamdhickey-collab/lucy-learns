@@ -970,6 +970,57 @@ prompts — it is that **an image which is 90% right is usually finished**, and
 the last 10% costs more than it returns.
 
 
+### 7.4 The split, and why it cost two images and not six
+
+`dg-07` was carrying three different actions and `dg-09` three more, which made
+them the two worst entries in §3.5. Splitting them looked like +6 illustrations.
+It was +2, because four of the six moments already had a correct picture sitting
+unused or under-used elsewhere:
+
+| Moment | Was | Now | New art |
+| --- | --- | --- | --- |
+| Cue the stay | `dg-07` | `door-stay-02-cue` | **yes** |
+| Walk to the door and back | `dg-07` | `dg-07` — keeps this, its one real job | no |
+| Reward on the bed | `dg-07` | `dg-25` — a handler kneeling to feed her on the bed | no |
+| Leash and settle | `dg-09` | `door-greet-01-settle` | **yes** |
+| Open the door, guest outside | `dg-09` | `dg-09` — keeps this | no |
+| Bring the guest in | `dg-09` | `dg-21` — a guest standing just inside | no |
+
+`dg-25` was the sharpest of these. §5 already noted it as "the correct picture
+for `dg-07`'s third beat" — a handler kneeling at the bed with the treat going in
+between Lucy's paws, which is exactly what "walk back and reward her on the bed"
+describes, while `dg-07` showed the handler walking *away* with empty hands. The
+fix was a one-word change to a key.
+
+What it did to the load:
+
+| Image | Refs before | Refs after |
+| --- | --- | --- |
+| `dg-07` | 30 | 6 |
+| `dg-09` | 16 | 7 |
+| `dg-25` | 3 | 18 |
+| `dg-21` | 1 | 7 |
+| `door-stay-02-cue` | — | 9 |
+| `door-greet-01-settle` | — | 6 |
+
+`dg-25` at 18 is not the problem `dg-07` at 30 was: it is one action shown at
+many levels, which is the whole point of a level ladder, rather than three
+actions sharing a frame.
+
+**The two new keys render a stand-in.** Their `src` points at the image the step
+used before the split, so the app keeps working while the artwork is made. Their
+alt text describes the picture that should be there and is wrong about the one
+currently loading — the only place in the app where alt and image disagree,
+deliberately, and it resolves with a one-line change each. `sw.js` will need the
+two new filenames added when the art lands.
+
+Verified: 160 image references across every activity, level and step resolve to
+a key that exists and a file that exists, and no image is left carrying two
+different actions. What remains are per-level rewordings of the same move —
+"Send Lucy to her bed" and "Send her to her bed" — which is what a level ladder
+is supposed to look like.
+
+
 ---
 
 ## 8. What has to be decided before production
@@ -980,9 +1031,10 @@ The style question is closed — five approved images, §7. What is left is scop
    tag, no harness, leash clipped to the collar ring at her neck.** Carried into
    the shared character block in §6. Eighteen of the thirty already comply;
    dg-01 – dg-12 are the ones that have to change.
-2. **Splitting the overloaded images.** `dg-07` → 3, `dg-09` → 3, `dg-03` → 2.
-   That is +6 illustrations and edits to `content.js`. Alternatively, repoint
-   the reward step at `dg-25`, which needs no new art.
+2. ~~**Splitting the overloaded images.**~~ **Done for `dg-07` and `dg-09`, and
+   it cost two new illustrations rather than six.** Four of the six moments
+   already had a correct picture elsewhere in the library and only needed
+   pointing at. `dg-03` → 2 is still open. See §9.
 3. **The correct/incorrect pair** needs a component decision (§6.4). Round 1
    settled the *artwork* half — the taut coral leash carries the error without a
    ✓ or ✗ — but `.step-figure` still renders one image, so the pair needs either
