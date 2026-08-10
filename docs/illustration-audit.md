@@ -797,7 +797,8 @@ warm cream ground, and the most aggressive crop in the app (21:9) alongside the
 
 ## 7. Pilot results
 
-**The pilot is settled. Five approved images sit in `img/pilot/approved/`.**
+**Seven approved images sit in `img/pilot/approved/`** — the five from the style
+pilot, plus the two the `dg-07` / `dg-09` split needed.
 
 Nothing has been installed. No `IMAGES` key points at any pilot image, and the
 existing thirty are untouched. Each round is kept where it landed —
@@ -811,6 +812,12 @@ the provenance of every approved frame stays readable.
 | `door-greet-08-petting.png` | round 2 | `dg-11` |
 | `door-greet-08-jumping.png` | round 2 | new — the incorrect half of the pair |
 | `door-cover.png` | round 3 | `dg-01` |
+| `door-stay-02-cue.png` | round 5 | new — from the `dg-07` split |
+| `door-greet-01-settle.png` | round 6 | new — from the `dg-09` split |
+
+`img/pilot/approved/` is committed. The six working rounds are not — 34 MB of
+superseded drafts, kept locally, with what they taught written down here
+instead.
 
 ### 7.1 Round 1 — the style test
 
@@ -1021,6 +1028,57 @@ different actions. What remains are per-level rewordings of the same move —
 is supposed to look like.
 
 
+### 7.5 Rounds 4 to 6 — the two split images
+
+Two images, three rounds, and one clear pattern: **the failures have moved off
+the dog.**
+
+**Round 4 — Scene 6, rejected.** The stay cue came back with the handler's flat
+palm pressed against the front door panel and her eyes on the door rather than
+on Lucy. It reads as holding the door shut, not as signalling a dog. Worse, it
+put her *at* the door, which is step 3's job — this image exists specifically to
+separate step 2 from step 3, so the one thing it could not do was conflate them.
+
+Lucy, though, was correct: down on the bed, front legs extended, head up, eyes
+on the handler, wiry muzzle, collar and tag.
+
+**Round 5 — Scene 6, approved.** Three specifics went into the prompt: stand
+*beside the bed, one stride from Lucy at most*; *head turned down, looking
+directly at her*; and the palm *held in open air and aimed at the dog*, with an
+explicit "must not touch or rest against the door, the wall, or any other
+surface". That last one is now in the standing reject list, because a raised hand
+drifting onto a surface is the kind of failure that recurs.
+
+**Round 6 — Scene 7, approved first attempt.** Closed door, nobody outside, the
+leash clipped to the collar ring with the clip legible at 3×, and the handler
+crouched with a hand on Lucy's shoulder. It reads as *attaching the leash*, which
+is what the step instruction actually says. One nit left alone: the forearm
+reaching in is a more saturated orange than her face elsewhere, the same drift
+`dg-03` has in §5.
+
+#### What the reference attachment is worth
+
+Character drift wrecked rounds 1 and 2 — a smooth-faced dog in the one pair where
+continuity was the entire point. Since attaching an approved image became
+routine, it has not recurred once. Scene 6 took two attempts and **Lucy came back
+right in both**; what went wrong twice was the human's pose and position.
+
+That is worth more than a habit, so it is no longer one: every prompt
+`scripts/pilot.mjs` copies now opens with *"Match this attached image exactly for
+style, palette and the dog's appearance"*, ahead of the style block, and the CLI
+says so on the way out. The remaining risk in this loop is the human, and the
+prompts should spend their specificity there.
+
+#### Reading these at full size does not work
+
+Three calls in this project were wrong at fit-to-screen and right at 3×. The
+muzzle in §7.3 was called smooth when it was scruffy. The floor in §7.2 was
+called too orange when it was the least saturated in the set. The approach image
+in §7.2 was called illegible when it reads fine. **Zoom before judging a
+character detail, and measure before judging a colour** — both are cheap, and
+both have overturned a verdict here.
+
+
 ---
 
 ## 8. What has to be decided before production
@@ -1041,4 +1099,8 @@ The style question is closed — five approved images, §7. What is left is scop
    a two-up variant with HTML labels or a second step.
 4. **Renaming** — do it during the restyle or not at all; it touches
    `content.js`, `sw.js` and this document.
-5. **Source PNGs in git** — 65 MB today, and the restyle will add a second set.
+5. **Source PNGs in git** — 65 MB today for the painted set, and the restyle will
+   add a second. Half-settled: `img/pilot/approved/` is committed and the working
+   rounds are not (§7). The older `img/source/` is left alone for now — removing
+   it from HEAD would not reclaim the history anyway, so the real decision is
+   whether to keep both generations once the restyle lands.
