@@ -50,13 +50,16 @@ change — that is what makes five images look like one set.
 
 **Order matters:**
 
-1. **Scene 1 first**, with `img/pilot/pilot-1-setup.png` attached and the note:
-   *"Match this exactly for style, palette, room and character. Change one thing
-   only: add a small round blue tag hanging from the collar ring."*
-2. When Scene 1 is right, **attach the new Scene 1 to every later message** and
-   add: *"Match this image exactly for style, palette, character design, the
-   collar and tag, and the way the leash attaches. Same dog, same woman, same
-   room."*
+1. **Always attach an approved image**, from `img/pilot/approved/`. Every prompt
+   `pilot.mjs` copies now opens with *"Match this attached image exactly for
+   style, palette and the dog's appearance — same dog, same woman, same room"*,
+   so there is nothing to type; there just has to be something attached for it
+   to refer to. Pick the nearest scene: the same room and the same distance beat
+   the same activity.
+2. That attachment is the strongest lever on consistency in the whole loop.
+   Scene 6 took two attempts and Lucy came back right in both — the failure was
+   the human's pose, twice. Character drift, which dogged rounds 1 and 2, has
+   not recurred since the reference became routine.
 3. **Scene 4 must follow Scene 3 in the same conversation**, with the approved
    Scene 3 attached. It is the same room, camera, cast and distance — only
    Lucy's behaviour and the guest's reaction change. Round 1 generated it
@@ -79,8 +82,10 @@ sips -c 1024 1365 raw.png --out cropped.png && sips -Z 1100 -s format jpeg -s fo
 **Reject and regenerate if:** any letter, number, word, checkmark, cross or
 arrow appears; Lucy is wearing a harness; the collar has no blue tag; the leash
 runs over her back; there is white on her face; the background gains furniture
-nobody asked for; the image comes back square rather than landscape; or it comes
-back as two panels.
+nobody asked for; the image comes back square rather than landscape; it comes
+back as two panels; **or a raised hand is touching a door, wall or surface
+instead of gesturing in open air** — round 4 put a stay signal flat against the
+door panel, which reads as holding the door shut.
 
 ---
 
@@ -382,15 +387,24 @@ the cleanest.*
 > handler** — holding a position, not resting. A small round blue tag hangs from
 > her purple collar.
 >
-> The handler stands facing her a step away, side-on to camera, with **one flat
-> open palm raised at chest height** in a clear stay signal. Her weight is even,
-> her other arm relaxed at her side. She has not started moving yet.
+> The handler stands **right beside the bed, one stride away from Lucy at most**,
+> side-on to camera. **Her head is turned down and she is looking directly at
+> Lucy.** One flat open palm is raised at chest height as a stay signal,
+> **held in open air and aimed at the dog**.
 >
-> Background: the closed charcoal front door well behind her, the woven doormat,
-> one wall plane, oak floor. Nothing else.
+> **Her hand must not touch or rest against the door, the wall, or any other
+> surface — nothing near it. She is nowhere near the door.** The closed charcoal
+> front door is small in the background on the far side of the room, several
+> paces behind her, and she has not moved toward it.
 >
-> The single thing this image must make obvious: the signal has just been given
-> and neither of them has moved.
+> Her weight is even and her other arm hangs relaxed at her side. This is the
+> instant before she goes anywhere.
+>
+> Background: the distant closed door, the woven doormat, one wall plane, oak
+> floor. Nothing else.
+>
+> The single thing this image must make obvious: the signal has just been given,
+> the handler is still standing over her dog, and neither of them has moved.
 >
 > Landscape 4:3, wider than tall.
 
