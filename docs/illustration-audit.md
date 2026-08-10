@@ -1079,6 +1079,41 @@ character detail, and measure before judging a colour** — both are cheap, and
 both have overturned a verdict here.
 
 
+### 7.6 The diptych, taken apart
+
+`dg-03` was the third most-referenced image in the app and the only one with two
+actions painted into a single frame: a doorbell press on the left, a knock on the
+right, with Lucy drawn differently in each panel. At 84px a card showed half of
+each.
+
+Fourteen step references, and the useful discovery was that **seven of them
+wanted neither panel.** "Ring or knock once" is the *handler* making the sound
+while standing beside Lucy — which `dg-20` already shows correctly, leash under
+the foot and all. Those seven now point there.
+
+| Instruction | References | Now |
+| --- | --- | --- |
+| "Ring or knock once" | 7 | `dg-20` — already existed |
+| "Your guest rings the bell" / "Helper rings the real doorbell" | 6 | `door-sound-02-bell` — **new** |
+| "Have your helper knock nearby" | 1 | `door-sound-02-knock` — **new** |
+
+That also settles a complaint §5 raised and could not act on: `dg-20` is the only
+image demonstrating the leash-under-foot technique the copy repeatedly names, and
+it appeared at exactly one level while `dg-02` taught the same technique wrongly
+six times over. It now carries eight references.
+
+`dg-03` is referenced by no step. Its key and files stay for the moment because
+they are what the two new keys load as stand-ins; all three go together when the
+artwork lands.
+
+**The hand in both new images is deliberately anonymous** — a forearm with a
+plain sleeve, not the guest's checked shirt. Six of the seven references are the
+guest and one is a helper, and one picture has to serve both.
+
+With this, **no image in the app carries more than one action.** What is left are
+per-level rewordings of the same move, which is what a level ladder is for.
+
+
 ---
 
 ## 8. What has to be decided before production
@@ -1089,10 +1124,10 @@ The style question is closed — five approved images, §7. What is left is scop
    tag, no harness, leash clipped to the collar ring at her neck.** Carried into
    the shared character block in §6. Eighteen of the thirty already comply;
    dg-01 – dg-12 are the ones that have to change.
-2. ~~**Splitting the overloaded images.**~~ **Done for `dg-07` and `dg-09`, and
-   it cost two new illustrations rather than six.** Four of the six moments
-   already had a correct picture elsewhere in the library and only needed
-   pointing at. `dg-03` → 2 is still open. See §9.
+2. ~~**Splitting the overloaded images.**~~ **Done.** `dg-07` and `dg-09` cost
+   two new illustrations rather than six; `dg-03` cost two more, and half its
+   references turned out to want an image that already existed. See §7.4 and
+   §7.6. No image in the app now carries more than one action.
 3. **The correct/incorrect pair** needs a component decision (§6.4). Round 1
    settled the *artwork* half — the taut coral leash carries the error without a
    ✓ or ✗ — but `.step-figure` still renders one image, so the pair needs either
