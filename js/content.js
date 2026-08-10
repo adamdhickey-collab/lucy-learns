@@ -178,6 +178,32 @@ export const IMAGES = withThumb({
     alt: 'A hand knocks on the closed front door while Lucy watches from inside through the door’s window.',
   },
 
+  // --- the one step that shows both outcomes --------------------------------
+  //
+  // Every other picture in the app shows something going right. This pair is
+  // the exception, and the audit's §3.6 found the library had no incorrect
+  // behaviour anywhere in it — no jumping, no barking, no bolting past the
+  // handler.
+  //
+  // The two are the same room, camera, cast and distance, so the only thing
+  // that changes between them is Lucy and the guest's reaction. The error is
+  // carried by the taut coral leash and by her posture, with no ✗ or red ring
+  // painted on: the style rules those out, and round 1 of the pilot proved they
+  // are not needed.
+  //
+  // `dg-11` keeps the activity cover. This pair renders at step 8 only. The
+  // cover crops to 16:7 on Today and to a 56px square on the map, and the
+  // petting frame loses the guest's head to the 16:7 band (§7.2) — no reason to
+  // take that on when the painted cover is doing the job.
+  'door-greet-08-petting': {
+    src: 'img/door-greet-08-petting.jpg',
+    alt: 'Lucy sits with all four paws on the floor while a crouching guest rests an open palm on her chest and her handler holds the leash slack behind her.',
+  },
+  'door-greet-08-jumping': {
+    src: 'img/door-greet-08-jumping.jpg',
+    alt: 'Lucy rears up with both front paws on the guest’s chest, mouth open and ears back, while he leans away and the leash pulls tight.',
+  },
+
   // Covers for the programs that are named but not written yet.
   'cg-01': {
     src: 'img/cg-01.jpg',
@@ -791,7 +817,14 @@ export const ACTIVITIES = [
       {
         instruction: 'Ask for a sit, then allow calm petting.',
         cue: 'Sit',
-        image: 'dg-11',
+        image: 'door-greet-08-petting',
+        // The only step in the app that shows the wrong outcome next to the
+        // right one. `avoid` is what turns the figure into a pair; every step
+        // without it renders exactly as before. It sits here because the helper
+        // below already describes the failure in words — "if her front feet
+        // leave the floor" — and a household reading that mid-session should
+        // not have to picture it.
+        avoid: 'door-greet-08-jumping',
         helper: 'If her front feet leave the floor, the guest stands up and turns away. Reset and try again.',
       },
     ],

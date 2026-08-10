@@ -196,11 +196,35 @@ function stepScreen(activity, level) {
     ${topBar(`Step ${session.stepIndex + 1} of ${steps.length}`, session.stepIndex + 1, steps.length)}
     <div class="player-scroll">
       <div class="player-inner">
-        ${img
-          ? html`<figure class="step-figure">
-              <img src="${img.src}" alt="${img.alt}" />
-            </figure>`
-          : ''}
+        ${/* One step in the app shows both outcomes. `avoid` on the step is
+              what asks for it, and everything without one renders as it always
+              has — a pair is a property of the step, not a new kind of screen.
+
+              Two <figure>s rather than one with two images: each picture needs
+              its own caption, a <figure> takes one <figcaption>, and the
+              caption is doing real work here. It is the only thing saying which
+              of the two is which, because the style rules out a ✗ painted into
+              the artwork and the pilot showed one was not needed. A screen
+              reader gets the alt and the verdict together, in that order.
+
+              Side by side rather than stacked: the comparison is the point, and
+              stacking them puts a scroll between the two halves of it. */ ''}
+        ${img && step.avoid && IMAGES[step.avoid]
+          ? html`<div class="step-pair">
+              <figure class="step-pair-item">
+                <img src="${img.src}" alt="${img.alt}" />
+                <figcaption>Like this</figcaption>
+              </figure>
+              <figure class="step-pair-item step-pair-item--avoid">
+                <img src="${IMAGES[step.avoid].src}" alt="${IMAGES[step.avoid].alt}" />
+                <figcaption>Not this</figcaption>
+              </figure>
+            </div>`
+          : img
+            ? html`<figure class="step-figure">
+                <img src="${img.src}" alt="${img.alt}" />
+              </figure>`
+            : ''}
 
         ${/* The top bar already says "Step 3 of 5" beside a bar showing the
               same thing. Printing it again here put the identical string on
@@ -786,6 +810,7 @@ function preloadUpcoming(activity, level) {
   const steps = stepsForLevel(activity, level);
   const next = steps[session.stepIndex + 1];
   if (next && next.image) new Image().src = IMAGES[next.image].src;
+  if (next && next.avoid && IMAGES[next.avoid]) new Image().src = IMAGES[next.avoid].src;
 }
 
 /**
