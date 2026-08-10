@@ -127,6 +127,33 @@ export const IMAGES = withThumb({
     src: 'img/dg-26.jpg',
     alt: 'A guest steps back out of the doorway with a friendly wave while a handler stays beside Lucy.',
   },
+  // --- the two moments the set never had a picture for ---------------------
+  //
+  // `dg-07` was carrying three different actions and `dg-09` three more (see
+  // docs/illustration-audit.md §3.5). Four of those six already had a correct
+  // picture sitting elsewhere in the library and only needed pointing at:
+  // dg-25 is the reward-on-the-bed, dg-21 is the guest coming in, and dg-07
+  // and dg-09 each keep one job of their own. These two had nothing.
+  //
+  // They are keyed under the naming scheme from §3.8 rather than the next free
+  // dg-NN, because that is where the whole library is going and there is no
+  // sense minting two more numbers to rename later.
+  //
+  // **The `src` on both is a stand-in.** It points at the image the step used
+  // before the split, so the app keeps rendering while the artwork is made —
+  // the alt text below describes the picture that *should* be there, and is
+  // wrong about the one currently loading. Swapping in the real file is a
+  // one-line change each. Until then this is the only thing in the app whose
+  // alt and image disagree, deliberately and in one place.
+  'door-stay-02-cue': {
+    src: 'img/dg-07.jpg',
+    alt: 'A handler stands facing Lucy with a flat open palm raised at chest height while Lucy lies on her bed, head up, holding her eye.',
+  },
+  'door-greet-01-settle': {
+    src: 'img/dg-09.jpg',
+    alt: 'A handler clips the leash to Lucy’s collar and settles her onto her bed, well back from the closed front door.',
+  },
+
   // Covers for the programs that are named but not written yet.
   'cg-01': {
     src: 'img/cg-01.jpg',
@@ -533,12 +560,14 @@ export const ACTIVITIES = [
       {
         instruction: 'Cue the stay and hold her eye for one beat.',
         cue: 'Stay',
-        image: 'dg-07',
+        image: 'door-stay-02-cue',
       },
       { instruction: 'Move toward the door.', image: 'dg-07' },
       {
+        // dg-07 showed the handler walking away with nothing in her hands on a
+        // step about coming back and paying. dg-25 is that payment, drawn.
         instruction: 'Walk back and reward her on the bed.',
-        image: 'dg-07',
+        image: 'dg-25',
         helper: 'Deliver the treat between her paws so the bed becomes the paying spot.',
       },
       { instruction: 'Release, then reset for the next rep.', cue: 'Okay', image: 'dg-19' },
@@ -647,7 +676,7 @@ export const ACTIVITIES = [
       { instruction: 'Ring or knock once.', image: 'dg-03' },
       { instruction: 'Say her name brightly.', cue: 'Lucy!', image: 'dg-04' },
       { instruction: 'Send her to her bed.', cue: 'Go to bed', image: 'dg-06' },
-      { instruction: 'Reward her twice on the bed.', image: 'dg-07' },
+      { instruction: 'Reward her twice on the bed.', image: 'dg-25' },
       {
         instruction: 'Walk toward the door, then come back.',
         image: 'dg-07',
@@ -728,12 +757,12 @@ export const ACTIVITIES = [
     fallbackImage: 'dg-26',
     fallbackSteps: FALLBACK_STEPS,
     steps: [
-      { instruction: 'Leash Lucy and settle her on her bed.', image: 'dg-09' },
+      { instruction: 'Leash Lucy and settle her on her bed.', image: 'door-greet-01-settle' },
       { instruction: 'Your guest rings the bell.', image: 'dg-03' },
       { instruction: 'Send her to her bed.', cue: 'Go to bed', image: 'dg-06' },
       { instruction: 'Open the door. The guest stays put.', image: 'dg-09' },
       { instruction: 'Reward her for holding the bed.', image: 'dg-12' },
-      { instruction: 'Bring the guest in and let Lucy settle.', image: 'dg-09' },
+      { instruction: 'Bring the guest in and let Lucy settle.', image: 'dg-21' },
       { instruction: 'Walk her over on a loose leash.', cue: 'Go say hi', image: 'dg-10' },
       {
         instruction: 'Ask for a sit, then allow calm petting.',
@@ -758,7 +787,8 @@ export const ACTIVITIES = [
         reps: 3,
         endAfterStep: 6,
         successCriteria: ['Holds the bed while the guest enters', 'Settles within a few seconds'],
-        overrides: { 5: { instruction: 'Guest steps inside and stands still by the door.', image: 'dg-21' } },
+        // The image is the base step's now, so this override only rewords it.
+        overrides: { 5: { instruction: 'Guest steps inside and stands still by the door.' } },
       },
       {
         number: 3,
