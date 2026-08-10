@@ -111,9 +111,11 @@ function buildPrompt(id) {
     };
   }
 
-  const sceneIndex = findHeading(lines, (l) => new RegExp(`^## Scene ${key}\\b`).test(l));
+  // Scenes live at ## while the pilot was flat, and at ### once the restyle
+  // batches gave them parents. Both are a scene.
+  const sceneIndex = findHeading(lines, (l) => new RegExp(`^#{2,3} Scene ${key}\\b`).test(l));
   if (sceneIndex === null) {
-    die(`No prompt "${id}". Try 1-5 for a full scene, or 3a/3b/3c for a follow-up edit.`);
+    die(`No prompt "${id}". Scenes are numbered; 3a/3b/3c are the follow-up edits.`);
   }
   return {
     title: lines[sceneIndex].replace(/^#+\s*/, ''),

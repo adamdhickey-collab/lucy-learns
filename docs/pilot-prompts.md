@@ -495,6 +495,184 @@ and add both filenames to the precache list in `sw.js`.
 
 ---
 
+# The restyle proper
+
+Twenty-nine keys are still painted. Four of them already have approved art
+waiting — `dg-01`, `dg-02`, `dg-10` and `dg-11` — so **twenty-five need
+drawing.**
+
+## Why this goes activity by activity
+
+The obvious order is by reference count, biggest first. It is the wrong one.
+While the library is half-restyled every session is a mix, and a household
+notices that inside a five-minute run far more than it notices one image being
+newer than another. So the unit is the **activity**: finish every picture one
+activity touches, install them together, and that whole session is consistent
+even while the rest of the app is not.
+
+| Batch | Activity | To draw | Already approved |
+| --- | --- | --- | --- |
+| **1** | dg-1 Doorbell Predicts Rewards | 6 | `dg-02` |
+| 2 | dg-4 Controlled Real Greeting | 6 | `dg-10`, `dg-11` |
+| 3 | dg-3 Doorbell Means Place | 4 new, 3 shared with batches 1–2 | — |
+| 4 | dg-2 Stay While the Door Opens | 11 | — |
+| 5 | Covers and the four planned | 4 | `dg-01` |
+
+dg-1 goes first because it is the smallest complete session and the one every
+household runs on day one. dg-2 goes last because it is the largest and because
+four of its eleven are the distance ladder, which is four versions of one
+composition and best drawn in a single sitting once the room is settled.
+
+**Each of these is a fix, not just a restyle.** Every brief below carries the
+defect §5 recorded against the image it replaces. Redrawing them in the new
+style without correcting what they say would be a waste of twenty-five rounds.
+
+---
+
+## Batch 1 — dg-1 Doorbell Predicts Rewards
+
+Six images. With `door-sound-01-setup` already approved and the bell and knock
+already live, these complete the activity.
+
+### Scene 10 — You make the sound
+*Replaces `dg-20`, 9 references — the most-used image in the batch, and the only
+one in the library that shows the leash-under-foot technique the copy keeps
+naming. It also sits on welcome panel 2.*
+
+> Interior entry hall, three-quarter view. Lucy stands beside the handler's leg
+> facing a closed charcoal front door, head up, ears forward, alert but not
+> lunging. A small round blue tag hangs from her purple collar.
+>
+> The handler stands next to her in profile, **knuckles to the door frame
+> mid-knock**, the other arm relaxed. **The leash runs from her collar down to
+> under the handler's near shoe, with a visible loop of slack on the floor** —
+> that detail is the whole reason this image exists, so it must be unmistakable.
+>
+> Background: the closed door, the doormat, one baseboard line. Nothing else.
+>
+> The single thing this image must make obvious: she is making the sound herself,
+> standing right beside the dog, hands free because the leash is underfoot.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 11 — Say her name
+*Replaces `dg-04`, 8 references. **The fix:** the current one already has treats
+in an open palm, which is the next step's job — it skips the beat it exists to
+show.*
+
+> Interior entry hall, three-quarter view. Lucy sits near the closed front door
+> and **turns her head fully away from the door to look up at the handler** —
+> the turn is the entire subject of the picture. Mouth relaxed, ears soft.
+>
+> The handler crouches side-on at her level, face toward her, **both hands empty
+> and at rest.** No treat, no pouch in her hand, nothing being offered — the
+> payment comes one step later and must not appear here.
+>
+> Background: the closed door, the doormat, one wall plane. Nothing else.
+>
+> The single thing this image must make obvious: her name was said and she looked
+> away from the door.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 12 — Two treats, straight away
+*Replaces `dg-17`, 5 references. This is the payment, and it is where the treats
+belong.*
+
+> Interior entry hall, close three-quarter view. Lucy stands or sits facing the
+> handler, head forward, taking food from an open hand, body loose and easy.
+>
+> The handler crouches at her level with a **flat open palm holding two small
+> treats, clearly two and clearly visible**, the mustard pouch at her hip and her
+> other hand at rest.
+>
+> Background: the closed door, one wall plane, oak floor. Nothing else.
+>
+> The single thing this image must make obvious: two treats, arriving
+> immediately.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 13 — The pause between reps
+*Replaces `dg-18`, 5 references. The current one has the best-drawn leash arc in
+the whole library — match it.*
+
+> Interior entry hall, side view. Lucy stands loose and easy beside the handler
+> on a slack leash, weight even on all four feet, mouth open and soft. **Nothing
+> is being asked of her** — no cue, no treat, no hand signal.
+>
+> The handler stands side-on, **the leash hanging from a relaxed hand in a deep,
+> obvious J**, looking down at her without instructing. Both of them are simply
+> waiting.
+>
+> Background: the closed door, the doormat, one wall plane, her empty bed at the
+> edge of frame. Nothing else.
+>
+> The single thing this image must make obvious: the rep is over and nothing is
+> happening.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 14 — Called from another room
+*Replaces `dg-05`, 2 references. **The fix:** in the current one Lucy faces the
+door, away from the handler — it shows the step failing.*
+
+> Interior entry hall opening onto a hallway, three-quarter view. Lucy sits on
+> her flat grey bed near the closed front door and **turns her head back over her
+> shoulder, toward the handler and away from the door.** That turn is the whole
+> subject.
+>
+> The handler stands well back — a doorway or hall away, small in the frame,
+> side-on — with one hand raised in a small beckon, calm and unhurried.
+>
+> **Keep Lucy large enough to read.** The current version is so wide that she is
+> a small dark shape; she should still be a clear, recognisable dog with her head
+> turn legible on a phone.
+>
+> Background: the closed door, her bed, one wall plane, the hall opening.
+> Nothing else — no kitchen, no furniture.
+>
+> The single thing this image must make obvious: she heard her name from far away
+> and turned toward it.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 15 — Take the pressure off
+*Replaces `dg-24`, 2 references — but it is the **activity cover**, so it takes
+the 16:7 Today band and the 84px and 56px squares. **The fix:** the current one
+puts Lucy hard left with two-thirds empty hallway, so the square thumb lands on
+floorboards.*
+
+> Interior entry hall, three-quarter view, **well back from a closed front door**.
+> Lucy sits leaning slightly into the handler, calm and settled, taking a treat.
+> A small round blue tag hangs from her purple collar.
+>
+> The handler crouches beside her, **one hand resting on Lucy's shoulder and the
+> other offering a treat**, her body turned away from the door. This is a step
+> back from the pressure, not a repetition.
+>
+> **Composition, and this matters more than anything else in the brief: put the
+> two of them together in the centre of the frame, inside the middle horizontal
+> band, with clear space above and below.** A square crop taken from the middle
+> must contain Lucy's head, the hand on her shoulder and the treat. Do not push
+> them to one side and leave the rest of the room empty.
+>
+> Background: the closed door small in the background, the doormat, one wall
+> plane. Nothing else.
+>
+> The single thing this image must make obvious: nothing is being asked, and she
+> is being reassured well away from the door.
+>
+> Landscape 4:3, wider than tall.
+
+### When batch 1 is done
+
+Install all six together with `door-sound-01-setup`, and Doorbell Predicts
+Rewards becomes the first activity a household can run start to finish in one
+style. Run `node scripts/pilot.mjs verify` before opening the PR.
+
+---
+
 ## The crop tests, and how to re-run them
 
 Round 2 cleared these. Re-run them on any replacement before approving it:
