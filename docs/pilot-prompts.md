@@ -5,10 +5,17 @@ Ready to paste into ChatGPT. Five images, chosen in
 the new style once: a partial-figure setup, a moving leash, a three-figure
 interaction, a corrective pair, and a wide multi-person room.
 
-**This is round 2.** Round 1 landed in `img/pilot/` and its results are written
-up in [§7 of the audit](illustration-audit.md). The prompts below are the
-current ones — corrected, not additional. Nothing has been installed; no
-`IMAGES` key points at any pilot image.
+**Rounds 1 and 2 are done.** Round 2 landed every fix and cleared the crop
+tests; three of its five images are approved. Results are in
+[§7 of the audit](illustration-audit.md), and the two follow-ups are in
+[Round 3](#round-3--two-follow-ups) at the bottom of this file.
+
+The five scene prompts below are the full briefs, kept current rather than
+versioned — use them if a scene has to be generated from scratch again. For the
+two images that need a touch-up, use Round 3 instead: those are edits, and
+re-pasting a full brief will redraw the whole scene.
+
+Nothing has been installed; no `IMAGES` key points at any pilot image.
 
 ---
 
@@ -277,17 +284,102 @@ handler — the same fault the image it replaces has.*
 
 ---
 
-## Still unproven after round 1
+## Round 3 — two follow-ups
 
-Both cover candidates — Scenes 3 and 5 — needed re-running, so nothing has yet
-been tested against the two crops most likely to send an image back:
+Round 2 landed every fix and cleared the crop tests. Three of the five are
+approved as they stand: `door-sound-01-setup`, `door-greet-08-petting` and
+`door-greet-08-jumping`. Two need one more pass, and there is one optional
+third. Full results in [§7.2 of the audit](illustration-audit.md).
 
-- **16:7** on Today, which letterboxes a cover to a horizontal band.
-- **56 × 56** on the program map rail, a centred square from the thumb.
+These are **edits, not fresh generations.** Attach the round 2 file, paste the
+prompt, and change nothing else. Block A and Block B still apply — but say so
+rather than re-pasting them, or the model will redraw the whole scene.
 
-Check an approved Scene 3 and Scene 5 against both before generating anything
-beyond the pilot. See [§2 of the audit](illustration-audit.md) for the full crop
-table.
+### 3A — `door-cover`: give her the scruffy muzzle back
+
+*Attach `img/pilot/round-2/door-cover.png`, and also
+`img/pilot/round-2/door-sound-01-setup.png` as the reference for her head.*
+
+> Keep this image exactly as it is — same composition, same camera, same three
+> figures in the same positions, same collar and blue tag, same slack leash,
+> same background.
+>
+> Change one thing: **the dog's muzzle.** She is drawn here with a smooth
+> Labrador face, and she should have the slightly scruffy, wiry muzzle and
+> eyebrows she has in the second attached image. Same head shape, same wiry
+> texture around the mouth and brows. She is a Labrador and German Wirehaired
+> Pointer mix, and the scruff is what makes her recognisable.
+>
+> While you are there, warm the floor down slightly: the oak is more saturated
+> and orange here than in the other images in the set. Match the paler honey oak
+> of the attached reference.
+>
+> Nothing else changes. No text, no symbols. Landscape 4:3, 1448 × 1086.
+
+### 3B — `door-greet-07-approach`: bring her forward, clear of the legs
+
+*Attach `img/pilot/round-2/door-greet-07-approach.png`.*
+
+> Keep this image exactly as it is — same composition, same camera, same room,
+> same handler and guest, same collar and blue tag, same J of slack in the leash.
+>
+> Change one thing: **move the dog forward, so she is clear of the handler's
+> legs.** She currently trails behind the handler and overlaps her dark navy
+> jeans, which hides the white blaze on her chest and makes her hard to read
+> against the trousers. Her shoulder should sit **level with the handler's
+> knee** — beside her, not behind her and not ahead of her — with clear space
+> between the dog's body and the handler's leg so her whole silhouette and the
+> white chest blaze are visible against the wall and floor.
+>
+> She is still walking calmly at the handler's side. Her nose must not go further
+> forward than the handler's leading foot.
+>
+> Nothing else changes. No text, no symbols. Landscape 4:3, 1448 × 1086.
+
+### 3C — `door-greet-08-petting`: optional, for the Today crop
+
+The image is approved as it stands. This only matters if you would rather the
+guest kept his head on the Today screen, which letterboxes this cover to a
+horizontal band across the middle of the frame and currently cuts him off at the
+jaw. Everything instructional survives the crop either way.
+
+*Attach `img/pilot/round-2/door-greet-08-petting.png`.*
+
+> Keep this image exactly as it is — same composition, same camera, same figures,
+> same collar and blue tag, same hand on the chest, same leash.
+>
+> Change one thing: **lower the crouching man so his whole head fits inside the
+> middle of the frame.** Crouch him deeper, so the top of his head sits at about
+> the same height as the dog's ears rather than near the top edge. The dog, the
+> handler and the hand on the chest all stay exactly where they are.
+>
+> Nothing else changes. No text, no symbols. Landscape 4:3, 1448 × 1086.
+
+### Checking the result
+
+Same reject list as before, plus: if the model has redrawn the scene rather than
+edited it — different camera, different furniture, a moved figure — discard it
+and try again with a shorter prompt. An edit that changes two things is a
+regeneration wearing a disguise.
+
+---
+
+## The crop tests, and how to re-run them
+
+Round 2 cleared these. Re-run them on any replacement before approving it:
+
+```bash
+cd "/Users/ahickey/dev/claude-local/Lucy Learns/img/pilot/round-2" && for f in *.png; do sips -c 634 1448 "$f" --out "/tmp/${f%.png}-today-16x7.png"; sips -c 1086 1086 "$f" --out "/tmp/${f%.png}-sq.png"; sips -Z 56 "/tmp/${f%.png}-sq.png" --out "/tmp/${f%.png}-thumb56.png"; done
+```
+
+| Crop | Applies to | Command |
+| --- | --- | --- |
+| 16:7 Today hero | activity covers | `sips -c 634 1448` |
+| 21:9 program hero | `door-cover` | `sips -c 621 1448` |
+| 5:4 welcome panel | `door-cover` | `sips -c 1086 1357` |
+| 84 / 56 square | activity covers | `sips -c 1086 1086` then `sips -Z 84` |
+
+See [§2 of the audit](illustration-audit.md) for which surface uses which.
 
 ---
 

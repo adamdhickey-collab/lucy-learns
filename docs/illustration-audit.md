@@ -795,10 +795,13 @@ warm cream ground, and the most aggressive crop in the app (21:9) alongside the
 
 ---
 
-## 7. Pilot round 1 — results
+## 7. Pilot results
 
-Five images, one per scene, in `img/pilot/`. Nothing has been cropped, resized,
-or installed; no `IMAGES` key points at any of them.
+Nothing has been installed. No `IMAGES` key points at any pilot image, and the
+existing thirty are untouched. Round 1 sits in `img/pilot/round-1/`, round 2 in
+`img/pilot/round-2/`.
+
+### 7.1 Round 1 — the style test
 
 | File | Scene | Delivered | Verdict |
 | --- | --- | --- | --- |
@@ -808,7 +811,7 @@ or installed; no `IMAGES` key points at any of them.
 | `pilot-4-jumping.png` | 6.4 jumping | 1254 × 1254 (square) | Re-run — ratio, character |
 | `pilot-5-cover.png` | 6.5 cover | 1536 × 1024 (3:2) | Re-run — character, gaze |
 
-### What the style test settled
+#### What the style test settled
 
 **The style works.** Flat vector forms, crisp edges, warm cream ground, muted
 palette, restrained backgrounds — consistent across all five, and the shared
@@ -826,7 +829,7 @@ component can carry plain HTML labels or none at all.
 **Equipment is right in all five** — flat purple collar, leash at the neck, no
 harness. They are the first images in the project to match the settled spec.
 
-### What has to be fixed in round 2
+#### What had to be fixed in round 2
 
 - **Ratio.** Scenes 1 and 2 came back at exactly 4:3 and need nothing but a
   resize. Scenes 3 and 4 came back square, and that is not a crop worth making:
@@ -848,12 +851,66 @@ harness. They are the first images in the project to match the settled spec.
   block. That is why Scene 1 is being re-run despite passing on everything else
   — the tag has to be in every frame or in none.
 
-### Not yet answered
+### 7.2 Round 2 — every fix landed, and the crops finally got tested
 
-Neither square crop nor cover behaviour has been tested, because the two cover
-candidates (Scenes 3 and 5) are the two that need re-running. Until an approved
-cover exists at 4:3, the 16:7 Today band and the 56px map thumb from §2 are
-still unproven — and they are the constraint most likely to send an image back.
+Five images, delivered under the §3.8 naming scheme, **all five at exactly
+1448 × 1086**. All six corrections from round 1 came back applied.
+
+| File | Replaces | Verdict |
+| --- | --- | --- |
+| `door-sound-01-setup.png` | dg-02 | **Approved** |
+| `door-greet-08-petting.png` | dg-11 | **Approved** — see the 16:7 note below |
+| `door-greet-08-jumping.png` | new | **Approved** |
+| `door-greet-07-approach.png` | dg-10 | Re-run — overcorrected |
+| `door-cover.png` | dg-01 | Re-run — muzzle |
+
+#### Fixed
+
+| Fix | Result |
+| --- | --- |
+| Round blue tag | ✓ all five, visible on the ring |
+| 4:3 and not square | ✓ all five at 1448 × 1086 |
+| Guest clean-shaven | ✓ the beard is gone |
+| Lucy watches the handler on the cover | ✓ head turned up to her |
+| Lucy level with the knee on the approach | ✓ no longer out in front |
+| Same dog across the jumping pair | ✓ scruffy muzzle now matches |
+
+Collar and no harness throughout, and **no text, number, checkmark, cross or
+arrow in any of them** — a constraint that has now held across fourteen
+generations without a single violation.
+
+#### The crop tests
+
+The open question from round 1. Rendered from the actual files at the exact
+ratios in §2, not estimated:
+
+| Crop | Image | Result |
+| --- | --- | --- |
+| **21:9** program hero | `door-cover` | **Passes.** All three subjects intact, heads inside the band. The "middle 60%" instruction did its job. |
+| **5:4** welcome panel | `door-cover` | Passes — a 45px trim from each side, nothing near a subject. |
+| **84 × 84** library card | `door-greet-08-petting` | Passes — reads as a person crouching with a dog. |
+| **56 × 56** map rail | `door-greet-08-petting` | Passes — same shape, still legible. |
+| **16:7** Today hero | `door-greet-08-petting` | **The guest loses his head.** |
+
+The 16:7 band takes 634px from a 1086px-tall frame, and the guest's head sits
+above it. `object-position: center 42%` shifts the band up by about 36px in the
+real render, which is not enough to save him. Everything instructional survives
+— Lucy's head, the hand on her chest, the leash, the handler's hand — so this is
+a judgement call rather than a defect: accept a cropped guest on Today, or drop
+him a few inches in the frame so his head sits inside the middle band. §9 has the
+one-line change if you want it.
+
+#### What still needs a pass
+
+- **`door-cover`: Lucy's muzzle is smooth.** The scruff is gone in this image
+  only; she is a wirehaired mix in the other four and a smooth-coated Labrador
+  here. It is the same character break that dogged round 1, now isolated to one
+  frame — and it is the most-seen illustration in the app. The floor is also a
+  more saturated orange than the other four.
+- **`door-greet-07-approach`: overcorrected.** She is no longer ahead of the
+  handler's knee, but she is now behind it and overlapping the dark navy jeans,
+  so her white chest blaze disappears into the leg and she half-vanishes at phone
+  size. The target is level with the knee, not trailing it.
 
 ---
 
