@@ -41,6 +41,17 @@ const die = (msg) => {
 
 // --- prompts ---------------------------------------------------------------
 
+/**
+ * Every prompt opens with this, because every prompt is sent with an approved
+ * image attached and the attachment is the strongest lever on consistency we
+ * have. Round 4 and round 5 of Scene 6 differed only in the human's pose —
+ * Lucy came back right both times, off the reference.
+ *
+ * It leads rather than trails: the model should know the attachment outranks
+ * the description before it reads three hundred words of description.
+ */
+const MATCH = 'Match this attached image exactly for style, palette and the dog\'s appearance — same dog, same woman, same room.';
+
 /** Every line of the blockquote that follows a heading, with the "> " gone. */
 function blockquoteAfter(lines, headingIndex) {
   const out = [];
@@ -96,7 +107,7 @@ function buildPrompt(id) {
     return {
       title: lines[editIndex].replace(/^#+\s*/, ''),
       attach,
-      text: `Keep the attached image. The style and cast rules we have been using still apply — do not restate or redraw them.\n\n${body}`,
+      text: `${MATCH}\n\nKeep the attached image — this is an edit, not a redraw. The style and cast rules we have been using still apply; do not restate them.\n\n${body}`,
     };
   }
 
@@ -107,7 +118,7 @@ function buildPrompt(id) {
   return {
     title: lines[sceneIndex].replace(/^#+\s*/, ''),
     attach: null,
-    text: `${blockA}\n\n${blockB}\n\n${blockquoteAfter(lines, sceneIndex)}`,
+    text: `${MATCH}\n\n${blockA}\n\n${blockB}\n\n${blockquoteAfter(lines, sceneIndex)}`,
   };
 }
 
@@ -122,6 +133,7 @@ function cmdPrompt(id) {
   console.log(`\n── ${title} ──\n`);
   console.log(text);
   console.log(`\n── copied to the clipboard ──`);
+  console.log('   Attach an approved image — the prompt opens by telling it to match one.');
   if (attach) console.log(`   Attach: ${attach.trim()}`);
   console.log('');
 }
