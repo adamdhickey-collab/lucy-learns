@@ -30,7 +30,9 @@ import os from 'node:os';
 const ROOT = path.resolve(import.meta.dirname, '..');
 const PROMPTS = path.join(ROOT, 'docs/pilot-prompts.md');
 const PILOT = path.join(ROOT, 'img/pilot');
-const DOWNLOADS = path.join(os.homedir(), 'Downloads');
+// Where a fresh generation gets dropped. Both, newest wins, so it does not
+// matter which one the browser is pointed at today.
+const INBOX = [path.join(os.homedir(), 'Desktop'), path.join(os.homedir(), 'Downloads')];
 
 const die = (msg) => {
   console.error(`\n  ${msg}\n`);
@@ -151,6 +153,11 @@ function knownHashes() {
   return seen;
 }
 
+function nextRoundName() {
+  const n = Number(path.basename(currentRound()).split('-')[1] || 0);
+  return `round-${n + 1}`;
+}
+
 function currentRound() {
   if (!fs.existsSync(PILOT)) return path.join(PILOT, 'round-1');
   const rounds = fs
@@ -160,20 +167,49 @@ function currentRound() {
   return path.join(PILOT, rounds.at(-1) || 'round-1');
 }
 
-function newestDownload() {
-  const candidates = fs
-    .readdirSync(DOWNLOADS)
-    .filter((f) => isImage(f) && /chatgpt|image/i.test(f))
-    .map((f) => ({ f, t: fs.statSync(path.join(DOWNLOADS, f)).mtimeMs }))
-    .sort((a, b) => b.t - a.t);
-  if (!candidates.length) die(`Nothing image-shaped in ${DOWNLOADS}.`);
-  return path.join(DOWNLOADS, candidates[0].f);
+/**
+ * The newest image sitting in either drop folder.
+ *
+ * This used to filter on the filename containing "chatgpt" or "image", which
+ * was wrong twice over: the browser saves some of them under a bare UUID, and
+ * the filter silently matched nothing rather than saying so. Newest wins, and
+ * the chosen path is always printed so a wrong pick is visible immediately.
+ */
+function newestDrop() {
+  const candidates = INBOX.filter((dir) => fs.existsSync(dir)).flatMap((dir) =>
+    fs
+      .readdirSync(dir)
+      .filter(isImage)
+      .map((f) => ({ full: path.join(dir, f), t: fs.statSync(path.join(dir, f)).mtimeMs }))
+  );
+  if (!candidates.length) die(`No images in ${INBOX.join(' or ')}.`);
+  return candidates.sort((a, b) => b.t - a.t)[0].full;
+}
+
+/**
+ * Wait until the file stops growing.
+ *
+ * A half-written download copies happily and reports whatever nonsense is in
+ * the partial header — this returned "1920 x 2749" for a 1448 x 1086 image
+ * once, which is a confusing thing to be told about your own artwork.
+ */
+function settled(file) {
+  let last = -1;
+  for (let i = 0; i < 40; i++) {
+    const size = fs.statSync(file).size;
+    if (size === last && size > 0) return;
+    last = size;
+    execFileSync('sleep', ['0.25']);
+  }
+  die(`${path.basename(file)} is still being written. Wait for the download to finish.`);
 }
 
 function cmdAdd(name, file) {
   if (!name) die('Name it: `add door-cover` (the name it should land under).');
-  const src = file ? path.resolve(file) : newestDownload();
+  const src = file ? path.resolve(file) : newestDrop();
   if (!fs.existsSync(src)) die(`No such file: ${src}`);
+  settled(src);
+  console.log(`\n  from ${src.replace(os.homedir(), '~')}`);
 
   const hash = md5(src);
   const twin = knownHashes().get(hash);
@@ -186,6 +222,16 @@ function cmdAdd(name, file) {
   const round = currentRound();
   fs.mkdirSync(round, { recursive: true });
   const dest = path.join(round, `${name.replace(/\.png$/i, '')}.png`);
+  // Never write over an image that is already here. An earlier version did,
+  // and quietly destroyed the round 2 cover it was meant to be replacing —
+  // these files are untracked, so there was nothing to restore it from.
+  if (fs.existsSync(dest)) {
+    die(
+      `${path.relative(ROOT, dest)} already exists.\n` +
+        `  Nothing was copied. Start the next round (mkdir ${path.relative(ROOT, path.join(PILOT, nextRoundName()))})\n` +
+        `  or add it under a different name.`
+    );
+  }
   fs.copyFileSync(src, dest);
 
   const { w, h, ratio } = dims(dest);
