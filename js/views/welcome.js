@@ -27,7 +27,15 @@ const PANELS = [
     note: 'It supports your trainer. It does not replace one.',
   },
   {
-    image: 'dg-03',
+    // Was the dg-03 diptych, which is retired. dg-20 rather than one of the two
+    // images that replaced it: this panel sits one swipe after panel 1, so a
+    // new-style illustration here would put the style change on the welcome,
+    // where a household meets the app for the first time and has nothing to
+    // read it against. dg-20 is painted like its neighbour and is still a true
+    // picture of a session step — and it happens to show the leash under a foot
+    // while the copy beside it talks about running a session one-handed.
+    // Revisit when the restyle reaches the rest of the library.
+    image: 'dg-20',
     eyebrow: 'How a session goes',
     title: 'One instruction at a time',
     body: 'No handout to reread. Each step fills the screen with a picture, the exact words to say, and nothing else. You can run it one-handed with a leash in the other.',

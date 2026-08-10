@@ -31,10 +31,6 @@ export const IMAGES = withThumb({
     src: 'img/dg-02.jpg',
     alt: 'Lucy sits calmly beside the front door on a leash while a handler holds a treat pouch.',
   },
-  'dg-03': {
-    src: 'img/dg-03.jpg',
-    alt: 'Two views side by side: a hand pressing a doorbell, and a hand knocking on a door, with Lucy watching from inside.',
-  },
   'dg-04': {
     src: 'img/dg-04.jpg',
     alt: 'Lucy turns away from the door to look up at her handler, who is offering two small treats.',
@@ -169,17 +165,17 @@ export const IMAGES = withThumb({
   // technique appeared at exactly one level while `dg-02` taught it wrongly six
   // times over.
   //
-  // These two take the rest. Both `src` values are stand-ins pointing at the
-  // diptych until the artwork exists — see the note on door-stay-02-cue above
-  // for how that resolves. `dg-03` itself is now referenced by no step; its key
-  // and files stay only because they are what the stand-ins load.
+  // These two take the rest, and with them drawn `dg-03` is gone from the app
+  // entirely — key, files and precache. The hand in both is deliberately
+  // anonymous, a plain sleeve rather than the guest's checked shirt, because
+  // six of these seven references are the guest and one is a helper.
   'door-sound-02-bell': {
-    src: 'img/dg-03.jpg',
-    alt: 'A hand presses the doorbell beside the closed front door while Lucy watches from inside.',
+    src: 'img/door-sound-02-bell.jpg',
+    alt: 'A hand presses the doorbell beside the closed front door while Lucy watches from inside through the door’s window.',
   },
   'door-sound-02-knock': {
-    src: 'img/dg-03.jpg',
-    alt: 'A hand knocks on the closed front door while Lucy watches from inside.',
+    src: 'img/door-sound-02-knock.jpg',
+    alt: 'A hand knocks on the closed front door while Lucy watches from inside through the door’s window.',
   },
 
   // Covers for the programs that are named but not written yet.
