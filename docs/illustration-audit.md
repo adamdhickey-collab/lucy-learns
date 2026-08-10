@@ -1142,10 +1142,15 @@ The style question is closed — five approved images, §7. What is left is scop
    two new illustrations rather than six; `dg-03` cost two more, and half its
    references turned out to want an image that already existed. See §7.4 and
    §7.6. No image in the app now carries more than one action.
-3. **The correct/incorrect pair** needs a component decision (§6.4). Round 1
-   settled the *artwork* half — the taut coral leash carries the error without a
-   ✓ or ✗ — but `.step-figure` still renders one image, so the pair needs either
-   a two-up variant with HTML labels or a second step.
+3. ~~**The correct/incorrect pair** needs a component decision (§6.4).~~
+   **Built.** A two-up figure, not a second step: a pair is a property of a step,
+   not a new kind of screen, and adding a step would have changed the session
+   flow and the rep count for a presentational reason. `avoid` on a step turns
+   its figure into a pair; every step without one renders exactly as before.
+   Side by side rather than stacked, because a comparison you have to scroll
+   between is not a comparison — 166px a side at 375px, which is enough when the
+   difference is sitting versus rearing. The captions carry the verdict and
+   nothing is painted into the artwork.
 4. **Renaming** — do it during the restyle or not at all; it touches
    `content.js`, `sw.js` and this document.
 5. **Source PNGs in git** — 65 MB today for the painted set, and the restyle will

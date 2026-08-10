@@ -1593,6 +1593,60 @@ details.disclosure .disclosure-body {
   object-fit: cover;
 }
 
+/* Right and wrong, side by side.
+   ------------------------------------------------------------------------
+   One step uses this: the calm greeting, where the failure worth naming is
+   Lucy putting her feet on the guest. Two columns rather than two rows,
+   because a comparison the household has to scroll between is not a
+   comparison. At 375px that is about 163px a side, which is enough — sitting
+   and rearing are different silhouettes, not different details.
+
+   The captions carry the whole verdict. Nothing is painted into the artwork:
+   no cross, no red ring, no tick. The error reads from the taut coral leash
+   and from her posture, which is what the pilot was run to find out. */
+.step-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-2);
+}
+
+.step-pair-item {
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--surface-sunken);
+}
+
+.step-pair-item img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+/* Short enough to hold one line at 163px, which is the whole design brief for
+   this label. Both use a tinted band rather than colour alone, so the pair
+   still reads as two verdicts in greyscale and to anyone who cannot separate
+   the green from the coral. */
+.step-pair-item figcaption {
+  padding: 6px var(--s-2);
+  background: var(--success-wash);
+  color: var(--success);
+  font-size: var(--step--1);
+  font-weight: 700;
+  text-align: center;
+}
+
+.step-pair-item--avoid {
+  border-color: var(--caution);
+}
+
+.step-pair-item--avoid figcaption {
+  background: var(--caution-wash);
+  color: var(--caution-text);
+}
+
 .step-count {
   font-size: var(--step--1);
   font-weight: 700;

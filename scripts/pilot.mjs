@@ -334,9 +334,15 @@ async function cmdVerify() {
   for (const a of ACTIVITIES) {
     need(a.coverImage, `${a.id} cover`);
     need(a.fallbackImage, `${a.id} fallback`);
-    a.steps.forEach((s, i) => need(s.image, `${a.id} step ${i + 1}`));
+    a.steps.forEach((s, i) => {
+      need(s.image, `${a.id} step ${i + 1}`);
+      need(s.avoid, `${a.id} step ${i + 1} (avoid)`);
+    });
     for (const l of a.levels)
-      for (const s of stepsForLevel(a, l)) need(s.image, `${a.id} L${l.number} step ${s.position}`);
+      for (const s of stepsForLevel(a, l)) {
+        need(s.image, `${a.id} L${l.number} step ${s.position}`);
+        need(s.avoid, `${a.id} L${l.number} step ${s.position} (avoid)`);
+      }
   }
 
   // The text sweep. Anything naming an image outside the structures above.
@@ -347,7 +353,9 @@ async function cmdVerify() {
     });
   for (const file of walk(path.join(ROOT, 'js'))) {
     const src = fs.readFileSync(file, 'utf8');
-    for (const m of src.matchAll(/\bimage:\s*'([^']+)'/g))
+    // `image:` and `avoid:` both name a key. Any third field that ever does
+    // needs adding here, which is the cost of the sweep being a sweep.
+    for (const m of src.matchAll(/\b(?:image|avoid):\s*'([^']+)'/g))
       need(m[1], path.relative(ROOT, file));
   }
 
