@@ -3,6 +3,16 @@
 Everything needed to generate new artwork that matches what is already in the
 app, with the filename each one has to land under.
 
+> **Superseded for new work — see [illustration-audit.md](illustration-audit.md).**
+> The style block below describes the painted picture-book look the app is
+> moving away from, and the character sheet gets Lucy's equipment wrong: it
+> offers "purple collar **or** harness", and that *or* is why the current set
+> changes equipment three times inside a single five-minute session. Lucy wears
+> **the harness only, no collar**, and the leash clips to the **ring on the
+> front of the harness at her chest**, never the back. Do not generate from the
+> character sheet below. This file stays as the record of how today's set was
+> made.
+
 ## Why these images
 
 `img/` currently holds twelve illustrations, and they are stretched thin. One
