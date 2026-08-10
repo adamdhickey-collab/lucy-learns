@@ -59,17 +59,19 @@ export const ICONS = {
     '<svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M3 12h3M18 12h3M4.9 19.1 7 17M17 7l2.1-2.1"/><circle cx="12" cy="12" r="3"/></svg>',
 
   // The end of the route. A sun said "nice day" rather than "this is what you
-  // are working towards"; the thing at the end of this program is the dog
-  // herself, greeting someone calmly. A paw is the one mark in the set that is
-  // unmistakably Lucy, and it survives being 15px wide in the Today strip,
-  // which a dog silhouette or a rosette does not.
-  paw:
-    '<svg viewBox="0 0 24 24">' +
-    '<ellipse cx="6.6" cy="10.4" rx="1.9" ry="2.4"/>' +
-    '<ellipse cx="10.6" cy="7.4" rx="2" ry="2.6"/>' +
-    '<ellipse cx="15.1" cy="7.7" rx="2" ry="2.6"/>' +
-    '<ellipse cx="18.6" cy="11.2" rx="1.9" ry="2.3"/>' +
-    '<path d="M12.4 12.6c2.6 0 4.8 1.7 5.3 3.8.5 2-1 3.7-3.1 3.7-1 0-1.6-.4-2.2-.4s-1.2.4-2.2.4c-2.1 0-3.6-1.7-3.1-3.7.5-2.1 2.7-3.8 5.3-3.8z"/>' +
+  // are working towards", and the paw that replaced it was five separate
+  // shapes trying to survive at 15px in the Today strip — at that size the
+  // toes closed up and it read as a blob.
+  //
+  // A star is one shape, it is the only solid mark in a set of line-work, and
+  // "the star at the end" needs no explaining. Solid is the point: the marks
+  // before it are outlines of things still to be done, and this one is filled
+  // because it is the prize. It is drawn `class="icon--solid"` so the stroke
+  // rules that every other icon lives by can step aside for it — a 2px stroke
+  // on a filled star swells the points until they touch.
+  star:
+    '<svg viewBox="0 0 24 24" class="icon--solid">' +
+    '<path d="M12 3.1 14.29 9.4 21.04 9.66 15.71 13.81 17.58 20.29 12 16.5 6.42 20.29 8.29 13.81 2.96 9.66 9.71 9.4Z"/>' +
     '</svg>',
   check: '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
   trash:
