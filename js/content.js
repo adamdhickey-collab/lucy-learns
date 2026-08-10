@@ -139,19 +139,20 @@ export const IMAGES = withThumb({
   // dg-NN, because that is where the whole library is going and there is no
   // sense minting two more numbers to rename later.
   //
-  // **The `src` on both is a stand-in.** It points at the image the step used
-  // before the split, so the app keeps rendering while the artwork is made —
-  // the alt text below describes the picture that *should* be there, and is
-  // wrong about the one currently loading. Swapping in the real file is a
-  // one-line change each. Until then this is the only thing in the app whose
-  // alt and image disagree, deliberately and in one place.
+  // These two were stand-ins for one release — the key pointed at the image the
+  // step used before the split, so the app kept rendering while the artwork was
+  // made. Both now have their own picture, drawn in the Warm Instructional
+  // Vector style the rest of the library is moving to. They are the first two
+  // in the app, so they will not match their neighbours until the restyle
+  // catches up; a correct picture in the coming style beats a wrong one in the
+  // old.
   'door-stay-02-cue': {
-    src: 'img/dg-07.jpg',
-    alt: 'A handler stands facing Lucy with a flat open palm raised at chest height while Lucy lies on her bed, head up, holding her eye.',
+    src: 'img/door-stay-02-cue.jpg',
+    alt: 'A handler stands beside Lucy’s bed with a flat open palm raised at chest height while Lucy lies on the bed, head up, holding her eye.',
   },
   'door-greet-01-settle': {
-    src: 'img/dg-09.jpg',
-    alt: 'A handler clips the leash to Lucy’s collar and settles her onto her bed, well back from the closed front door.',
+    src: 'img/door-greet-01-settle.jpg',
+    alt: 'A handler crouches beside Lucy’s bed clipping the leash to her collar, well back from the closed front door.',
   },
 
   // Covers for the programs that are named but not written yet.
