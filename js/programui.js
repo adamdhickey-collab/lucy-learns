@@ -199,7 +199,7 @@ function outcomeNode(prog) {
   return html`<li class="stage stage--outcome ${prog.complete ? 'stage--outcome-won' : ''}">
     <div>
       <span class="stage-rail" aria-hidden="true">
-        <span class="stage-node">${icon('paw')}</span>
+        <span class="stage-node">${icon('star')}</span>
       </span>
       <span class="stage-body">
         <span class="stage-state">${outcome.eyebrow}</span>
@@ -251,14 +251,17 @@ function outcomeNode(prog) {
  * list would not be valid, and the row is aria-hidden behind the caller's own
  * label in every case.
  */
-function stageNodes(prog, { currentActivityIndex = -1, compact = false } = {}) {
+function stageNodes(prog, { currentActivityIndex = -1, compact = false, plain = false } = {}) {
   // Exactly one stop reads as "next". The live ring used to be painted by
   // state, and once more than one activity was unparked two states qualified
   // at once — the one in progress and the first one merely open — so the row
   // lit up twice and pointed in two directions. `focus` is already the single
   // answer to what to do next: whatever is underway, or failing that the first
   // thing open.
-  const nextId = prog.complete ? null : prog.focus.activity.id;
+  //
+  // `plain` drops that mark entirely, for the one place that is introducing
+  // the four rather than reporting on them. See routePreview().
+  const nextId = prog.complete || plain ? null : prog.focus.activity.id;
   const stops = prog.stages.map((stage, i) => {
     const active = stage.index === currentActivityIndex && stage.state !== STAGE.soon;
     const done = stage.state === STAGE.complete;
@@ -277,7 +280,7 @@ function stageNodes(prog, { currentActivityIndex = -1, compact = false } = {}) {
   return html`<span class="route-line${compact ? ' route-line--compact' : ''}" aria-hidden="true">
     ${join(stops)}
     <span class="route-stop route-stop--end" style="--i: ${prog.stages.length}">
-      <span class="route-node">${icon('paw')}</span>
+      <span class="route-node">${icon('star')}</span>
       ${/* One word, like every other label in the row. "Calm hello" was the
             only two-word label here, and being the rightmost it wrapped and
             forced the whole row to reserve a second line. "Goal" also says
@@ -366,7 +369,10 @@ export function programStrip(prog, { stage = null } = {}) {
  * out as a road with the finish line on the end of it.
  *
  * Nothing here is progress — on first run there is none — so every station is
- * drawn empty. It is the size and shape of the job, not a score.
+ * drawn empty. It is the size and shape of the job, not a score. That includes
+ * the live ring: `plain` keeps it off Sound, which was tinted and titled in the
+ * accent here while the four were still only being named. A row where one of
+ * them is already lit is answering "what next", and nobody has asked yet.
  */
 export function routePreview(prog) {
   const outcome = prog.program.outcome;
@@ -377,7 +383,7 @@ export function routePreview(prog) {
     role="img"
     aria-label="${prog.stages.length} activities, ${allLevels} levels, ending in ${outcome ? outcome.title : 'the finish'}"
   >
-    ${stageNodes(prog)}
+    ${stageNodes(prog, { plain: true })}
   </div>`;
 }
 

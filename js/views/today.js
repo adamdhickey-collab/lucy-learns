@@ -17,12 +17,12 @@ import { programProgress } from '../program.js';
 import { programStrip } from '../programui.js';
 import { html, raw, join, icon, badge, initialsOf, focusHeading } from '../ui.js';
 
-const greeting = () => {
-  const hour = new Date().getHours();
-  if (hour < 12) return 'Good morning';
-  if (hour < 17) return 'Good afternoon';
-  return 'Good evening';
-};
+// One greeting, at any hour. The three time-of-day variants were a clock
+// reading dressed up as warmth: they changed the heading three times a day
+// without ever telling the household anything, and "Good evening" landed on
+// someone practicing at 5:01pm as if the app had opinions about their
+// schedule. "Hello" is right whenever the app is opened.
+const greeting = () => 'Hello';
 
 function render() {
   const state = getState();

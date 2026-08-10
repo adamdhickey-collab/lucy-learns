@@ -882,11 +882,14 @@ a.visually-hidden:focus {
   padding: calc(var(--s-5) + env(safe-area-inset-top)) 0 var(--s-4);
 }
 
-/* The same size as every other screen's h1. It sat one step down, which made
-   the one heading that greets the household by name the quietest one in the
-   app. */
+/* Bigger than every other screen's h1, which is the point: this is the line
+   that says the app knows who opened it. It was a step below the rest, then
+   level with them; "Hello, Fabiola" is short enough to take the top step
+   without wrapping on a narrow phone, and the extra size is what makes the
+   name read as a welcome rather than a page title. */
 .today-head h1 {
-  font-size: var(--step-3);
+  font-size: var(--step-4);
+  line-height: 1.15;
   text-wrap: balance;
 }
 
@@ -3250,6 +3253,9 @@ details.disclosure .disclosure-body {
   box-shadow: var(--shadow-card);
   color: inherit;
   text-decoration: none;
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease;
 }
 
 .program-strip-body {
@@ -3289,6 +3295,7 @@ details.disclosure .disclosure-body {
   flex: 0 0 auto;
   width: 20px;
   height: 20px;
+  transition: transform 140ms ease;
   fill: none;
   stroke: var(--primary);
   stroke-width: 2;
@@ -3452,6 +3459,7 @@ details.disclosure .disclosure-body {
   border-right: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   border-bottom-right-radius: 3px;
+  transition: border-color 140ms ease;
 }
 
 /* The strip is the first thing on Today, so it does not need the full section
@@ -3464,10 +3472,39 @@ details.disclosure .disclosure-body {
   margin-bottom: var(--s-5);
 }
 
+/* Hover: lift it, do not tint it.
+   ------------------------------------------------------------------------
+   This card used to wash blue on hover, which broke in two ways. The caret is
+   a separate rotated square painted `--surface`, so it stayed white while the
+   card went blue and the speech bubble's tail visibly detached from it. And
+   the row of marks inside sits on discs of the page colour, which stop
+   reading as seats once the surface behind them changes hue.
+
+   Both of those are the tint's fault rather than the caret's, so the tint
+   goes. Raising the card off the page says "this is one object and it is
+   yours to press" without repainting anything inside it, the caret comes
+   along because it is drawn from the same two tokens as the card, and the
+   underlined title matches how every other link-shaped card here answers a
+   pointer. */
 @media (hover: hover) {
   .program-strip:hover {
     border-color: var(--border-strong);
-    background: var(--primary-wash);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .program-strip--points:hover::after {
+    border-color: var(--border-strong);
+  }
+
+  .program-strip:hover .program-strip-top strong {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* The arrow leans the way the card goes. Direct child only: the five marks
+     in the row are svgs inside this card too, and they stay put. */
+  .program-strip:hover > svg {
+    transform: translateX(2px);
   }
 
   .stage > a:hover .stage-top strong {
@@ -3795,6 +3832,12 @@ details.disclosure .disclosure-body {
     transition: none;
   }
 
+  /* The lift keeps its colour and shadow change — those are state, not
+     motion — but the arrow stops travelling. */
+  .program-strip:hover > svg {
+    transform: none;
+  }
+
   .program-band--moved .program-band-top b {
     animation: none;
   }
@@ -3992,11 +4035,24 @@ details.disclosure .disclosure-body {
 .route-stop--end .route-node svg {
   width: 18px;
   height: 18px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+}
+
+/* The one filled mark in the set.
+   ------------------------------------------------------------------------
+   Every icon here is line-work, so the shared rules hand each svg a 2px
+   stroke and no fill. The goal star is the exception in both directions: it
+   is filled because it is the prize at the end of a row of things still to
+   do, and it drops the stroke because a 2px outline on a shape with five
+   points thickens them until the notches between them close up.
+
+   Written to out-specify the per-context svg rules — `.route-stop--end
+   .route-node svg` is two classes deep — rather than relying on the svg's
+   own fill attribute, which any of them would overwrite. */
+.route-node svg.icon--solid,
+.stage-node svg.icon--solid,
+svg.icon--solid {
+  fill: currentColor;
+  stroke: none;
 }
 
 /* Gold, like the node above it. The width cap this used to carry was there to
