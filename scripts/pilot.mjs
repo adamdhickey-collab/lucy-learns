@@ -301,6 +301,73 @@ function cmdCheck(dir) {
   console.log(`  contact sheet → node scripts/pilot.mjs sheet\n`);
 }
 
+// --- verify ----------------------------------------------------------------
+
+/**
+ * Every way an image key can be reached, checked at once.
+ *
+ * This exists because a narrower version of it missed one. Retiring `dg-03`
+ * walked ACTIVITIES, found no references, and declared it safe — but the
+ * welcome screen names images in its own PANELS array, and panel 2 was still
+ * asking for it. The app would have thrown on first run, on the second screen
+ * a household ever sees.
+ *
+ * So the structured walk is backed by a text sweep: any `image: '...'` in js/
+ * has to name a key that exists, wherever it lives. Belt and braces, because
+ * the structured half is the one that already failed.
+ */
+async function cmdVerify() {
+  const content = await import(`file://${path.join(ROOT, 'js/content.js')}`);
+  const { IMAGES, ACTIVITIES, PROGRAMS, PLANNED_ACTIVITIES, stepsForLevel } = content;
+  const sw = fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8');
+  const problems = [];
+  const used = new Set();
+
+  const need = (key, where) => {
+    if (!key) return;
+    used.add(key);
+    if (!IMAGES[key]) problems.push(`${where} wants "${key}", which is not in IMAGES`);
+  };
+
+  for (const p of PROGRAMS) need(p.coverImage, `program ${p.id}`);
+  for (const a of PLANNED_ACTIVITIES) need(a.coverImage, `planned ${a.id}`);
+  for (const a of ACTIVITIES) {
+    need(a.coverImage, `${a.id} cover`);
+    need(a.fallbackImage, `${a.id} fallback`);
+    a.steps.forEach((s, i) => need(s.image, `${a.id} step ${i + 1}`));
+    for (const l of a.levels)
+      for (const s of stepsForLevel(a, l)) need(s.image, `${a.id} L${l.number} step ${s.position}`);
+  }
+
+  // The text sweep. Anything naming an image outside the structures above.
+  const walk = (dir) =>
+    fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
+      const full = path.join(dir, e.name);
+      return e.isDirectory() ? walk(full) : full.endsWith('.js') ? [full] : [];
+    });
+  for (const file of walk(path.join(ROOT, 'js'))) {
+    const src = fs.readFileSync(file, 'utf8');
+    for (const m of src.matchAll(/\bimage:\s*'([^']+)'/g))
+      need(m[1], path.relative(ROOT, file));
+  }
+
+  for (const [key, v] of Object.entries(IMAGES)) {
+    for (const f of [v.src, v.thumb]) {
+      if (!fs.existsSync(path.join(ROOT, f))) problems.push(`${key}: ${f} is not on disk`);
+      if (!sw.includes(`'./${f}'`)) problems.push(`${key}: ${f} is not in the sw.js precache`);
+    }
+  }
+
+  const orphans = Object.keys(IMAGES).filter((k) => !used.has(k));
+
+  console.log(`\n  ${Object.keys(IMAGES).length} keys, ${used.size} reached, ${problems.length} problems`);
+  for (const p of problems) console.log(`  ✗ ${p}`);
+  if (orphans.length) console.log(`  · unreferenced keys: ${orphans.join(', ')}`);
+  if (!problems.length) console.log('  ✓ every reference resolves, every file exists and is precached');
+  console.log('');
+  if (problems.length) process.exit(1);
+}
+
 // --- contact sheet ---------------------------------------------------------
 
 function cmdSheet(dir) {
@@ -342,6 +409,7 @@ const [cmd, ...rest] = process.argv.slice(2);
   prompt: () => cmdPrompt(rest[0]),
   add: () => cmdAdd(rest[0], rest[1]),
   check: () => cmdCheck(rest[0]),
+  verify: () => cmdVerify(),
   sheet: () => cmdSheet(rest[0]),
 }[cmd] ||
   (() =>
@@ -350,5 +418,6 @@ const [cmd, ...rest] = process.argv.slice(2);
         '  prompt <1-5|3a|3b|3c>   copy a prompt to the clipboard\n' +
         '  add <name> [file]       name the newest ChatGPT download and file it\n' +
         '  check [dir]             ratios, duplicate detection, every crop from §2\n' +
+        '  verify                  every image reference in the app resolves\n' +
         '  sheet [dir]             contact sheet to review them side by side'
     )))();

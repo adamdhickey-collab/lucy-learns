@@ -1102,9 +1102,23 @@ image demonstrating the leash-under-foot technique the copy repeatedly names, an
 it appeared at exactly one level while `dg-02` taught the same technique wrongly
 six times over. It now carries eight references.
 
-`dg-03` is referenced by no step. Its key and files stay for the moment because
-they are what the two new keys load as stand-ins; all three go together when the
-artwork lands.
+`dg-03` is **gone** — key, both files, and its precache entries. The artwork for
+both halves landed in round 7.
+
+Retiring it turned up the one real defect of this whole exercise. The check that
+declared it safe walked `ACTIVITIES` and found no references — but the welcome
+screen names its images in its own `PANELS` array, and panel 2 was still asking
+for `dg-03`. That would have thrown on first run, on the second screen a
+household ever sees. `scripts/pilot.mjs verify` now covers every route to an
+image key, structured *and* by text sweep, and exits non-zero naming the file.
+The structured walk is the half that already failed once.
+
+Panel 2 took `dg-20` rather than either replacement: it sits one swipe after
+panel 1, so a new-style illustration there would put the style change on the
+welcome, where a household has nothing to read it against. `dg-20` is painted
+like its neighbour, is still a true picture of a session step, and happens to
+show the leash under a foot while the copy beside it talks about running a
+session one-handed.
 
 **The hand in both new images is deliberately anonymous** — a forearm with a
 plain sleeve, not the guest's checked shirt. Six of the seven references are the
