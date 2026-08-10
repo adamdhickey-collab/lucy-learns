@@ -797,9 +797,20 @@ warm cream ground, and the most aggressive crop in the app (21:9) alongside the
 
 ## 7. Pilot results
 
+**The pilot is settled. Five approved images sit in `img/pilot/approved/`.**
+
 Nothing has been installed. No `IMAGES` key points at any pilot image, and the
-existing thirty are untouched. Round 1 sits in `img/pilot/round-1/`, round 2 in
-`img/pilot/round-2/`.
+existing thirty are untouched. Each round is kept where it landed —
+`img/pilot/round-1/`, `round-2/`, `round-3/` — and `approved/` holds copies, so
+the provenance of every approved frame stays readable.
+
+| Approved | From | Replaces |
+| --- | --- | --- |
+| `door-sound-01-setup.png` | round 2 | `dg-02` |
+| `door-greet-07-approach.png` | round 2 | `dg-10` |
+| `door-greet-08-petting.png` | round 2 | `dg-11` |
+| `door-greet-08-jumping.png` | round 2 | new — the incorrect half of the pair |
+| `door-cover.png` | round 3 | `dg-01` |
 
 ### 7.1 Round 1 — the style test
 
@@ -912,9 +923,58 @@ one-line change if you want it.
   so her white chest blaze disappears into the leg and she half-vanishes at phone
   size. The target is level with the knee, not trailing it.
 
+### 7.3 Round 3 — one fix kept, one reverted
+
+Two edits, run against the round 2 files with a single named change each.
+
+**`door-cover` — kept.** The scruffy muzzle came back: at 4× magnification there
+is a clear wiry beard along the jaw and brow texture, and everything else
+survived the edit — composition, collar and tag, her gaze up to the handler, the
+clean-shaven guest, exact 4:3. The 21:9 program crop passes with more headroom
+than the round 2 version had. One residual, left alone deliberately: her skull is
+narrower and her muzzle finer than the setup reference, so she reads younger. The
+prompt named coat texture and coat texture is what changed; head shape is a
+different instruction, and it only shows with the two heads side by side at 4×.
+
+**`door-greet-07-approach` — reverted.** The edit reduced the overlap and made
+the white chest blaze visible, and cost two things that were right. She shrank —
+her back sits at the handler's knee where it used to reach mid-thigh, turning a
+medium-large Lab and pointer mix into something closer to a terrier. And she
+stopped walking: all four feet planted, the stride gone, in the one image whose
+job is "walking her over on a loose leash". The leash also slackened into a loop
+on the floor, which reads closer to dropped than held short. Round 2's version
+stands.
+
+#### Two corrections to what §7.2 says
+
+- **The cover's floor was never too orange.** §7.2 recorded it as "a more
+  saturated orange than the rest of the set", and that went into the 3A prompt
+  as well. Measured, it is among the least saturated: 0.53 against 0.52 for the
+  setup, 0.61 for the petting and 0.67 for the jumping frame. What actually
+  drifts is the **wall** — `#f2ceae` on the cover against `#f3dabe`, `#fae0c2`
+  and `#faddbe` elsewhere, pinker and a shade darker. It is small enough to
+  leave.
+- **The approach image should not have been sent back.** §7.2 called it
+  "overcorrected" and said she "half-vanishes at phone size". At magnification
+  that was overstated: her silhouette is clear, her head reads, and the blaze is
+  visible against the jeans. It was a marginal complaint, and chasing it cost
+  her size and her gait.
+
+#### What the two rounds of edits taught
+
+An edit prompt changes more than the thing it names. Both round 3 prompts said
+"keep this image exactly as it is" and named one change; one came back with the
+change and nothing else, the other came back with the change plus a resized dog
+and a lost gait. The lesson for the full restyle is not to write better edit
+prompts — it is that **an image which is 90% right is usually finished**, and
+the last 10% costs more than it returns.
+
+
 ---
 
 ## 8. What has to be decided before production
+
+The style question is closed — five approved images, §7. What is left is scope.
 
 1. ~~**Harness or collar.**~~ **Settled: a flat purple collar with a round blue
    tag, no harness, leash clipped to the collar ring at her neck.** Carried into
@@ -923,7 +983,10 @@ one-line change if you want it.
 2. **Splitting the overloaded images.** `dg-07` → 3, `dg-09` → 3, `dg-03` → 2.
    That is +6 illustrations and edits to `content.js`. Alternatively, repoint
    the reward step at `dg-25`, which needs no new art.
-3. **The correct/incorrect pair** needs a component decision (§6.4).
+3. **The correct/incorrect pair** needs a component decision (§6.4). Round 1
+   settled the *artwork* half — the taut coral leash carries the error without a
+   ✓ or ✗ — but `.step-figure` still renders one image, so the pair needs either
+   a two-up variant with HTML labels or a second step.
 4. **Renaming** — do it during the restyle or not at all; it touches
    `content.js`, `sw.js` and this document.
 5. **Source PNGs in git** — 65 MB today, and the restyle will add a second set.

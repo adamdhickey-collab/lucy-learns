@@ -286,10 +286,17 @@ handler — the same fault the image it replaces has.*
 
 ## Round 3 — two follow-ups
 
-Round 2 landed every fix and cleared the crop tests. Three of the five are
-approved as they stand: `door-sound-01-setup`, `door-greet-08-petting` and
-`door-greet-08-jumping`. Two need one more pass, and there is one optional
-third. Full results in [§7.2 of the audit](illustration-audit.md).
+**Done, and the pilot is closed.** 3A was kept and 3B reverted; 3C was never
+run, because 3B showed what a second edit costs. The five approved images are in
+`img/pilot/approved/`, and the results are in
+[§7.3 of the audit](illustration-audit.md).
+
+The prompts below are kept as the record of how the edits were written, and as
+the pattern for any future one — attach the file, name one change, say nothing
+else. The caveat worth carrying forward: **an edit changes more than the thing
+it names.** 3A came back with the change and nothing else. 3B came back with the
+change plus a resized dog and a lost walking gait, which was worse than the
+problem it fixed. An image that is 90% right is usually finished.
 
 These are **edits, not fresh generations.** Attach the round 2 file, paste the
 prompt, and change nothing else. Block A and Block B still apply — but say so
@@ -416,11 +423,21 @@ because they are edits — it prints the file to attach instead.
 ```bash
 node scripts/pilot.mjs add door-cover
 ```
-Takes the newest ChatGPT image out of `~/Downloads`, names it, and files it in
-the current round. **Refuses anything whose bytes already exist anywhere under
-`img/`** and names the twin, which is the check that catches a re-added batch.
-Prints the dimensions and whether it is 4:3. Pass a path as a second argument to
-add a specific file instead of the newest.
+Takes the newest image from **either `~/Desktop` or `~/Downloads`**, names it,
+and files it in the current round. It prints the path it chose, so a wrong pick
+is obvious. Pass a path as a second argument to name a specific file instead.
+
+Three things it will not do, each of which cost something once:
+
+- **Copy a file that is still downloading.** It waits for the size to settle. A
+  half-written PNG copies happily and reports whatever is in the partial header
+  — it once claimed a 1448 × 1086 image was 1920 × 2749.
+- **Write over an image that already exists.** It names the file and stops. An
+  earlier version overwrote the round 2 cover it was meant to be replacing, and
+  since `img/pilot/` is untracked there was nothing to restore it from. Start a
+  new round instead: `mkdir img/pilot/round-4`.
+- **Accept bytes we already have.** It names the twin. This is what catches a
+  batch being re-downloaded and re-added as if it were new.
 
 ```bash
 node scripts/pilot.mjs check
