@@ -23,14 +23,6 @@ const withThumb = (images) => {
 };
 
 export const IMAGES = withThumb({
-  'dg-07': {
-    src: 'img/dg-07.jpg',
-    alt: 'Lucy lying on her bed holding position while a handler walks toward the closed front door and glances back.',
-  },
-  'dg-08': {
-    src: 'img/dg-08.jpg',
-    alt: 'A handler stands at the open front door greeting an imaginary visitor, shown as a faint silhouette, while Lucy stays on her bed.',
-  },
   'dg-13': {
     src: 'img/dg-13.jpg',
     alt: 'Lucy lies on her bed while a handler takes a single step away from her toward the closed front door.',
@@ -47,25 +39,20 @@ export const IMAGES = withThumb({
     src: 'img/dg-16.jpg',
     alt: 'The front door is open a few inches onto daylight while Lucy stays lying on her bed.',
   },
-  'dg-19': {
-    src: 'img/dg-19.jpg',
-    alt: 'Lucy steps up off her bed as her handler releases her from the stay.',
-  },
   'dg-23': {
     src: 'img/dg-23.jpg',
     alt: 'A handler holds a relaxed conversation in the open doorway while Lucy stays settled on her bed.',
-  },
-  'dg-25': {
-    src: 'img/dg-25.jpg',
-    alt: 'A handler kneels beside Lucy’s bed and feeds her a treat for staying in place.',
   },
   // --- the two moments the set never had a picture for ---------------------
   //
   // `dg-07` was carrying three different actions and `dg-09` three more (see
   // docs/illustration-audit.md §3.5). Four of those six already had a correct
-  // picture sitting elsewhere in the library and only needed pointing at:
-  // dg-25 is the reward-on-the-bed, dg-21 is the guest coming in, and dg-07
-  // and dg-09 each keep one job of their own. These two had nothing.
+  // picture sitting elsewhere in the library and only needed pointing at: the
+  // reward-on-the-bed and the guest-coming-in both existed, and `dg-07` and
+  // `dg-09` each kept one job of their own. These two had nothing. (All four of
+  // those keys have since been redrawn — batch 2 and batch 3 — as
+  // `door-stay-04-pay`, `door-greet-06-enter`, `door-stay-03-cross` and
+  // `door-greet-04-open`.)
   //
   // They are keyed under the naming scheme from §3.8 rather than the next free
   // dg-NN, because that is where the whole library is going and there is no
@@ -277,6 +264,55 @@ export const IMAGES = withThumb({
   'door-greet-cover': {
     src: 'img/door-greet-cover.jpg',
     alt: 'Lucy sits with all four paws down while a crouching guest rests an open palm on her chest and her handler holds the leash in a loose loop behind her.',
+  },
+
+  // --- batch 3: the whole of Doorbell Means Place ---------------------------
+  //
+  // The third activity, and the smallest batch, because three of dg-3's seven
+  // pictures had already arrived with batches 1 and 2. The four that were left
+  // turned out to belong to dg-2 as much as to dg-3 — `dg-25` was dg-2's cover
+  // and its step 4, `dg-07` its step 3, `dg-19` its step 5, `dg-08` its L5 and
+  // L6 override — so they are keyed into dg-2's step numbering beside
+  // `door-stay-02-cue`, and dg-2 arrives at batch 4 with five of eleven done.
+  //
+  // The §5 defects: `dg-07` was the most-used image in the app at thirty
+  // references and carried three actions; §7.4 took two away and this draws the
+  // one it kept. `dg-19` read as a near-mirror of "go to your bed" — two of the
+  // most-used pictures meaning opposite things — so this one bans a pointing
+  // finger from the frame and puts her stepping *off* the bed toward open hands.
+  // `dg-08` painted the imaginary visitor as a translucent blue figure baked
+  // into the artwork, which the style rules out and which read as a ghost; the
+  // porch is simply empty now, and her bed is back from the door rather than
+  // against it.
+  //
+  // `door-place-cover` is new. dg-3's cover had been `door-place-03-send` since
+  // batch 2, and that image failed the Today band three times running: sliced
+  // across the eyes, then decapitated at the shoulders. It is geometry, not
+  // prompting — the band keeps 58% of the frame height and a standing adult plus
+  // a floor-level bed does not fit in it. Every cover that passed first time has
+  // a crouching or kneeling human. So dg-3 got its own, and it is mirrored
+  // against `door-stay-04-pay` on purpose: the first attempt passed every crop
+  // and still failed, because at 56px it was the same picture as dg-2's cover
+  // and those two thumbnails sit side by side on the program map rail.
+  'door-place-cover': {
+    src: 'img/door-place-cover.jpg',
+    alt: 'Lucy lies settled on her bed while her handler crouches beside her, well back from the closed front door.',
+  },
+  'door-stay-03-cross': {
+    src: 'img/door-stay-03-cross.jpg',
+    alt: 'Lucy lies on her bed with her head up, watching her handler walk toward the closed front door.',
+  },
+  'door-stay-03-pretend': {
+    src: 'img/door-stay-03-pretend.jpg',
+    alt: 'A handler stands in the open doorway talking to an empty porch while Lucy stays on her bed.',
+  },
+  'door-stay-04-pay': {
+    src: 'img/door-stay-04-pay.jpg',
+    alt: 'A handler kneels beside Lucy’s bed and feeds her a treat for staying in place.',
+  },
+  'door-stay-05-release': {
+    src: 'img/door-stay-05-release.jpg',
+    alt: 'Lucy steps off her bed toward her handler’s open hands as she is released from the stay.',
   },
 
   // Covers for the programs that are named but not written yet.
@@ -669,7 +705,7 @@ export const ACTIVITIES = [
     // The mark this activity carries everywhere it appears. See ICONS.
     icon: 'act-stay',
     shortPurpose: 'Lucy holds her bed while you walk over and open the door.',
-    coverImage: 'dg-25',
+    coverImage: 'door-stay-04-pay',
     estimatedMinutes: 7,
     difficulty: 'intermediate',
     equipment: ['Lucy on leash', 'Her bed or a marked boundary', 'Small treats'],
@@ -678,7 +714,7 @@ export const ACTIVITIES = [
       'If she breaks position twice in a row, drop back a level.',
       'A boundary works as well as a bed. If you use one, cue “Back” instead of “Go to bed”.',
     ],
-    fallbackImage: 'dg-25',
+    fallbackImage: 'door-stay-04-pay',
     fallbackSteps: FALLBACK_STEPS,
     steps: [
       { instruction: 'Send Lucy to her bed.', cue: 'Go to bed', image: 'door-place-03-send' },
@@ -687,15 +723,15 @@ export const ACTIVITIES = [
         cue: 'Stay',
         image: 'door-stay-02-cue',
       },
-      { instruction: 'Move toward the door.', image: 'dg-07' },
+      { instruction: 'Move toward the door.', image: 'door-stay-03-cross' },
       {
         // dg-07 showed the handler walking away with nothing in her hands on a
         // step about coming back and paying. dg-25 is that payment, drawn.
         instruction: 'Walk back and reward her on the bed.',
-        image: 'dg-25',
+        image: 'door-stay-04-pay',
         helper: 'Deliver the treat between her paws so the bed becomes the paying spot.',
       },
-      { instruction: 'Release, then reset for the next rep.', cue: 'Okay', image: 'dg-19' },
+      { instruction: 'Release, then reset for the next rep.', cue: 'Okay', image: 'door-stay-05-release' },
     ],
     levels: [
       {
@@ -736,7 +772,7 @@ export const ACTIVITIES = [
         setup: 'Open the door all the way and stand in the doorway.',
         reps: 5,
         successCriteria: ['Holds the bed with the door wide open'],
-        overrides: { 2: { instruction: 'Open the door all the way and stand there.', image: 'dg-08' } },
+        overrides: { 2: { instruction: 'Open the door all the way and stand there.', image: 'door-stay-03-pretend' } },
       },
       {
         number: 6,
@@ -745,7 +781,7 @@ export const ACTIVITIES = [
         reps: 5,
         successCriteria: ['Stays through your voice at the door'],
         overrides: {
-          2: { instruction: 'Open the door and cheerfully say hi to nobody.', image: 'dg-08' },
+          2: { instruction: 'Open the door and cheerfully say hi to nobody.', image: 'door-stay-03-pretend' },
         },
       },
       {
@@ -787,7 +823,7 @@ export const ACTIVITIES = [
     // The mark this activity carries everywhere it appears. See ICONS.
     icon: 'act-place',
     shortPurpose: 'The doorbell becomes her cue to move away from the door.',
-    coverImage: 'door-place-03-send',
+    coverImage: 'door-place-cover',
     estimatedMinutes: 7,
     difficulty: 'intermediate',
     equipment: ['Lucy on leash', 'Her bed', 'Small treats', 'Doorbell or a door to knock on'],
@@ -795,19 +831,19 @@ export const ACTIVITIES = [
       'Keep the whole sequence smooth before you add a pretend visitor.',
       'If she needs the lure three reps in a row, stay at this level.',
     ],
-    fallbackImage: 'dg-25',
+    fallbackImage: 'door-stay-04-pay',
     fallbackSteps: FALLBACK_STEPS,
     steps: [
       { instruction: 'Ring or knock once.', image: 'door-sound-02-self' },
       { instruction: 'Say her name brightly.', cue: 'Lucy!', image: 'door-sound-03-name' },
       { instruction: 'Send her to her bed.', cue: 'Go to bed', image: 'door-place-03-send' },
-      { instruction: 'Reward her twice on the bed.', image: 'dg-25' },
+      { instruction: 'Reward her twice on the bed.', image: 'door-stay-04-pay' },
       {
         instruction: 'Walk toward the door, then come back.',
-        image: 'dg-07',
+        image: 'door-stay-03-cross',
         helper: 'Walking away right after she lands teaches her the bed is where the job happens.',
       },
-      { instruction: 'Release and reset.', cue: 'Okay', image: 'dg-19' },
+      { instruction: 'Release and reset.', cue: 'Okay', image: 'door-stay-05-release' },
     ],
     levels: [
       {
@@ -839,7 +875,7 @@ export const ACTIVITIES = [
         setup: 'After she lands, walk all the way to the door without hesitating.',
         reps: 5,
         successCriteria: ['Holds the bed while you cross the room', 'Sequence feels fluid'],
-        overrides: { 4: { instruction: 'Walk all the way to the door, then return.', image: 'dg-07' } },
+        overrides: { 4: { instruction: 'Walk all the way to the door, then return.', image: 'door-stay-03-cross' } },
       },
       {
         number: 5,
@@ -850,7 +886,7 @@ export const ACTIVITIES = [
         overrides: {
           4: {
             instruction: 'Open the door and greet an imaginary guest.',
-            image: 'dg-08',
+            image: 'door-stay-03-pretend',
             helper: 'Then close the door, walk back, and pay her for staying.',
           },
         },

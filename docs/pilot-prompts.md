@@ -85,7 +85,11 @@ runs over her back; there is white on her face; the background gains furniture
 nobody asked for; the image comes back square rather than landscape; it comes
 back as two panels; **or a raised hand is touching a door, wall or surface
 instead of gesturing in open air** — round 4 put a stay signal flat against the
-door panel, which reads as holding the door shut.
+door panel, which reads as holding the door shut; **or a reward image comes back
+with no visible treat.** That last one is not hypothetical: it is the §5 defect
+recorded against `dg-12`, and Scene 23 reproduced it on the first attempt with a
+closed hand at Lucy's muzzle. A hand near the mouth is not a treat. If the step
+pays her, the food has to be in the frame and separate from the fingers.
 
 ---
 
@@ -1095,10 +1099,15 @@ the floor "a nice touch that survives to the new style", so keep it.*
 > treat, her body completely unmoved** — she is being paid for staying, not for
 > coming. All four feet stay on the bed.
 >
-> The handler **kneels on the floor beside the bed**, back straight, **the treat
-> pinched between finger and thumb and delivered low, down between Lucy's front
-> paws** — the bed is the paying spot and the picture has to say so. The mustard
-> pouch is at her hip.
+> The handler **kneels on the floor beside the bed**, back straight, delivering
+> the treat low, down between Lucy's front paws — the bed is the paying spot and
+> the picture has to say so. The mustard pouch is at her hip.
+>
+> **The treat itself must be unmistakable: a small brown treat held between
+> fingertip and thumb, clearly separate from the fingers and clearly visible
+> against the grey bed.** Do not draw a closed fist or a cupped empty hand at her
+> muzzle — this is the picture of the payment arriving, and if the food is not in
+> frame the image says nothing at all.
 >
 > The black leash is clipped to her collar and **lies coiled loose on the floor**
 > beside the bed.
@@ -1207,11 +1216,98 @@ notes the bed sits against the door and should be a few feet back.*
 >
 > Landscape 4:3, wider than tall.
 
-### When batch 3 is done
+### Scene 27 — Place, composed as a cover
+*New, and added mid-batch. dg-3's cover has been `door-place-03-send` since batch
+2 retired `dg-06`, and that image has now failed the Today band three times in
+three different ways — face sliced across the eyes, then a thin bed, then the
+handler decapitated at the shoulders with the bed almost entirely below the band.
+**That is geometry, not prompting**, and the rule it taught is written up under
+the crop tests below: a standing adult and a floor-level bed do not both fit in
+58% of the frame height. Every cover that has worked first time —
+`door-sound-cover`, `door-greet-cover`, `door-stay-04-pay` — has a crouching or
+kneeling human in it. So dg-3 gets its own cover, exactly as dg-4 did, and
+`door-place-03-send` goes back to being only a step figure, where it is finished.*
 
-Install the four with the `door-place-03-send` re-run, and dg-3 Doorbell Means
-Place is complete — the third of four activities. Four keys retire: `dg-07`,
-`dg-08`, `dg-19`, `dg-25`.
+*Save as `door-place-cover`. **It must not look like `door-stay-04-pay`**, which
+is dg-2's cover and also a person low beside a dog on a bed. The first attempt
+passed every crop and still failed this: at 56px the two were the same picture —
+dog on the bed at the left, person low at the right, door small at the far
+right — and those two thumbnails sit **next to each other on the program map
+rail**, which §2 calls the place a household scans the four activities. So this
+one is **mirrored**, and the door is pushed forward. Same defect §5 recorded
+against `dg-19` and `dg-06`, two images reading alike; it applies to covers on a
+rail just as much as to steps in a session.*
+
+> Interior entry hall, three-quarter view. **Lucy and her bed are on the RIGHT of
+> the frame and the handler is on the LEFT** — this layout is deliberate and is
+> the opposite way round from the reference image, which is a different
+> activity's cover and must not be echoed.
+>
+> Lucy lies settled on her bed, **well back from the closed front door**, front
+> legs extended, body relaxed and **her head turned away from the door to look
+> up at the handler.** She has arrived and she is staying — this is the finished
+> behaviour, not the moment of arriving.
+>
+> The handler **crouches beside the bed at her level, down on her heels, back
+> straight**, one hand resting lightly and calmly on the edge of the bed. **She
+> is not offering food and there is no treat anywhere in the frame** — nothing is
+> being asked of Lucy and nothing is being paid.
+>
+> The black leash is clipped to her collar and lies slack across the bed and the
+> floor.
+>
+> **The closed charcoal front door sits behind the handler on the LEFT, large and
+> unmistakable** — near enough to read its panels and its small window at a
+> glance, with the doormat in front of it. The sound at that door is the reason
+> the bed matters, so it is a real part of this picture, not a small shape at the
+> edge of it. The first attempt put it small and far right; it belongs forward and
+> opposite.
+>
+> Background: the closed door, the doormat, her bed, one wall plane. Nothing else.
+>
+> **Composition, and this matters more than anything else in the brief: this is
+> an activity cover, so it is letterboxed to a wide band across the middle and
+> centre-cropped to a small square. The handler is crouched, so the whole group
+> is low and compact — put Lucy, the bed and the crouching handler together in
+> the centre of the frame, with a clear margin of empty wall above the handler's
+> head and clear floor below the bed.** A wide band across the middle must hold
+> the handler's face, Lucy's head and the door; a centred square must hold Lucy,
+> the bed and the handler. **Nobody in this image is standing**, and **the dog is
+> on the right while the person is on the left** — that arrangement is what keeps
+> this thumbnail from being mistaken for another activity's.
+>
+> The single thing this image must make obvious: the door is over there and she
+> is settled on her bed, away from it.
+>
+> Landscape 4:3, wider than tall.
+
+### Batch 3 is done — installed at 1.54.0
+
+Six images, and dg-3 Doorbell Means Place is complete — the third of four
+activities, every level, cover and fallback, nothing painted left in it. Four
+keys retired: `dg-07`, `dg-08`, `dg-19`, `dg-25`. dg-3's `coverImage` moved to
+`door-place-cover` and `door-place-03-send` went back to being only a step
+figure, which is where it works.
+
+**The drift list is empty of beds.** `door-place-03-send` was re-run with the
+pinned Block B mattress and reinstalled over the thin-mat version, so dg-3 steps
+3 and 4 match and so do dg-4's.
+
+**dg-2 is five-eighths done before batch 4 starts.** Its cover, its fallback and
+its steps 1, 2, 4 and 5 are all new. What is left is step 3 alone, which is the
+distance ladder: `dg-13`, `dg-14`, `dg-15`, `dg-16` and `dg-23` — **five images,
+not the eleven the original plan counted, and four of them are one composition at
+four distances.** That is the whole of batch 4.
+
+Two things this batch cost, both now rules rather than anecdotes:
+
+- **Nobody stands in a cover.** `door-place-03-send` failed the Today band three
+  times before the cause turned out to be geometric rather than verbal. The rule
+  is written up under the crop tests.
+- **Two covers can pass every crop and still fail together.** The first
+  `door-place-cover` was correct in isolation and identical to `door-stay-04-pay`
+  at 56px, and those two sit side by side on the map rail. Covers have to be
+  checked against each other, not only against their own briefs.
 
 **Check what it does to dg-2 before opening the PR.** All four are shared, so
 batch 4's activity picks up its cover, its steps 3, 4 and 5, and its L5–L6
@@ -1232,6 +1328,21 @@ Round 2 cleared these. Re-run them on any replacement before approving it:
 ```bash
 cd "/Users/ahickey/dev/claude-local/Lucy Learns/img/pilot/round-2" && for f in *.png; do sips -c 634 1448 "$f" --out "/tmp/${f%.png}-today-16x7.png"; sips -c 1086 1086 "$f" --out "/tmp/${f%.png}-sq.png"; sips -Z 56 "/tmp/${f%.png}-sq.png" --out "/tmp/${f%.png}-thumb56.png"; done
 ```
+
+**Nobody stands in a cover.** The band keeps 634px of a 1086px master — 58% of
+the height — and a standing adult plus a floor-level dog bed does not fit in it.
+You get the head or you get the bed, and shrinking both until they fit kills the
+56px thumb. `door-place-03-send` proved it three times over: sliced across the
+eyes, then decapitated at the shoulders with the bed below the band, with a
+correct-but-unrelated fix in between. Every cover that passed first time —
+`door-sound-cover`, `door-greet-cover`, `door-stay-04-pay`, and Scene 27 —
+has a **crouching or kneeling** human, which is what makes the group compact
+enough to sit in the middle band and inside a centred square at once.
+
+So: if a scene needs someone standing, it is a step image. If it has to be a
+cover, put the person down at the dog's level. Where an activity's natural cover
+wants a standing figure, draw the activity a separate cover instead of forcing
+one image to do both — dg-4 and dg-3 both ended up here.
 
 **The Today band is not centred.** `object-position: center 42%`
 ([app.css](../css/app.css)) shifts it up, so what a household actually sees is
