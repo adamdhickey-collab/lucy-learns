@@ -4661,25 +4661,20 @@ svg.icon--solid {
   align-items: flex-start;
 }
 
-.planned-mark {
-  flex: 0 0 auto;
-  display: grid;
-  place-items: center;
+/* The same 84px square a live card uses, so the two kinds of card line up down
+   the list — but held back. Muted and softened, because a full-strength picture
+   on an unavailable card competes with the four a household can actually open,
+   and the point of the row is that these come later. The dashed border and the
+   "Not written yet" tag say it in words; this says it at a glance. */
+.planned-thumb {
   width: 84px;
   height: 84px;
+  flex: none;
   border-radius: var(--r-md);
+  object-fit: cover;
   background: var(--surface-sunken);
-  color: var(--text-secondary);
-}
-
-.planned-mark svg {
-  width: 26px;
-  height: 26px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  filter: saturate(0.55) contrast(0.94);
+  opacity: 0.72;
 }
 
 .planned-tag {

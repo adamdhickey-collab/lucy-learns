@@ -60,12 +60,24 @@ function activityCard(activity) {
  * than no card.
  */
 function plannedCard(activity) {
+  const img = IMAGES[activity.coverImage];
   return html`<li>
     <div class="activity-card activity-card--planned">
-      ${/* Its own mark rather than a clock. All four showed the same clock,
-            which said "later" four times and said nothing about which one this
-            is — the same bare-title problem the route had. */ ''}
-      <div class="planned-mark" aria-hidden="true">${icon(activity.icon || 'clock')}</div>
+      ${/* Its own picture, in the same 84px square a real activity card uses.
+            This was a clock once — the same clock four times, which said
+            "later" and nothing about which one this is — and then the
+            activity's own icon, which fixed that. The picture fixes it better,
+            and it is the reason these four illustrations exist: `coverImage`
+            has been on PLANNED_ACTIVITIES since the beginning and nothing has
+            ever rendered it, so the art sat in the bundle unreachable while
+            the card drew a line-art mark instead.
+
+            The card still cannot be mistaken for a live one: it is a <div>
+            rather than an <a>, the border is dashed, the background is
+            transparent, it carries "Not written yet", and the thumb itself is
+            dimmed and desaturated so it reads as a plan rather than a
+            destination. */ ''}
+      <img class="planned-thumb" src="${img.thumb}" alt="" loading="lazy" />
       <div class="body">
         <h3>${activity.title}</h3>
         <p>${activity.shortPurpose}</p>

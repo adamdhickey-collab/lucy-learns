@@ -350,22 +350,46 @@ export const IMAGES = withThumb({
     alt: 'A handler leans on the open front door talking to an empty porch while Lucy stays settled on her bed across the room.',
   },
 
-  // Covers for the programs that are named but not written yet.
-  'cg-01': {
-    src: 'img/cg-01.jpg',
-    alt: 'Lucy stands with all four paws on the floor, looking up at a person who keeps their hands to themselves.',
+  // --- batch 5: the four planned programmes, and the end of the restyle -----
+  //
+  // The last four painted pictures in the app, and the batch where the rule
+  // that governed the other four stopped applying. These render at 84px and
+  // nowhere else — one reference each, the locked "soon" card in the library —
+  // so the briefs said to draw the thumbnail rather than the illustration:
+  // close in, one flat plane behind, everything that matters inside the
+  // centred square the card takes. §5 recorded `sr-01` as the busiest
+  // background in the library and "mush at 84px"; its replacement is a wall, a
+  // floor, a mat, a sleeping dog and the lower legs of somebody nearby.
+  //
+  // `fd-01` was the only one with a real §5 defect and it had two: Lucy
+  // looking up and past the handler — the picture showed the step failing —
+  // and a white blaze up her muzzle that appears in no other image. Its
+  // replacement took two generations; the first turned her head correctly and
+  // sent her eyes into the middle distance, the same defect again.
+  //
+  // Known drift, accepted deliberately: all four are closer to a smooth-coated
+  // Labrador than the wirehaired mix (worst on the first three; the `plan-name`
+  // re-run got the scruff back). Invisible at the only size these render. If a
+  // planned programme is ever written and its cover is promoted to full-size
+  // surfaces, redraw these first.
+  //
+  // Keyed to the icons the cards already carry (see ICONS plan-*) rather than
+  // minting a fifth naming family for four files.
+  'plan-fourpaws': {
+    src: 'img/plan-fourpaws.jpg',
+    alt: 'Lucy stands with all four paws on the floor, looking up at a person who keeps their hands together at their waist.',
   },
-  'sr-01': {
-    src: 'img/sr-01.jpg',
-    alt: 'Lucy lies fully relaxed on her mat while the household carries on around her.',
+  'plan-mat': {
+    src: 'img/plan-mat.jpg',
+    alt: 'Lucy lies flat on her side asleep on her mat while someone sits quietly nearby.',
   },
-  'wp-01': {
-    src: 'img/wp-01.jpg',
-    alt: 'Lucy walks on a loose leash looking up at her handler as a stranger passes by on the pavement.',
+  'plan-walkpeople': {
+    src: 'img/plan-walkpeople.jpg',
+    alt: 'Lucy walks on a loose leash looking up at her handler as a stranger passes behind them.',
   },
-  'fd-01': {
-    src: 'img/fd-01.jpg',
-    alt: 'Lucy turns her head toward her handler at the sound of her name while a distraction sits behind her.',
+  'plan-name': {
+    src: 'img/plan-name.jpg',
+    alt: 'Lucy turns her head to meet her crouching handler\u2019s eyes while a squirrel sits ignored on the grass behind her.',
   },
 });
 
@@ -431,7 +455,7 @@ export const PLANNED_ACTIVITIES = [
     id: 'planned-greeting',
     icon: 'plan-fourpaws',
     goalId: 'calm-greetings',
-    coverImage: 'cg-01',
+    coverImage: 'plan-fourpaws',
     title: 'Four Paws on the Floor',
     shortPurpose: 'Nobody gets touched until all four feet are down.',
     note: 'The door routine handles arrivals. This one handles the jump itself.',
@@ -440,7 +464,7 @@ export const PLANNED_ACTIVITIES = [
     id: 'planned-settle',
     icon: 'plan-mat',
     goalId: 'settle-recovery',
-    coverImage: 'sr-01',
+    coverImage: 'plan-mat',
     title: 'Settle on a Mat',
     shortPurpose: 'Lucy lies down and stays down while the room carries on without her.',
     note: 'The skill underneath the bed work, taken away from the door.',
@@ -449,7 +473,7 @@ export const PLANNED_ACTIVITIES = [
     id: 'planned-walk',
     icon: 'plan-walkpeople',
     goalId: 'walks-public',
-    coverImage: 'wp-01',
+    coverImage: 'plan-walkpeople',
     title: 'People Passing on Walks',
     shortPurpose: 'Someone walks by and Lucy keeps walking with you.',
     note: 'The same arousal as a doorbell, somewhere you cannot close the door.',
@@ -458,7 +482,7 @@ export const PLANNED_ACTIVITIES = [
     id: 'planned-name',
     icon: 'plan-name',
     goalId: 'foundation',
-    coverImage: 'fd-01',
+    coverImage: 'plan-name',
     title: 'Name Response Around Distractions',
     shortPurpose: 'Her name turns her head no matter what else is happening.',
     note: 'Every other activity leans on this one.',
