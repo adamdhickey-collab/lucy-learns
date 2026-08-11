@@ -140,9 +140,12 @@ door panel, which reads as holding the door shut.
 > boots. Relaxed, hands at his sides, never leaning over the dog. The same man,
 > with the same face, in every image.
 >
-> **Props, only where a scene names them:** a flat grey rectangular dog bed, a
-> black leash, a charcoal panelled front door with a small window, a woven
-> doormat, pale warm oak floorboards, cream walls with a white baseboard.
+> **Props, only where a scene names them:** **her bed — a rectangular grey
+> mattress-style dog bed, deep and clearly cushioned, roughly a hand's depth,
+> with a piped edge and soft quilting on the top surface. It is a mattress, not
+> a thin mat, and it is the same bed in every image** — a black leash, a charcoal
+> panelled front door with a small window, a woven doormat, pale warm oak
+> floorboards, cream walls with a white baseboard.
 
 ---
 
@@ -534,6 +537,17 @@ style without correcting what they say would be a waste of twenty-five rounds.
 Six images. With `door-sound-01-setup` already approved and the bell and knock
 already live, these complete the activity.
 
+**The leash is in every one of these.** The first draft of these briefs named it
+only in Scenes 10 and 13, and the first generation of Scene 11 came back with
+Lucy wearing nothing but her collar — correctly, since nothing had asked for a
+leash. But `dg-1` lists "Lucy on leash" as equipment, the approved step-1 setup
+trails it under the handler's shoe, and Scene 10 makes the leash-under-foot the
+entire subject. Run the five steps in order with the leash named in only two of
+them and it appears, vanishes for two steps, and comes back. A household notices
+that inside a five-minute session; it is the exact inconsistency batching by
+activity exists to prevent. So every brief below states where the leash is, even
+when it is doing nothing.
+
 ### Scene 10 — You make the sound
 *Replaces `dg-20`, 9 references — the most-used image in the batch, and the only
 one in the library that shows the leash-under-foot technique the copy keeps
@@ -562,7 +576,8 @@ show.*
 
 > Interior entry hall, three-quarter view. Lucy sits near the closed front door
 > and **turns her head fully away from the door to look up at the handler** —
-> the turn is the entire subject of the picture. Mouth relaxed, ears soft.
+> the turn is the entire subject of the picture. Mouth relaxed, ears soft. The
+> black leash is clipped to her collar and lies slack across the floor.
 >
 > The handler crouches side-on at her level, face toward her, **both hands empty
 > and at rest.** No treat, no pouch in her hand, nothing being offered — the
@@ -580,7 +595,8 @@ show.*
 belong.*
 
 > Interior entry hall, close three-quarter view. Lucy stands or sits facing the
-> handler, head forward, taking food from an open hand, body loose and easy.
+> handler, head forward, taking food from an open hand, body loose and easy. The
+> black leash is clipped to her collar and lies slack across the floor.
 >
 > The handler crouches at her level with a **flat open palm holding two small
 > treats, clearly two and clearly visible**, the mustard pouch at her hip and her
@@ -620,7 +636,8 @@ door, away from the handler — it shows the step failing.*
 > Interior entry hall opening onto a hallway, three-quarter view. Lucy sits on
 > her flat grey bed near the closed front door and **turns her head back over her
 > shoulder, toward the handler and away from the door.** That turn is the whole
-> subject.
+> subject. The black leash is clipped to her collar and **trails loose along the
+> floor behind her** — nobody is holding it, because the handler is a room away.
 >
 > The handler stands well back — a doorway or hall away, small in the frame,
 > side-on — with one hand raised in a small beckon, calm and unhurried.
@@ -645,7 +662,9 @@ floorboards.*
 
 > Interior entry hall, three-quarter view, **well back from a closed front door**.
 > Lucy sits leaning slightly into the handler, calm and settled, taking a treat.
-> A small round blue tag hangs from her purple collar.
+> A small round blue tag hangs from her purple collar. The black leash is clipped
+> to her collar and lies slack on the floor, **kept low and out of the middle of
+> the frame** — see the composition note below.
 >
 > The handler crouches beside her, **one hand resting on Lucy's shoulder and the
 > other offering a treat**, her body turned away from the door. This is a step
@@ -665,11 +684,337 @@ floorboards.*
 >
 > Landscape 4:3, wider than tall.
 
-### When batch 1 is done
+### Batch 1 is done — installed at 1.52.0
 
-Install all six together with `door-sound-01-setup`, and Doorbell Predicts
-Rewards becomes the first activity a household can run start to finish in one
-style. Run `node scripts/pilot.mjs verify` before opening the PR.
+All six shipped together with `door-sound-01-setup`, and Doorbell Predicts
+Rewards is the first activity a household can run start to finish in one style.
+Eight keys retired: `dg-01`, `dg-02`, `dg-04`, `dg-05`, `dg-17`, `dg-18`,
+`dg-20`, `dg-24`.
+
+**`dg-01` came along, and that was not optional.** Welcome panel 2 had been
+holding `dg-20` deliberately, in the old style, so that it matched panel 1's
+`dg-01` — see the comment in `js/views/welcome.js`. Repointing panel 2 alone
+would have put the restyle one swipe after an old-style panel on the first
+screen a household ever sees. Panel 1 had approved art waiting as `door-cover`,
+so both moved in the same release and the welcome stayed internally consistent.
+**Every batch from here needs the same question asked before it lands: what
+else is on screen beside these, and does it move too?**
+
+Two things worth carrying forward to batch 2:
+
+- **Name the leash in every brief, including the ones it is doing nothing in.**
+  §7 has the long version. It cost a full sitting of five generations.
+- **The two treats are legible at native size and blur to one smudge at 1x.**
+  They resolve on any retina phone, and the step copy says "two" regardless, so
+  this was accepted rather than redrawn. If a future scene hangs its whole
+  meaning on a detail that small, draw it bigger instead.
+
+---
+
+## Batch 2 — dg-4 Controlled Real Greeting
+
+Six to draw, one to install, and one question the batch plan did not ask.
+
+Three of this activity's pictures are already new and live — `door-greet-01-settle`
+(step 1), `door-sound-02-bell` (step 2, from batch 1's neighbours) and the
+`door-greet-08-petting` / `door-greet-08-jumping` pair at step 8. A fourth,
+`door-greet-07-approach`, has been approved since round 3 and never wired up; it
+replaces `dg-10` at step 7 and needs no new art, only installing. Do that in the
+same PR — it is the batch-1 lesson applied: `door-sound-01-setup` had been
+sitting approved and uninstalled too, and shipping five around it would have
+left step 1 of that activity in the old style.
+
+### Before anything is drawn: what else is on screen?
+
+Batch 1 nearly shipped a new-style welcome panel next to an old-style one. Run
+the same check here, and it turns up two things.
+
+**`dg-06` is not really a dg-4 image.** It has twenty-two references across
+dg-2, dg-3 and dg-4, and it is dg-3's activity cover. Drawing it here is
+correct — dg-4 cannot be finished without it — but it means batch 3 inherits its
+own cover from this batch, and it means this one picture has to survive the 16:7
+band and the 56px square as well as the 4:3 step frame. It is briefed as a cover,
+not as a step.
+
+**`dg-11` is the dg-4 cover, and the approved art cannot take the job.** §7.2
+tested `door-greet-08-petting` at 16:7 and the guest loses his head; it called
+that a judgement call and offered a one-line `object-position` change. That was
+the right call for a *step* image doing double duty. It is the wrong one now,
+because the alternative has changed: batch 1 showed that a cover drawn to an
+explicit composition constraint passes all three crops on the first try, and
+that a cover left to compose itself puts the 56px thumb on floorboards. So this
+batch draws a purpose-made dg-4 cover — Scene 22 — rather than accepting a
+decapitated guest on the Today hero. **If you would rather not spend the
+generation, drop Scene 22 and point `coverImage` at `door-greet-08-petting`; the
+cropped guest is survivable and everything instructional stays in the band.**
+
+| Scene | Replaces | Refs | Save as |
+| --- | --- | --- | --- |
+| 16 | `dg-06` | 22 | `door-place-03-send` |
+| 17 | `dg-09` | 7 | `door-greet-04-open` |
+| 18 | `dg-12` | 6 | `door-greet-05-reward` |
+| 19 | `dg-21` | 7 | `door-greet-06-enter` |
+| 20 | `dg-22` | 1 | `door-greet-06-seated` |
+| 21 | `dg-26` | 2 | `door-greet-09-leaves` |
+| 22 | `dg-11` as cover | 4 | `door-greet-cover` |
+
+Attach `door-sound-cover.png` or `door-greet-08-petting.png` — both are approved,
+both have the guest or the handler at Lucy's level, and the second one has the
+guest's face, which four of these scenes need.
+
+**The leash is named in every brief**, including the ones where it does nothing.
+See the batch 1 note above for what skipping that cost.
+
+**Her bed is now pinned in Block B, for the same reason.** It used to read "a
+flat grey rectangular dog bed", and "flat" was doing damage: scenes 17–20 came
+back with a deep quilted mattress, `door-place-03-send` came back twice with a
+thin mat, and batch 1's `door-sound-03-name-distant` is a thin mat too. Steps 3
+and 4 of this activity are adjacent, so the bed changed shape mid-session. Block
+B now describes the mattress the majority of the library already draws — deep,
+piped, quilted. Two images are on the wrong side of that line and are listed
+under "known drift" below.
+
+### Scene 16 — Send her to her bed
+*Replaces `dg-06`, 22 references — the second most-used image in the app, and
+dg-3's activity cover, so it takes the 16:7 band and the 56px square too.
+**The fix:** the direction is backwards. The current one has Lucy already
+standing on the bed, facing off it, walking toward the pointing hand — a viewer
+reads "come off the bed", which is the opposite instruction. It also has no door
+anywhere in frame, though every step that uses it is about the door.*
+
+> Interior entry hall, side view. Lucy is **mid-stride onto her flat grey bed,
+> her front feet landing on it and her hind feet still on the floorboards**, head
+> and body aimed at the bed, tail level. She is arriving, not leaving — **every
+> line of her points at the bed and away from the handler.**
+>
+> The handler is **behind her line of travel**, side-on, one arm extended
+> pointing at the bed. **The pointing hand must be clearly upstream of the dog —
+> behind her, not in front of her** — so that nothing in the picture invites her
+> back off the bed.
+>
+> The black leash is clipped to her collar and swings slack between them.
+>
+> Background: the closed charcoal front door behind the handler, the doormat, one
+> wall plane, the bed. Nothing else. The door must be in frame — every step that
+> uses this picture is about the door.
+>
+> **Composition, and this matters as much as the action: this is an activity
+> cover as well as a step. Put Lucy, the bed and the handler together in the
+> middle of the frame, and leave a clear margin of empty wall above the
+> handler's head and clear floor below the bed.** Everything that matters —
+> the handler's face, the pointing hand, Lucy, and the bed she is stepping onto
+> — must fit inside a wide letterbox band across the middle *and* inside a
+> centred square. **Do not let the handler's head run up to the top edge of the
+> frame**; a wide crop will slice her face.
+>
+> The single thing this image must make obvious: she is arriving on the bed,
+> sent there from behind.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 17 — The door opens, the guest stays put
+*Replaces `dg-09`, 7 references. **The fix:** there is no handler and no leash
+anywhere in the current picture, on a step whose whole point is that Lucy is
+held on the bed while the door opens. `dg-09` used to carry three actions; §7.4
+took two of them away, so this now has one job and should show only it.*
+
+> Interior entry hall, three-quarter view. Lucy sits on her flat grey bed,
+> **clearly back from the door**, head up and attention on the open doorway but
+> **her body completely still — feet planted, not rising, not leaning forward.**
+>
+> **The handler is in frame and holding the leash**, standing beside the bed
+> between Lucy and the door, side-on, the leash running from her hand down to
+> Lucy's collar with an obvious slack J. She has just opened the door and is not
+> looking at the guest.
+>
+> The guest stands **outside the threshold on the porch**, feet still and
+> together, hands at his sides, not stepping in and not reaching toward the dog.
+>
+> Background: the open front door, the doormat, her bed, one wall plane. Nothing
+> else — no furniture, no garden.
+>
+> The single thing this image must make obvious: the door is open, the guest has
+> not moved, and she is being held on the bed on a slack leash.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 18 — Paid on the bed
+*Replaces `dg-12`, 6 references. **The fix:** no treat is visible in the current
+one, and the handler bends from the waist over the dog, which is the posture the
+trainer's guidance specifically avoids. §5 also flags the door as "wide open, not
+barely open" — that one is an **alt-text error, not a drawing error**: step 4
+opens the door, so at step 5 the door is open and should stay open.*
+
+> Interior entry hall, three-quarter view. Lucy sits on her flat grey bed taking
+> a treat, **her feet unmoved on the bed** — she is being paid for staying
+> exactly where she is.
+>
+> The handler **crouches beside the bed at Lucy's level, down on her heels, back
+> straight — she does not bend at the waist over the dog.** A **single treat is
+> clearly visible between her finger and thumb**, arriving at Lucy's mouth. The
+> leash is slack in her other hand.
+>
+> The guest stands outside the open door, still, hands at his sides, small in the
+> background and not part of the exchange.
+>
+> Background: the open front door with the guest beyond it, the doormat, the bed,
+> one wall plane. Nothing else.
+>
+> The single thing this image must make obvious: the treat is arriving while she
+> is still on the bed and the door is still open.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 19 — The guest comes in and does nothing
+*Replaces `dg-21`, 7 references — it picked up six of them in the §7.4 split.
+**The fix:** the guest in the current one is the second of the two different men
+the library drifted into, and there is no leash although the level runs on one.*
+
+> Interior entry hall, three-quarter view. Lucy lies on her flat grey bed, head
+> up, watching the guest, **feet unmoved** — settled, not about to rise.
+>
+> The guest has **just crossed the threshold and stopped**: standing just inside
+> the closed door, **feet together, hands at his sides, looking at the handler
+> and not at the dog.** He is doing nothing at all, and that is the subject.
+>
+> The handler stands between the bed and the guest, relaxed, **the leash running
+> from her hand to Lucy's collar with a slack J.**
+>
+> Background: the closed front door behind the guest, the doormat, her bed, one
+> wall plane. Nothing else.
+>
+> The single thing this image must make obvious: he is inside, he has stopped,
+> and nobody is paying her any attention.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 20 — The guest sits down
+*Replaces `dg-22`, 1 reference. **The warning, not a fix:** §5 calls this the
+most complex composition in the library — two seated figures, sofa, armchair,
+side table, rug, plant, framed picture, doormat and door — and "the scene that
+will most test whether the new style can stay uncluttered". Strip it. If the new
+version needs everything the old one had, it is wrong.*
+
+> Interior room adjoining the entry hall, three-quarter view. Lucy lies on her
+> flat grey bed a few feet from both people, head up but **relaxed and oriented
+> at nothing — she is not watching the guest.** The leash is clipped to her
+> collar and lies slack on the floor.
+>
+> The guest sits in a **plain armchair**, body angled away from the dog, hands
+> resting on the chair arms, not looking at her.
+>
+> The handler sits **on a plain sofa**, also not attending to Lucy, at ease.
+>
+> **Background: the armchair, the sofa, Lucy's bed, one wall plane and the floor.
+> Nothing else at all — no side table, no rug, no plant, no framed picture, no
+> lamp, no cushions beyond what the seats need.** The room is carrying on around
+> her and the picture must still feel as empty as the rest of the set.
+>
+> The single thing this image must make obvious: the room has moved on and she is
+> not part of it.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 21 — The guest leaves
+*Replaces `dg-26`, 2 references. **The flag:** §5 records it doing double duty as
+an ending image and as the "Lucy is too excited" de-escalation sheet for dg-4,
+"which are different messages". This brief draws the ending. See the note below
+for the fallback.*
+
+> Interior entry hall, three-quarter view. Lucy sits at the handler's side,
+> **on leash and watching the guest go without rising** — settled, four feet
+> down, weight back.
+>
+> The handler stands beside her, **the leash held short in the hand nearest
+> Lucy's collar**, mustard pouch at her hip, calm and unhurried.
+>
+> The guest is **stepping back out through the open door onto the porch**, half
+> turned, one hand raised in a small backward wave. He is leaving, not arriving —
+> his weight is already outside the threshold.
+>
+> Background: the open front door, the doormat, one wall plane. Nothing else.
+>
+> The single thing this image must make obvious: it is over, he is going, and she
+> stayed sitting.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 22 — The calm hello, composed as a cover
+*Replaces `dg-11` **as the activity cover only** — the step-8 figure is already
+drawn and approved as `door-greet-08-petting`. §5 calls `dg-11` "the most
+instructionally correct image in the library — the one to hold the new style to",
+and also warns that "three figures currently spread wider than a square crop can
+hold". That is the whole problem this scene exists to solve.*
+
+> Interior entry hall, three-quarter view, **well back from the closed front
+> door**. Lucy sits **square with all four feet down, weight back on her
+> haunches, head level** — not jumping, not leaning in, not rising.
+>
+> The guest **crouches to one side of her at her level**, resting an **open palm
+> flat on her chest — not over the top of her skull** — eyes soft, face calm.
+> This is the correct greeting and every detail of it must read.
+>
+> The handler stands close behind Lucy holding the **leash in a loose loop with
+> obvious slack**.
+>
+> **Composition, and this matters more than anything else in the brief: this is
+> an activity cover, so it is letterboxed to a wide band across the middle and
+> centre-cropped to a small square. Group all three tightly in the centre of the
+> frame, inside the middle horizontal band, with clear space above and below. Do
+> not spread them across the width.** A square crop taken from the middle must
+> contain **Lucy's head, the guest's hand on her chest, and the guest's face.**
+> The handler may fall partly outside that square; the guest may not.
+>
+> Background: the closed door small behind them, the doormat, one wall plane.
+> Nothing else.
+>
+> The single thing this image must make obvious: four paws on the floor and a
+> hand on her chest.
+>
+> Landscape 4:3, wider than tall.
+
+### Batch 2 is done — installed at 1.53.0
+
+All seven shipped with `door-greet-07-approach`, and Controlled Real Greeting
+joins Doorbell Predicts Rewards as an activity that runs start to finish in one
+style — **all eight steps, all five levels, cover and fallback, with no `dg-NN`
+left anywhere in it.** Eight keys retired: `dg-06`, `dg-09`, `dg-10`, `dg-11`,
+`dg-12`, `dg-21`, `dg-22`, `dg-26`.
+
+`dg-06`'s other homes came along as intended: dg-2 step 1 and dg-3 step 3 both
+draw `door-place-03-send` now, and dg-3's cover with them. Same early inheritance
+dg-3 got from batch 1.
+
+**Scene 16 took two goes and still is not perfect.** The first had the right bed
+and a face sliced across the eyes by the Today band; the second fixed the crop
+and came back with a thin mat. Round 10's is installed and the bed is on the
+drift list below. What the round cost was worth it for two things that outlast
+it: the real-band check (above) and the pinned bed in Block B.
+
+### Known drift
+
+Two installed or approved images draw her bed as a thin mat rather than the
+mattress Block B now pins:
+
+- **`door-sound-03-name-distant`** (batch 1, shipped at 1.52.0). It is the only
+  bed in dg-1, so nothing sits beside it to contradict it — low priority.
+- **`door-place-03-send`** (batch 2, shipped at 1.53.0 — round 10's). This one
+  *does* have neighbours: dg-4 steps 3 and 4 are adjacent and step 4 has the
+  mattress. Installed knowingly rather than spend a third generation on it.
+
+Neither is worth a round on its own. Fold them into the next batch that touches
+the same activity, or into batch 4 — dg-2 is eleven images and most of them are
+on the bed, so the mattress has to be right there anyway.
+
+**The `dg-26` decision, settled.** It was serving as both the ending of dg-2 L8
+and the "Lucy is too excited" sheet for dg-4, which say different things. Scene
+21 took the ending as `door-greet-09-leaves`. The fallback went to
+`door-sound-cover` rather than to new art: the sheet's own copy reads "move Lucy
+farther from the door / keep her on leash and stay beside her / feed her on her
+bed", and that picture — a handler crouched beside her, well back from the door,
+hand on her shoulder — is already exactly that. §7.4's best fix was this same
+move, repointing a key at a correct picture that already exists instead of
+drawing one.
 
 ---
 
@@ -679,6 +1024,17 @@ Round 2 cleared these. Re-run them on any replacement before approving it:
 
 ```bash
 cd "/Users/ahickey/dev/claude-local/Lucy Learns/img/pilot/round-2" && for f in *.png; do sips -c 634 1448 "$f" --out "/tmp/${f%.png}-today-16x7.png"; sips -c 1086 1086 "$f" --out "/tmp/${f%.png}-sq.png"; sips -Z 56 "/tmp/${f%.png}-sq.png" --out "/tmp/${f%.png}-thumb56.png"; done
+```
+
+**The Today band is not centred.** `object-position: center 42%`
+([app.css](../css/app.css)) shifts it up, so what a household actually sees is
+**y 190–824** of a 1086px master, not the y 226–860 that `sips -c 634 1448`
+produces. Thirty-six pixels, and it is the difference between a clean crop below
+the chin and a face sliced across the eyes — which is exactly what it did to the
+first `door-place-03-send`. Check the real band on any cover before approving it:
+
+```bash
+sips <file>.png --cropToHeightWidth 634 1448 --cropOffset 190 0 --out /tmp/real-today.png
 ```
 
 | Crop | Applies to | Command |
