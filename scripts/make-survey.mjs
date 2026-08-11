@@ -39,11 +39,7 @@ const LIVE = 'https://adamdhickey-collab.github.io/lucy-learns';
 // two scenes claiming one key would mean two scoring keys for one picture.
 // Scene 15 is absent for that reason: Scene 37 redrew `door-sound-cover` to a
 // different claim and owns its scoring key now.
-//
-// PENDING: Scene 39 redraws `door-place-cover`, currently owned by 27. Swap
-// them at install, not before — 39's picture does not exist yet, so mapping it
-// now would score the *old* image against the *new* claim, which is the one
-// failure mode this table exists to prevent and would not throw.
+
 const SHIPPED_AS = {
   1: 'door-sound-01-setup',
   2: 'door-greet-07-approach',
@@ -70,7 +66,6 @@ const SHIPPED_AS = {
   24: 'door-stay-03-cross',
   25: 'door-stay-05-release',
   26: 'door-stay-03-pretend',
-  27: 'door-place-cover',
   28: 'door-stay-03-onestep',
   29: 'door-stay-03-halfway',
   30: 'door-stay-03-handle',
@@ -82,6 +77,7 @@ const SHIPPED_AS = {
   36: 'plan-name',
   37: 'door-sound-cover',
   38: 'door-stay-cover',
+  39: 'door-place-cover',
 };
 
 // Pairs §5 warned would read alike, or that this work found reading alike. A

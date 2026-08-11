@@ -204,10 +204,39 @@ a door.
 pair does not fix the pair. Both members define the collision, so both have to
 move — or the one that moves has to move much further than the other.
 
-## Outstanding
+## Third run: the defect is fixed, and the score cannot move
 
-`door-place-cover` should become the archetype it was assumed to be: **the dog
-alone on her bed, close, no door and no person in frame.** That leaves the four
-as a close two-shot, a bright doorway, a lone dog on a pale rectangle, and two
-upright figures — four shapes rather than four scenes. Re-run Block C after it
-lands, as a set, which is the only way this can be checked.
+`door-place-cover` redrawn as the dog alone on her bed — no door, no person —
+and all four re-tested as a set.
+
+Still 10/12, the same as both earlier runs. But the shape of the result changed:
+
+| Run | Pairs named as confusable |
+| --- | --- |
+| First | 2&3, 2&3, 1&2 — converging |
+| Second | 2&3, 2&3, 2&3 — unanimous |
+| Third | 1&3, 4&1, 2&3 — no agreement |
+
+And every viewer described all four **distinctly and accurately**: a close-up of
+two heads, a pale door with the dog set back from it, a dog alone on a bed with
+no people or door, two figures at a doorway. In the first run three of the four
+came back in the same words. That was the defect and it is gone.
+
+**The residual errors are not visual.** One viewer read both pictures correctly
+and still mapped them to the wrong names; another said why:
+
+> *"The difference between those two activities is behavioural/narrative, not
+> visual, so the thumbnail can't carry it."*
+
+That is right, and it is the ceiling. *Doorbell Predicts Rewards*, *Doorbell
+Means Place* and *Stay While the Door Opens* are three protocols about a dog, a
+door and a bed. No 56px picture encodes which protocol is which.
+
+**The matching task is also harder than the app.** On the program map every
+cover sits beside its activity name and its own icon. The picture never has to
+identify the activity alone — it only has to not be a duplicate of its
+neighbour, and it no longer is. Chasing 12/12 would mean optimising against a
+test stricter than the product.
+
+Stop here. If a fifth activity is added it needs a fifth *shape*, and this set
+test must be re-run — not the crop tests on the new cover by itself.
