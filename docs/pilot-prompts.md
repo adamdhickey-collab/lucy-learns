@@ -1321,6 +1321,208 @@ the real 42% band, both squares and the 16:10 fallback sheet.
 
 ---
 
+## Batch 4 — dg-2 Stay While the Door Opens
+
+Five images, and the plan said eleven. Batches 1 to 3 handed dg-2 its cover, its
+fallback and steps 1, 2, 4 and 5, so **everything left is step 3** — the one step
+the level ladder rewrites eight times:
+
+| Level | Step 3 becomes | State |
+| --- | --- | --- |
+| base | `door-stay-03-cross` | live, batch 3 |
+| L1 One step away | `dg-13` | **draw** |
+| L2 Halfway to the door | `dg-14` | **draw** |
+| L3 Touch the handle | `dg-15` | **draw** |
+| L4 Crack the door | `dg-16` | **draw** |
+| L5 Open it fully | `door-stay-03-pretend` | live, batch 3 |
+| L6 Say hi to nobody | `door-stay-03-pretend` | live, batch 3 |
+| L7 Imaginary conversation | `dg-23` | **draw** |
+| L8 Familiar person outside | `door-greet-04-open` | live, batch 2 |
+
+They all key into the same family: `door-stay-03-onestep`, `-halfway`,
+`-handle`, `-crack`, `-conversation`.
+
+### The ladder is one picture at four moments, and it has to be generated that way
+
+`dg-13`, `dg-14`, `dg-15` and `dg-16` are one composition sampled at four points
+on the same walk. A household climbs L1 → L2 → L3 → L4 over days, and what
+must change between them is **the handler's distance from the door and the state
+of the door — nothing else.** If the camera moves, or the room shifts, or Lucy is
+drawn at a different size, the ladder stops reading as progress and starts
+reading as four unrelated pictures.
+
+So generate them **in one conversation, in order, each with the previous approved
+one attached**, exactly the way Scene 8 and Scene 9 were made a matched pair.
+Scenes 29 to 31 are written as "same room, same camera, change one thing"
+briefs, which is why they are much shorter than the others in this file. Do not
+paste them out of order and do not start a fresh chat between them.
+
+**No crop constraints on any of these five.** §5 confirms the ladder never
+renders as a thumbnail — these are step figures only, always full 4:3. That also
+disposes of §5's own note that "the four-image distance ladder is
+indistinguishable at 56px": true, and it does not matter. What matters is that
+they are distinguishable **from each other at full size and in sequence**, which
+is the opposite problem and the one these briefs solve.
+
+### Two near-duplicates to steer away from
+
+Both are images this batch sits next to, and both were flagged in §5 or found in
+batch 3:
+
+- **`dg-14` against `door-stay-03-cross`.** §5 calls `dg-14` a near-duplicate of
+  the image `door-stay-03-cross` replaced. They are both "handler partway across
+  the room". The difference is motion: `door-stay-03-cross` is **walking, mid-
+  stride, going away**; this one is **stopped, weight settled back, turned
+  round to look at Lucy.** Scene 29 says so twice.
+- **`dg-23` against `door-stay-03-pretend`.** Both are the handler talking to
+  nobody at an open door, one level apart. §5 gives the difference and it is
+  posture: `door-stay-03-pretend` is **standing in the doorway** for a quick
+  hello; this is **leaning on the door, weight on one hip, a hand in a pocket**,
+  settled into twenty or thirty seconds of conversation. Scene 32 makes the lean
+  the subject.
+
+Attach `door-stay-03-cross.png` to Scene 28 — same room, same bed, same distance
+from the door, and the handler already walking. After that, attach the previous
+scene in the ladder.
+
+### Scene 28 — One step away
+*Replaces `dg-13`. **The fix, and it is P1:** no step is being taken in the
+current one — both feet are planted beside the bed, on the level whose entire
+subject is the first single step. §5 also notes it is the flattest render in the
+library and that Lucy reads smaller and younger there than anywhere else.*
+
+> Interior entry hall, side view. **This establishes a room that three more
+> pictures will reuse: the bed on one side, the closed charcoal front door on the
+> other, and clear floor between them.** Frame it so the whole walk from bed to
+> door is visible.
+>
+> Lucy lies on her bed holding the down, front legs extended, **head up and eyes
+> on the handler**, feet unmoved. She is a medium-large adult dog and should read
+> as one — not small, not young.
+>
+> The handler is **right beside the bed, taking the very first step away from it
+> toward the door: one foot clearly lifted and placed forward, the other still
+> planted, weight only just beginning to transfer.** Her body is still square to
+> the bed. **The step must be unmistakably in progress** — this is the whole
+> subject, and a figure standing with both feet down is a reject.
+>
+> The black leash is clipped to Lucy's collar and lies slack on the floor.
+>
+> Background: her bed, the closed front door, the doormat, one wall plane.
+> Nothing else.
+>
+> The single thing this image must make obvious: one step, and no more.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 29 — Halfway to the door
+*Replaces `dg-14`. **Attach the approved Scene 28** and change only what is named
+below. **The fix:** §5 calls this a near-duplicate of the picture that is now
+`door-stay-03-cross`, which shows the handler walking away mid-stride. This one
+is stopped and turned back, and that difference is the only thing telling the two
+apart.*
+
+> Same room, same camera, same distance, same light, same bed and door as the
+> previous image. Lucy is in the same place on her bed, holding, head up.
+>
+> Change one thing: **the handler is now halfway across the room and has
+> stopped.** Weight settled on the back foot, both feet on the floor, **her upper
+> body turned back over her shoulder to look at Lucy.** She is paused and
+> watching her, not walking — no mid-stride, no lifted foot.
+>
+> The single thing this image must make obvious: half the room between them, and
+> the handler has stopped to check.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 30 — Hand on the handle
+*Replaces `dg-15`. **Attach the approved Scene 29.** §5 calls the current one
+"clean and correct" — this is a restyle, not a repair. Keep what it does.*
+
+> Same room, same camera, same distance, same light, same bed and door as the
+> previous image. Lucy is in the same place on her bed, holding, head up and
+> watching.
+>
+> Change one thing: **the handler has reached the door and closed her hand around
+> the handle.** She stands at it in profile, body relaxed, not pulling. **The door
+> is still completely shut** — no gap, no daylight, no movement in it.
+>
+> The single thing this image must make obvious: her hand is on the handle and
+> the door has not opened.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 31 — Crack the door
+*Replaces `dg-16`. **Attach the approved Scene 30.** **The fix is in the alt
+rather than the art:** §5 notes the alt omits the handler, who is the subject of
+the step. The picture keeps her.*
+
+> Same room, same camera, same distance, same light, same bed and door as the
+> previous image. Lucy is in the same place on her bed, holding, head up.
+>
+> Change one thing: **the door is now open a hand's width and no more** — a
+> narrow band of daylight down the opening, the rest of the door still closed.
+> The handler stays at the door with one hand on its edge, holding it at that
+> width. **She remains clearly in frame; she is the one doing this.**
+>
+> Nothing is visible through the gap. No porch, no figure, no view — just light.
+>
+> The single thing this image must make obvious: a few inches of daylight, and
+> she is still on her bed.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 32 — The imaginary conversation
+*Replaces `dg-23`. **The fix is separation, not repair:** §5 calls this the
+cleanest, emptiest interior in the library and says it "sets the distance between
+bed and door better than any other image" — so keep the emptiness and keep the
+distance. What it must not do is look like `door-stay-03-pretend`, which is one
+level earlier and also the handler talking to nobody at an open door. The
+difference §5 gives is posture, and this brief makes the lean the subject.*
+
+> Interior entry hall, three-quarter view, **with a generous run of empty floor
+> between the bed and the door** — the distance is part of the point.
+>
+> Lucy lies down on her bed **well back from the door**, head up, holding. Her
+> feet have not moved. The black leash is clipped to her collar and lies slack on
+> the floor.
+>
+> The front door is open. The handler is **leaning easily on it — one hand high
+> on the door's edge, weight settled on one hip, her other hand in a pocket** —
+> head turned out to the empty porch, mid-conversation. **The lean is the
+> subject: this is somebody twenty seconds into talking, comfortable and in no
+> hurry, not somebody who has just opened the door to say hello.**
+>
+> **There is nobody outside: no person, no silhouette, no outline, no translucent
+> figure.** The porch is empty.
+>
+> Background: the open door, the empty porch beyond it, the doormat, her bed, one
+> wall plane. Nothing else — this is the emptiest room in the set and should stay
+> that way.
+>
+> The single thing this image must make obvious: a long, relaxed conversation at
+> the open door, and she is holding the bed right through it.
+>
+> Landscape 4:3, wider than tall.
+
+### When batch 4 is done
+
+Install the five and **dg-2 Stay While the Door Opens is complete — the fourth
+and last activity, and with it every activity in the app is redrawn.** Five keys
+retire: `dg-13`, `dg-14`, `dg-15`, `dg-16`, `dg-23`.
+
+Check the ladder in sequence before opening the PR, not one file at a time: open
+L1 through L4 in the player and confirm the distance actually grows and the room
+does not move. `node scripts/pilot.mjs sheet` puts them side by side, which is
+the fastest way to see a camera that shifted.
+
+What remains after this is **batch 5**: `cg-01`, `sr-01`, `wp-01` and `fd-01`,
+the covers for the four programs that are named but not written yet. No activity
+depends on them, so they are the only pictures left that a household can reach
+without the restyle being complete.
+
+---
+
 ## The crop tests, and how to re-run them
 
 Round 2 cleared these. Re-run them on any replacement before approving it:
