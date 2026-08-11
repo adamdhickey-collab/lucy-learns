@@ -1557,6 +1557,177 @@ without the restyle being complete.
 
 ---
 
+## Batch 5 — the four planned programs
+
+The last four, and the only pictures left in the app that are not redrawn:
+`cg-01`, `sr-01`, `wp-01`, `fd-01`, the covers for the programs that are named
+but not written. No activity depends on them.
+
+| Replaces | Programme | Save as |
+| --- | --- | --- |
+| `cg-01` | Four Paws on the Floor | `plan-fourpaws` |
+| `sr-01` | Settle on a Mat | `plan-mat` |
+| `wp-01` | People Passing on Walks | `plan-walkpeople` |
+| `fd-01` | Name Response Around Distractions | `plan-name` |
+
+The names match the icons these cards already carry (`plan-fourpaws`,
+`plan-mat`, `plan-walkpeople`, `plan-name` in ICONS), because the card and its
+mark are the same thing in two media and there is no reason to invent a second
+vocabulary for four files.
+
+### Everything this batch needs is different, because these are thumbnails
+
+Every previous batch composed for a step figure at full width, with the crop
+tests as a constraint on top. **These four render at 84px and nowhere else** —
+one reference each, the locked "soon" card in the Activities library. §5 says it
+twice and it is the whole brief: of `cg-01`, "only ever renders at 84px; the
+full-frame hallway is wasted"; of `sr-01`, "at 84px it is mush."
+
+So the rule for this batch inverts. **Draw the thumbnail, not the illustration.**
+
+- **One shape, filling the frame.** Whatever the scene is, it has to survive
+  being 84 pixels wide. Two figures at full height, a room around them, and a
+  distance between them are all invisible at that size. Get close.
+- **Centred, because the card takes a square.** The 4:3 master is centre-cropped
+  to a square, so the outer sixth of each side is thrown away before a household
+  sees it. Nothing that matters goes there.
+- **Background is a colour, not a room.** One flat wall or one flat ground plane
+  and nothing else. §5 records `sr-01` as "the busiest background in the whole
+  library — armchair, side table, mug, plant pot, bookcase, two framed pictures,
+  trailing vine, patterned rug"; every one of those is a smudge at 84px and
+  there is no larger size where the household ever sees them.
+- **No crop tests to run.** These take one crop and it is the square. That is
+  the only thing to check.
+
+Attach `door-greet-cover.png` — closest for cast and palette, and a cover
+already composed tight and centred, which is the habit these four need.
+
+### Scene 33 — Four paws on the floor
+*Replaces `cg-01`. §5 records no defect in what it shows, only that "the
+full-frame hallway is wasted" on an 84px card. This is a restyle and a crop-in.*
+
+> **Close in on Lucy and the person's legs — this is drawn for a small square,
+> so fill the frame with the two of them and nothing else.**
+>
+> Lucy **stands four-square with every foot flat on the floor**, head up toward
+> the person, weight even and back — **not leaning forward, not a paw lifted,
+> nothing about her rising.**
+>
+> The person stands upright and still beside her, **hands held together at the
+> waist**, deliberately giving her nothing to jump at. Crop them at the chest or
+> shoulders; their face is not what this card is about, and keeping it would push
+> Lucy too small.
+>
+> Background: one flat wall plane and the floor. Nothing else at all.
+>
+> The single thing this image must make obvious, at the size of a thumbnail: all
+> four feet are down.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 34 — Settled on the mat
+*Replaces `sr-01`. **The fix:** §5 calls it "the busiest background in the whole
+library" and notes it is mush at 84px, which is the only size it ever renders.
+Strip it to almost nothing.*
+
+> **Close in on Lucy on her mat — this is drawn for a small square, so she fills
+> the frame.**
+>
+> Lucy lies **flat on her side on a grey mat, head down on the floor, eyes closed
+> or half closed**, legs loose, fully released. This is deep rest and not a
+> down-stay: nothing about her is holding a position.
+>
+> **A person is present only as a hint of company — the lower legs and feet of
+> someone seated, at the very edge of the frame, still and turned away.** No
+> chair drawn in full, no face, no book, nothing to look at.
+>
+> **Background: one flat wall plane and the floor. No armchair, no side table,
+> no mug, no plant, no bookcase, no pictures, no rug, no lamp.** The old version
+> had every one of those and they are a smudge at the only size this is ever
+> seen.
+>
+> The single thing this image must make obvious, at the size of a thumbnail: a
+> dog completely asleep.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 35 — Someone passes on the pavement
+*Replaces `wp-01`. **The warning:** this is the only outdoor picture in the
+library, so it has to invent a street vocabulary in the new style — and then use
+almost none of it, because it renders at 84px. Keep the outdoors to a pavement
+and a flat band of green.*
+
+> **Close in on Lucy and her handler walking — this is drawn for a small square,
+> so the two of them fill the frame.**
+>
+> Lucy **walks at the handler's side, her head turned up to them**, ears toward
+> them, **not looking at the person passing.** The black leash runs from her
+> collar to the handler's hand in a loose J with obvious slack.
+>
+> The handler walks beside her **looking down at her**, relaxed. Crop them at the
+> chest; the walk is in the legs and the leash, not the face.
+>
+> **The stranger is a small figure walking away in the background, already past
+> them, with no interaction of any kind** — no eye contact, no reaching, no
+> turning. Keep them small and plain.
+>
+> Background: a plain pavement underfoot and **one flat band of green behind**.
+> No houses, no cars, no fences, no trees, no signs, no other people.
+>
+> The single thing this image must make obvious, at the size of a thumbnail: she
+> is looking up at her handler while somebody walks by.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 36 — Her name, with something better going on
+*Replaces `fd-01`. **Two fixes, and this is the only one of the four with a real
+defect.** §5: "she is not looking at the handler — she looks up and past them,
+so the picture shows the step failing." And the character break — "off-sheet
+markings: a white blaze up the muzzle and forehead that appears in no other
+image." Lucy has **no white on her face**, ever.*
+
+> **Close in on Lucy and the crouching handler — this is drawn for a small
+> square, so the two of them fill the frame.**
+>
+> Lucy stands with her **head turned back and down to the handler, eyes on
+> them**, ears forward toward them. **Her head turn is the entire subject and it
+> must land on the handler — not up, not past them, not into the middle
+> distance.**
+>
+> **She has no white on her face. None.** The scruff on her muzzle is grey and
+> black; her white is the blaze on her chest and her toes, and nowhere else.
+>
+> The handler **crouches low behind and to one side of her**, one hand low and
+> calm, not holding food out.
+>
+> **The distraction is behind her and plainly ignored** — a squirrel sitting on
+> the grass, small and still, well back in the frame. Nothing else outdoors.
+>
+> Background: flat ground and one flat band of green. No trees, no path, no
+> fence, no park furniture.
+>
+> The single thing this image must make obvious, at the size of a thumbnail: her
+> head has turned to her handler and away from the squirrel.
+>
+> Landscape 4:3, wider than tall.
+
+### When batch 5 is done
+
+Install the four and **the restyle is finished** — every picture in the app is
+in the Warm Instructional Vector style, and the audit's thirty painted
+illustrations are all gone. Four keys retire: `cg-01`, `sr-01`, `wp-01`,
+`fd-01`.
+
+Check them the way they will be seen: build the 84px squares and look at those,
+not at the full frames. If a scene only reads at full size it has failed the
+one test that applies to it.
+
+```bash
+cd img/pilot/round-16 && for f in *.png; do sips -c 1086 1086 "$f" --out "/tmp/${f%.png}-sq.png"; sips -Z 84 "/tmp/${f%.png}-sq.png" --out "/tmp/${f%.png}-84.png"; done
+```
+
+---
+
 ## The crop tests, and how to re-run them
 
 Round 2 cleared these. Re-run them on any replacement before approving it:
