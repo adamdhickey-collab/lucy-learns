@@ -58,10 +58,18 @@ export function programHeader(prog, { eyebrow = 'Your program', heading = 'h2' }
     <div class="program-head">
       <p class="eyebrow">${eyebrow}</p>
       ${raw(`<${heading}>${esc(prog.program.title)}</${heading}>`)}
-      <div class="program-tally">
-        <b>${prog.cleared}</b>
-        <span>of ${prog.total} levels cleared</span>
-      </div>
+      <!-- No "N of 23 levels cleared" tally, and no N/23 on the strip either.
+           Twenty-three is the sum of every level in all four activities, and
+           stated as a total it reads as the size of the homework rather than
+           the shape of it: one cleared against twenty-three looks like a
+           standing start no matter how much of an activity is actually done.
+           The household never runs "a level of twenty-three" — they run one
+           activity at a time, and the per-activity count on the library card
+           says five, which is a number a person can hold.
+
+           The meter stays. A bar filling up is progress without a denominator
+           attached to it, and its aria-label still carries the real numbers for
+           anyone who wants them. -->
       <div
         class="meter"
         role="img"
@@ -328,10 +336,10 @@ function caretPosition(prog, currentActivityIndex) {
  * that had been sitting directly above Today's primary button.
  */
 export function programStrip(prog, { stage = null } = {}) {
-  // Same rule as programHeader: before the first session there is no score to
-  // show, so the count comes off rather than reporting 0. The dots stay —
-  // an empty row of them is the shape of the job, not a zero.
-  const started = prog.cleared > 0;
+  // The N/23 chip that used to sit beside the title is gone — see the note in
+  // programHeader. The dots stay: an empty row of them is the shape of the job,
+  // which is the thing a total was failing to be.
+  //
   // The caret only exists where something sits underneath for it to point at,
   // which is Today. On the library and on Progress the strip stands alone.
   const caret = stage ? caretPosition(prog, stage.index) : null;
@@ -348,9 +356,6 @@ export function programStrip(prog, { stage = null } = {}) {
         : ''}
       <span class="program-strip-top">
         <strong>${prog.program.title}</strong>
-        ${started
-          ? html`<span class="program-strip-count">${prog.cleared}/${prog.total}</span>`
-          : ''}
       </span>
       ${programTrack(prog, stage ? stage.index : -1)}
       <small>${programPitch(prog)}</small>

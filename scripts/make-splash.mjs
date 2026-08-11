@@ -76,8 +76,8 @@ const SCREENS = [
 // nothing lost, and because the field below is the artwork's own background
 // colour, the cream runs to all four edges anyway. It reads as full-bleed and
 // is not.
-const ART_WIDTH_FRACTION = 1;
-const ART_CENTER_Y = 0.45;
+const ART_WIDTH_FRACTION = 0.88;
+const ART_CENTER_Y = 0.5;
 
 // The artwork's own background, not the app's --background.
 //

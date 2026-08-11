@@ -100,14 +100,18 @@
          Inert to assistive tech: it is decoration over a loading app, and the
          real content is announced when the router paints. -->
     <div id="splash" class="splash" aria-hidden="true">
+      <!-- The wordmark. Two spans because they arrive one after the other, and
+           a stagger needs something to stagger. Like the bar below, it animates
+           in rather than being painted at t=0: the iOS launch image is the
+           artwork on its field and nothing else, so anything already on screen
+           at the handoff would pop. Arriving a beat later reads as the app
+           waking up instead. -->
+      <p class="splash-title"><span>Lucy</span> <span>Learns</span></p>
       <!-- The slot holds the position the launch image baked in; the img
            inside it does the scaling, so the two transforms never fight. -->
       <div class="splash-slot">
         <img class="splash-mark" src="img/splash-mark.jpg" alt="" />
       </div>
-      <!-- Fills across the hold. app.js hands it the real duration and how
-           much of it has already gone, so it tracks actual elapsed time rather
-           than miming it. -->
       <!-- Fills across the hold. app.js hands it the real duration and how
            much of it has already gone, so it tracks actual elapsed time rather
            than miming it. -->

@@ -2397,12 +2397,18 @@ details.disclosure .disclosure-body {
   background: var(--splash-field);
   transition: opacity 420ms ease-in;
 
-  /* One number drives the badge and everything positioned off it. 100vw is the
-     phone geometry the launch images bake in — the art runs edge to edge — so
-     on a phone this resolves to exactly what the generator used. The caps only
-     bite on a desktop window: 56vh keeps the 3:4 art inside three quarters of
-     the height, and 520px stops it filling a large screen. */
-  --badge: min(100vw, 56vh, 520px);
+  /* One number drives the art and everything positioned off it. 88vw is the
+     phone geometry the launch images bake in, so on a phone this resolves to
+     exactly what the generator used. The caps only bite on a desktop window:
+     50vh keeps the 3:4 art inside half the height, and 460px stops it filling
+     a large screen.
+
+     It was 100vw and centred at 45%, which put the top of the art at y=115 on
+     a 375×812 phone and left the wordmark nowhere to go — the artwork's own
+     cream painted straight over it. Backing off to 88% and centring properly
+     opens a real band above the art for the title and still leaves room for
+     the meta and the bar below. */
+  --badge: min(88vw, 50vh, 460px);
 
   /* The art is 3:4, so its height is a derived number rather than a second
      free one. Everything stacked below the art measures off this, not off
@@ -2413,7 +2419,7 @@ details.disclosure .disclosure-body {
      underneath it and all three have to move together — and because
      scripts/make-splash.mjs bakes the same two numbers into the iOS launch
      images. Change one, change the other, and regenerate. */
-  --badge-y: 45%;
+  --badge-y: 50%;
 
   /* Overwritten by app.js with the real hold and how much of it has already
      elapsed. The fallbacks keep the bar sane if the script never runs. */
@@ -2437,17 +2443,70 @@ details.disclosure .disclosure-body {
 /* Sits below the badge, offset by half the badge from its centre so the gap
    holds at any size. Fades in rather than being there at t=0: the launch image
    has no line, so anything painted immediately would pop at the handoff. */
+/* The wordmark, above the art.
+   ------------------------------------------------------------------------
+   Positioned off the top of the frame rather than off the badge: the art is
+   centred at 45% and its height changes with the viewport, so hanging the
+   title beneath a moving object would put it somewhere different on every
+   screen. The top edge does not move. */
+.splash-title {
+  position: absolute;
+  top: 11%;
+  left: 0;
+  right: 0;
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 11vw, 3.25rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  /* Reads on the artwork's cream at 8.9:1 — the field is warmer than the app's
+     paper, so the app's default ink is the wrong ink here. */
+  color: var(--primary-dark);
+}
+
+/* Each word rises into place, the second a beat behind the first. The overshoot
+   in the timing function is the whole "fun": it settles like something landing
+   rather than sliding to a stop. */
+.splash-title span {
+  display: inline-block;
+  animation: splash-word-in 620ms cubic-bezier(0.2, 1.5, 0.4, 1) both;
+}
+.splash-title span:first-child {
+  animation-delay: 200ms;
+}
+.splash-title span:last-child {
+  animation-delay: 330ms;
+}
+
+@keyframes splash-word-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5em) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .splash-progress {
   position: absolute;
   /* Under the meta, which is itself under the badge. The 3.4em clears both
      lines of version and date at their own size. */
   top: calc(var(--badge-y) + var(--badge-h) / 2 + var(--s-5) + 3.4em);
   left: 50%;
-  width: min(calc(var(--badge) * 0.4), 160px);
-  height: 3px;
+  /* Was 3px of --border, which is a cool grey and sat on the artwork's warm
+     cream looking like a scratch rather than a control. The track is now the
+     fill's own colour at low alpha, so the two belong to each other and both
+     belong to the field, and it is thick enough to read as a pill rather than
+     a hairline. */
+  width: min(calc(var(--badge) * 0.5), 190px);
+  height: 8px;
   transform: translateX(-50%);
   border-radius: var(--r-pill);
-  background: var(--border);
+  background: color-mix(in srgb, var(--primary-dark) 16%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--primary-dark) 12%, transparent);
   overflow: hidden;
   /* Its own keyframes rather than splash-meta-in, because that one animates
      `transform` to `none` and would drop the translateX that centres this.
@@ -2471,7 +2530,10 @@ details.disclosure .disclosure-body {
   width: 100%;
   height: 100%;
   border-radius: inherit;
-  background: var(--primary);
+  /* --primary-dark, not --primary: this bar sits on the splash's cream rather
+     than the app's paper, and the darker end of the ramp is what carries on it.
+     6.9:1 against the field. */
+  background: var(--primary-dark);
   transform-origin: left center;
   /* Linear, because it is reporting time rather than performing. The negative
      delay starts it wherever the boot already got to, so it reads real
@@ -2587,9 +2649,17 @@ details.disclosure .disclosure-body {
   .splash-mark,
   .splash-meta,
   .splash-progress,
+  .splash-title span,
   .splash--done .splash-mark {
     animation: none;
     transform: none;
+  }
+
+  /* The title still arrives, it just arrives without moving — `animation: none`
+     above would otherwise leave it at the keyframe's starting opacity of 0 and
+     the wordmark would never show at all. */
+  .splash-title span {
+    opacity: 1;
   }
 
   /* The slot's centring transform is not decoration, so it is restored after

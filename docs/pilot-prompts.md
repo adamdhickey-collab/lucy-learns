@@ -1689,13 +1689,25 @@ image." Lucy has **no white on her face**, ever.*
 > **Close in on Lucy and the crouching handler — this is drawn for a small
 > square, so the two of them fill the frame.**
 >
-> Lucy stands with her **head turned back and down to the handler, eyes on
-> them**, ears forward toward them. **Her head turn is the entire subject and it
-> must land on the handler — not up, not past them, not into the middle
-> distance.**
+> Lucy stands with her **head turned back and down to the handler**, ears
+> forward toward them.
 >
-> **She has no white on her face. None.** The scruff on her muzzle is grey and
-> black; her white is the blaze on her chest and her toes, and nowhere else.
+> **Her eyes are the whole picture, and they must be locked on the handler's
+> face. Draw the two of them looking directly at each other — her gaze angled
+> down to meet a person crouched below her eye line, and clearly meeting them.**
+> Not up. Not level. Not over their shoulder, not past their head, not into the
+> middle distance. **The first attempt turned her head correctly and then sent
+> her eyes over the handler into the distance, which is the same defect the old
+> picture had and the only reason this one is being drawn.** If a viewer cannot
+> tell she is looking at the person, it is wrong.
+>
+> **She has no white on her face. None.** Her white is the blaze on her chest
+> and her toes, and nowhere else.
+>
+> **Her muzzle is scruffy and wiry** — a visibly bearded jaw and chin and tufted
+> eyebrows, grey and black against the coat. **She is a Labrador and German
+> Wirehaired Pointer mix and must not be drawn as a smooth-coated Labrador.**
+> The first attempt drew her smooth-faced.
 >
 > The handler **crouches low behind and to one side of her**, one hand low and
 > calm, not holding food out.
