@@ -2387,22 +2387,33 @@ details.disclosure .disclosure-body {
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: var(--background);
+  /* The artwork's own cream, not the app's paper. The splash art is now a
+     portrait illustration that runs the full width of the screen rather than a
+     badge sitting on the app's field, so the field has to be the colour the
+     illustration already has at its edges — otherwise the art reads as a
+     lighter rectangle on paper. Keep in step with FIELD in
+     scripts/make-splash.mjs. The fade to the app is where paper arrives. */
+  --splash-field: #f6e6d0;
+  background: var(--splash-field);
   transition: opacity 420ms ease-in;
 
-  /* One number drives the badge and everything positioned off it. 60vw is the
-     phone geometry the launch images bake in; on every iPhone portrait that is
-     the smallest of the three, so this resolves to exactly what the generator
-     used. The caps only bite on a desktop window, where 60% of the viewport
-     would otherwise fill the screen. 264px is the size the badge reaches on
-     the largest phone this ships to. */
-  --badge: min(50vw, 50vh, 220px);
+  /* One number drives the badge and everything positioned off it. 100vw is the
+     phone geometry the launch images bake in — the art runs edge to edge — so
+     on a phone this resolves to exactly what the generator used. The caps only
+     bite on a desktop window: 56vh keeps the 3:4 art inside three quarters of
+     the height, and 520px stops it filling a large screen. */
+  --badge: min(100vw, 56vh, 520px);
 
-  /* Where the badge sits. Named because the meta and the bar are stacked
+  /* The art is 3:4, so its height is a derived number rather than a second
+     free one. Everything stacked below the art measures off this, not off
+     --badge, which is only the width. */
+  --badge-h: calc(var(--badge) * 4 / 3);
+
+  /* Where the art sits. Named because the meta and the bar are stacked
      underneath it and all three have to move together — and because
      scripts/make-splash.mjs bakes the same two numbers into the iOS launch
      images. Change one, change the other, and regenerate. */
-  --badge-y: 34%;
+  --badge-y: 45%;
 
   /* Overwritten by app.js with the real hold and how much of it has already
      elapsed. The fallbacks keep the bar sane if the script never runs. */
@@ -2419,7 +2430,7 @@ details.disclosure .disclosure-body {
   top: var(--badge-y);
   left: 50%;
   width: var(--badge);
-  height: var(--badge);
+  height: var(--badge-h);
   transform: translate(-50%, -50%);
 }
 
@@ -2430,9 +2441,9 @@ details.disclosure .disclosure-body {
   position: absolute;
   /* Under the meta, which is itself under the badge. The 3.4em clears both
      lines of version and date at their own size. */
-  top: calc(var(--badge-y) + var(--badge) / 2 + var(--s-5) + 3.4em);
+  top: calc(var(--badge-y) + var(--badge-h) / 2 + var(--s-5) + 3.4em);
   left: 50%;
-  width: calc(var(--badge) * 0.5);
+  width: min(calc(var(--badge) * 0.4), 160px);
   height: 3px;
   transform: translateX(-50%);
   border-radius: var(--r-pill);
@@ -2487,9 +2498,10 @@ details.disclosure .disclosure-body {
   display: block;
   width: 100%;
   height: 100%;
-  /* The source art is square with cream corners. The launch images mask it to
-     the inscribed circle; this has to match or the two disagree at the edge. */
-  border-radius: 50%;
+  /* No mask. The art was a square badge and the launch images cut it to its
+     inscribed circle, so this had to match at the edge. Both are rectangles
+     now: the field is the artwork's own cream, so there is no edge to hide,
+     and a circle would take the dog's ears and paws with it. */
   /* Starts at exactly 1 — the size the launch image is already showing — and
      drifts in from there, so the first frame is identical and the motion
      begins after the handoff rather than through it. */
@@ -2519,7 +2531,7 @@ details.disclosure .disclosure-body {
   /* Directly under the badge rather than pinned to the bottom of the screen,
      so the mark, the build it is showing, and the bar reporting the wait read
      as one centred stack instead of three things at three heights. */
-  top: calc(var(--badge-y) + var(--badge) / 2 + var(--s-5));
+  top: calc(var(--badge-y) + var(--badge-h) / 2 + var(--s-5));
   margin: 0;
   text-align: center;
   animation: splash-meta-in 520ms 220ms ease-out both;
@@ -4026,7 +4038,12 @@ details.disclosure .disclosure-body {
 .route-stop--next .route-node {
   border-color: var(--primary);
   color: var(--primary);
-  box-shadow: 0 0 0 4px var(--primary-wash);
+  /* Inset, not outset. A 4px halo sat outside the disc and read as a second
+     circle around the mark — the row looked like five tokens and one target,
+     which is the button-versus-token confusion the discs above were introduced
+     to settle. A hairline on the edge of the disc itself does the same job:
+     the tint still carries "you are here" and the ring only sharpens it. */
+  box-shadow: inset 0 0 0 1px var(--primary-dark);
 }
 
 /* Finished. Filled, because a cleared activity is the one thing here that is
