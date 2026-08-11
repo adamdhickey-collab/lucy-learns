@@ -1166,10 +1166,20 @@ almost identically and mean opposite things. `door-place-03-send` now has Lucy
 stepping **onto** the bed with the handler's **pointing hand behind her**. This
 one has to be unmistakably the other thing.*
 
-> Interior entry hall, side view. Lucy is **stepping off her bed toward the
-> handler — front feet down on the floorboards, hind feet still on the bed**,
-> head up and eyes on the handler. The stay is over and she has been invited
-> off.
+*The blind pilot rejected the first version 4/4. Every viewer read the open
+hands correctly and every single one described the dog as "standing **on** the
+mat". Front feet down with both hind feet still up is a pose, not a departure —
+at a glance it is a dog standing on her bed. **She has to be most of the way
+off it.***
+
+> Interior entry hall, side view. Lucy is **walking off her bed toward the
+> handler and is most of the way off it — both front feet and one hind foot are
+> down on the floorboards, and only her back foot is still touching the bed,
+> right at its edge.** Her body is angled off the bed and her weight is forward,
+> over the floor rather than over the bed. Head up, eyes on the handler.
+>
+> **A viewer who sees only this picture has to say she is coming off the bed,
+> not standing on it.** If her whole body still sits over the bed, it is wrong.
 >
 > The handler stands **facing her, leaning very slightly forward, both hands
 > open, low and turned upward in a welcoming release gesture**, face relaxed.
@@ -1391,6 +1401,13 @@ current one — both feet are planted beside the bed, on the level whose entire
 subject is the first single step. §5 also notes it is the flattest render in the
 library and that Lucy reads smaller and younger there than anywhere else.*
 
+*The blind pilot rejected the first version 4/4 — every viewer said she was
+"walking away toward the door", which is `door-stay-03-cross`, one activity
+over. It also found the old claim unscoreable: **"one step, and no more" asks a
+still image to prove an absence.** You cannot see that no second step follows.
+The claim is now the thing a still can actually carry — how close she still is
+to the bed — and the brief gives her a reference to be close to.*
+
 > Interior entry hall, side view. **This establishes a room that three more
 > pictures will reuse: the bed on one side, the closed charcoal front door on the
 > other, and clear floor between them.** Frame it so the whole walk from bed to
@@ -1400,18 +1417,20 @@ library and that Lucy reads smaller and younger there than anywhere else.*
 > on the handler**, feet unmoved. She is a medium-large adult dog and should read
 > as one — not small, not young.
 >
-> The handler is **right beside the bed, taking the very first step away from it
-> toward the door: one foot clearly lifted and placed forward, the other still
-> planted, weight only just beginning to transfer.** Her body is still square to
-> the bed. **The step must be unmistakably in progress** — this is the whole
-> subject, and a figure standing with both feet down is a reject.
+> The handler is **right beside the bed and has only just left it. Her trailing
+> foot is still level with the edge of the bed — the bed is at her heel, close
+> enough to touch — and her leading foot is one pace ahead, no more.** Her body
+> stays square to the bed rather than turned into a walk. **She must not read as
+> walking away**: a figure in profile mid-stride with clear floor behind her is
+> the next picture in the ladder, not this one.
 >
 > The black leash is clipped to Lucy's collar and lies slack on the floor.
 >
 > Background: her bed, the closed front door, the doormat, one wall plane.
 > Nothing else.
 >
-> The single thing this image must make obvious: one step, and no more.
+> The single thing this image must make obvious: she has barely moved — the bed
+> is still right at her heel.
 >
 > Landscape 4:3, wider than tall.
 

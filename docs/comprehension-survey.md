@@ -116,7 +116,7 @@ landed, it lands here.
 
 > **Ask:** In one sentence, what is the person doing, and what is the dog doing?
 
-**Scoring key —** one step, and no more.
+**Scoring key —** she has barely moved — the bed is still right at her heel.
 
 ### Q8. Settled on the mat
 
