@@ -1460,12 +1460,21 @@ the step. The picture keeps her.*
 > Same room, same camera, same distance, same light, same bed and door as the
 > previous image. Lucy is in the same place on her bed, holding, head up.
 >
-> Change one thing: **the door is now open a hand's width and no more** — a
-> narrow band of daylight down the opening, the rest of the door still closed.
+> Change one thing: **the door is now open.** It has swung inward off the frame
+> and there is **a clear vertical stripe of bright daylight running the full
+> height of the opening, from the top of the door frame down to the floor** — a
+> hand's width across, wide enough to see at a glance and impossible to mistake
+> for a shut door. The near edge of the door stands proud of the frame; the gap
+> is real, not a seam.
+>
 > The handler stays at the door with one hand on its edge, holding it at that
 > width. **She remains clearly in frame; she is the one doing this.**
 >
 > Nothing is visible through the gap. No porch, no figure, no view — just light.
+>
+> **This is the one thing separating this picture from the previous one, where
+> the door is shut.** A door that still reads as closed, or a hand resting on the
+> edge with only a seam beside it, is a reject.
 >
 > The single thing this image must make obvious: a few inches of daylight, and
 > she is still on her bed.
@@ -1505,16 +1514,41 @@ difference §5 gives is posture, and this brief makes the lean the subject.*
 >
 > Landscape 4:3, wider than tall.
 
-### When batch 4 is done
+### Batch 4 is done — installed at 1.55.0
 
-Install the five and **dg-2 Stay While the Door Opens is complete — the fourth
-and last activity, and with it every activity in the app is redrawn.** Five keys
-retire: `dg-13`, `dg-14`, `dg-15`, `dg-16`, `dg-23`.
+Five images, and **every activity in the app is redrawn. No `dg-NN` key exists
+any more** — not in `IMAGES`, not in a step, not in a cover or a fallback, and
+the files are gone from `img/`. Five keys retired: `dg-13`, `dg-14`, `dg-15`,
+`dg-16`, `dg-23`.
 
-Check the ladder in sequence before opening the PR, not one file at a time: open
-L1 through L4 in the player and confirm the distance actually grows and the room
-does not move. `node scripts/pilot.mjs sheet` puts them side by side, which is
-the fastest way to see a camera that shifted.
+**Sequential attachment works, and here is the evidence.** The four ladder
+frames were generated in one sitting with each attached to the last:
+
+| Frame | Floor sat | Wall sat | Left edge of the bed |
+| --- | --- | --- | --- |
+| onestep | 0.69 | 0.32 | x = 83 |
+| halfway | 0.70 | 0.33 | x = 83 |
+| handle | 0.71 | 0.36 | x = 86 |
+| crack | 0.73 | 0.38 | x = 87 |
+
+The camera held to **four pixels across four generations**, and the floor drifted
+0.04 in saturation end to end. Use this for any future set that has to read as
+one sequence.
+
+Two notes for whoever picks this up next:
+
+- **`dg-16` took two goes, and the lesson is about vagueness.** "Open a hand's
+  width" was too small an instruction to register: it came back as a shut door
+  with a hand resting on the edge, which is the same picture as the handle frame
+  before it. The brief now asks for a full-height stripe of daylight with the
+  door standing proud of the frame, and says a shut door is a reject. When a
+  step's whole subject is a small physical difference, describe the difference,
+  not the measurement.
+- **`door-stay-03-onestep` shows a full stride rather than one lifted foot.**
+  The recorded P1 defect — both feet planted, no motion at all — is fixed, and
+  in sequence against the halfway frame it reads as clearly closer to the bed.
+  It was accepted rather than re-run because re-running the first rung would
+  have cascaded through the two frames attached beneath it.
 
 What remains after this is **batch 5**: `cg-01`, `sr-01`, `wp-01` and `fd-01`,
 the covers for the four programs that are named but not written yet. No activity

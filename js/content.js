@@ -23,26 +23,6 @@ const withThumb = (images) => {
 };
 
 export const IMAGES = withThumb({
-  'dg-13': {
-    src: 'img/dg-13.jpg',
-    alt: 'Lucy lies on her bed while a handler takes a single step away from her toward the closed front door.',
-  },
-  'dg-14': {
-    src: 'img/dg-14.jpg',
-    alt: 'Lucy holds her bed while a handler pauses halfway across the room and glances back at her.',
-  },
-  'dg-15': {
-    src: 'img/dg-15.jpg',
-    alt: 'A handler rests a hand on the front door handle while Lucy holds her bed across the room.',
-  },
-  'dg-16': {
-    src: 'img/dg-16.jpg',
-    alt: 'The front door is open a few inches onto daylight while Lucy stays lying on her bed.',
-  },
-  'dg-23': {
-    src: 'img/dg-23.jpg',
-    alt: 'A handler holds a relaxed conversation in the open doorway while Lucy stays settled on her bed.',
-  },
   // --- the two moments the set never had a picture for ---------------------
   //
   // `dg-07` was carrying three different actions and `dg-09` three more (see
@@ -313,6 +293,61 @@ export const IMAGES = withThumb({
   'door-stay-05-release': {
     src: 'img/door-stay-05-release.jpg',
     alt: 'Lucy steps off her bed toward her handler’s open hands as she is released from the stay.',
+  },
+
+  // --- batch 4: the distance ladder, and the last of the dg-NN keys ---------
+  //
+  // dg-2 was planned as the largest batch at eleven. Batches 1 to 3 handed it
+  // its cover, its fallback and steps 1, 2, 4 and 5, so what was left was step 3
+  // alone — the one step the level ladder rewrites eight times. Five of those
+  // eight needed drawing and they are here; with them, every activity in the app
+  // is redrawn and no `dg-NN` key exists any more.
+  //
+  // The first four are one composition at four points on the same walk: one step
+  // from the bed, halfway and stopped, hand on the handle, door open a hand's
+  // width. A household climbs L1 to L4 over days, so the only thing that may
+  // change between the frames is the handler's distance and the state of the
+  // door. They were generated in one sitting with each frame attached to the
+  // last, and it worked — the left edge of the bed lands within four pixels
+  // across all four, and the floor drifts 0.03 in saturation end to end.
+  //
+  // §5 flags the ladder as indistinguishable at 56px and calls that acceptable
+  // because it never renders as a thumbnail. That is right, and it inverts the
+  // job: there are no crop constraints on any of these, and the requirement is
+  // that they read apart from *each other* at full size and in sequence.
+  //
+  // Two of them exist to not look like something else. `door-stay-03-halfway`
+  // is stopped and turned back, against `door-stay-03-cross`, which is walking
+  // away mid-stride — §5 called those two near-duplicates. And
+  // `door-stay-03-conversation` leans on the door with a hand in a pocket,
+  // against `door-stay-03-pretend` one level earlier, which stands in the
+  // doorway for a quick hello.
+  //
+  // `dg-13`'s recorded defect was that no step was being taken on the level
+  // whose whole subject is the first single step. `dg-16`'s replacement took two
+  // goes: "open a hand's width" was too small an instruction to register and
+  // came back as a shut door with a hand resting on its edge, which is the same
+  // picture as the handle frame before it. The brief now asks for a full-height
+  // stripe of daylight and says a shut door is a reject.
+  'door-stay-03-onestep': {
+    src: 'img/door-stay-03-onestep.jpg',
+    alt: 'A handler steps away from Lucy’s bed toward the closed front door while Lucy holds her down on the bed.',
+  },
+  'door-stay-03-halfway': {
+    src: 'img/door-stay-03-halfway.jpg',
+    alt: 'Lucy holds her bed while a handler pauses halfway across the room and glances back at her.',
+  },
+  'door-stay-03-handle': {
+    src: 'img/door-stay-03-handle.jpg',
+    alt: 'A handler rests a hand on the front door handle while Lucy holds her bed across the room.',
+  },
+  'door-stay-03-crack': {
+    src: 'img/door-stay-03-crack.jpg',
+    alt: 'A handler holds the front door open a few inches onto daylight while Lucy stays lying on her bed.',
+  },
+  'door-stay-03-conversation': {
+    src: 'img/door-stay-03-conversation.jpg',
+    alt: 'A handler leans on the open front door talking to an empty porch while Lucy stays settled on her bed across the room.',
   },
 
   // Covers for the programs that are named but not written yet.
@@ -740,7 +775,7 @@ export const ACTIVITIES = [
         setup: 'Take a single step toward the door and come straight back.',
         reps: 5,
         successCriteria: ['Stays on the bed', 'No creeping forward'],
-        overrides: { 2: { instruction: 'Take one step toward the door.', image: 'dg-13' } },
+        overrides: { 2: { instruction: 'Take one step toward the door.', image: 'door-stay-03-onestep' } },
       },
       {
         number: 2,
@@ -748,7 +783,7 @@ export const ACTIVITIES = [
         setup: 'Walk halfway, pause, then return.',
         reps: 5,
         successCriteria: ['Stays on the bed', 'Waits for the release'],
-        overrides: { 2: { instruction: 'Walk halfway to the door, then pause.', image: 'dg-14' } },
+        overrides: { 2: { instruction: 'Walk halfway to the door, then pause.', image: 'door-stay-03-halfway' } },
       },
       {
         number: 3,
@@ -756,7 +791,7 @@ export const ACTIVITIES = [
         setup: 'Walk all the way over and put your hand on the handle.',
         reps: 5,
         successCriteria: ['Stays while you touch the handle'],
-        overrides: { 2: { instruction: 'Walk over and touch the door handle.', image: 'dg-15' } },
+        overrides: { 2: { instruction: 'Walk over and touch the door handle.', image: 'door-stay-03-handle' } },
       },
       {
         number: 4,
@@ -764,7 +799,7 @@ export const ACTIVITIES = [
         setup: 'Open the door a few inches, then close it.',
         reps: 5,
         successCriteria: ['Stays as the door moves', 'No rushing when it opens'],
-        overrides: { 2: { instruction: 'Open the door a few inches, then close it.', image: 'dg-16' } },
+        overrides: { 2: { instruction: 'Open the door a few inches, then close it.', image: 'door-stay-03-crack' } },
       },
       {
         number: 5,
@@ -793,7 +828,7 @@ export const ACTIVITIES = [
         overrides: {
           2: {
             instruction: 'Chat with an imaginary guest for twenty seconds.',
-            image: 'dg-23',
+            image: 'door-stay-03-conversation',
             helper: 'Use your real greeting voice. The excitement in your tone is the hard part.',
           },
         },
