@@ -150,3 +150,64 @@ one is ever redrawn again, fix the gaze at the same time.
 Eight images, two redrawn, all eight now passing their claim under blind check.
 Worth putting in front of a paid panel — which is the only question this dry run
 was ever able to answer.
+
+---
+
+# Block C, second run — the covers as a set
+
+## First run: three of four were the same picture
+
+Four covers at 56px, three viewers, matching each to its activity. Ten of twelve
+right, but **six of the twelve were self-reported guesses**, one viewer swapped
+two covers, and all three named a pair they could not separate. Only
+`door-greet-cover` was identified confidently by everyone, and what saved it is
+structural: it is the only one with two people in it.
+
+The cause was a rule from batch 3 — *nobody stands in a cover*, derived because
+a standing adult and a floor-level bed will not both fit in the 16:7 band. It is
+correct, it is why every cover passes its crops, and it turned three of them
+into the same silhouette. **Each was tested against the crops alone and never
+against the others**, so four separately-correct images became one composition
+drawn four times.
+
+## Second run: one fixed, one half-fixed, one still to do
+
+Two redrawn — `door-sound-cover` as a close two-shot, `door-stay-cover` as the
+open door — and re-tested the same way.
+
+| Cover | Correct | Guessed | First run |
+| --- | --- | --- | --- |
+| `door-sound-cover` (new) | 3/3 | 1 | 3/3, 2 guesses |
+| `door-greet-cover` | 3/3 | 1 | 3/3, 0 guesses |
+| `door-stay-cover` (new) | 2/3 | 1 | — |
+| `door-place-cover` | 2/3 | 1 | 2/3, 1 guess |
+
+**The close two-shot worked.** Nobody confused it with the bed pictures any
+more, which was the whole point of the archetype.
+
+**The open door half-worked.** It is distinct from the close-up and from the
+greeting, and two viewers described its bright doorway accurately — but all
+three still named it and `door-place-cover` as the hard pair:
+
+> *"Both are 'door + dark dog-on-a-mat' compositions in the same beige room with
+> the same orange floor… the distinguishing detail — whether the person is right
+> next to the dog or over at the door — is exactly the kind of positional cue
+> that gets lost at thumbnail size."*
+
+That is a mistake I made knowingly. I left place alone because earlier viewers
+had described it as "a dog alone on a mat", and treated that as the archetype
+already being in place. It is not: it has a door in the corner and a crouching
+person, and those are precisely what collide with a cover whose whole subject is
+a door.
+
+**The lesson is the same one, one level up.** Redrawing half of a confusable
+pair does not fix the pair. Both members define the collision, so both have to
+move — or the one that moves has to move much further than the other.
+
+## Outstanding
+
+`door-place-cover` should become the archetype it was assumed to be: **the dog
+alone on her bed, close, no door and no person in frame.** That leaves the four
+as a close two-shot, a bright doorway, a lone dog on a pale rectangle, and two
+upright figures — four shapes rather than four scenes. Re-run Block C after it
+lands, as a set, which is the only way this can be checked.

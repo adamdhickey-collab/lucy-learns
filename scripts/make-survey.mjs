@@ -22,7 +22,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { IMAGES } from '../js/content.js';
+import { IMAGES, ACTIVITIES } from '../js/content.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const BRIEFS = resolve(root, 'docs/pilot-prompts.md');
@@ -34,13 +34,9 @@ const LIVE = 'https://adamdhickey-collab.github.io/lucy-learns';
 // ones carry a "Save as" column — and a rule with four exceptions is worse than
 // a table you can read.
 //
-// PENDING, batch 6: when those two land, `15` becomes `37` (Scene 37 redraws
-// `door-sound-cover` in place, so its scoring key must come from the new brief
-// rather than the retired one) and `38: 'door-stay-cover'` is added. Until then
-// this table is deliberately unchanged: pointing at a key that does not exist
-// yet would throw, and pointing scene 15's claim at an image drawn to a
-// different claim would be worse — it would score silently against the wrong
-// answer.
+// Scene 15 is deliberately absent. It drew `door-sound-cover` originally; Scene
+// 37 redrew that key to a different claim, so 37 owns the scoring key now and
+// pointing 15 at it would score the new picture against the retired answer.
 const SHIPPED_AS = {
   1: 'door-sound-01-setup',
   2: 'door-greet-07-approach',
@@ -56,7 +52,6 @@ const SHIPPED_AS = {
   12: 'door-sound-04-treats',
   13: 'door-sound-05-settle',
   14: 'door-sound-03-name-distant',
-  15: 'door-sound-cover',
   16: 'door-place-03-send',
   17: 'door-greet-04-open',
   18: 'door-greet-05-reward',
@@ -78,6 +73,8 @@ const SHIPPED_AS = {
   34: 'plan-mat',
   35: 'plan-walkpeople',
   36: 'plan-name',
+  37: 'door-sound-cover',
+  38: 'door-stay-cover',
 };
 
 // Pairs §5 warned would read alike, or that this work found reading alike. A
@@ -119,12 +116,14 @@ const CONFUSABLE = [
 // The four activity covers, which sit side by side on the program map at 56px.
 // The first draft of one of them passed every crop test on its own and was
 // still the same thumbnail as its neighbour.
-const COVERS = [
-  { scene: 15, activity: 'Doorbell Predicts Rewards' },
-  { scene: 23, activity: 'Stay While the Door Opens' },
-  { scene: 27, activity: 'Doorbell Means Place' },
-  { scene: 22, activity: 'Controlled Real Greeting' },
-];
+//
+// Read out of the app rather than listed here. These were hardcoded as scene
+// numbers once and drifted the moment a cover was redrawn: batch 6 moved dg-1's
+// cover to a new scene and dg-2's to a new key, and the table went on pointing
+// at the retired ones — emitting `thumb-undefined.jpg` into the block without
+// complaint. Whatever `coverImage` says is what the map renders, so that is
+// what the survey has to ask about.
+const COVERS = ACTIVITIES.map((a) => ({ key: a.coverImage, activity: a.title }));
 
 // --- parse the briefs ------------------------------------------------------
 
@@ -310,7 +309,8 @@ per cover.
 | Cover | Activity | Thumbnail |
 | --- | --- | --- |
 ${COVERS.map((c) => {
-  const s = scenes.get(c.scene);
+  const s = [...scenes.values()].find((x) => x.key === c.key);
+  if (!s) throw new Error(`cover "${c.key}" (${c.activity}) has no scene — nothing would score it`);
   return `| \`${s.key}\` | ${c.activity} | ${thumb(s)} |`;
 }).join('\n')}
 

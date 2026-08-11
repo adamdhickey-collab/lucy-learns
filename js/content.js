@@ -286,6 +286,20 @@ export const IMAGES = withThumb({
     src: 'img/door-stay-03-pretend.jpg',
     alt: 'A handler stands in the open doorway talking to an empty porch while Lucy stays on her bed.',
   },
+  // dg-2's cover, split off from the reward picture.
+  //
+  // `door-stay-04-pay` covered this activity as well as being its step 4 and
+  // the fallback for two activities. At 56px on the program map that made it a
+  // person crouched low beside a dark dog — which is what dg-1's and dg-3's
+  // covers were too, so three of the four rails were the same silhouette and a
+  // blind test had six of twelve matches come back as guesses. This one is the
+  // open door instead: a bright vertical slab with Lucy small and far from it,
+  // a shape no other cover has. The reward picture keeps its other three jobs
+  // unchanged.
+  'door-stay-cover': {
+    src: 'img/door-stay-cover.jpg',
+    alt: 'A handler holds the front door wide open onto daylight while Lucy stays lying on her bed across the room.',
+  },
   'door-stay-04-pay': {
     src: 'img/door-stay-04-pay.jpg',
     alt: 'A handler kneels beside Lucy’s bed and feeds her a treat for staying in place.',
@@ -764,7 +778,7 @@ export const ACTIVITIES = [
     // The mark this activity carries everywhere it appears. See ICONS.
     icon: 'act-stay',
     shortPurpose: 'Lucy holds her bed while you walk over and open the door.',
-    coverImage: 'door-stay-04-pay',
+    coverImage: 'door-stay-cover',
     estimatedMinutes: 7,
     difficulty: 'intermediate',
     equipment: ['Lucy on leash', 'Her bed or a marked boundary', 'Small treats'],
