@@ -116,8 +116,37 @@ open hands as an invitation without prompting. The departure was bought at a
 little cost to the invitation. Not enough to reject, worth watching in the
 panel.
 
-### `door-stay-03-onestep` — outstanding
+### `door-stay-03-onestep` — fixed and installed at 1.63.0
 
-Brief amended, not yet redrawn. Pair **P2** in Block B (`door-stay-03-cross` vs
-`door-stay-03-halfway`) should be expected to fail until it is: three images
-currently read as the same picture of a person walking toward a door.
+Redrawn against both the amended brief and the amended claim. Checked blind,
+three viewers, none of whom had seen the first attempt:
+
+- *"The person has taken only one small step away from the dog's bed — she's
+  standing right beside/just in front of it… a modest, one-step distance, not
+  across the room."* That is the amended claim, in a stranger's words.
+- *"A woman stands…"* — the "walking away toward the door" reading that failed
+  4/4 is gone.
+- Shown all three rungs of the ladder and asked to order them by distance
+  moved, a third viewer got it right and called this one *"unmistakable at a
+  glance"*.
+
+Two things recorded rather than smoothed over.
+
+**Pair P2 is still the closest call, but it is a different pair now.** With this
+image fixed, the viewer named `door-stay-03-halfway` vs `door-stay-03-cross` as
+the hard one: *"same crop, framing, and background… the only real
+differentiators are distance and pose."* They separated them correctly when
+asked, so it is a near-miss rather than a failure — but P2 earns its place in
+Block B and should go to a panel.
+
+**A small regression in the dog.** Her gaze is now ambiguous — *"looking off to
+the side/toward the door rather than at the woman"* — where the brief asks for
+eyes on the handler. It does not touch this image's claim, which is about how
+little the person has moved, so it was not worth a fourth generation. If this
+one is ever redrawn again, fix the gaze at the same time.
+
+## Where Block A stands
+
+Eight images, two redrawn, all eight now passing their claim under blind check.
+Worth putting in front of a paid panel — which is the only question this dry run
+was ever able to answer.
