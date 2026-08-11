@@ -2379,8 +2379,8 @@ details.disclosure .disclosure-body {
    Splash
    The last thing the OS shows and the first thing the app shows, holding the
    same mark in the same place on the same background. Geometry is duplicated
-   in scripts/make-splash.mjs, which bakes it into the iOS launch images: 60%
-   of viewport width, centred at 45% height. Change one, change both.
+   in scripts/make-splash.mjs, which bakes it into the iOS launch images: 88%
+   of viewport width, centred at 50% height. Change one, change both.
    ========================================================================= */
 
 .splash {
@@ -2427,6 +2427,34 @@ details.disclosure .disclosure-body {
   --splash-elapsed: 0ms;
 }
 
+/* A slow warm vignette at the very edges of the field. It gives the flat
+   cream some depth once the composition has assembled, and it breathes in
+   over more than a second precisely so it cannot exist on the first frame —
+   the launch image is a flat field, so the first frame must be too. Kept
+   faint enough that where it grazes the art's corners it reads as light,
+   not as a treatment applied to the picture. */
+.splash::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    140% 110% at 50% 42%,
+    transparent 58%,
+    rgba(122, 82, 44, 0.09) 100%
+  );
+  animation: splash-vignette-in 1400ms 500ms ease-out both;
+}
+
+@keyframes splash-vignette-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* Position only. This is the geometry the iOS launch image baked in, so it
    never moves — the scale animation lives on the img inside it. If the two
    shared a transform the mark would start somewhere the launch image did not
@@ -2440,49 +2468,103 @@ details.disclosure .disclosure-body {
   transform: translate(-50%, -50%);
 }
 
-/* Sits below the badge, offset by half the badge from its centre so the gap
-   holds at any size. Fades in rather than being there at t=0: the launch image
-   has no line, so anything painted immediately would pop at the handoff. */
 /* The wordmark, above the art.
    ------------------------------------------------------------------------
-   Positioned off the top of the frame rather than off the badge: the art is
-   centred at 45% and its height changes with the viewport, so hanging the
-   title beneath a moving object would put it somewhere different on every
-   screen. The top edge does not move. */
-.splash-title {
+   The head is the band the art actually leaves free: from the top of the
+   screen down to the art's top edge, which is the same sum the slot does.
+   The previous head sat at a flat `top: 7%` and hoped — and because the slot
+   comes after it in the DOM and the mark is an opaque cream JPG, whatever
+   fell below the art's top edge was quietly painted over. On most screens
+   that was the tagline, which is why it never seemed to render at all.
+   Deriving the band from the art's own geometry means the text cannot land
+   under the art on any screen, and the z-index makes the layering explicit
+   rather than an accident of source order. */
+.splash-head {
   position: absolute;
-  top: 11%;
+  top: 0;
   left: 0;
   right: 0;
-  margin: 0;
+  height: calc(var(--badge-y) - var(--badge-h) / 2);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* The band starts at y=0, which on a notched phone is under the notch.
+     Centre in what remains, not in the glass. */
+  padding-top: env(safe-area-inset-top, 0px);
   text-align: center;
+}
+
+/* Stacked and set big rather than one centred line at heading size: two short
+   words side by side at a readable size is a header, and this is a title card.
+   The size is capped by height as well as width because the band it lives in
+   is a height: the art's top edge is at worst 16.7vh from the top (the 50vh
+   cap on --badge guarantees it), so the type scales with whichever axis runs
+   out first instead of betting on portrait. */
+.splash-title {
+  margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(2rem, 11vw, 3.25rem);
+  /* The line box is tighter than the glyphs need, which is what pulls the two
+     words into one mass rather than two lines with air between them. */
+  line-height: 0.84;
+  font-size: clamp(2.125rem, min(17vw, 8.5vh), 4.5rem);
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.03em;
   /* Reads on the artwork's cream at 8.9:1 — the field is warmer than the app's
      paper, so the app's default ink is the wrong ink here. */
   color: var(--primary-dark);
 }
 
-/* Each word rises into place, the second a beat behind the first. The overshoot
-   in the timing function is the whole "fun": it settles like something landing
-   rather than sliding to a stop. */
 .splash-title span {
-  display: inline-block;
-  animation: splash-word-in 620ms cubic-bezier(0.2, 1.5, 0.4, 1) both;
+  display: block;
+}
+
+/* The subset of Fraunces shipped here carries the full opsz 9–144 and wght
+   100–900 axes (no SOFT/WONK — they were subset away). `opsz` is pinned to
+   144, the poster cut: highest stroke contrast, tightest fit, the version of
+   Fraunces that was drawn to be a masthead rather than a paragraph. The
+   `font-weight` properties stay as fallbacks for anything that cannot do
+   variations; where variations work, these settings win. */
+
+/* "Learns" is the verb and the point, so it carries the weight and the colour
+   while "Lucy" sits back a step — lighter, smaller, warmer-tracked. Optical,
+   not semantic: at this size two words in identical ink read as a wall. */
+.splash-title span:first-child {
+  font-size: 0.58em;
+  font-weight: 500;
+  font-variation-settings:
+    'opsz' 144,
+    'wght' 460;
+  letter-spacing: 0.015em;
+  color: var(--primary);
+}
+
+.splash-title span:last-child {
+  font-variation-settings:
+    'opsz' 144,
+    'wght' 640;
+}
+
+/* Each word drops in, the second a beat behind the first. The overshoot in the
+   curve is the whole "fun": they settle like something landing rather than
+   sliding to a stop. The hidden state lives in the keyframe's `from`, not in
+   the base rule, so `animation: none` under reduced motion leaves everything
+   visible with no cleanup. */
+.splash-title span {
+  animation: splash-word-in 560ms cubic-bezier(0.18, 1.5, 0.32, 1) both;
 }
 .splash-title span:first-child {
-  animation-delay: 200ms;
+  animation-delay: 140ms;
 }
 .splash-title span:last-child {
-  animation-delay: 330ms;
+  animation-delay: 300ms;
 }
 
 @keyframes splash-word-in {
   from {
     opacity: 0;
-    transform: translateY(0.5em) scale(0.94);
+    transform: translateY(-0.4em) scale(0.93);
   }
   to {
     opacity: 1;
@@ -2490,63 +2572,196 @@ details.disclosure .disclosure-body {
   }
 }
 
-.splash-progress {
-  position: absolute;
-  /* Under the meta, which is itself under the badge. The 3.4em clears both
-     lines of version and date at their own size. */
-  top: calc(var(--badge-y) + var(--badge-h) / 2 + var(--s-5) + 3.4em);
-  left: 50%;
-  /* Was 3px of --border, which is a cool grey and sat on the artwork's warm
-     cream looking like a scratch rather than a control. The track is now the
-     fill's own colour at low alpha, so the two belong to each other and both
-     belong to the field, and it is thick enough to read as a pill rather than
-     a hairline. */
-  width: min(calc(var(--badge) * 0.5), 190px);
-  height: 8px;
-  transform: translateX(-50%);
-  border-radius: var(--r-pill);
-  background: color-mix(in srgb, var(--primary-dark) 16%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--primary-dark) 12%, transparent);
-  overflow: hidden;
-  /* Its own keyframes rather than splash-meta-in, because that one animates
-     `transform` to `none` and would drop the translateX that centres this.
-     Every frame here has to carry the centring through. */
-  animation: splash-progress-in 420ms 260ms ease-out both;
+/* Under the name, and last of the head to arrive. Wide-tracked caps flanked
+   by a pair of rules, so it reads as a set mark rather than a sentence — it
+   is a tagline, not copy. Flex rather than text-align because the rules are
+   flex items: no vertical-align arithmetic, and centring is true without the
+   old text-indent compensation (the tracking's trailing space now misplaces
+   the line by half a letter-space split across a flex centre — under a
+   pixel — instead of visibly shoving it left). */
+.splash-tagline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7em;
+  margin: clamp(0.5rem, 1.8vh, 1rem) 0 0;
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--primary-dark) 68%, transparent);
+  animation: splash-tagline-in 620ms 480ms ease-out both;
 }
 
-@keyframes splash-progress-in {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%);
-  }
+/* The flanking rules. They draw outward from the words — origin at the text
+   side — a beat after the words fade up, which is the difference between a
+   lockup arriving and two dashes being there. */
+.splash-tagline::before,
+.splash-tagline::after {
+  content: '';
+  flex: none;
+  width: 1.9em;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.55;
+  animation: splash-rule-in 480ms 620ms cubic-bezier(0.33, 1, 0.68, 1) both;
 }
 
-.splash-progress > span {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border-radius: inherit;
-  /* --primary-dark, not --primary: this bar sits on the splash's cream rather
-     than the app's paper, and the darker end of the ramp is what carries on it.
-     6.9:1 against the field. */
-  background: var(--primary-dark);
+.splash-tagline::before {
+  transform-origin: right center;
+}
+
+.splash-tagline::after {
   transform-origin: left center;
-  /* Linear, because it is reporting time rather than performing. The negative
-     delay starts it wherever the boot already got to, so it reads real
-     elapsed time instead of restarting the clock at first paint. */
-  animation: splash-fill var(--splash-hold) linear var(--splash-elapsed) both;
 }
 
-@keyframes splash-fill {
+@keyframes splash-rule-in {
   from {
     transform: scaleX(0);
   }
   to {
     transform: scaleX(1);
+  }
+}
+
+@keyframes splash-tagline-in {
+  from {
+    opacity: 0;
+    letter-spacing: 0.32em;
+  }
+  to {
+    opacity: 1;
+    letter-spacing: 0.16em;
+  }
+}
+
+/* The art is deliberately the one thing that does not animate in. It is the
+   only element the iOS launch image already has on screen, so it has to be at
+   exactly its final size and position on the first frame — anything else, a
+   fade or a scale, cross-dissolves one copy of the same picture into another
+   and reads as a flicker at the handoff. The liveliness comes from the three
+   things that were never in the launch image: the name, the line, and the dog.
+   `splash-breathe` on the mark still starts at scale(1) for the same reason. */
+
+.splash-progress {
+  position: absolute;
+  /* Under the meta, which is itself under the art. The 3.4em clears both lines
+     of version and date at their own size. */
+  top: calc(var(--badge-y) + var(--badge-h) / 2 + var(--s-5) + 3.4em);
+  /* A lane, not a pill. This was a 190px bar filling up; it is now the ground
+     Lucy runs along, so it wants the width of the screen to run across. */
+  left: 8%;
+  right: 8%;
+  height: 34px;
+  /* The ground she has yet to cover: a dashed line rather than a solid one,
+     so the distance ahead reads as a path — and so the solid trail she draws
+     behind her (below) reads as something happening to the ground rather
+     than a second decoration. Dashes are whole pixels on the same 2px grid
+     as the sprite's feet. */
+  background: repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--primary-dark) 24%, transparent) 0 8px,
+      transparent 8px 16px
+    )
+    left bottom / 100% 2px no-repeat;
+  /* Last to arrive, and the sequence reads top to bottom: the name lands, the
+     tagline sets, the imprint line surfaces, and then the ground rolls out
+     under a dog who is already however far along the boot actually is. */
+  animation: splash-progress-in 460ms 820ms ease-out both;
+}
+
+@keyframes splash-progress-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The ground already covered. Same duration, same negative delay, same linear
+   clock as the traversal — so its leading edge is always under her body (she
+   moves over `100% - 52px` while the trail scales over 100%, which puts the
+   tip at most one sprite-width ahead of her left edge, i.e. under the dog).
+   scaleX rather than width because it is the one part of the lane that runs
+   for the whole hold, and stretching a solid line costs nothing. */
+.splash-trail {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: color-mix(in srgb, var(--primary) 60%, transparent);
+  transform-origin: left center;
+  animation: splash-trail-across var(--splash-hold) linear var(--splash-elapsed) both;
+}
+
+@keyframes splash-trail-across {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Lucy, running the hold out.
+   ------------------------------------------------------------------------
+   Two animations on one element, doing two different jobs.
+
+   `splash-run-cycle` is the legs: a four-frame sprite sheet stepped through on
+   a fixed 420ms loop, which is her gait and has nothing to do with how long the
+   app takes to boot.
+
+   `splash-run-across` is the progress: it carries her from one end of the lane
+   to the other over exactly --splash-hold, with the same negative
+   --splash-elapsed the fill used, so she is however far along the boot actually
+   is. Reload halfway through and she starts halfway across. That is the whole
+   reason this can replace a progress bar rather than just decorate one — her
+   position on the lane *is* the reading.
+
+   `left` rather than a transform because the distance is "the width of the lane
+   minus her own width", and a percentage on `left` already means that against
+   the parent while a percentage on translateX would mean it against herself.
+   Five seconds of linear tween on one small element is not the place to fight
+   for the compositor. */
+.splash-runner {
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  display: block;
+  width: 64px;
+  height: 40px;
+  background-image: url('../img/lucy-run.svg');
+  background-repeat: no-repeat;
+  /* Pixels, not percentages. A percentage background-position is proportional
+     — it aligns the image's X% point with the box's X% point — so stepping it
+     to -400% ran the sheet clean off the end and drew nothing at all. The sheet
+     is four 64px frames, so it is 256px wide and each step is exactly -64px. */
+  background-size: 256px 40px;
+  background-position-x: 0;
+  /* The sprite is 26x18 actual pixels blown up ~2x. Without this the browser
+     smooths it into mush and the whole point of a pixel dog is gone. */
+  image-rendering: pixelated;
+  animation:
+    splash-run-cycle 420ms steps(4) infinite,
+    splash-run-across var(--splash-hold) linear var(--splash-elapsed) both;
+}
+
+@keyframes splash-run-cycle {
+  to {
+    background-position-x: -256px;
+  }
+}
+
+@keyframes splash-run-across {
+  from {
+    left: 0;
+  }
+  to {
+    left: calc(100% - 64px);
   }
 }
 
@@ -2596,7 +2811,7 @@ details.disclosure .disclosure-body {
   top: calc(var(--badge-y) + var(--badge-h) / 2 + var(--s-5));
   margin: 0;
   text-align: center;
-  animation: splash-meta-in 520ms 220ms ease-out both;
+  animation: splash-meta-in 520ms 720ms ease-out both;
 }
 
 @keyframes splash-meta-in {
@@ -2614,12 +2829,17 @@ details.disclosure .disclosure-body {
   animation: none;
 }
 
+/* The version is part of the composition now: the wordmark's serif at colophon
+   size, in the wordmark's ink, so the stack under the art reads as the mark's
+   imprint line rather than debug output that wandered on. */
 .splash-version {
   margin: 0;
-  color: var(--text-secondary);
+  font-family: var(--font-display);
+  color: color-mix(in srgb, var(--primary-dark) 80%, transparent);
   font-size: var(--step--1);
   font-weight: 600;
-  /* Tabular figures so the count-up does not reflow the line as digits land. */
+  letter-spacing: 0.01em;
+  /* Tabular figures so the line cannot reflow if the number changes width. */
   font-variant-numeric: tabular-nums;
 }
 
@@ -2627,7 +2847,7 @@ details.disclosure .disclosure-body {
   margin: var(--s-1) 0 0;
   color: var(--text-secondary);
   font-size: 0.6875rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
   font-variant-numeric: tabular-nums;
   opacity: 0.75;
@@ -2638,41 +2858,49 @@ details.disclosure .disclosure-body {
   pointer-events: none;
 }
 
-/* Reduced motion keeps the splash and drops every part of it that moves. The
-   count-up is disabled in JS to match; the mark simply sits at rest. */
+/* Leaving: the head lifts slightly against the fade — the same beat as the
+   mark falling back — so the departure has the same up/back parallax the
+   arrival had, instead of one flat dissolve. */
+.splash--done .splash-head {
+  transform: translateY(-10px);
+  transition: transform 420ms cubic-bezier(0.4, 0, 0.9, 0.4);
+}
+
+/* Reduced motion keeps the splash and drops every part of it that moves.
+   Every hidden state lives in a keyframe's `from`, never in a base rule, so
+   `animation: none` is also the visibility fix: with no animation to fill
+   backwards from, everything simply sits at its final, visible state. */
 @media (prefers-reduced-motion: reduce) {
   .splash,
-  .splash--done .splash-mark {
+  .splash--done .splash-mark,
+  .splash--done .splash-head {
     transition: none;
   }
 
+  .splash::after,
   .splash-mark,
   .splash-meta,
   .splash-progress,
   .splash-title span,
-  .splash--done .splash-mark {
+  .splash-tagline,
+  .splash-tagline::before,
+  .splash-tagline::after,
+  .splash-trail,
+  .splash-runner,
+  .splash--done .splash-mark,
+  .splash--done .splash-head {
     animation: none;
     transform: none;
   }
 
-  /* The title still arrives, it just arrives without moving — `animation: none`
-     above would otherwise leave it at the keyframe's starting opacity of 0 and
-     the wordmark would never show at all. */
-  .splash-title span {
-    opacity: 1;
-  }
-
-  /* The slot's centring transform is not decoration, so it is restored after
-     the blanket `transform: none` above. */
-  .splash-progress {
-    transform: translateX(-50%);
-  }
-
-  /* The bar still reports progress, it just does it without sweeping: the
-     fill is simply present, since a static empty track says nothing. */
-  .splash-progress > span {
-    animation: none;
-    transform: none;
+  /* Lucy still reports progress, she just does it without running: the legs
+     stop cycling and she is parked at the far end of the lane with the trail
+     drawn behind her, because a dog frozen at the start line says the boot
+     has stalled. `transform: none` above already leaves the trail at full
+     scale; only her `left` needs saying, because the traversal keyframes
+     carry it. */
+  .splash-runner {
+    left: calc(100% - 64px);
   }
 }
 
