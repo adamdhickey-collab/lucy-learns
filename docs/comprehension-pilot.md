@@ -94,12 +94,30 @@ a transition needs the picture to show a body most of the way through it, not
 balanced at the moment of change.** Stills are bad at "about to" and "just
 beginning to".
 
-## What happens next
+## Re-runs
 
-Both briefs are amended in [pilot-prompts.md](pilot-prompts.md) — Scenes 25 and
-28 — and carry a note recording why. Re-run those two, install, and re-run this
-dry run before booking a panel; if they pass here, Block A is worth paying for.
+### `door-stay-05-release` — fixed and installed at 1.62.0
 
-Pair **P2** in Block B (`door-stay-03-cross` vs `door-stay-03-halfway`) should
-be expected to fail until `onestep` is redrawn — three images currently read as
-the same picture of a person walking toward a door.
+Redrawn against the amended brief: most of her off the bed, one back foot still
+touching its edge, weight over the floor. Checked blind again, three viewers,
+none of whom had seen the first attempt.
+
+- *"The dog is off the bed — standing on the wood floor beside it"*
+- *"standing on the wood floor with one front paw still resting on the edge of a
+  gray dog bed"*
+- Shown against `door-place-03-send` and asked which sends her **to** the bed
+  and which invites her **off** it, a third viewer got both right — so Block B's
+  pair **P1** works as well.
+
+That clause failed 4/4 before and passes now. One thing to watch: a viewer who
+saw only this picture said the gesture's purpose was "unclear — inviting the dog
+forward or something else", where all four viewers of the first version read the
+open hands as an invitation without prompting. The departure was bought at a
+little cost to the invitation. Not enough to reject, worth watching in the
+panel.
+
+### `door-stay-03-onestep` — outstanding
+
+Brief amended, not yet redrawn. Pair **P2** in Block B (`door-stay-03-cross` vs
+`door-stay-03-halfway`) should be expected to fail until it is: three images
+currently read as the same picture of a person walking toward a door.
