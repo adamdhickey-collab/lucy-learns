@@ -1759,6 +1759,145 @@ cd img/pilot/round-16 && for f in *.png; do sips -c 1086 1086 "$f" --out "/tmp/$
 
 ---
 
+## Batch 6 — the covers, told apart
+
+Two images. Not four, and the reason matters.
+
+The blind pilot showed all four activity covers at 56px — the size the program
+map actually renders them — and asked three viewers to match each to its
+activity. Ten of twelve matches were right, which sounds fine until you read how
+they got there: **six of the twelve were self-reported guesses**, one viewer
+swapped two covers outright, and all three named a pair they could not separate.
+
+| Cover | Correct | Guessed |
+| --- | --- | --- |
+| `door-greet-cover` | 3/3 | 0 |
+| `door-sound-cover` | 3/3 | 2 |
+| `door-stay-04-pay` | 2/3 | 1 |
+| `door-place-cover` | 2/3 | 1 |
+
+Only the greeting cover was identified confidently by everyone, and the thing
+that saves it is structural rather than fine: it is the only one with **two
+people in it**. The other three are the same silhouette — a person low down
+beside a dark dog — competing on detail that does not survive to 56px. In the
+viewers' words: *"the only distinguishing signal is the dog's posture, which is
+a thin thread to hang two different activities on at this size."*
+
+### This is a self-inflicted wound, and worth naming
+
+Batch 3 derived a rule — **nobody stands in a cover** — because a standing adult
+and a floor-level bed will not both fit inside the 16:7 Today band. That rule is
+correct and it is why every cover passes its crops. It is also exactly what made
+three of them the same picture. Each cover was tested against the crops on its
+own and never against the others until the pilot, so four separately-correct
+images turned out to be one composition drawn four times.
+
+**A cover has two jobs and they pull apart: survive the crops, and not look like
+its neighbours.** The second one can only be checked as a set.
+
+So these two briefs are about *archetype* before anything else. After them the
+four should be distinguishable by silhouette alone, which is all 56px carries:
+
+| Activity | Archetype at 56px |
+| --- | --- |
+| dg-1 Doorbell Predicts Rewards | **a close two-shot** — one big dog head, one face, no room |
+| dg-2 Stay While the Door Opens | **a bright vertical slab** — the open door dominating, dog small |
+| dg-3 Doorbell Means Place | **a lone dark mass on a pale rectangle** — dog on her bed |
+| dg-4 Controlled Real Greeting | **two upright figures** — the guest and the handler |
+
+`door-place-cover` and `door-greet-cover` are not redrawn. Place already reads as
+"a dog alone on a mat" to viewers at this size — the crouching handler vanishes,
+which is a happy accident worth keeping — and greeting is the one that works.
+
+**One of these needs a new key.** `door-stay-04-pay` is dg-2's cover *and* its
+step 4 *and* the fallback for both dg-2 and dg-3. It stays exactly as it is in
+those three jobs; dg-2 gets a separate cover, the same split dg-4 already has
+between `door-greet-cover` and `door-greet-08-petting`.
+
+### Scene 37 — The sound, as a close two-shot
+*Redraws `door-sound-cover` in place — it is dg-1's cover and the fallback for
+dg-1 and dg-4, and never a step, so the key does not change. **The fix:** at
+56px it is a person crouched beside a dark dog, which is also what dg-2's and
+dg-3's covers are. Two viewers guessed it.*
+
+> **Close two-shot. Come in much tighter than any other picture in this set:
+> Lucy's head and shoulders and the handler's face and one hand, and almost
+> nothing else.** No room, no floor, no furniture — the wall behind them and
+> that is all. This is a portrait, not a scene, and the tight crop is the whole
+> point: it must not read as a person-beside-a-dog-in-a-hallway, because three
+> other pictures already are.
+>
+> Lucy fills the left of the frame, **head large and turned up and back toward
+> the handler**, ears soft, mouth relaxed, alert but calm. Her purple collar and
+> the round blue tag are clear at this size because her neck is close to camera.
+>
+> The handler's **face is in the frame** — turned down toward Lucy, calm and
+> pleased, close enough that the two heads are almost touching. One hand rests
+> lightly on Lucy's shoulder. **Do not crop her face away**: two heads together
+> is the shape this picture is recognised by.
+>
+> Background: one flat wall plane. Nothing else at all — no door, no doormat, no
+> floor.
+>
+> **Composition: two heads, close together, filling the middle of the frame.**
+> A wide band across the middle must contain both heads. A centred square must
+> contain both heads. Reduced to a thumbnail this should read as one large dark
+> mass and one face, side by side, and nothing else.
+>
+> The single thing this image must make obvious: the sound happened and she has
+> turned to her person.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 38 — The stay, as an open door
+*New key: `door-stay-cover`. dg-2's `coverImage` moves here; `door-stay-04-pay`
+keeps step 4 and both fallbacks unchanged. **The fix:** the reward picture is a
+kneeling person beside a dog, which at 56px is the same object as two other
+covers. This activity is the only one of the four whose subject is the door
+itself, so the door should be what a household sees.*
+
+> **The door is the subject and it should dominate the frame.** Come in so that
+> the open front door and the daylight through it take up most of the picture —
+> more than half its width — with the room, the bed and Lucy pushed small to one
+> side.
+>
+> The door stands **open onto bright daylight: a tall, clean band of light down
+> the opening, unmistakable at any size.** The near edge of the door is proud of
+> the frame; the doormat is below it. Nothing and nobody is visible outside — the
+> porch is empty.
+>
+> The handler stands at the door with one hand on its edge, **cropped at the
+> chest** so she does not need her full height. She is turned toward the opening,
+> not toward the camera.
+>
+> Lucy lies on her flat grey mattress bed **well back, small in the frame, at the
+> opposite side from the door**, head up and watching, feet unmoved. She is a
+> long way from the door and that distance is part of the subject. The black
+> leash trails slack from her collar across the floor.
+>
+> Background: the open door and its light, the doormat, her bed, the floor, one
+> wall plane. Nothing else.
+>
+> **Composition: the bright doorway on one side, the dog small on her bed on the
+> other, clear floor between them.** A wide band across the middle and a centred
+> square must both contain the bright opening and the dog. Reduced to a thumbnail
+> this should read as a bright vertical slab beside a small dark shape — a
+> silhouette no other cover in this set has.
+>
+> The single thing this image must make obvious: the door is wide open and she
+> has stayed where she is.
+>
+> Landscape 4:3, wider than tall.
+
+### When batch 6 is done
+
+Install both, move dg-2's `coverImage` to `door-stay-cover`, and **re-run Block
+C before believing it worked.** These two were drawn to be told apart from each
+other and from the two that stay — a claim only a set test can settle, which is
+the whole lesson of the first one.
+
+---
+
 ## The crop tests, and how to re-run them
 
 Round 2 cleared these. Re-run them on any replacement before approving it:

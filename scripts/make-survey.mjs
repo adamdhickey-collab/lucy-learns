@@ -33,6 +33,14 @@ const LIVE = 'https://adamdhickey-collab.github.io/lucy-learns';
 // output inconsistently — the early batches say "Replaces `dg-20`" and the late
 // ones carry a "Save as" column — and a rule with four exceptions is worse than
 // a table you can read.
+//
+// PENDING, batch 6: when those two land, `15` becomes `37` (Scene 37 redraws
+// `door-sound-cover` in place, so its scoring key must come from the new brief
+// rather than the retired one) and `38: 'door-stay-cover'` is added. Until then
+// this table is deliberately unchanged: pointing at a key that does not exist
+// yet would throw, and pointing scene 15's claim at an image drawn to a
+// different claim would be worse — it would score silently against the wrong
+// answer.
 const SHIPPED_AS = {
   1: 'door-sound-01-setup',
   2: 'door-greet-07-approach',
