@@ -67,12 +67,30 @@ const SCREENS = [
 ];
 
 // Same geometry as the in-app splash in app.css.
-const ART_WIDTH_FRACTION = 0.5;
-const ART_CENTER_Y = 0.34;
+//
+// The art was a square badge at half width; it is now a portrait illustration
+// that runs the full width of the screen. Full width rather than full screen
+// on purpose: the art is 3:4 and a phone is nearer 9:19.5, so covering the
+// screen would crop about a third of the width off a 16 Pro and take the dog
+// with it. At full width the illustration is as large as it can be with
+// nothing lost, and because the field below is the artwork's own background
+// colour, the cream runs to all four edges anyway. It reads as full-bleed and
+// is not.
+const ART_WIDTH_FRACTION = 1;
+const ART_CENTER_Y = 0.45;
 
-// The app's --background. Keep these in step: the whole point of the launch
-// image is that the boot and the first paint are the same colour.
-const FIELD = [0xf7, 0xf5, 0xef];
+// The artwork's own background, not the app's --background.
+//
+// This used to be the app's paper, #f7f5ef, because the art was a badge sitting
+// on the app's field and the two had to agree or the launch flashed. The art
+// now *is* the screen, so the field has to be the art's cream instead — if it
+// were paper you would see the illustration as a lighter rectangle on a
+// slightly different cream, which is the same seam in the other direction.
+//
+// Keep in step with `--splash-field` in css/app.css. The in-app splash paints
+// that colour, so the OS image and the first frame still match exactly; what
+// changed is which colour both of them use.
+const FIELD = [0xf6, 0xe6, 0xd0];
 
 // --- decode ----------------------------------------------------------------
 
@@ -134,20 +152,20 @@ function decodePng(path) {
 
 // --- resize ----------------------------------------------------------------
 
-function bilinearResize(image, targetSize) {
+function bilinearResize(image, targetW, targetH) {
   const { width, height, bpp, data } = image;
-  const out = Buffer.alloc(targetSize * targetSize * 3);
-  for (let ty = 0; ty < targetSize; ty++) {
-    const sy = (ty + 0.5) * (height / targetSize) - 0.5;
+  const out = Buffer.alloc(targetW * targetH * 3);
+  for (let ty = 0; ty < targetH; ty++) {
+    const sy = (ty + 0.5) * (height / targetH) - 0.5;
     const y0 = Math.max(0, Math.floor(sy));
     const y1 = Math.min(height - 1, y0 + 1);
     const fy = sy - y0;
-    for (let tx = 0; tx < targetSize; tx++) {
-      const sx = (tx + 0.5) * (width / targetSize) - 0.5;
+    for (let tx = 0; tx < targetW; tx++) {
+      const sx = (tx + 0.5) * (width / targetW) - 0.5;
       const x0 = Math.max(0, Math.floor(sx));
       const x1 = Math.min(width - 1, x0 + 1);
       const fx = sx - x0;
-      const di = (ty * targetSize + tx) * 3;
+      const di = (ty * targetW + tx) * 3;
       for (let c = 0; c < 3; c++) {
         const p00 = data[(y0 * width + x0) * bpp + c];
         const p10 = data[(y0 * width + x1) * bpp + c];
@@ -233,34 +251,39 @@ let total = 0;
 const tags = [];
 for (const [width, height, ptW, ptH, dpr, devices] of SCREENS) {
   const side = Math.round(width * ART_WIDTH_FRACTION);
-  const scaled = bilinearResize(art, side);
+  // Aspect-preserving: the art is portrait now, so squaring it would squash the
+  // dog. Width is what the fraction applies to; height follows from the source.
+  const artW = side;
+  const artH = Math.round(side * (art.height / art.width));
+  const scaled = bilinearResize(art, artW, artH);
   const canvas = Buffer.alloc(width * height * 3);
   for (let i = 0; i < canvas.length; i += 3) {
     canvas[i] = FIELD[0];
     canvas[i + 1] = FIELD[1];
     canvas[i + 2] = FIELD[2];
   }
-  const left = Math.round((width - side) / 2);
-  const top = Math.round(height * ART_CENTER_Y - side / 2);
+  const left = Math.round((width - artW) / 2);
+  const top = Math.round(height * ART_CENTER_Y - artH / 2);
 
-  // Composite the mark through its inscribed circle. `coverage` is the pixel's
-  // fraction inside the circle, so the last pixel-width of the edge blends into
-  // the field instead of stepping down it.
-  const radius = side / 2;
-  const centre = radius - 0.5;
-  for (let y = 0; y < side; y++) {
-    const dy = y - centre;
-    for (let x = 0; x < side; x++) {
-      const dx = x - centre;
-      const coverage = Math.min(Math.max(radius - Math.hypot(dx, dy) + 0.5, 0), 1);
-      if (coverage === 0) continue;
-      const src = (y * side + x) * 3;
-      const dst = ((top + y) * width + left + x) * 3;
-      for (let c = 0; c < 3; c++) {
-        canvas[dst + c] = Math.round(
-          scaled[src + c] * coverage + FIELD[c] * (1 - coverage)
-        );
-      }
+  // A straight composite, no mask. The circle mask existed because a square of
+  // the artwork's cream sat visibly on the app's paper field; now the field is
+  // that same cream, so there is no edge to hide — and a mask would cut the
+  // dog's ears and paws, which reach the edges of this illustration.
+  //
+  // Rows outside the canvas are skipped rather than clamped: on the shortest
+  // screen in the table the art is taller than the space above and below the
+  // centre line, and wrapping would smear the last row across the field.
+  for (let y = 0; y < artH; y++) {
+    const canvasY = top + y;
+    if (canvasY < 0 || canvasY >= height) continue;
+    for (let x = 0; x < artW; x++) {
+      const canvasX = left + x;
+      if (canvasX < 0 || canvasX >= width) continue;
+      const src = (y * artW + x) * 3;
+      const dst = (canvasY * width + canvasX) * 3;
+      canvas[dst] = scaled[src];
+      canvas[dst + 1] = scaled[src + 1];
+      canvas[dst + 2] = scaled[src + 2];
     }
   }
   const name = `apple-splash-${width}-${height}.png`;

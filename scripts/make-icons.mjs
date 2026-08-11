@@ -96,13 +96,23 @@ function writePng(path, size, pixel) {
 // --- corner sampling -------------------------------------------------------
 
 /**
- * Read the top-left pixel of a PNG, to pad the maskable icon with the
- * artwork's own background instead of a guess.
+ * Read the artwork's background colour from the top-left of a PNG, to pad the
+ * maskable icon with the artwork's own field instead of a guess.
  *
- * Only the very first pixel is needed. Every PNG row filter leaves pixel zero
- * equal to the raw byte (Sub, Average, and Paeth all have zero-valued
- * neighbours at the left edge), so the filter type can be ignored here.
- * Returns null for anything unusual — interlaced, 16-bit, or palettes.
+ * Reads a run of pixels along the first scanline and takes the median rather
+ * than trusting pixel zero. One pixel is not safe: the icon source generated
+ * for 1.56.0 had a single stray #1d7b7a at (0,0) against a field of #147f7b
+ * everywhere else, and padding with it drew a visibly lighter rectangle around
+ * the artwork inside the safe zone — the exact seam this sampling exists to
+ * avoid. A median over a run ignores a stray pixel and still costs one
+ * scanline.
+ *
+ * Every PNG row filter leaves pixel zero equal to the raw byte (Sub, Average,
+ * and Paeth all have zero-valued neighbours at the left edge), so the first
+ * pixel needs no unfiltering. Later pixels in the row do, so only filter type
+ * 0 (None) is read past pixel zero; anything else falls back to pixel zero,
+ * which is still better than nothing. Returns null for anything unusual —
+ * interlaced, 16-bit, or palettes.
  */
 function sampleCorner(path) {
   try {
@@ -142,7 +152,38 @@ function sampleCorner(path) {
       finishFlush: zlibConstants.Z_SYNC_FLUSH,
     });
     if (raw.length < 4) return null;
-    return [raw[1], raw[2], raw[3]];
+
+    const channels = header.colorType === 6 ? 4 : 3;
+    const first = [raw[1], raw[2], raw[3]];
+
+    // Unfilter the first scanline. The row above it is all zeroes, which
+    // collapses every filter to something one line long: Up leaves the bytes
+    // alone, and Paeth's predictor degenerates to the left neighbour, which is
+    // Sub. That is the whole table, so no general decoder is needed.
+    const filter = raw[0];
+    const wanted = 64;
+    const available = Math.floor((raw.length - 1) / channels);
+    const count = Math.min(wanted, available);
+    if (count < 3) return first;
+
+    const bytes = count * channels;
+    const line = new Uint8Array(bytes);
+    for (let i = 0; i < bytes; i++) {
+      const value = raw[1 + i];
+      const left = i >= channels ? line[i - channels] : 0;
+      if (filter === 1 || filter === 4) line[i] = (value + left) & 0xff;
+      else if (filter === 3) line[i] = (value + (left >> 1)) & 0xff;
+      else line[i] = value; // 0 None, 2 Up
+    }
+
+    const median = (values) => {
+      const sorted = [...values].sort((a, b) => a - b);
+      return sorted[sorted.length >> 1];
+    };
+
+    return [0, 1, 2].map((channel) =>
+      median(Array.from({ length: count }, (_, i) => line[i * channels + channel]))
+    );
   } catch {
     return null;
   }
