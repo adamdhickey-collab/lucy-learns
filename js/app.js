@@ -1,5 +1,6 @@
 import { isStorageOk, isOnboarded, onStorageChange } from './store.js';
 import { APP_VERSION, APP_UPDATED } from './version.js';
+import { studyMode, applyStudyMode, STUDY_SPLASH_HOLD_MS } from './study.js';
 import { ICONS, announceScreen, markNavigated, withTransition } from './ui.js';
 import today from './views/today.js';
 import activities from './views/activities.js';
@@ -11,6 +12,13 @@ import player, { cancelSession } from './views/player.js';
 import welcome from './views/welcome.js';
 import report from './views/report.js';
 import program from './views/program.js';
+
+// Before anything reads state. `?study` rebuilds the baseline so every research
+// participant enters the same app; see js/study.js for why each of the three
+// modes exists. Without the parameter this is a no-op and the household's own
+// data is never touched.
+const STUDY = studyMode();
+if (STUDY) applyStudyMode(STUDY);
 
 const routes = [
   { pattern: /^#\/welcome$/, view: welcome },
@@ -168,8 +176,14 @@ route();
 // booting instead of adding the hold on top of it.
 //
 // ?splash-hold on any URL parks it indefinitely for design review.
+//
+// Study mode shortens it instead of removing it. Five seconds is right for a
+// household opening the app once a day and wrong inside a timed task, but a
+// participant should still meet the product they are being asked about — so
+// they get the title card, just briefly. Long enough for the wordmark to land,
+// short enough not to show up in the numbers.
 
-const SPLASH_HOLD_MS = 5000;
+const SPLASH_HOLD_MS = STUDY ? STUDY_SPLASH_HOLD_MS : 5000;
 const SPLASH_FADE_MS = 420;
 
 const splash = document.getElementById('splash');
