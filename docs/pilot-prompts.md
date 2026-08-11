@@ -1889,12 +1889,68 @@ itself, so the door should be what a household sees.*
 >
 > Landscape 4:3, wider than tall.
 
+### Scene 39 — Place, as a dog on a bed and nothing else
+*Redraws `door-place-cover` in place — dg-3's cover and nothing else, so the key
+does not change. **The fix, and it is a correction to my own reasoning:** this
+cover was left out of the first pass because earlier viewers had described it as
+"a dog alone on a mat", which I took to mean the archetype was already there. It
+is not. There is a door in the corner and a crouching handler, and when dg-2's
+cover became the open door, those two became the same picture — all three
+viewers in the set test named this pair and no other. Redrawing half of a
+confusable pair does not fix the pair.*
+
+*This one has the easiest job of the four and the strictest brief, because what
+it has to be is **less**.*
+
+> **A dog on a bed, close, and nothing else in the frame.**
+>
+> Lucy lies on her bed, **filling the middle of the picture** — settled, front
+> legs extended, head up, calm and awake. Come in close enough that she and the
+> bed are most of what you see: this is a portrait of a dog in her place, not a
+> room with a dog in it.
+>
+> Her bed is the grey mattress-style bed, deep and quilted, and its **pale
+> rectangle should read clearly underneath her** — the shape of the bed against
+> the floor is half of what makes this picture recognisable at a small size.
+>
+> **There is no door in this image. There is no person in this image.** No
+> doorway, no doormat, no hand, no legs, no figure at the edge of frame, nothing
+> in the corner. Those are the two things that make it look like the other
+> covers, and both are gone. If you can see a door anywhere, it is wrong.
+>
+> The black leash is clipped to her collar and lies slack across the bed and the
+> floor beside it.
+>
+> Background: one flat wall plane and the floor. Nothing else at all.
+>
+> **Composition: her and the bed, centred, filling the frame.** A wide band
+> across the middle must contain her head and the bed. A centred square must
+> contain her and the bed. Reduced to a thumbnail this should read as **one dark
+> mass on a pale rectangle** — a shape no other cover in this set has, now that
+> the others are a close two-shot, a bright doorway and two upright figures.
+>
+> The single thing this image must make obvious: she is settled on her own bed.
+>
+> Landscape 4:3, wider than tall.
+
 ### When batch 6 is done
 
-Install both, move dg-2's `coverImage` to `door-stay-cover`, and **re-run Block
-C before believing it worked.** These two were drawn to be told apart from each
-other and from the two that stay — a claim only a set test can settle, which is
-the whole lesson of the first one.
+Scenes 37 and 38 are installed at 1.64.0, and the set test on them is written up
+in [comprehension-pilot.md](comprehension-pilot.md). Scene 39 is the last one.
+
+Install it and **re-run Block C as a set before believing any of it worked.**
+Twice now a cover has passed every check made on it alone and failed the moment
+it was put beside its neighbours. The four are meant to be four shapes:
+
+| Activity | Shape at 56px |
+| --- | --- |
+| dg-1 Doorbell Predicts Rewards | a close two-shot |
+| dg-2 Stay While the Door Opens | a bright vertical slab |
+| dg-3 Doorbell Means Place | a lone dark mass on a pale rectangle |
+| dg-4 Controlled Real Greeting | two upright figures |
+
+If a fifth activity is ever added, it needs a fifth shape, and the set test has
+to be run again — not the crop tests on the new one alone.
 
 ---
 

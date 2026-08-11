@@ -34,9 +34,16 @@ const LIVE = 'https://adamdhickey-collab.github.io/lucy-learns';
 // ones carry a "Save as" column — and a rule with four exceptions is worse than
 // a table you can read.
 //
-// Scene 15 is deliberately absent. It drew `door-sound-cover` originally; Scene
-// 37 redrew that key to a different claim, so 37 owns the scoring key now and
-// pointing 15 at it would score the new picture against the retired answer.
+// When a scene redraws a key another scene already owns, the old scene comes out
+// and the new one goes in — only the current scene for a key is listed, because
+// two scenes claiming one key would mean two scoring keys for one picture.
+// Scene 15 is absent for that reason: Scene 37 redrew `door-sound-cover` to a
+// different claim and owns its scoring key now.
+//
+// PENDING: Scene 39 redraws `door-place-cover`, currently owned by 27. Swap
+// them at install, not before — 39's picture does not exist yet, so mapping it
+// now would score the *old* image against the *new* claim, which is the one
+// failure mode this table exists to prevent and would not throw.
 const SHIPPED_AS = {
   1: 'door-sound-01-setup',
   2: 'door-greet-07-approach',
