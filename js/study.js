@@ -19,9 +19,9 @@
  *   Nothing is reachable before the welcome, so a task written against Today
  *   actually starts three panels earlier unless onboarding is the point.
  *
- *   The splash holds for five seconds. That is deliberate for a household
- *   opening the app once a day, and it is five seconds inside the first task of
- *   every participant, on every reload, in a tool that reports time on task.
+ *   The splash holds for three seconds. That is deliberate for a household
+ *   opening the app once a day, and it is three seconds inside the first task
+ *   of every participant, on every reload, in a tool that reports time on task.
  *
  * Every load with the parameter rebuilds the baseline from scratch. That is the
  * whole point: a participant who reloads, or backs out and re-enters from the

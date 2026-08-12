@@ -2484,16 +2484,42 @@ details.disclosure .disclosure-body {
   top: 0;
   left: 0;
   right: 0;
-  height: calc(var(--badge-y) - var(--badge-h) / 2);
+  /* The band is the space the *drawing* leaves free, not the space the badge
+     leaves free. The badge's own top edge was the old boundary, but the JPG
+     carries blank cream for its first 26% — measured from the file, the first
+     painted row is at 26.0% of its height — so a band stopping at the badge
+     edge centred the wordmark against empty field and read too high. The band
+     now borrows 20% of the badge's height from that margin, keeping a 6%
+     cushion above the painted edge. The 0.2 is a constant of this artwork,
+     like the geometry make-splash.mjs bakes: replace splash-mark.jpg and it
+     must be re-measured. */
+  height: calc(var(--badge-y) - var(--badge-h) / 2 + var(--badge-h) * 0.2);
   z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   /* The band starts at y=0, which on a notched phone is under the notch.
      Centre in what remains, not in the glass. */
   padding-top: env(safe-area-inset-top, 0px);
   text-align: center;
+}
+
+/* Dead-centring the wordmark in the band put it visually high: the band ends
+   at the art's *baked* top edge, but the drawing itself starts lower — the
+   badge carries its own transparent margin — so a centred title had more
+   empty field below it than above. These spacers sink the cluster to 60% of
+   the band instead of 50%. Proportional rather than a fixed nudge on purpose:
+   on a short screen the band shrinks toward nothing and a fixed offset would
+   march the title into the art, while 60% of a small band is still safely
+   inside it. */
+.splash-head::before {
+  content: '';
+  flex: 1.5;
+}
+
+.splash-head::after {
+  content: '';
+  flex: 1;
 }
 
 /* Stacked and set big rather than one centred line at heading size: two short
@@ -2711,9 +2737,9 @@ details.disclosure .disclosure-body {
    ------------------------------------------------------------------------
    Two animations on one element, doing two different jobs.
 
-   `splash-run-cycle` is the legs: a four-frame sprite sheet stepped through on
-   a fixed 420ms loop, which is her gait and has nothing to do with how long the
-   app takes to boot.
+   `splash-run-cycle` is the legs: an eight-frame sprite sheet stepped through
+   on a fixed 600ms loop, which is her gait and has nothing to do with how long
+   the app takes to boot.
 
    `splash-run-across` is the progress: it carries her from one end of the lane
    to the other over exactly --splash-hold, with the same negative
@@ -2725,34 +2751,41 @@ details.disclosure .disclosure-body {
    `left` rather than a transform because the distance is "the width of the lane
    minus her own width", and a percentage on `left` already means that against
    the parent while a percentage on translateX would mean it against herself.
-   Five seconds of linear tween on one small element is not the place to fight
+   Three seconds of linear tween on one small element is not the place to fight
    for the compositor. */
 .splash-runner {
   position: absolute;
   bottom: 2px;
   left: 0;
   display: block;
-  width: 64px;
-  height: 40px;
-  background-image: url('../img/lucy-run.svg');
+  /* Exactly half the sprite's native 114×72 cell. On the 2× screens this app
+     lives on, device pixels meet source pixels 1:1 — the art shows at full
+     resolution with no scaling blur in either direction. The generator rounds
+     cells to even so that this half is a whole CSS pixel; a fractional step
+     would bleed frames into their neighbours. */
+  width: 57px;
+  height: 36px;
+  background-image: url('../img/lucy-run.png');
   background-repeat: no-repeat;
   /* Pixels, not percentages. A percentage background-position is proportional
      — it aligns the image's X% point with the box's X% point — so stepping it
-     to -400% ran the sheet clean off the end and drew nothing at all. The sheet
-     is four 64px frames, so it is 256px wide and each step is exactly -64px. */
-  background-size: 256px 40px;
+     to -800% would run the sheet clean off the end and draw nothing at all.
+     Eight 57px cells at display size, so the sheet is 456px wide and each
+     step is exactly -57px. */
+  background-size: 456px 36px;
   background-position-x: 0;
-  /* The sprite is 26x18 actual pixels blown up ~2x. Without this the browser
-     smooths it into mush and the whole point of a pixel dog is gone. */
-  image-rendering: pixelated;
+  /* No image-rendering: pixelated here any more. The old sprite was hard
+     pixel art upscaled 2× and needed its edges protected; this one is
+     anti-aliased art displayed at native resolution, where the hint would
+     only roughen what the artist smoothed. */
   animation:
-    splash-run-cycle 420ms steps(4) infinite,
+    splash-run-cycle 600ms steps(8) infinite,
     splash-run-across var(--splash-hold) linear var(--splash-elapsed) both;
 }
 
 @keyframes splash-run-cycle {
   to {
-    background-position-x: -256px;
+    background-position-x: -456px;
   }
 }
 
@@ -2761,7 +2794,7 @@ details.disclosure .disclosure-body {
     left: 0;
   }
   to {
-    left: calc(100% - 64px);
+    left: calc(100% - 57px);
   }
 }
 
@@ -2900,7 +2933,7 @@ details.disclosure .disclosure-body {
      scale; only her `left` needs saying, because the traversal keyframes
      carry it. */
   .splash-runner {
-    left: calc(100% - 64px);
+    left: calc(100% - 57px);
   }
 }
 
