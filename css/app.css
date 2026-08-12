@@ -2761,7 +2761,7 @@ details.disclosure .disclosure-body {
 
 /* The ground already covered. Same duration, same negative delay, same linear
    clock as the traversal — so its leading edge is always under her body (she
-   moves over `100% - 52px` while the trail scales over 100%, which puts the
+   moves over `100% - 37px` while the trail scales over 100%, which puts the
    tip at most one sprite-width ahead of her left edge, i.e. under the dog).
    scaleX rather than width because it is the one part of the lane that runs
    for the whole hold, and stretching a solid line costs nothing. */
@@ -2812,24 +2812,29 @@ details.disclosure .disclosure-body {
   bottom: 2px;
   left: 0;
   display: block;
-  /* A third of the sprite's native 114×72 cell. Half read as a large dog on a
-     short lane — she filled a fifth of the run and so appeared to arrive
-     almost as soon as she set off. A third leaves her about an eighth of the
-     lane, which is what makes the distance look like a distance.
+  /* A sixth of the sprite's native 222×150 cell — the numbers
+     scripts/make-runner.mjs prints, and it prints them because the divisor is
+     baked into how it packs the cells. Don't edit these by hand; change
+     DIVISOR there and paste what it says.
 
-     Thirds because 114 and 72 both divide by 3 exactly. Every cell boundary
+     The size on the lane is the judgement, and it holds across sheets: around
+     37px leaves her an eighth of the run, which is what makes the distance
+     look like a distance. A fifth of the lane and she appears to arrive
+     almost as soon as she sets off.
+
+     Sixths because 222 and 150 both divide by 6 exactly. Every cell boundary
      stays on a whole CSS pixel, which is the thing that matters: a fractional
      step would slide a sliver of the next frame into view on every tick. */
-  width: 38px;
-  height: 24px;
+  width: 37px;
+  height: 25px;
   background-image: url('../img/lucy-run.png');
   background-repeat: no-repeat;
   /* Pixels, not percentages. A percentage background-position is proportional
      — it aligns the image's X% point with the box's X% point — so stepping it
      to -800% would run the sheet clean off the end and draw nothing at all.
-     Eight 38px cells at display size, so the sheet is 304px wide and each
-     step is exactly -38px. */
-  background-size: 304px 24px;
+     Eight 37px cells at display size, so the sheet is 296px wide and each
+     step is exactly -37px. */
+  background-size: 296px 25px;
   background-position-x: 0;
   /* No image-rendering: pixelated here any more. The old sprite was hard
      pixel art upscaled 2× and needed its edges protected; this one is
@@ -2842,7 +2847,7 @@ details.disclosure .disclosure-body {
 
 @keyframes splash-run-cycle {
   to {
-    background-position-x: -304px;
+    background-position-x: -296px;
   }
 }
 
@@ -2851,7 +2856,7 @@ details.disclosure .disclosure-body {
     left: 0;
   }
   to {
-    left: calc(100% - 38px);
+    left: calc(100% - 37px);
   }
 }
 
@@ -2990,7 +2995,7 @@ details.disclosure .disclosure-body {
      scale; only her `left` needs saying, because the traversal keyframes
      carry it. */
   .splash-runner {
-    left: calc(100% - 38px);
+    left: calc(100% - 37px);
   }
 }
 

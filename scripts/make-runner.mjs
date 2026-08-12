@@ -19,11 +19,15 @@
 //
 // What it does:
 //   1. reads the approved sheet (art/pilot/approved/lucy-run-sheet.png,
-//      straight RGBA, transparent background),
-//   2. finds the eight frames by scanning for fully-transparent columns,
-//   3. trims the sheet vertically to the art,
-//   4. re-packs each frame centred in a uniform cell,
-//   5. writes img/lucy-run.png and prints the numbers the CSS needs.
+//      straight RGBA),
+//   2. keys out whatever the exporter left behind for a background,
+//   3. finds the eight frames by scanning for transparent columns,
+//   4. trims the sheet vertically to the art,
+//   5. re-packs each frame centred in a uniform cell,
+//   6. writes img/lucy-run.png and prints the numbers the CSS needs.
+//
+// Step 2 is not paranoia. Three sheets have been through here and two of them
+// were exported as "transparent" without being transparent; see WASH.
 //
 // Frames keep their *source* vertical position — the artist drew them on a
 // common ground plane, and a gallop's airborne frames are meant to sit higher
@@ -47,6 +51,50 @@ const EXPECTED_FRAMES = 8;
 // Breathing room inside each cell, so the widest frame doesn't touch the cell
 // edge and shimmer against its neighbour during the stepped animation.
 const CELL_PAD = 2;
+
+// Anything at or below this is background; above it, alpha is rescaled so the
+// surviving range still spans 0–255.
+//
+// "Transparent" in an export's filename means the exporter was asked for
+// transparency, not that it delivered it, and this is the one line of defence
+// against what it actually hands over. Two rejected sheets, both named
+// -transparent: one carried a single 1px column of 1–5/255 alpha in a gap
+// between frames, invisible at any size and enough to make the frame scan
+// count nine; the other carried its whole canvas at alpha 15–19 over a grey,
+// which is nothing on a dark drawing surface and a grey rectangle the size of
+// the cell once it is composited on the splash's cream.
+//
+// The rescale rather than a straight cut matters for sketched art, whose fur
+// edges are genuinely semi-transparent — cutting at a threshold trades a grey
+// box for a hard cut-out edge. On a clean sheet like the current one this is
+// close to a no-op, which is the point: it costs nothing and it catches the
+// export that isn't.
+const WASH = 8;
+
+// Alpha above this counts as art when finding the frame boundaries. It never
+// changes a pixel — it only decides where one frame ends and the next begins,
+// and where the band of art starts and stops vertically.
+//
+// Kept separate from WASH because a sheet can need a high bar here and a low
+// one there: frames six and seven are drawn 2px apart, so on a sheet with any
+// halo around the art the two dogs merge into one 405px-wide run and the
+// count fails. This sheet's edges are hard, so the two settings agree.
+const ALPHA_FLOOR = 8;
+
+// Cells round up to a multiple of this, and the CSS displays them divided by
+// it. Two things are being held at once.
+//
+// The hard requirement is that the display size is a whole number of CSS
+// pixels: `background-position-x` steps by one cell per frame, and a
+// fractional step slides a sliver of the next frame into view on every tick.
+//
+// The judgement is the size on the lane, and it does not change when the art
+// does. Somewhere around 38px leaves her an eighth of the run, which is what
+// makes the distance look like a distance; at a fifth she appears to arrive
+// almost as soon as she sets off. So when a sheet arrives bigger, this number
+// goes up to hold the dog the same size — six for this one's 222px cells,
+// where the first commissioned sheet's 114px cells wanted three.
+const DIVISOR = 6;
 
 // --- minimal PNG in/out ------------------------------------------------------
 // Same approach as make-icons.mjs: this project has no dependencies, and the
@@ -167,12 +215,27 @@ function encode(path, w, h, px) {
 
 const { w, h, px } = decode(SRC);
 
+// Key the wash out first, so every later step — the frame scan, the vertical
+// trim, the copy — is looking at the drawing rather than at the canvas it was
+// exported over. Counted, and reported, because "how much of this sheet was
+// background" is the one number that says whether the key did anything.
+let keyed = 0;
+for (let i = 3; i < px.length; i += 4) {
+  const a = px[i];
+  if (a <= WASH) {
+    px[i] = 0;
+    keyed++;
+  } else {
+    px[i] = Math.round(((a - WASH) / (255 - WASH)) * 255);
+  }
+}
+
 const columnHasInk = (x) => {
-  for (let y = 0; y < h; y++) if (px[(y * w + x) * 4 + 3] !== 0) return true;
+  for (let y = 0; y < h; y++) if (px[(y * w + x) * 4 + 3] > ALPHA_FLOOR) return true;
   return false;
 };
 const rowHasInk = (y) => {
-  for (let x = 0; x < w; x++) if (px[(y * w + x) * 4 + 3] !== 0) return true;
+  for (let x = 0; x < w; x++) if (px[(y * w + x) * 4 + 3] > ALPHA_FLOOR) return true;
   return false;
 };
 
@@ -201,22 +264,17 @@ while (bottom > top && !rowHasInk(bottom - 1)) bottom--;
 
 // --- re-pack ----------------------------------------------------------------
 
-// Cells are rounded up to even, because the sprite displays at exactly half
-// its native size — device pixels match source pixels 1:1 on the 2× screens
-// this app actually lives on. Half of an odd cell is a fractional CSS pixel,
-// and a fractional background-position-x step is how frames bleed into their
-// neighbours.
-const even = (n) => n + (n % 2);
-const cellH = even(bottom - top);
-const cellW = even(Math.max(...frames.map((f) => f.x1 - f.x0)) + CELL_PAD * 2);
+const round = (n) => n + ((DIVISOR - (n % DIVISOR)) % DIVISOR);
+const cellH = round(bottom - top);
+const cellW = round(Math.max(...frames.map((f) => f.x1 - f.x0)) + CELL_PAD * 2);
 const sheetW = cellW * frames.length;
 const out = Buffer.alloc(sheetW * cellH * 4);
 
 frames.forEach((f, i) => {
   const fw = f.x1 - f.x0;
   const dx = i * cellW + Math.floor((cellW - fw) / 2);
-  // bottom - top, not cellH: the even-rounding row at the foot of the cell is
-  // padding, and reading it from the source would run past the sheet.
+  // bottom - top, not cellH: the rounding rows at the foot of the cell are
+  // padding, and reading them from the source would run past the sheet.
   for (let y = 0; y < bottom - top; y++) {
     const srcOff = ((top + y) * w + f.x0) * 4;
     const dstOff = (y * sheetW + dx) * 4;
@@ -227,10 +285,16 @@ frames.forEach((f, i) => {
 const bytes = encode(OUT, sheetW, cellH, out);
 
 console.log(
+  `keyed ${((keyed / (w * h)) * 100).toFixed(1)}% of the source to transparent ` +
+    `(alpha <= ${WASH})`
+);
+console.log(
   `wrote img/lucy-run.png — ${frames.length} frames, ${cellW}×${cellH} each, ` +
     `sheet ${sheetW}×${cellH}, ${(bytes / 1024).toFixed(1)}KB`
 );
 console.log(
-  `CSS: width ${cellW}px; height ${cellH}px; background-size ${sheetW}px ${cellH}px; ` +
-    `steps(${frames.length}) to background-position-x -${sheetW}px`
+  `CSS: width ${cellW / DIVISOR}px; height ${cellH / DIVISOR}px; ` +
+    `background-size ${sheetW / DIVISOR}px ${cellH / DIVISOR}px; ` +
+    `steps(${frames.length}) to background-position-x -${sheetW / DIVISOR}px ` +
+    `(native cell ${cellW}×${cellH}, shown at 1/${DIVISOR})`
 );
