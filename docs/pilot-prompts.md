@@ -2392,6 +2392,90 @@ passed a review by the people who commissioned them and failed a stranger, so a
 third opinion from this side of the desk is worth nothing. The copy-to-neutral-
 names loop is in the pilot doc.
 
+## Batch 10 — the camera move
+
+One scene. `door-sound-03-name-distant` has now failed a blind check three
+times, and the third failure was different from the first two in a way that
+names the cause.
+
+| Attempt | What blind viewers said |
+| --- | --- |
+| Shipped | "looking up at nothing I can see" |
+| Body squared to the door, head turned back | "roughly 180 degrees away from her" |
+| Whole body turned down the hallway | "I cannot tell — her eyes are not visible" |
+
+**The two fixes are in opposition from where the camera is standing.** It sits
+beside the front door looking down the hall, and that is the one position where
+a dog facing down the hall must have her back to it. Point her at the handler
+and you lose her face; show her face and she is squared to the door. Three
+attempts have been spent trading one for the other, and a fourth would trade it
+again.
+
+So this is not another pose note. **Move the camera** so the sightline lies
+across the frame instead of into it: both figures side-on, facing each other,
+with the distance between them running left to right. A stranger reads two
+profiles facing each other instantly, and there is nothing left to infer.
+
+### Scene 47 — Called from another room, shot side-on
+
+*Redraws `door-sound-03-name-distant` for the third time. **The fix:** the
+camera, not the dog. See the table above and the batch 9 section of
+[comprehension-pilot.md](comprehension-pilot.md). Recorded honestly there: the
+viewers are language models, left/right is a known weak spot for them, and
+zoomed in her muzzle really is turned down the hallway in both earlier
+attempts. This is being redrawn because it is the only Block A image no
+outsider has ever read correctly, not because the drawing is incompetent.*
+
+> **Attach `art/pilot/approved/door-sound-03-name.png`** for the cast, the
+> palette and Lucy's coat — but **not for the camera**. That one is a close
+> two-shot; this is a wide one.
+>
+> **Shoot the whole scene side-on, like a stage.** The camera looks straight at
+> the back wall of a long hallway. Lucy and the handler are both **in full
+> profile, at the two ends of the frame, facing each other across it.** The
+> distance between them runs left to right across the picture, not away from
+> the viewer.
+>
+> **Lucy sits on the right**, on her deep grey quilted bed, **her whole flank
+> to the camera** — a clean side view. **Her muzzle and her eye are in clear
+> profile and both point left, straight at the handler.** Her head is straight
+> forward on her body, not twisted over her shoulder. Her ears are forward. Do
+> not turn her body toward the camera, do not put her back to it, and do not
+> square her to the door: **her body, her head and her eyes all point the same
+> way, at the handler.**
+>
+> **The handler crouches on the left**, low, also in profile, **facing right
+> toward Lucy**, with both arms open toward her. Her face is turned to Lucy and
+> is at roughly Lucy's eye height, so the line between their faces is close to
+> horizontal.
+>
+> **Keep them far apart** — a long empty stretch of floorboards between them,
+> most of the width of the frame. She is being called from the other end of the
+> home and the distance is the point of the step.
+>
+> The **front door is behind Lucy at the right-hand edge**, closed, mostly out
+> of frame — enough to say this is the entry hall and no more. A woven doormat
+> in front of it. Background is one plain wall and the floor: no furniture, no
+> pictures, no doorways, nothing between them to break the sightline.
+>
+> The black leash runs from her collar and lies slack in a loop on the floor.
+> Purple collar, round blue tag, bearded muzzle, tufted brows, no white on her
+> face, no harness.
+>
+> The single thing this image must make obvious: **the two of them are looking
+> straight at each other down the length of the room.**
+>
+> Landscape 4:3, wider than tall.
+
+### Landing it
+
+node scripts/pilot.mjs add door-sound-03-name-distant
+
+`SHIPPED_AS` needs 14 → 47. **Then blind-check it before installing**, the way
+batch 9 was checked — this scene's whole history is people who commissioned it
+reading it correctly and strangers not. If a third camera still does not carry
+it, stop drawing and rewrite the claim to what the picture can hold.
+
 ---
 
 ## The crop tests, and how to re-run them
