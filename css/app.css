@@ -2813,10 +2813,12 @@ details.disclosure .disclosure-body {
 
    `splash-run-across` is the progress: it carries her from the left of the
    lane to the right over --splash-run, which app.js sets to the hold that is
-   left after the boot and the lane's entrance are both paid for. She waits at
-   the start line while the ground rolls out, sets off when it has finished
-   arriving, and crosses in one unbroken linear run that lands exactly on the
-   dismissal — boot time sets her speed, never her starting line.
+   left after the boot and the lane's entrance are both paid for, plus the
+   fade. She waits at the start line while the ground rolls out, sets off when
+   it has finished arriving, and crosses in one unbroken linear run that lands
+   exactly as the fade finishes — still moving while the splash dims, never
+   parked at the finish on a visible screen. Boot time sets her speed, never
+   her starting line.
 
    Both animations live behind .splash--running, which app.js adds only after
    writing --splash-run and --splash-run-delay. That ordering is the fix for a

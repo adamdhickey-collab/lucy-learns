@@ -230,11 +230,16 @@ if (splash) {
   //
   // The delay holds her at the start line until the lane's own entrance has
   // finished, so the sequence reads: ground rolls out, dog sets off, dog
-  // arrives exactly as the splash leaves. The run is stretched to whatever
-  // hold is left after the delay — boot time sets her speed, never her
-  // starting line. On a boot slow enough to eat the entrance, the delay
-  // collapses to zero and she simply runs what remains; past the hold
-  // entirely, both go to zero and the splash is already leaving.
+  // crosses the finish as the last of the splash fades out. The run is
+  // stretched to whatever hold is left after the delay *plus the fade*: the
+  // dismissal starts the fade at the hold, and she runs on through it,
+  // reaching the end exactly as opacity reaches zero. Ending the run at the
+  // start of the fade instead meant 420ms of dog standing at the finish line
+  // on a splash that was still perfectly visible — which read as arriving
+  // early, because it was. Boot time sets her speed, never her starting
+  // line. On a boot slow enough to eat the entrance, the delay collapses to
+  // zero and she simply runs what remains; past the hold entirely, both go
+  // to zero and the splash is already leaving.
   //
   // LANE_IN_END_MS mirrors `splash-progress-in 460ms 820ms` in app.css, by
   // hand — change one, change both. The two clocks differ by first paint
@@ -247,7 +252,10 @@ if (splash) {
   const runDelay = Math.min(Math.max(LANE_IN_END_MS - elapsed, 0), remaining);
   splash.style.setProperty('--splash-hold', `${SPLASH_HOLD_MS}ms`);
   splash.style.setProperty('--splash-run-delay', `${Math.round(runDelay)}ms`);
-  splash.style.setProperty('--splash-run', `${Math.round(remaining - runDelay)}ms`);
+  splash.style.setProperty(
+    '--splash-run',
+    `${Math.round(remaining - runDelay + SPLASH_FADE_MS)}ms`
+  );
   splash.classList.add('splash--running');
 
   if (!location.search.includes('splash-hold')) {
