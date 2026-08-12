@@ -21,6 +21,7 @@ import {
   headlineInsight,
   activityMastery,
   currentLevel,
+  repCount,
   successRate,
   sessionsAt,
   relativeDay,
@@ -31,6 +32,7 @@ import {
   badge,
   icon,
   pct,
+  reps,
   mmss,
   focusHeading,
   refreshApp,
@@ -134,11 +136,18 @@ function render() {
 
   const mastery = LIVE_ACTIVITIES.map((activity) => {
     const level = currentLevel(activity);
-    const rate = successRate(sessionsAt(activity.id, level.number));
+    const at = sessionsAt(activity.id, level.number);
+    const rate = successRate(at);
     return html`<div class="mastery-row">
       <strong>${activity.title}</strong>
+      ${/* The rate never appears without the reps behind it — same house rule
+            as the lesson report. A bare "100%" on this row can be one session
+            of four, and this is the screen a household reads to decide
+            whether a level is done. */ ''}
       <div class="under">
-        <small>Level ${level.number} · ${level.title}${rate !== null ? ` · ${pct(rate)}` : ''}</small>
+        <small>Level ${level.number} · ${level.title}${
+          rate !== null ? ` · ${pct(rate)} of ${reps(repCount(at))}` : ''
+        }</small>
         ${badge(activityMastery(activity.id))}
       </div>
     </div>`;

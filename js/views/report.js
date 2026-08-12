@@ -20,9 +20,7 @@ import {
   successRate,
   relativeDay,
 } from '../metrics.js';
-
-const reps = (n) => `${n} rep${n === 1 ? '' : 's'}`;
-import { html, join, badge, pct, toast, focusHeading } from '../ui.js';
+import { html, join, badge, pct, reps, toast, focusHeading } from '../ui.js';
 
 // 14 days covers the common every-other-week lesson cadence by default.
 let rangeDays = 14;

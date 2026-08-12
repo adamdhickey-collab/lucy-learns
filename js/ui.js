@@ -372,6 +372,17 @@ export function confirmSheet({
 
 export const pct = (value) => (value === null || value === undefined ? '—' : `${Math.round(value * 100)}%`);
 
+/**
+ * "35 reps" / "1 rep" — the count that goes next to a percentage.
+ *
+ * Lives here rather than in each view because the rule it enforces is a house
+ * rule: a rate is never printed without the number of repetitions behind it.
+ * Three trainers reading the lesson report cold all asked the same question of
+ * every percentage on it, and 77% of thirteen reps and 77% of two hundred are
+ * the same number carrying different amounts of evidence.
+ */
+export const reps = (n) => `${n} rep${n === 1 ? '' : 's'}`;
+
 export const mmss = (seconds) => {
   if (seconds === null || seconds === undefined) return '—';
   const m = Math.floor(seconds / 60);

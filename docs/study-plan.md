@@ -366,11 +366,28 @@ turns out to rest on **56 reps across 12 sessions** — under five reps a sessio
 single session of five. Both were true before; neither was legible. That is the
 whole argument for printing the denominator.
 
-**Left alone deliberately:** the same bare percentages appear on the progress
-screen ([progress.js](../js/views/progress.js), the mastery rows) and on an
-activity's detail screen. The blind read was of the report — the document a
-trainer acts on — and the fix stops there rather than sweeping the app on the
-strength of a finding from one screen.
+**And then across the app, in 1.78.0.** The same bare percentages were on the
+progress screen's mastery rows and on an activity's detail screen, so the rule
+became a house rule: `reps()` lives in [ui.js](../js/ui.js) beside `pct()`, and
+a rate is not printed without the count behind it.
+
+The progress rows were the better catch of the two. *Doorbell Predicts Rewards*
+read **100%** and *Stay While the Door Opens* read **100%**; they now read
+*"100% of 5 reps"* and *"100% of 4 reps"*, directly above a note explaining
+that a level clears at 75%. That is the screen a household uses to decide
+whether a level is done.
+
+The detail screen's line was closer to a misreading than a gap. It said *"7
+sessions logged · 100% success at level 4"* — two numbers in one sentence, of
+which the percentage covers only the sessions at the current level, not the
+seven. It now says *"7 sessions logged · level 4: 100% of 5 reps went well"*.
+
+Two percentages are still bare, both on purpose. The **calm rate** is
+denominated in sessions rather than reps, and its session count is in the card
+immediately beside it. The **trend line** would have to carry the previous
+window's rep count as well, which is more arithmetic than a one-line comparison
+can hold. The post-session screen never needed the fix: it has always printed
+*"4/5 went well"* next to the percentage.
 
 **Still not fixed:** the headline is largely one activity. 7 of the 12 sessions
 are *Doorbell Predicts Rewards*, so the top-line number is close to a

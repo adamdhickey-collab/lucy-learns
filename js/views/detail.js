@@ -11,6 +11,7 @@ import { setLevel, resolveCue, sessionsFor } from '../store.js';
 import {
   currentLevel,
   masteryFor,
+  repCount,
   successRate,
   sessionsAt,
   relativeDay,
@@ -26,6 +27,7 @@ import {
   icon,
   difficultyDots,
   pct,
+  reps,
   focusHeading,
   refreshApp,
 } from '../ui.js';
@@ -120,7 +122,8 @@ function render({ slug }) {
 
   const active = currentLevel(activity);
   const history = sessionsFor(activity.id);
-  const rate = successRate(sessionsAt(activity.id, active.number));
+  const atLevel = sessionsAt(activity.id, active.number);
+  const rate = successRate(atLevel);
 
   const { program: prog, stage } = stageFor(activity);
 
@@ -200,7 +203,9 @@ function render({ slug }) {
         <p class="section-note" style="margin-bottom: var(--s-3)">
           ${history.length
             ? `${history.length} session${history.length === 1 ? '' : 's'} logged${
-                rate !== null ? ` · ${pct(rate)} success at level ${active.number}` : ''
+                rate !== null
+                  ? ` · level ${active.number}: ${pct(rate)} of ${reps(repCount(atLevel))} went well`
+                  : ''
               }`
             : 'Start at level 1. You can always move down.'}
         </p>
