@@ -274,6 +274,82 @@ kind of pass at all.
 **Not acted on yet.** Weighting the comparison, or labelling which levels each
 week covered, is a product decision rather than a copy fix.
 
+---
+
+## Blind read of the lesson report
+
+Three readers, each given the report screen cold and told they are the trainer
+receiving it at the start of a lesson, with ninety seconds to read it. None saw
+the app, the code, or each other.
+
+This is the screen the whole product argues for — the first ten minutes of
+every follow-up, prepared — and until now nobody outside this project had read
+it.
+
+### One claim was mine, not the app's
+
+All three said **"three date-range buttons, no indication which is active"**.
+That is false: *Two weeks* carries `aria-pressed="true"` and a `--primary-wash`
+background. **My text capture stripped the visual state before they saw it.**
+
+Worth recording because it is the second time this project's *method* has
+manufactured a finding — the first was filenames leaking answers into the image
+survey. A text rendering is not a screen, and any finding about emphasis,
+colour or active state has to be checked against the real DOM before it counts.
+
+### Verified, and worth fixing
+
+**The trend line disappears silently.** The report does compute direction of
+travel — "up from 71% the previous 14 days", "steady against…" — and then
+renders nothing at all when there is no prior window to compare against
+(`priorRate === null`). Confirmed: the demo history spans 12 days, so a
+fortnight view has an empty prior window and the line is simply absent.
+
+A trainer cannot tell *"flat"* from *"there was nothing to compare"*. And it
+fails hardest exactly when it matters most: the first weeks with a new client,
+when the report is the only history there is. All three readers listed "no
+direction of travel" as their top missing item, and one said both directions
+average to the same number and need opposite lessons.
+
+**The skill list and its own summary disagree.** The sentence says *"1 of 4
+activities finished"* while only **three** rows are listed — activities with no
+sessions in the range are dropped (`if (!mine.length) return null`) but still
+counted in the total. Two readers noticed and both concluded there was an
+activity being hidden from them. There is: *Controlled Real Greeting*, not yet
+started.
+
+**No denominators anywhere.** "77% of reps went well" without the rep count,
+and "60% went well" over a single session is set in the same weight as "77%"
+over seven. Every reader raised it independently; one put it plainly — *"77% of
+13 reps and 77% of 200 reps are different animals."*
+
+**The headline is one activity wearing a hat.** 7 of the 12 sessions are
+*Doorbell Predicts Rewards*, which itself scores 77% — so the top-line number
+is close to a restatement of one skill, presented as a statement about the dog.
+
+### True, and not defects
+
+The criterion behind "went well" is undefined and self-scored, and the mastery
+badges are the app's thresholds rather than the trainer's judgement. Both are
+inherent to a home-practice log, both were the *first thing* every reader
+wanted to interrogate, and neither is fixable by moving pixels. The honest
+response is for the report not to over-claim, which is the same lesson as the
+calm rate.
+
+### The one finding I did not expect
+
+**All three said the notes are the most useful thing on the screen, and all
+three noted they are at the bottom in the smallest type.** Two said they would
+start the lesson there. The single sentence a household typed — *"Neighbor
+stopped by unannounced. She recovered once she was on her bed"* — beat twelve
+sessions of scored practice for every reader, because it is the only
+unrehearsed event on the page.
+
+They also converged on the same two opening questions, unprompted: *what does
+"went well" mean to you*, and *tell me about the neighbour*. Both point at the
+same gap. The report is rich in grades and thin on the two things a trainer
+actually works from: the criterion, and what happened when it was real.
+
 ### What this run cannot tell you
 
 Every caveat in the section below still applies, plus one specific to the
