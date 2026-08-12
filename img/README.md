@@ -38,7 +38,7 @@ are all level-3 images and sort together.
 | File | What it is |
 | --- | --- |
 | `door-cover.jpg` | the program cover, used by the welcome panel |
-| `lucy-portrait.jpg` | Lucy's photo on her own tab (`js/config.js`) |
+| `lucy-portrait.jpg` | Lucy's picture on her own tab (`js/config.js`) — a head crop of the app icon, see below |
 | `splash-mark.jpg` | the splash artwork; iOS launch images are baked from it |
 | `lucy-run.png` | the 8-frame sprite that runs the splash out |
 | `icon-*.png`, `apple-*.png` | generated — see `scripts/make-icons.mjs` |
@@ -52,6 +52,19 @@ Change the source in `art/` and re-run:
     node scripts/make-runner.mjs     lucy-run.png, from art/pilot/approved/lucy-run-sheet.png
     node scripts/make-icons.mjs      the icon set
     node scripts/make-splash.mjs     the iOS launch images, from art/source/splash-source.png
+
+`lucy-portrait.jpg` is also derived, but by hand rather than by a script — it
+is one crop that has been re-cut twice, which is not enough to earn a
+generator. It is a head crop of the icon:
+
+    sips icons/source.png --cropToHeightWidth 880 880 --cropOffset 0 198 --out /tmp/lp.png
+    sips -Z 400 -s format jpeg -s formatOptions 82 /tmp/lp.png --out img/lucy-portrait.jpg
+
+The numbers are measured, not guessed. In the 1254² icon her head spans
+x 228–1048 and y 71–620, with the collar narrowing at y≈610. An 880 square at
+x 198 centres her face horizontally and keeps both ear tips; y 0 takes all 71
+available pixels of headroom, which is the most there is. Anything tighter
+clips an ear — a 740 crop was tried and did. Re-measure if the icon changes.
 
 ## Adding an image
 

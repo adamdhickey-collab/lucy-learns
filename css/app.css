@@ -2177,10 +2177,12 @@ details.disclosure .disclosure-body {
   border-radius: 50%;
   /* `cover` still earns its place as a guard — it keeps any future portrait
      filling the circle instead of squashing — but it does nothing to the
-     current one. The portrait is the app icon, square, in a square box, so
-     there is nothing to crop. The `object-position: 30% 40%` that used to sit
-     here was aimed at the off-centre artwork this replaced; left in place it
-     would have looked deliberate while meaning nothing. */
+     current one. The portrait is a square crop of the app icon in a square
+     box, so there is nothing left to crop; the framing was done in the file
+     (see img/README.md) rather than here, because a circle clips the corners
+     and object-position cannot know that. The `object-position: 30% 40%` that
+     used to sit here was aimed at the off-centre artwork this replaced; left
+     in place it would have looked deliberate while meaning nothing. */
   object-fit: cover;
   flex: none;
   background: var(--surface-sunken);
