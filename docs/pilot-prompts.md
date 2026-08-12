@@ -134,6 +134,18 @@ pays her, the food has to be in the frame and separate from the fingers.
 > She is an adult dog with accurate, real canine body language — never
 > anthropomorphised, never given human expressions.
 >
+> **Her gaze is carried by the angle of her head, never by her eyes.** She is a
+> black dog, and at the size these render her eye is a dark shape on dark fur —
+> thirteen blind viewers of `door-sound-03-name-distant` said so unprompted:
+> "the eye is barely legible", "dark with little contrast", "I can only read
+> direction from the head angle, not the pupils". So any brief that needs her
+> looking at something must point her **whole muzzle** at it and must say where
+> that thing is **relative to her head**: a crouching person is *below* a
+> sitting dog, and she has to look **down** to meet them. Four attempts at that
+> one image were lost to drawing her in the default alert pose — chin up, ears
+> forward, eyes bright — which sends her sightline over the head of anyone
+> kneeling in front of her.
+>
 > **The handler** is a woman in her thirties with dark brown hair in a ponytail,
 > an olive-green hoodie, dark navy jeans, grey sneakers, and a mustard-yellow
 > treat pouch clipped at her right hip. Her face is in profile or turned away.
