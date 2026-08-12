@@ -2265,6 +2265,123 @@ being left out of the panel that exists to check exactly that. Fixed to gather
 the whole italic block. The session estimate is now computed from the counts
 rather than hardcoded, because that is how it went stale unnoticed.
 
+## Batch 9 — the two the blind pilot failed
+
+Both of these already replaced a §5 defect once, and the blind re-run found the
+defect still there. So these are **second** attempts at the same two problems,
+which is the reason each brief below spends most of its length on one thing.
+
+Read the run first: [comprehension-pilot.md](comprehension-pilot.md), the
+"Block A, second run" section. The short version is that the first pilot was
+handing viewers filenames like `door-sound-03-name-distant.jpg` and asking what
+the dog was doing, and one picture passed on the strength of its own filename.
+
+**Two different reference images.** Do not attach the same one to both — each
+scene is being pulled toward a specific picture that already works.
+
+### Scene 45 — Called from another room, redrawn so she is looking at her
+
+*Redraws `door-sound-03-name-distant`. **The fix:** the dog's gaze. This scored
+**0/4** in the blind run — "looking up and off to the side", "looking upward at
+nothing I can see", "looking up and away toward the upper right rather than at
+her". That is `dg-05`'s recorded defect, the dog facing away from the person
+calling her, surviving its own replacement. The first redraw turned her head
+part of the way down the hall and then sent her eyes above the handler's head.
+All four viewers also could not tell what the distant handler's raised hand was
+doing — "a hand signal, a wave, or reaching for a light switch".*
+
+> **Attach `art/pilot/approved/door-sound-03-name.png`.** That is the same
+> activity and the same pair getting the eyeline exactly right at close range;
+> this scene is that eye contact, at the length of a hallway.
+>
+> Lucy sits on her grey bed in the foreground near the front door. **Her whole
+> head is turned down the hallway and her eyes are locked on the handler's
+> face.** Draw a straight, unobstructed sightline between them: if you cannot
+> trace a line from her pupils to the handler's face, the image is wrong. Her
+> eyes must not go above the handler, past her, or into the middle distance —
+> **that is the single defect this redraw exists to correct, and it has now
+> failed twice.**
+>
+> **The handler crouches, low, at the far end of the hallway, with both arms
+> open toward Lucy.** She was standing with one hand raised and no viewer could
+> read it. A crouch with open arms is a different silhouette rather than a
+> different detail, and a silhouette is all that survives at that distance.
+> Crouching also drops her face toward Lucy's eye level, which is what makes
+> the sightline believable — a seated dog looking at a standing adult fifteen
+> feet away is looking slightly *up*, and that upward angle is exactly what
+> went wrong.
+>
+> Keep the distance. **She is far away, small in frame, at the end of the
+> hall** — the whole point of this step is that Lucy is being called from
+> another room, so do not bring her closer to make the gaze easier.
+>
+> The black leash runs from Lucy's collar and lies slack in a loop on the
+> floor. Her scruffy bearded muzzle and tufted brows, no white on her face.
+>
+> The single thing this image must make obvious: **she is looking straight at
+> the person calling her from the far end of the hall.**
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 46 — Send her to her bed, redrawn as arriving
+
+*Redraws `door-place-03-send`. **The fix:** the direction. It scored 3/4, and
+the number flatters it — **all four volunteered that they could not tell
+whether she was getting on the bed or off it**, and the one who committed said
+"walking away from her off the far side". One called it the image they were
+least sure of in the set. That is `dg-06`'s recorded defect, the direction
+backwards, surviving its own replacement. In the current picture only her front
+paws are on the bed, her whole body is still on the floor, and her head is low
+and turned away from the handler — nothing in it says* sent.
+
+> **Attach `art/pilot/approved/door-greet-04-open.png`.** That is the same bed,
+> the same room and the same dog with the coat right, and it is one of the
+> pictures the blind run passed 4/4.
+>
+> **Most of Lucy is on the bed.** All four feet on it, or at the very least
+> three, with her body over the bed and not over the floor. She has arrived —
+> **do not draw her balanced at the moment of stepping on.** A still cannot
+> show "about to", and front-paws-on is the exact pose that failed here and
+> failed again on `door-stay-05-release` from the other side. If a stranger
+> could describe her as leaving, it is wrong.
+>
+> **Her head is up and turned back toward the handler**, ears toward her. That
+> is what makes it a dog who was *sent* rather than a dog who happened to be
+> standing there — currently her head is down and turned away, which reads as
+> her own idea or as walking off.
+>
+> The handler stands where she is, **arm extended, index finger pointing at the
+> bed**, the coiled black leash in her other hand, treat pouch at her hip. She
+> stays behind and to the side; she is not luring and there is no food in the
+> pointing hand.
+>
+> **The bed is the deep grey mattress**, as in the attached image — piped edge,
+> quilted top, a hand's depth. Not a thin mat.
+>
+> **Her coat is the wirehaired mix, not a smooth Labrador** — bearded jaw,
+> tufted brows, wiry along the back. The picture being replaced drew her
+> smooth-faced, the same drift batch 8 corrected in the planned covers.
+>
+> The single thing this image must make obvious: **she has arrived on the bed
+> and is looking back at the person who sent her.**
+>
+> Landscape 4:3, wider than tall.
+
+### Landing these two
+
+Each lands under its existing key, so nothing in `js/content.js` moves:
+
+node scripts/pilot.mjs add door-sound-03-name-distant
+
+node scripts/pilot.mjs add door-place-03-send
+
+`SHIPPED_AS` needs 14 → 45 and 16 → 46. Then regenerate the survey.
+
+**Then re-run them blind, with the filenames stripped.** Both of these have now
+passed a review by the people who commissioned them and failed a stranger, so a
+third opinion from this side of the desk is worth nothing. The copy-to-neutral-
+names loop is in the pilot doc.
+
 ---
 
 ## The crop tests, and how to re-run them
