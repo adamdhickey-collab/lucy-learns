@@ -1,5 +1,38 @@
 # Maze setup sheet
 
+> **Built. The draft exists** as *Lucy Learns – first-run usability*, in the
+> *Lucy Learns* project:
+> `app.maze.co/projects/573145028/mazes/573145029`
+>
+> It is a **draft** — nothing published, nobody recruited, nothing paid for.
+> What is left is the dry run below and then Publish.
+>
+> **Three things were decided at the keyboard that this sheet did not
+> anticipate:**
+>
+> 1. **Screen recording is OFF.** Maze warns that *"screen recording on mobile
+>    requires the Maze Participate app"* — fifteen panellists each installing an
+>    app is real friction and skews the sample toward the more technical. The
+>    click paths answer M3, M4 and M6, which are the questions that matter.
+>    Reverse it in Study requirements → Clips if you would rather have the
+>    recordings and accept the drop-off.
+> 2. **M5 is two blocks, not one.** An Open Question does not open the app, so
+>    "look at Progress and tell me what it says" needs a Website Test *then* the
+>    question. It is built that way.
+> 3. **M6 now runs before M5**, which is a change from the order below and an
+>    improvement. M5 sends people to Progress and asks them to read it; the
+>    report M6 hunts for is at the bottom of that same screen. Running M5 first
+>    would have primed M6 and inflated its pass rate.
+>
+> **Already verified, so you do not need to:** all three URL variants survive
+> Maze's link field with the hash intact (`?study=welcome`, `?study#/today`,
+> `?study#/progress`) — that was the biggest risk on the checklist below. Maze
+> also resolved the page title and favicon, so it can reach the site.
+>
+> Still yours to do: the **mobile dry run**, which is the one that protects the
+> money.
+
+
 Everything to type into the Maze builder, in the order the builder asks for it.
 The reasoning behind each mission — why it exists, what result changes what — is
 in [study-plan.md](study-plan.md); this file is just the fields.
