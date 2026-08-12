@@ -257,6 +257,17 @@ export function weekSummary(offset = 0) {
     .map((s) => s.recoverySeconds)
     .filter((n) => typeof n === 'number');
 
+  // The average level practised, so the calm rate can say whether two weeks are
+  // comparable. `calmRate` is a flat count of calm sessions over all sessions,
+  // and nothing in it knows that level 1 is easier than level 5 — so a week
+  // spent on early rungs scores higher than a week spent on late ones for the
+  // same dog, and the screen was presenting that as improvement.
+  //
+  // Found by asking three people to read the Progress screen cold. All three
+  // answered "yes, she is getting calmer" off the headline and then, unprompted,
+  // pointed out that the two weeks were not the same work.
+  const levels = sessions.map((s) => s.levelNumber).filter((n) => typeof n === 'number');
+
   return {
     from,
     to,
@@ -264,6 +275,7 @@ export function weekSummary(offset = 0) {
     incidents,
     count: sessions.length,
     calmRate: sessions.length ? calm / sessions.length : null,
+    avgLevel: levels.length ? levels.reduce((a, b) => a + b, 0) / levels.length : null,
     successRate: successRate(sessions),
     jumps: sessions.filter((s) => (s.behaviorsObserved || []).includes('jumped')).length,
     nips: sessions.filter((s) => (s.behaviorsObserved || []).includes('nipped')).length,

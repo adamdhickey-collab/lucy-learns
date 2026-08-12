@@ -56,6 +56,32 @@ function metric(value, label, note) {
 }
 
 /**
+ * The "last week" line under the calm rate, qualified when the two weeks were
+ * not the same work.
+ *
+ * The rate counts calm sessions over all sessions and knows nothing about
+ * difficulty, so a week on level 1 outscores a week on level 5 for the same
+ * dog. Left bare, "83% — 57% last week" reads as a calmer dog when it can just
+ * as easily be an easier week, and this screen is what a household hands their
+ * trainer.
+ *
+ * Half a level is the threshold: below that the mix has not really moved, and
+ * flagging it every week would make the qualifier invisible by repetition.
+ * Stated in words rather than as an adjusted number, because there is no honest
+ * weighting — how much harder level 4 is than level 3 is not a thing this app
+ * knows, and inventing a coefficient would bury the caveat in arithmetic.
+ */
+function calmNote(week, prior) {
+  if (prior.calmRate === null) return '';
+  const base = `${pct(prior.calmRate)} last week`;
+  if (week.avgLevel === null || prior.avgLevel === null) return base;
+
+  const shift = week.avgLevel - prior.avgLevel;
+  if (Math.abs(shift) < 0.5) return base;
+  return shift < 0 ? `${base}, on harder levels` : `${base}, on easier levels`;
+}
+
+/**
  * A written comparison rather than another dashboard tile. Direction is stated
  * in words, so the arrow is decoration and not the only signal.
  */
@@ -219,11 +245,7 @@ function render() {
                   week.count === 1 ? 'Session' : 'Sessions',
                   prior.count ? `${prior.count} last week` : ''
                 )}
-                ${metric(
-                  pct(week.calmRate),
-                  'Stayed calm',
-                  prior.calmRate !== null ? `${pct(prior.calmRate)} last week` : ''
-                )}
+                ${metric(pct(week.calmRate), 'Stayed calm', calmNote(week, prior))}
               </div>
 
               <div class="card" style="margin-top: var(--s-3)">
