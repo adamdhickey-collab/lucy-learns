@@ -143,7 +143,7 @@ and the test is whether any of them land.
 
 ### M6 — Hand something to the trainer
 
-> You see your trainer tomorrow. Get to something you could show them.
+> You have a lesson with your trainer tomorrow and they want to see how the last few weeks have gone. Find the summary you would hand them.
 
 Start: `https://adamdhickey-collab.github.io/lucy-learns/?study#/today`
 
@@ -189,6 +189,99 @@ down is to be able to stop.
 - **Check the URLs resolve with the query before the hash.** Paste each one; do
   not retype.
 - Record the version tested in the run log so results stay attached to a build.
+
+---
+
+## Synthetic first-tap run, before any panel
+
+Twelve viewers, three per mission, each shown one mission cold and nothing else.
+They were given the screen as a faithful text listing — every line in order,
+every tappable marked — and asked **where they would tap first**, plus whether
+they were confident or guessing.
+
+**Why first tap and not completion.** An earlier synthetic run drove the whole
+app and finished 6/6, which measured nothing: models do not give up, do not
+skim, and will scroll to the bottom of the longest page in the app. First
+instinct is the part that transfers. It is also what M3, M4 and M6's thresholds
+are actually about.
+
+| Mission | First tap correct | Confident |
+| --- | --- | --- |
+| M3 find the activity | 3/3 (via Activities) | 0/3 on the tab, **3/3 on the activity** |
+| M4 record a moment | **3/3** | 3/3 |
+| M5 read the data | n/a — answered correctly 3/3 | immediate |
+| M6 something for the trainer | **0/3** | 0/3 — every one guessing |
+
+### Two predictions of mine were wrong
+
+**M4 was supposed to be the likeliest failure.** The plan says moment logging
+"is not a tab — it is reached from a card" and warns it may be effectively
+unshipped. All three went straight to it, confidently, quoting the card's own
+subtitle back: *"a real arrival … is exactly what this control is described as
+capturing."* The copy is doing the work.
+
+**M3's naming trap did not catch anyone.** Three activities are protocols about
+a dog, a door and a bed, and I expected people to land on the wrong doorbell
+one. All three picked *Doorbell Means Place*, all confident, and all three named
+*Stay While the Door Opens* as the runner-up while correctly explaining the
+difference — that one starts with her already on the bed. **The one-line
+descriptions separate them even though the names do not.** Do not shorten those
+descriptions.
+
+### M6 fails, but the mission may be at fault
+
+Nobody's first tap was Progress. Two went to *Start session*, one to *Record a
+moment*, and **all three flagged themselves as guessing** — because "get to
+something you could show them" reads two ways: *do* something new worth showing,
+or *find* a summary. Two said so explicitly.
+
+So this is not yet evidence that the report is unfindable. It is evidence that
+**the mission wording is ambiguous**, which would have burned a real panel. The
+Maze block has been reworded to name the artefact without naming the button.
+Worth noting that two of three named Progress as their *second* guess.
+
+The quantified version of the original worry stands regardless: *"Prepare for
+your next lesson"* is **line 88 of 89** on the Progress screen.
+
+### The finding that is worth the whole run
+
+All three M5 viewers answered "yes, she is getting calmer" **immediately**, off
+`83% Stayed calm` against `57% last week`. Then, unprompted, all three produced
+the same critique — and it is about the product, not the picture of it:
+
+- **`Jumping — 2 sessions — New this week`** sits directly under a calm rate
+  that supposedly rose 26 points.
+- **The two weeks are not the same difficulty.** Last week's logged work was
+  Level 5; this week is mostly Levels 1–3. Verified in code:
+  [js/metrics.js](js/metrics.js) computes `calmRate` as `calm / sessions.length`
+  for the week, **with no weighting by level**. So part of 57% → 83% is easier
+  drills, and the screen offers no way to see that.
+- **The only real-life event went badly** — the guest who arrived unannounced —
+  and it is buried sixth in a reverse-chronological list with nothing tying it
+  to the headline.
+- **83% has not met the app's own "Reliable" bar** of 90%, which is stated on
+  the same screen.
+
+One viewer put it in a sentence worth keeping: *"The screen makes the optimistic
+read effortless and the skeptical read work."*
+
+That is a real problem for a screen whose job is to prepare an honest handover
+to a trainer. It is not a usability defect and a panel would probably never
+surface it — participants answer the question asked. It is exactly what careful
+readers are good at finding, and it is the strongest argument for running this
+kind of pass at all.
+
+**Not acted on yet.** Weighting the comparison, or labelling which levels each
+week covered, is a product decision rather than a copy fix.
+
+### What this run cannot tell you
+
+Every caveat in the section below still applies, plus one specific to the
+method: these viewers saw the screen as *text*. They cannot tell you what
+someone's eye lands on, whether the illustration pulls attention away from the
+button, or whether a 60px tap target is comfortable. Twelve viewers agreeing on
+a first tap is a signal about **wording and information scent**, and nothing
+more.
 
 ## What this cannot tell you
 

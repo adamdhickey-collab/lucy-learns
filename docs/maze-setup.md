@@ -130,7 +130,7 @@ whether any of them land.
 
 **URL** `https://adamdhickey-collab.github.io/lucy-learns/?study#/today`
 
-> You see your trainer tomorrow. Get to something you could show them.
+> You have a lesson with your trainer tomorrow and they want to see how the last few weeks have gone. Find the summary you would hand them.
 
 Pass: reaches the lesson report. Its only entry point is a button at the very
 bottom of Progress, below the whole recent-activity list.
