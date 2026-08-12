@@ -805,6 +805,12 @@ existing thirty are untouched. Each round is kept where it landed —
 `art/pilot/round-1/`, `round-2/`, `round-3/` — and `approved/` holds copies, so
 the provenance of every approved frame stays readable.
 
+> **Since superseded (2026-08-12).** Rounds 1–19 were deleted; only
+> `art/pilot/approved/` and the current round survive. The "From" column below
+> is now a record of where a frame came from rather than a path you can open.
+> It is left as written because the provenance is the point — which round a
+> frame won in is what these tables are for.
+
 | Approved | From | Replaces |
 | --- | --- | --- |
 | `door-sound-01-setup.png` | round 2 | `dg-02` |
@@ -817,7 +823,8 @@ the provenance of every approved frame stays readable.
 
 `art/pilot/approved/` is committed. The six working rounds are not — 34 MB of
 superseded drafts, kept locally, with what they taught written down here
-instead.
+instead. *(They were deleted on 2026-08-12, along with every round through 19.
+Writing it down here is what made that safe.)*
 
 ### 7.1 Round 1 — the style test
 

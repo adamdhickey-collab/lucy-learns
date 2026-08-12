@@ -316,8 +316,8 @@ rather than re-pasting them, or the model will redraw the whole scene.
 
 ### 3A — `door-cover`: give her the scruffy muzzle back
 
-*Attach `art/pilot/round-2/door-cover.png`, and also
-`art/pilot/round-2/door-sound-01-setup.png` as the reference for her head.*
+*Attach `art/pilot/approved/door-cover.png`, and also
+`art/pilot/approved/door-sound-01-setup.png` as the reference for her head.*
 
 > Keep this image exactly as it is — same composition, same camera, same three
 > figures in the same positions, same collar and blue tag, same slack leash,
@@ -337,7 +337,7 @@ rather than re-pasting them, or the model will redraw the whole scene.
 
 ### 3B — `door-greet-07-approach`: bring her forward, clear of the legs
 
-*Attach `art/pilot/round-2/door-greet-07-approach.png`.*
+*Attach `art/pilot/approved/door-greet-07-approach.png`.*
 
 > Keep this image exactly as it is — same composition, same camera, same room,
 > same handler and guest, same collar and blue tag, same J of slack in the leash.
@@ -362,7 +362,7 @@ guest kept his head on the Today screen, which letterboxes this cover to a
 horizontal band across the middle of the frame and currently cuts him off at the
 jaw. Everything instructional survives the crop either way.
 
-*Attach `art/pilot/round-2/door-greet-08-petting.png`.*
+*Attach `art/pilot/approved/door-greet-08-petting.png`.*
 
 > Keep this image exactly as it is — same composition, same camera, same figures,
 > same collar and blue tag, same hand on the chest, same leash.
@@ -1754,7 +1754,7 @@ not at the full frames. If a scene only reads at full size it has failed the
 one test that applies to it.
 
 ```bash
-cd art/pilot/round-16 && for f in *.png; do sips -c 1086 1086 "$f" --out "/tmp/${f%.png}-sq.png"; sips -Z 84 "/tmp/${f%.png}-sq.png" --out "/tmp/${f%.png}-84.png"; done
+cd art/pilot/approved && for f in *.png; do sips -c 1086 1086 "$f" --out "/tmp/${f%.png}-sq.png"; sips -Z 84 "/tmp/${f%.png}-sq.png" --out "/tmp/${f%.png}-84.png"; done
 ```
 
 ---
@@ -2045,7 +2045,7 @@ regenerate the survey, since the scoring keys follow the briefs.
 Round 2 cleared these. Re-run them on any replacement before approving it:
 
 ```bash
-cd "/Users/ahickey/dev/claude-local/Lucy Learns/art/pilot/round-2" && for f in *.png; do sips -c 634 1448 "$f" --out "/tmp/${f%.png}-today-16x7.png"; sips -c 1086 1086 "$f" --out "/tmp/${f%.png}-sq.png"; sips -Z 56 "/tmp/${f%.png}-sq.png" --out "/tmp/${f%.png}-thumb56.png"; done
+cd "/Users/ahickey/dev/claude-local/Lucy Learns/art/pilot/approved" && for f in *.png; do sips -c 634 1448 "$f" --out "/tmp/${f%.png}-today-16x7.png"; sips -c 1086 1086 "$f" --out "/tmp/${f%.png}-sq.png"; sips -Z 56 "/tmp/${f%.png}-sq.png" --out "/tmp/${f%.png}-thumb56.png"; done
 ```
 
 **Nobody stands in a cover.** The band keeps 634px of a 1086px master — 58% of
@@ -2129,8 +2129,8 @@ Three things it will not do, each of which cost something once:
   — it once claimed a 1448 × 1086 image was 1920 × 2749.
 - **Write over an image that already exists.** It names the file and stops. An
   earlier version overwrote the round 2 cover it was meant to be replacing, and
-  since `art/pilot/` is untracked there was nothing to restore it from. Start a
-  new round instead: `mkdir art/pilot/round-4`.
+  since the rounds are untracked there was nothing to restore it from. Start a
+  new round instead: `mkdir art/pilot/round-21`.
 - **Accept bytes we already have.** It names the twin. This is what catches a
   batch being re-downloaded and re-added as if it were new.
 
@@ -2147,6 +2147,12 @@ node scripts/pilot.mjs sheet
 Builds `sheet.html` — all of them side by side with their dimensions, for
 reviewing in one go rather than one file at a time.
 
-Rounds are folders: `art/pilot/round-1/`, `round-2/`, and so on. `add`, `check`
-and `sheet` all use the highest-numbered one unless given a path. Start a new
-round by making the folder.
+Rounds are folders: `art/pilot/round-20/`, `round-21/`, and so on. `add`,
+`check` and `sheet` all use the highest-numbered one unless given a path. Start
+a new round by making the folder.
+
+Rounds 1–19 were deleted on 2026-08-12 once every image they produced was
+installed and its master committed to `art/pilot/approved/`. Numbering carries
+on from 20 rather than resetting, because the batch post-mortems above cite
+rounds by number. Where a brief here says "attach" a file, the path is now
+`approved/` — that is the only pilot folder guaranteed to still hold it.

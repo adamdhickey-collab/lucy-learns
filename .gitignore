@@ -10,9 +10,13 @@
 art/pilot/*/crops/
 art/pilot/*/sheet.html
 
-# The working rounds — twenty of them, ~300 MB, and every one superseded. What
-# they taught is written down in §7 of docs/illustration-audit.md and in the
-# batch post-mortems in docs/pilot-prompts.md, which is the part worth keeping.
+# The working rounds: every generation, kept or rejected, as it arrived.
+# Rounds 1-19 (264 MB, all superseded) were deleted on 2026-08-12 — what they
+# taught is written down in §7 of docs/illustration-audit.md and in the batch
+# post-mortems in docs/pilot-prompts.md, which is the part worth keeping.
+# Numbering was not reset, because those post-mortems cite rounds by number.
+#
 # art/pilot/approved/ IS committed: those are the masters every shipped image
-# is derived from, and until they were committed they existed on one laptop.
+# is generated against, and until they were committed they existed on one
+# laptop. Never add them to this list.
 art/pilot/round-*/

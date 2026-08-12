@@ -27,11 +27,23 @@ life on one laptop.
 Every generation, kept or rejected, in the order it arrived. `pilot.mjs` files
 new downloads into the highest-numbered round.
 
-Superseded, and large. What they taught is written down where it survives them:
-§7 of [`../docs/illustration-audit.md`](../docs/illustration-audit.md) and the
-per-batch post-mortems in
-[`../docs/pilot-prompts.md`](../docs/pilot-prompts.md). Safe to delete when the
-disk is wanted — but they are **not in git**, so deleting is permanent.
+**Rounds 1–19 were deleted on 2026-08-12** — 264 MB, every one superseded.
+Numbering was deliberately not reset: the per-batch post-mortems in
+[`../docs/pilot-prompts.md`](../docs/pilot-prompts.md) cite rounds by number
+("round 4 and round 5 of Scene 6 differed only in the human's pose"), and
+renumbering would turn those into references to the wrong thing.
+
+Before deleting a round, check that every shipped image still has its master in
+`approved/`. The check that cleared the 2026-08-12 deletion:
+
+    for f in img/*.jpg; do b=$(basename "$f" .jpg); case "$b" in thumb-*) continue;; esac
+      [ -f "art/pilot/approved/$b.png" ] || echo "NO MASTER: $b"; done
+
+It reports `lucy-portrait` and `splash-mark`, and both are fine: the portrait
+predates the pilot process, and the splash mark's master is
+`art/source/splash-source.png`. Any other name in that output means the round
+holds the only high-resolution original of a shipped image, and deleting it is
+not recoverable — these are **not in git**.
 
 ## art/source/ — the original painted illustrations
 
