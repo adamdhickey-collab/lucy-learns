@@ -2050,6 +2050,153 @@ node scripts/pilot.mjs add door-sound-02-knock
 Then update `SHIPPED_AS` in `scripts/make-survey.mjs` (8 → 40, 9 → 41) and
 regenerate the survey, since the scoring keys follow the briefs.
 
+## Batch 8 — Lucy is not a Labrador
+
+The four `plan-*` covers were flagged at install for drifting toward a smooth
+Labrador and never redrawn. Looking at them properly: **three did, one did
+not.** `plan-name` (Scene 36) has the bearded muzzle and the wiry texture,
+because Scene 36 was the one brief that argued for them at length. The other
+three are a smooth-coated black Lab — glossy, clean-jawed, no beard, no brow
+tufts.
+
+So this batch is three images, and `plan-name` is the reference to attach: same
+batch, same palette, same 84px composition rules, and the coat already right.
+
+**The lesson is the leash's lesson again.** Block B has said from the start
+that Lucy has a "slightly scruffy muzzle and eyebrows" and is "never
+smooth-faced". Three images broke it anyway, because a line in a shared cast
+block is a thing the model reads once and a thing nobody checks at review. The
+briefs below make the coat the subject rather than an attribute — the same fix
+that stopped the leash disappearing.
+
+**What is worth knowing before spending a sitting on this.** These four render
+at 84px and nowhere else, greyed to 55% saturation and 72% opacity on the
+locked "soon" card. At that size the coat is invisible; nobody using the app
+today can see this defect. It is worth fixing because these are the covers for
+programmes not yet written, and the day one of them is built the picture is
+suddenly full size — and because Lucy looking like a different dog in three
+pictures is the one inconsistency the whole restyle was meant to prevent. It
+is not worth fixing because it is currently visible, and it should not jump
+any queue in front of work that is.
+
+### What all three have in common
+
+Attach `art/pilot/approved/plan-name.png`. Everything about composition,
+crop and background stays exactly as it is in the image being replaced —
+these compositions passed, and the 84px rules from batch 5 still hold
+(one shape filling the frame, centred for the square crop, background is a
+colour and not a room).
+
+Every prompt below opens with this, and it is the whole batch:
+
+> **The one thing to change: her coat.** She is a Labrador and German
+> Wirehaired Pointer mix, **not a smooth-coated Labrador**, and the attached
+> image is what she is supposed to look like. She has a **visibly bearded jaw
+> and chin** and **shaggy, tufted eyebrows**, grizzled grey against the black.
+> Her coat is **wiry and slightly broken along the back and flanks**, not
+> sleek and not glossy. **She is never smooth-faced.**
+>
+> **No white anywhere on her face.** Her white is the blaze on her chest and
+> her toes, and nowhere else. She wears a flat purple collar with a small
+> round blue tag, and **never a harness**.
+
+### Scene 42 — Four paws on the floor, redrawn with her own coat
+
+*Redraws `plan-fourpaws` (Scene 33's key). The composition is correct and
+stays: Lucy standing four-square in profile, the person cropped at the chest
+with hands together at the waist, one flat wall and floor.*
+
+> Match the attached image for the dog's coat, face and markings, and keep
+> the composition of the image being replaced exactly.
+>
+> [the shared coat paragraph above]
+>
+> Lucy **stands four-square with every foot flat on the floor**, head up
+> toward the person, weight even and back — not leaning forward, not a paw
+> lifted, nothing about her rising. The person stands upright and still
+> beside her, hands held together at the waist, cropped at the chest.
+>
+> Background: one flat wall plane and the floor. Nothing else at all.
+>
+> The single thing this image must make obvious, at the size of a thumbnail:
+> all four feet are down.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 43 — Settled on the mat, redrawn with her own coat
+
+*Redraws `plan-mat` (Scene 34's key). Hardest of the three: she is asleep on
+her side with her head down, so the beard and brows have to read on a face
+in profile with the eyes closed.*
+
+> Match the attached image for the dog's coat, face and markings, and keep
+> the composition of the image being replaced exactly.
+>
+> [the shared coat paragraph above]
+>
+> Lucy lies **flat on her side on a grey mat, head down on the floor, eyes
+> closed**, legs loose, fully released — deep rest, not a down-stay. **Even
+> asleep and in profile the beard on her jaw and the tufts over her eyes are
+> visible**; that is what makes her her.
+>
+> A person is present only as the lower legs and feet of someone seated at
+> the very edge of the frame, still and turned away. Background: one flat
+> wall plane and the floor. No armchair, no table, no mug, no plant, no
+> bookcase, no pictures, no rug, no lamp.
+>
+> The single thing this image must make obvious, at the size of a thumbnail:
+> a dog completely asleep.
+>
+> Landscape 4:3, wider than tall.
+
+### Scene 44 — Someone passes on the pavement, redrawn with her own coat
+
+*Redraws `plan-walkpeople` (Scene 35's key). Keep the outdoor vocabulary
+minimal exactly as it is — a pavement and one flat band of green.*
+
+> Match the attached image for the dog's coat, face and markings, and keep
+> the composition of the image being replaced exactly.
+>
+> [the shared coat paragraph above]
+>
+> Lucy **walks at the handler's side, her head turned up to them**, ears
+> toward them, **not looking at the person passing**. The black leash runs
+> from her collar to the handler's hand in a loose J with obvious slack. The
+> handler walks beside her looking down at her, relaxed, cropped at the
+> chest.
+>
+> The stranger is a small figure walking away in the background, already
+> past them, with no interaction of any kind. Background: a plain pavement
+> underfoot and one flat band of green behind. No houses, no cars, no
+> fences, no trees, no signs, no other people.
+>
+> The single thing this image must make obvious, at the size of a thumbnail:
+> she is looking up at her handler while somebody walks by.
+>
+> Landscape 4:3, wider than tall.
+
+### Landing these three
+
+Each lands under its existing key, so nothing in `js/content.js` moves:
+
+node scripts/pilot.mjs add plan-fourpaws
+
+node scripts/pilot.mjs add plan-mat
+
+node scripts/pilot.mjs add plan-walkpeople
+
+`SHIPPED_AS` needs 33 → 42, 34 → 43, 35 → 44. Scene 36 / `plan-name` is
+untouched and stays mapped as it is.
+
+**Check them at 84px and nowhere else** — that is the only size they render,
+and the coat is the one thing being changed, so the honest check is the full
+frame side by side with `plan-name`:
+
+    cd art/pilot/round-21 && for f in *.png; do sips -c 1086 1086 "$f" --out "/tmp/${f%.png}-sq.png"; sips -Z 84 "/tmp/${f%.png}-sq.png" --out "/tmp/${f%.png}-84.png"; done
+
+If the beard is not visible at full size the redraw failed, and if the
+composition moved the redraw overreached.
+
 ---
 
 ## The crop tests, and how to re-run them
