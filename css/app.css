@@ -2175,8 +2175,13 @@ details.disclosure .disclosure-body {
   width: 76px;
   height: 76px;
   border-radius: 50%;
+  /* `cover` still earns its place as a guard — it keeps any future portrait
+     filling the circle instead of squashing — but it does nothing to the
+     current one. The portrait is the app icon, square, in a square box, so
+     there is nothing to crop. The `object-position: 30% 40%` that used to sit
+     here was aimed at the off-centre artwork this replaced; left in place it
+     would have looked deliberate while meaning nothing. */
   object-fit: cover;
-  object-position: 30% 40%;
   flex: none;
   background: var(--surface-sunken);
 }
@@ -2421,10 +2426,13 @@ details.disclosure .disclosure-body {
      images. Change one, change the other, and regenerate. */
   --badge-y: 50%;
 
-  /* Overwritten by app.js with the real hold and how much of it has already
-     elapsed. The fallbacks keep the bar sane if the script never runs. */
+  /* Overwritten by app.js with the real hold, and with how much of it is
+     left once the boot is paid for. The run is the one the lane animates
+     against — it starts at the left every time and is stretched to land on
+     the dismissal. The fallbacks keep the lane sane if the script never
+     runs. */
   --splash-hold: 1300ms;
-  --splash-elapsed: 0ms;
+  --splash-run: 1300ms;
 }
 
 /* A slow warm vignette at the very edges of the field. It gives the flat
@@ -2721,7 +2729,7 @@ details.disclosure .disclosure-body {
   height: 2px;
   background: color-mix(in srgb, var(--primary) 60%, transparent);
   transform-origin: left center;
-  animation: splash-trail-across var(--splash-hold) linear var(--splash-elapsed) both;
+  animation: splash-trail-across var(--splash-run) linear both;
 }
 
 @keyframes splash-trail-across {
@@ -2741,12 +2749,14 @@ details.disclosure .disclosure-body {
    on a fixed 600ms loop, which is her gait and has nothing to do with how long
    the app takes to boot.
 
-   `splash-run-across` is the progress: it carries her from one end of the lane
-   to the other over exactly --splash-hold, with the same negative
-   --splash-elapsed the fill used, so she is however far along the boot actually
-   is. Reload halfway through and she starts halfway across. That is the whole
-   reason this can replace a progress bar rather than just decorate one — her
-   position on the lane *is* the reading.
+   `splash-run-across` is the progress: it carries her from the left of the
+   lane to the right over --splash-run, which app.js sets to the hold that is
+   left after the boot. She starts at the start on every load and arrives as
+   the splash leaves, so the lane still reads as "how much longer" — boot time
+   sets her speed rather than her starting line. (It used to set her starting
+   line, via a negative delay. A one-second boot then opened the animation
+   with the dog already a third of the way across, which read as a glitch
+   rather than as information.)
 
    `left` rather than a transform because the distance is "the width of the lane
    minus her own width", and a percentage on `left` already means that against
@@ -2758,21 +2768,24 @@ details.disclosure .disclosure-body {
   bottom: 2px;
   left: 0;
   display: block;
-  /* Exactly half the sprite's native 114×72 cell. On the 2× screens this app
-     lives on, device pixels meet source pixels 1:1 — the art shows at full
-     resolution with no scaling blur in either direction. The generator rounds
-     cells to even so that this half is a whole CSS pixel; a fractional step
-     would bleed frames into their neighbours. */
-  width: 57px;
-  height: 36px;
+  /* A third of the sprite's native 114×72 cell. Half read as a large dog on a
+     short lane — she filled a fifth of the run and so appeared to arrive
+     almost as soon as she set off. A third leaves her about an eighth of the
+     lane, which is what makes the distance look like a distance.
+
+     Thirds because 114 and 72 both divide by 3 exactly. Every cell boundary
+     stays on a whole CSS pixel, which is the thing that matters: a fractional
+     step would slide a sliver of the next frame into view on every tick. */
+  width: 38px;
+  height: 24px;
   background-image: url('../img/lucy-run.png');
   background-repeat: no-repeat;
   /* Pixels, not percentages. A percentage background-position is proportional
      — it aligns the image's X% point with the box's X% point — so stepping it
      to -800% would run the sheet clean off the end and draw nothing at all.
-     Eight 57px cells at display size, so the sheet is 456px wide and each
-     step is exactly -57px. */
-  background-size: 456px 36px;
+     Eight 38px cells at display size, so the sheet is 304px wide and each
+     step is exactly -38px. */
+  background-size: 304px 24px;
   background-position-x: 0;
   /* No image-rendering: pixelated here any more. The old sprite was hard
      pixel art upscaled 2× and needed its edges protected; this one is
@@ -2780,12 +2793,12 @@ details.disclosure .disclosure-body {
      only roughen what the artist smoothed. */
   animation:
     splash-run-cycle 600ms steps(8) infinite,
-    splash-run-across var(--splash-hold) linear var(--splash-elapsed) both;
+    splash-run-across var(--splash-run) linear both;
 }
 
 @keyframes splash-run-cycle {
   to {
-    background-position-x: -456px;
+    background-position-x: -304px;
   }
 }
 
@@ -2794,7 +2807,7 @@ details.disclosure .disclosure-body {
     left: 0;
   }
   to {
-    left: calc(100% - 57px);
+    left: calc(100% - 38px);
   }
 }
 
@@ -2933,7 +2946,7 @@ details.disclosure .disclosure-body {
      scale; only her `left` needs saying, because the traversal keyframes
      carry it. */
   .splash-runner {
-    left: calc(100% - 57px);
+    left: calc(100% - 38px);
   }
 }
 

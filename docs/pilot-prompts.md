@@ -1972,6 +1972,20 @@ The claims do not change. The composition does: the camera pulls back enough
 to hold a standing man head to shoe, and everything else — the door, the
 window, Lucy behind it — stays where Scene 8 put it.
 
+**Amended at install (2026-08-12).** The owner generated both and took Lucy
+out of the window, so the delivered pair has an empty door and no dog. That
+halves Scene 40's claim: "the bell is being pressed, and she has heard it"
+was two assertions, and a picture without her can only carry the first. The
+installed claims are the reduced ones below; the step text carries her side
+("no barking on 4 of 5 sounds"), which it always did. The alt text was cut to
+match — it described her watching through the window for as long as the old
+images shipped, which was the app's only remaining place where the words and
+the picture disagreed.
+
+One more thing the diff caught and the eye did not: the doormat's weave
+re-rendered between the two frames. It is invisible at app size and the pair
+rule exists for viewers, not pixels — noted here, not worth a round.
+
 ### Scene 40 — The doorbell, rung by someone you can see
 
 *Redraws `door-sound-02-bell` (Scene 8's key). Attach
@@ -1988,16 +2002,14 @@ trousers, brown shoes.*
 > frame.** The press is the whole action. His body is relaxed; he is a visitor
 > ringing a bell, not a figure straining to reach it.
 >
-> Through the door's window, **Lucy is visible inside**: head and shoulders
-> only, head up, ears forward, alert to the sound. A small round blue tag
-> hangs from her purple collar. **The man must not overlap the window** — she
-> has to stay visible behind the glass.
+> ~~Through the door's window, Lucy is visible inside~~ *(cut by the owner at
+> generation — the installed image has an empty window, and the claim below is
+> the reduced one).*
 >
 > Background: the door, its frame, the doormat below, and a plain porch wall.
 > No garden, no view, no plants.
 >
-> The single thing this image must make obvious: the bell is being pressed,
-> and she has heard it.
+> The single thing this image must make obvious: the bell is being pressed.
 >
 > Landscape 4:3, wider than tall. One single scene — **not two panels.**
 
@@ -2012,9 +2024,9 @@ a garden.
 are a matched pair and should differ only in the arm.*
 
 > Same door, same camera, same distance, same light, same window and doormat
-> as the previous image. Lucy is visible through the window in the same
-> position, head up, ears forward. The same man stands in the same place,
-> whole, head to shoes.
+> as the previous image. ~~Lucy is visible through the window~~ *(cut with
+> Scene 40's — the pair ships with an empty window).* The same man stands in
+> the same place, whole, head to shoes.
 >
 > Change one thing: **he is knocking instead of pressing the bell** — knuckles
 > against the door panel, mid-knock, wrist relaxed, arm at a natural bend. The

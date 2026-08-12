@@ -71,16 +71,23 @@ export const IMAGES = withThumb({
   // `door-sound-01-setup`.)
   //
   // These two take the rest, and with them drawn `dg-03` is gone from the app
-  // entirely — key, files and precache. The hand in both is deliberately
-  // anonymous, a plain sleeve rather than the guest's checked shirt, because
-  // six of these seven references are the guest and one is a helper.
+  // entirely — key, files and precache.
+  //
+  // First drawn as a disembodied hand in an anonymous sleeve, so it could be
+  // "sometimes a helper and sometimes the guest". Batch 7 redrew both with
+  // the whole man standing at the door: the floating forearm read as out of
+  // proportion, and the anonymity was protecting a distinction the cast
+  // never had — the app's one adult male already plays helper and guest.
+  // Lucy is no longer in the door's window; the owner took her out of the
+  // picture, so the image carries "the sound is being made" and the step
+  // text carries what she should do about it.
   'door-sound-02-bell': {
     src: 'img/door-sound-02-bell.jpg',
-    alt: 'A hand presses the doorbell beside the closed front door while Lucy watches from inside through the door’s window.',
+    alt: 'A visitor at the closed front door presses the doorbell.',
   },
   'door-sound-02-knock': {
     src: 'img/door-sound-02-knock.jpg',
-    alt: 'A hand knocks on the closed front door while Lucy watches from inside through the door’s window.',
+    alt: 'A visitor at the closed front door knocks on it.',
   },
 
   // --- the one step that shows both outcomes --------------------------------

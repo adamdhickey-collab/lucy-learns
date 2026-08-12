@@ -214,13 +214,24 @@ if (splash) {
   const versionSlot = splash.querySelector('#splash-version');
   if (versionSlot) versionSlot.textContent = `Version ${APP_VERSION}`;
 
-  // Hand the bar the actual numbers. The negative delay is how much of the
-  // hold went on booting, so the fill starts where the load already got to
-  // rather than restarting the clock at first paint, and reaches full exactly
-  // as the splash begins to leave.
+  // Hand the lane the actual numbers.
+  //
+  // This used to run the full hold with a negative delay equal to the boot
+  // time, so Lucy's position on the lane read as how far the load had got —
+  // reload halfway through and she started halfway across. It was a nice idea
+  // and it was wrong to look at: a boot costing a second of a three-second
+  // hold dropped her a third of the way in, so the animation the household
+  // actually sees began with the dog already mid-screen and then finished
+  // early.
+  //
+  // Now she always starts at the left of the lane and the run is *stretched*
+  // to whatever hold is left, so she crosses the finish exactly as the splash
+  // leaves. Boot time still governs — it just sets her speed instead of her
+  // starting line, which is the version that reads as intended on every load.
   const elapsed = performance.now();
+  const remaining = Math.max(SPLASH_HOLD_MS - elapsed, 0);
   splash.style.setProperty('--splash-hold', `${SPLASH_HOLD_MS}ms`);
-  splash.style.setProperty('--splash-elapsed', `-${Math.round(elapsed)}ms`);
+  splash.style.setProperty('--splash-run', `${Math.round(remaining)}ms`);
 
   if (!location.search.includes('splash-hold')) {
     let dismissed = false;
