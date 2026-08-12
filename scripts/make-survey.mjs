@@ -54,7 +54,7 @@ const SHIPPED_AS = {
   11: 'door-sound-03-name',
   12: 'door-sound-04-treats',
   13: 'door-sound-05-settle',
-  14: 'door-sound-03-name-distant',
+  47: 'door-sound-03-name-distant',
   46: 'door-place-03-send',
   17: 'door-greet-04-open',
   18: 'door-greet-05-reward',
@@ -175,7 +175,17 @@ for (let i = 0; i < lines.length; i++) {
       if (!next) break;
       text += ' ' + next;
     }
-    current.claim = text.replace(/\s+/g, ' ').trim().replace(/\.$/, '');
+    // Strip emphasis the brief wrapped the claim in before trimming the stop:
+    // three of the 47 claims are written `**like this.**`, and the emitter adds
+    // its own bold and its own full stop, so those rendered as doubled emphasis
+    // ending `.**.` — the scoring key is the one line a marker reads literally,
+    // and punctuation noise in it looks like part of the answer.
+    current.claim = text
+      .replace(/\s+/g, ' ')
+      .trim()
+      .replace(/^\*\*/, '')
+      .replace(/\*\*$/, '')
+      .replace(/\.$/, '');
   }
 }
 

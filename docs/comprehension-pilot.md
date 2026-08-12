@@ -397,6 +397,50 @@ been read correctly by anyone who did not commission it, across three attempts
 and ten viewers. But it is also the point at which the honest options are a
 camera move or a rewritten claim, **not** a fourth attempt at the same shot.
 
+## The camera move, and two attempts past the stopping rule
+
+The camera moved: both figures side-on in full profile at opposite ends of the
+frame, the sightline running across the picture instead of into it. It fixed
+the direction — no viewer has said "the door" since. It did not deliver the
+claim.
+
+| # | Change | Verdict, 3 blind viewers each |
+| --- | --- | --- |
+| 4 | Side-on camera | "past and **above** her" |
+| 5 | Chin down, gap halved | 2 of 3 "**below** her, toward the floor"; 1 still "above" |
+| 6 | Chin down further | "**40–45 degrees below horizontal**… looking at the floor short of her" |
+
+**Attempt 5 is where this should have stopped, and the brief said so in
+writing.** The error had stopped converging and started oscillating: the same
+instruction pushed the gaze above the handler and then below her, with every
+viewer rating their own confidence low for the same reason — *"the eye is small
+and dark against black fur"*, *"at 10x magnification I still cannot resolve the
+pupil"*. A quantity that overshoots either side of the target on the same
+instruction is not a pose being missed. It is a variable nobody controls at
+this size.
+
+I proposed a sixth attempt anyway, on the argument that the remaining error was
+smaller and better understood than the previous five. It was, and it still made
+the picture worse — **on a dimension nobody was testing.** Two viewers
+independently flagged the dog: *"hunched and withdrawn, head lowered, ears set
+back, body slightly tucked"*, *"subdued or wary rather than engaged"*. Chasing
+the chin down bought the eyeline with her body language, in an app whose entire
+subject is a dog's body language.
+
+**Attempt 5 is what ships.** Attempt 6 is not installed. The claim was rewritten
+to what three strangers agreed the picture holds — a person down at the dog's
+level with both hands open, and the dog on her bed facing them — which is the
+*setup* for calling her from another room. The response is the thing being
+trained, not the thing a still frame can show.
+
+Two rules came out of this and are now in Block B, where every future brief
+gets them: **gaze on a black dog is carried by head angle and never by the eye**,
+and **never buy a gaze with her posture.** They cost six attempts and nineteen
+viewers, which is worth it once and would not be worth it twice.
+
+The cheapest lesson is the one about stopping rules: writing one down does not
+help if you argue your way past it the first time it binds.
+
 ---
 
 # Block C, second run — the covers as a set

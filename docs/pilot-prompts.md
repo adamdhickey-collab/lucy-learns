@@ -146,6 +146,26 @@ pays her, the food has to be in the frame and separate from the fingers.
 > forward, eyes bright — which sends her sightline over the head of anyone
 > kneeling in front of her.
 >
+> **And eye contact needs a close two-shot. A wide shot cannot carry it — do
+> not ask one to.** `door-sound-03-name` and `door-sound-cover` both pass 4/4
+> on mutual attention and both are close-ups where her head fills a good part
+> of the frame. `door-sound-03-name-distant` was asked for the same thing
+> across a room and failed five times with sixteen viewers, the error finally
+> swinging above the handler and then below her on the same instruction. When a
+> brief needs distance **and** eye contact, distance wins if the step is about
+> distance, and the claim has to be rewritten to something the wide shot can
+> hold. Those two requirements are mutually exclusive in this style.
+>
+> **Never buy a gaze with her posture.** Asking for her chin to come down, or
+> her head to turn further, can tip her into a hunched, ears-back, tucked sit —
+> two blind viewers described exactly that as "subdued or wary" and "does not
+> read as bright or eager attention" on a version drawn to fix an eyeline. A
+> dog who looks shut down is a worse error in a training app than a gaze nobody
+> can read, and it is the kind of error that gets waved through because the
+> thing being checked is somewhere else. Any brief that adjusts her head must
+> also say: **ears forward, topline level, weight forward, bright and
+> unworried.**
+>
 > **The handler** is a woman in her thirties with dark brown hair in a ponytail,
 > an olive-green hoodie, dark navy jeans, grey sneakers, and a mustard-yellow
 > treat pouch clipped at her right hip. Her face is in profile or turned away.
@@ -2474,8 +2494,27 @@ outsider has ever read correctly, not because the drawing is incompetent.*
 > Purple collar, round blue tag, bearded muzzle, tufted brows, no white on her
 > face, no harness.
 >
-> The single thing this image must make obvious: **the two of them are looking
-> straight at each other down the length of the room.**
+> The single thing this image must make obvious: **her person is down at her
+> level across the room with both hands open, and she is on her bed facing
+> them.**
+>
+> *(Claim rewritten after the fifth attempt, and the stopping rule above was
+> invoked rather than ignored. It used to end "the two of them are looking
+> straight at each other down the length of the room", and no version ever
+> carried it: five attempts, sixteen blind viewers, nobody. The last two
+> versions are the reason it was abandoned rather than tried a sixth time —
+> the error stopped converging and started oscillating, "above and past her"
+> becoming "below her, toward the floor" for two viewers and still "above" for
+> the third, every one of them rating their own confidence low because "the
+> eye is small and dark against black fur". A quantity that swings either side
+> of the target on the same instruction is not a pose being missed; it is a
+> variable nobody controls at this size.*
+>
+> *What three strangers **did** agree on is what the claim now says: a person
+> squatting with both hands open toward the dog, and the dog sitting on her bed
+> facing them. That is the setup for calling her from another room, which is
+> what the step asks the household to do — the response is the thing being
+> trained, not the thing being shown.)*
 >
 > Landscape 4:3, wider than tall.
 

@@ -123,17 +123,7 @@ landed, it lands here.
 
 **Scoring key —** she has her back to the dog and her attention out of the open door, and the dog is holding her bed anyway.
 
-### Q8. Called from another room
-
-![door-sound-03-name-distant](https://adamdhickey-collab.github.io/lucy-learns/img/door-sound-03-name-distant.jpg)
-
-`door-sound-03-name-distant.jpg` · **redraw of a recorded defect** · 2 references
-
-> **Ask:** In one sentence, what is the person doing, and what is the dog doing?
-
-**Scoring key —** she heard her name from far away and turned toward it.
-
-### Q9. One step away
+### Q8. One step away
 
 ![door-stay-03-onestep](https://adamdhickey-collab.github.io/lucy-learns/img/door-stay-03-onestep.jpg)
 
@@ -143,7 +133,7 @@ landed, it lands here.
 
 **Scoring key —** she has barely moved — the bed is still right at her heel.
 
-### Q10. Halfway to the door
+### Q9. Halfway to the door
 
 ![door-stay-03-halfway](https://adamdhickey-collab.github.io/lucy-learns/img/door-stay-03-halfway.jpg)
 
@@ -153,7 +143,7 @@ landed, it lands here.
 
 **Scoring key —** half the room between them, and the handler has stopped to check.
 
-### Q11. The sound, as a close two-shot
+### Q10. The sound, as a close two-shot
 
 ![door-sound-cover](https://adamdhickey-collab.github.io/lucy-learns/img/door-sound-cover.jpg)
 
@@ -163,7 +153,7 @@ landed, it lands here.
 
 **Scoring key —** she and her person have each other's complete attention.
 
-### Q12. The stay, as an open door
+### Q11. The stay, as an open door
 
 ![door-stay-cover](https://adamdhickey-collab.github.io/lucy-learns/img/door-stay-cover.jpg)
 
@@ -173,7 +163,7 @@ landed, it lands here.
 
 **Scoring key —** the door is wide open and she has stayed where she is.
 
-### Q13. Place, as a dog on a bed and nothing else
+### Q12. Place, as a dog on a bed and nothing else
 
 ![door-place-cover](https://adamdhickey-collab.github.io/lucy-learns/img/door-place-cover.jpg)
 
@@ -183,7 +173,7 @@ landed, it lands here.
 
 **Scoring key —** she is settled on her own bed.
 
-### Q14. Settled on the mat, redrawn with her own coat
+### Q13. Settled on the mat, redrawn with her own coat
 
 ![plan-mat](https://adamdhickey-collab.github.io/lucy-learns/img/plan-mat.jpg)
 
@@ -193,7 +183,7 @@ landed, it lands here.
 
 **Scoring key —** a dog completely asleep.
 
-### Q15. Send her to her bed, redrawn as arriving
+### Q14. Send her to her bed, redrawn as arriving
 
 ![door-place-03-send](https://adamdhickey-collab.github.io/lucy-learns/img/door-place-03-send.jpg)
 
@@ -201,7 +191,17 @@ landed, it lands here.
 
 > **Ask:** In one sentence, what is the person doing, and what is the dog doing?
 
-**Scoring key —** **she is standing on her bed, all four feet, looking up at the person pointing at it.**.
+**Scoring key —** she is standing on her bed, all four feet, looking up at the person pointing at it.
+
+### Q15. Called from another room, shot side-on
+
+![door-sound-03-name-distant](https://adamdhickey-collab.github.io/lucy-learns/img/door-sound-03-name-distant.jpg)
+
+`door-sound-03-name-distant.jpg` · **redraw of a recorded defect** · 1 reference
+
+> **Ask:** In one sentence, what is the person doing, and what is the dog doing?
+
+**Scoring key —** her person is down at her level across the room with both hands open, and she is on her bed facing them.
 
 ---
 
