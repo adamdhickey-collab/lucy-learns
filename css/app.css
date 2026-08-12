@@ -2808,8 +2808,13 @@ details.disclosure .disclosure-body {
    Two animations on one element, doing two different jobs.
 
    `splash-run-cycle` is the legs: an eight-frame sprite sheet stepped through
-   on a fixed 600ms loop, which is her gait and has nothing to do with how long
-   the app takes to boot.
+   on a fixed 1200ms loop. That number is half real-speed on purpose — the
+   whole run is in slow motion, and slow motion is a ratio, not a leg speed.
+   At 600ms per stride she covered ~78px of lane per cycle on a 2.1s crossing;
+   the 1200ms gait against the ~4.1s crossing app.js now budgets keeps the
+   ground covered per stride the same, which is what makes it read as the
+   world slowed down rather than a dog skating. Change either number alone and
+   she glides.
 
    `splash-run-across` is the progress: it carries her from the left of the
    lane to the right over --splash-run, which app.js sets to the hold that is
@@ -2871,7 +2876,7 @@ details.disclosure .disclosure-body {
 
 .splash--running .splash-runner {
   animation:
-    splash-run-cycle 600ms var(--splash-run-delay) steps(8) infinite,
+    splash-run-cycle 1200ms var(--splash-run-delay) steps(8) infinite,
     splash-run-across var(--splash-run) var(--splash-run-delay) linear both;
 }
 

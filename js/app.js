@@ -177,17 +177,26 @@ route();
 //
 // ?splash-hold on any URL parks it indefinitely for design review.
 //
-// Study mode shortens it instead of removing it. Three seconds is right for a
+// Study mode shortens it instead of removing it. A long hold is right for a
 // household opening the app once a day and wrong inside a timed task, but a
 // participant should still meet the product they are being asked about — so
 // they get the title card, just briefly. Long enough for the wordmark to land,
 // short enough not to show up in the numbers.
 //
-// (It was five. Three is one full pass of the entrance choreography plus a
-// beat, and past that the wait stopped reading as a title card and started
-// reading as loading.)
+// Five seconds, and the number is derived, not chosen: the lane entrance ends
+// at 1280ms, Lucy's slow-motion crossing needs ~4.2s to keep her 1200ms gait
+// honest against the ground (see splash-run-cycle in app.css — slow motion is
+// a ratio, and breaking it turns running into skating), and she runs 420ms of
+// that through the fade. 1280 + 4140 - 420 = 5000.
+//
+// This hold has been every value in the range: five, cut to three because a
+// static card past three seconds stopped reading as a title card and started
+// reading as loading, and now five again on purpose — the run is the show
+// now, and a lane that visibly reports progress is the thing a plain wait
+// never had. If the slow-motion run ever goes, the three-second finding still
+// stands; do not keep five out of inertia.
 
-const SPLASH_HOLD_MS = STUDY ? STUDY_SPLASH_HOLD_MS : 3000;
+const SPLASH_HOLD_MS = STUDY ? STUDY_SPLASH_HOLD_MS : 5000;
 const SPLASH_FADE_MS = 420;
 
 const splash = document.getElementById('splash');
