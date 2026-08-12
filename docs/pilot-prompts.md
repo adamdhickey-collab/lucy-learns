@@ -887,8 +887,16 @@ the library drifted into, and there is no leash although the level runs on one.*
 > Background: the closed front door behind the guest, the doormat, her bed, one
 > wall plane. Nothing else.
 >
-> The single thing this image must make obvious: he is inside, he has stopped,
-> and nobody is paying her any attention.
+> The single thing this image must make obvious: nobody is paying the dog any
+> attention, and she has stayed on her bed anyway.
+>
+> *(Rewritten after the second Block A run. It used to open "he is inside, he
+> has stopped" — and all four viewers placed him inside and stopped, then said
+> they could not tell whether he had just arrived or was about to leave. The
+> door behind him is shut either way, so the picture cannot settle it and the
+> claim should not have asked. What every viewer did see is that two people are
+> occupied with each other and the dog is holding anyway, which is the actual
+> training point of the step.)*
 >
 > Landscape 4:3, wider than tall.
 
@@ -1221,8 +1229,20 @@ notes the bed sits against the door and should be a few feet back.*
 > Background: the open front door, the doormat, the empty porch beyond, her bed,
 > one wall plane. Nothing else.
 >
-> The single thing this image must make obvious: the door is wide open onto
-> nobody, and she is still on her bed.
+> The single thing this image must make obvious: she has her back to the dog
+> and her attention out of the open door, and the dog is holding her bed
+> anyway.
+>
+> *(Rewritten after the second Block A run. It used to say "wide open onto
+> nobody". All four saw the open door and not one could confirm the porch was
+> empty — "a plain white glare", "a featureless pale glare". Nobody invented a
+> visitor, which is what `dg-08` got wrong and what this replaced, so the
+> picture is not at fault; an absence needs something drawn to be an absence
+> of, and an unrendered doorway reads as "cannot tell" rather than "nobody
+> there". The new claim is also what separates this from `door-stay-cover`,
+> which is the same room and the same two figures: there she is a large
+> foreground figure at a blank white slab, here she is small, in profile, and
+> looking out at a porch that is actually drawn.)*
 >
 > Landscape 4:3, wider than tall.
 
@@ -1844,8 +1864,17 @@ dg-3's covers are. Two viewers guessed it.*
 > contain both heads. Reduced to a thumbnail this should read as one large dark
 > mass and one face, side by side, and nothing else.
 >
-> The single thing this image must make obvious: the sound happened and she has
-> turned to her person.
+> The single thing this image must make obvious: she and her person have each
+> other's complete attention.
+>
+> *(Rewritten after the second Block A run. It used to say "the sound happened
+> and she has turned to her person". All four described the mutual attention
+> and not one mentioned a sound — because there is no sound in the picture: no
+> bell, no door, no hand at a button. A still cannot report that an event
+> happened a moment ago with nothing in frame to indicate it, which is the same
+> flaw as "one step, and no more" from the first run. The cover itself is
+> working — the close two-shot is the archetype that broke the Block C
+> deadlock — so this is a key that overreached, not a picture that failed.)*
 >
 > Landscape 4:3, wider than tall.
 

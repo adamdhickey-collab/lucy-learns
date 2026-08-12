@@ -289,21 +289,49 @@ Every one passes its own claim in isolation. The set does not separate. That is
 Block C's lesson arriving in Block A: **each was tested against its own key and
 never against its neighbours.**
 
+## The three keys, rewritten
+
+Done. Each was rewritten to claim what its picture can actually carry:
+
+| Image | Was | Now |
+| --- | --- | --- |
+| `door-sound-cover` | the sound happened and she has turned to her person | she and her person have each other's complete attention |
+| `door-stay-03-pretend` | the door is wide open onto nobody, and she is still on her bed | she has her back to the dog and her attention out of the open door, and the dog is holding her bed anyway |
+| `door-greet-06-enter` | he is inside, he has stopped, and nobody is paying her any attention | nobody is paying the dog any attention, and she has stayed on her bed anyway |
+
+Scored against the transcripts already collected, all three now pass **4/4** —
+every viewer's description satisfies the new wording.
+
+**That number is worth less than it looks, and the reason is worth writing
+down.** A key rewritten in front of the answers will always pass them; the
+transcripts informed the wording, so this is a consistency check and not a
+test. What stops it being circular is that each new claim is still falsifiable
+by a *different picture*: "nobody is paying the dog any attention" fails if
+anyone looks at her, "her back to the dog" fails if she turns around, "each
+other's complete attention" fails if either looks away. None of them is true of
+just any illustration.
+
+But they have not been read by anyone who has not already been read. **These
+three need a fresh blind check before their pass counts**, and it should be a
+run that has never seen the old wording.
+
+`door-stay-03-pretend`'s new claim also does a second job. It is the same room
+and the same two figures as `door-stay-cover`, and the old wording gave them
+nearly the same key. The new one names what actually separates them: here she
+is small, in profile, and looking out at a porch that is drawn; in the cover she
+is a large foreground figure against a blank white slab.
+
 ## What to do
 
-Nothing here is urgent enough to jump the usability study, and two of the five
-findings are text edits rather than redraws.
+Nothing here is urgent enough to jump the usability study. The keys above are
+done; what is left is two redraws and one deliberate refusal.
 
-1. **Rewrite three keys** — `door-sound-cover` (attention, not sound),
-   `door-stay-03-pretend` (an open door and a dog who stayed; drop the porch),
-   `door-greet-06-enter` (inside and ignored, drop the arrival). Free, and two
-   of them are currently unscoreable.
-2. **Redraw `door-sound-03-name-distant`** — the one clear failure, and it is
+1. **Redraw `door-sound-03-name-distant`** — the one clear failure, and it is
    the second attempt at this defect. Her eyes must meet the handler's, and the
    handler needs to be doing something legible at that distance.
-3. **Redraw `door-place-03-send`** — most of her on the bed, head up and turned
+2. **Redraw `door-place-03-send`** — most of her on the bed, head up and turned
    back to the handler.
-4. **Leave the ladder alone for now.** Fixing `cross`/`halfway`/`onestep` means
+3. **Leave the ladder alone for now.** Fixing `cross`/`halfway`/`onestep` means
    redrawing three images to be different from each other, which is the batch 6
    problem, and they are correctly ordered when seen in sequence — which is how
    the app shows them.

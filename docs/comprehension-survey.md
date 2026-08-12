@@ -111,7 +111,7 @@ landed, it lands here.
 
 > **Ask:** In one sentence, what is the person doing, and what is the dog doing?
 
-**Scoring key —** he is inside, he has stopped, and nobody is paying her any attention.
+**Scoring key —** nobody is paying the dog any attention, and she has stayed on her bed anyway.
 
 ### Q7. Paid on the bed
 
@@ -131,7 +131,7 @@ landed, it lands here.
 
 > **Ask:** In one sentence, what is the person doing, and what is the dog doing?
 
-**Scoring key —** the door is wide open onto nobody, and she is still on her bed.
+**Scoring key —** she has her back to the dog and her attention out of the open door, and the dog is holding her bed anyway.
 
 ### Q9. Called from another room
 
@@ -171,7 +171,7 @@ landed, it lands here.
 
 > **Ask:** In one sentence, what is the person doing, and what is the dog doing?
 
-**Scoring key —** the sound happened and she has turned to her person.
+**Scoring key —** she and her person have each other's complete attention.
 
 ### Q13. The stay, as an open door
 
