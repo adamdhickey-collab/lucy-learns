@@ -1043,6 +1043,17 @@ a.visually-hidden:focus {
   stroke-linejoin: round;
 }
 
+/* The headline is not always good news, so the mark beside it must not always
+   be gold. `headlineInsight()` now leads with a watch behaviour that got worse
+   — nipping that appeared, jumping that went up — and a reward-coloured
+   sunburst next to "Jumping showed up in 2 sessions" is the same flattery the
+   branch order was fixed to stop, done with colour instead of a sentence.
+   The sentence carries the meaning either way; this only stops the decoration
+   arguing with it. */
+.insight--watch svg {
+  stroke: var(--caution-text);
+}
+
 /* The week, in one card: the reading on top, the evidence for it underneath.
    These were two stacked blocks saying the same thing in two registers. */
 .week-card {

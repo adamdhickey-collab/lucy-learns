@@ -312,28 +312,65 @@ export function currentStreak() {
   return streak;
 }
 
-/** One sentence worth reading, chosen over decorative charts. */
+/**
+ * One sentence worth reading, chosen over decorative charts.
+ *
+ * Returns `{ text, tone }`. The tone exists because this line sits next to a
+ * sunburst: "Jumping showed up in 2 sessions" under a cheerful icon is the same
+ * flattery the branch order was just fixed to stop, done with a graphic instead
+ * of a sentence.
+ */
 export function headlineInsight() {
+  const say = (text, tone = 'good') => ({ text, tone });
   const week = weekSummary(0);
   const prior = weekSummary(1);
 
   if (!week.count && !prior.count) {
-    return 'Log a few sessions and Lucy’s trends will show up here.';
+    return say('Log a few sessions and Lucy’s trends will show up here.');
   }
+  // A watch behaviour getting worse outranks everything, including good news.
+  //
+  // Every branch in this function used to be a positive framing — jumping
+  // *down*, no nipping, goal met, calm rate — with one exception for a success
+  // rate that dipped. There was a "jumping is down" branch and no "jumping is
+  // up" branch, so a week where she practised plenty and nipped for the first
+  // time in a month opened with "Goal met." A household reading that gets told
+  // the thing that flatters them, on a screen they hand to their trainer.
+  //
+  // Nipping is checked before the success rate, not after. This app already
+  // treats nipping as the marker of a dog over threshold — `recommendation()`
+  // drops everything else and says take the pressure off — so a week that
+  // opened "success rate is up 10 points" while she nipped for the first time
+  // would be cheerier than the app's own advice about the same sessions.
+  const worse = (now, before, word, advice = '') => {
+    if (now <= before) return null;
+    const s = now === 1 ? 'session' : 'sessions';
+    return before === 0
+      ? `${word} showed up in ${now} ${s} this week, after none last week.${advice}`
+      : `${word} is up from ${before} to ${now} sessions this week.${advice}`;
+  };
+
+  const nipping = worse(week.nips, prior.nips, 'Nipping', ' Drop back a level and add distance.');
+  if (nipping) return say(nipping, 'watch');
+
   if (week.successRate !== null && prior.successRate !== null) {
     const delta = Math.round((week.successRate - prior.successRate) * 100);
-    if (delta >= 5) return `Lucy’s success rate is up ${delta} points on last week.`;
-    if (delta <= -5) return `Success dipped ${Math.abs(delta)} points this week. Try dropping back a level.`;
+    if (delta >= 5) return say(`Lucy’s success rate is up ${delta} points on last week.`);
+    if (delta <= -5) return say(`Success dipped ${Math.abs(delta)} points this week. Try dropping back a level.`, 'watch');
   }
+
+  const jumping = worse(week.jumps, prior.jumps, 'Jumping');
+  if (jumping) return say(jumping, 'watch');
+
   if (prior.jumps > 0 && week.jumps < prior.jumps) {
-    return `Jumping is down from ${prior.jumps} sessions to ${week.jumps} this week.`;
+    return say(`Jumping is down from ${prior.jumps} sessions to ${week.jumps} this week.`);
   }
-  if (week.nips === 0 && prior.nips > 0) return 'No nipping at all this week.';
-  if (week.count >= getState().weeklyGoal) return `${week.count} sessions this week. Goal met.`;
+  if (week.nips === 0 && prior.nips > 0) return say('No nipping at all this week.');
+  if (week.count >= getState().weeklyGoal) return say(`${week.count} sessions this week. Goal met.`);
   if (week.calmRate !== null) {
-    return `${Math.round(week.calmRate * 100)}% of this week’s sessions stayed calm.`;
+    return say(`${Math.round(week.calmRate * 100)}% of this week’s sessions stayed calm.`);
   }
-  return 'Keep going. Short sessions beat long ones.';
+  return say('Keep going. Short sessions beat long ones.');
 }
 
 /** What Today suggests practicing next. */

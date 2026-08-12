@@ -26,6 +26,7 @@ const greeting = () => 'Hello';
 
 function render() {
   const state = getState();
+  const insight = headlineInsight();
   // suggestedActivity() scores every open activity by the mastery of its
   // current level. That is a sensible ranking on its own, but the strip
   // directly above the hero draws the program's own `focus` — finish what is
@@ -140,7 +141,7 @@ function render() {
         ? html`<section class="section">
             <h2 class="visually-hidden">This week</h2>
             <div class="card week-card">
-              <div class="insight">${icon('spark')}<p>${headlineInsight()}</p></div>
+              <div class="insight insight--${insight.tone}">${icon('spark')}<p>${insight.text}</p></div>
               <div class="week-row">
                 <span>
                   ${week.count} of ${state.weeklyGoal} sessions${streak

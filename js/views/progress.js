@@ -121,6 +121,7 @@ function render() {
   const days = practiceByDay();
   const max = Math.max(1, ...days.map((d) => d.count));
   const prog = programProgress(PROGRAMS[0].id);
+  const insight = headlineInsight();
 
   const bars = days.map(
     (d) => html`<div class="bar ${d.count ? '' : 'bar--empty'}">
@@ -236,7 +237,7 @@ function render() {
               ${programStrip(prog)}
             </section>`
         : html`
-            <div class="insight">${icon('spark')}<p>${headlineInsight()}</p></div>
+            <div class="insight insight--${insight.tone}">${icon('spark')}<p>${insight.text}</p></div>
 
             <section class="section">
               <div class="metric-grid">
