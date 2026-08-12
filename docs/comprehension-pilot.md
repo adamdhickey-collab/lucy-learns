@@ -443,6 +443,81 @@ help if you argue your way past it the first time it binds.
 
 ---
 
+# Block B — the confusable pairs, first run
+
+Never run until now, which was an odd gap: every serious defect this project has
+found came from images that were fine alone and wrong beside a neighbour.
+
+Three viewers, four pairs each. Filenames stripped, **pair order different for
+every viewer, and left/right swapped independently** so the correct answer
+landed on A three times and B three times per viewer — position could not leak
+it. Each answer had to be A or B, with no "both", followed by an honest
+CONFIDENT or GUESSING.
+
+## 12 out of 12, every answer confident
+
+The first clean sweep in this project. No guesses, no wrong answers, and the
+discriminator each viewer named was the one the brief was built on.
+
+| Pair | Question | Score |
+| --- | --- | --- |
+| P1 `door-place-03-send` vs `door-stay-05-release` | sent TO the bed? | 3/3 |
+| P2 `door-stay-03-cross` vs `door-stay-03-halfway` | who has STOPPED? | 3/3 |
+| P3 `door-stay-03-handle` vs `door-stay-03-crack` | which door is OPEN? | 3/3 |
+| P4 `door-stay-03-pretend` vs `door-stay-03-conversation` | longer conversation? | 3/3 |
+
+### The finding that matters: describing and distinguishing are different jobs
+
+**P2 is the pair Block A viewers said they could not separate.** Shown the
+ladder as single images, they called `cross`, `halfway` and `onestep`
+"near-identical setups differing mainly in the woman's distance and posture" and
+said they "could not reliably tell them apart". Asked the discriminating
+question directly, all three got it right and all three were confident:
+*"both feet planted side by side with the body squared and still, while in B the
+legs are in a clear mid-stride scissor with one heel lifted."*
+
+The information was in the pictures the whole time. What Block A measured was
+whether a stranger **volunteers** it, which is a harder test than the app ever
+applies — the app shows these in sequence with the step written above them.
+
+That justifies the decision to leave the ladder alone rather than redraw three
+images to be different from each other, and it is worth remembering before any
+future redraw is ordered off a Block A transcript.
+
+### Contrast supplies what a single frame cannot
+
+`door-stay-05-release` failed its invitation clause 0/4 in Block A — nobody
+could tell whether the open hands invited the dog or blocked her. **In the pair
+it read as an invitation to all three**, unprompted: *"stepping off the bed
+toward her low, open, beckoning palm"*, *"her open, upturned inviting hand"*.
+
+Put beside a pointing finger, an open palm means the opposite of pointing. Alone
+it means whatever you already thought. That does not repair the solo failure —
+Block A is the right test for a picture that appears alone — but it does say the
+gesture is not ambiguous *in the app*, where it is one rung of a ladder.
+
+### The redraw held up
+
+`door-place-03-send` was the pair's whole problem in §5, and all three separated
+it on exactly the axis the redraw was written for: pointing finger with the dog
+**on** the bed against open palm with the dog **leaving** it. Confirmed twice
+now — solo in batch 9, and against its neighbour here.
+
+## Two things to watch, neither worth acting on yet
+
+**P3's open door is thin.** Two of three named it the hardest pair and both said
+why: *"the open state is carried entirely by a narrow white gap at the jamb, with
+no daylight, view outdoors, or shadow through the opening, so at a glance both
+doors read as shut."* They got it right — but it is a few pixels of jamb doing
+all the work, and it is the pair most likely to fail with a real panel skimming
+on a phone. If anything in Block B goes to a redraw, this is it.
+
+**No agreement on which pair was hardest** — one said P3, one said P1, one said
+P4. Scattered disagreement is the signature of a set with no systematic
+weakness, the same pattern the covers reached on their third run.
+
+---
+
 # Block C, second run — the covers as a set
 
 ## First run: three of four were the same picture
