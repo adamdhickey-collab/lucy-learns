@@ -124,6 +124,33 @@ export function readyToAdvance(activityId, levelNumber) {
   });
 }
 
+/**
+ * The one-line verdict, which has to agree with the answer the household just
+ * gave it.
+ *
+ * This used to be a fixed `${pct}% success, calm throughout.` — and
+ * `readyToAdvance` accepts arousal up to 3, which is *Calm*, *Some excitement*
+ * and *Very excited*. So a household that had just tapped "Very excited — hard
+ * to reach" was told on the very next screen that she was calm. Found by a
+ * blind run-through of the app: the tester picked "Some excitement", read
+ * "calm throughout", and re-read it twice trying to work out which one the app
+ * meant.
+ *
+ * In an app whose entire subject is a dog's arousal, contradicting the
+ * household's own reading of it is the one thing the summary must never do —
+ * it teaches them the number is not listening.
+ *
+ * Unknown arousal makes no claim at all rather than assuming the best.
+ */
+function verdict(pct, arousal) {
+  if (arousal === 1) return `${pct}% success, calm throughout.`;
+  if (arousal === 2) return `${pct}% success, wiggly but with you the whole way.`;
+  if (arousal === 3) {
+    return `${pct}% success, though she was wired for it — no harm in repeating this level once more.`;
+  }
+  return `${pct}% success.`;
+}
+
 /** Feedback shown on the recommendation screen right after a session. */
 export function recommendation(activity, level, session) {
   const reps = session.repetitions || 0;
@@ -163,7 +190,7 @@ export function recommendation(activity, level, session) {
       // a different one — describing what level 2 involves directly above
       // "up next: Stay While the Door Opens" put two different futures on the
       // same screen. This is the verdict; the notice below it is the plan.
-      body: `${pct}% success, calm throughout.`,
+      body: verdict(pct, session.arousalLevel),
       suggest: 'up',
       nextLevel: next.number,
     };
