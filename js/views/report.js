@@ -71,7 +71,12 @@ function composeShareText(days) {
   ];
   LIVE_ACTIVITIES.forEach((activity) => {
     const mine = sessions.filter((s) => s.activityId === activity.id);
-    if (!mine.length) return;
+    // Listed even when untouched, for the same reason the screen lists it: an
+    // activity nobody practised for a fortnight is information, not an absence.
+    if (!mine.length) {
+      lines.push(`- ${activity.title}: no sessions in this window`);
+      return;
+    }
     const level = currentLevel(activity);
     lines.push(
       `- ${activity.title}: level ${level.number}, ${activityMastery(activity.id).label.toLowerCase()}, ${pct(successRate(mine))} over ${mine.length} session${mine.length === 1 ? '' : 's'}`
@@ -94,6 +99,27 @@ function composeShareText(days) {
   return lines.join('\n');
 }
 
+/**
+ * Direction of travel under the success rate — including when there isn't any.
+ *
+ * This line used to render nothing at all when the previous window held no
+ * sessions, which is the state every household is in for their first fortnight
+ * of logging: exactly when the report is the only history a trainer has. A
+ * missing line and a flat line look identical, so "steady" was the reading on
+ * offer for "there was nothing to compare against". Say which one it is.
+ *
+ * The wording names the window rather than claiming there is no earlier
+ * practice at all — a seven-day view can have an empty week behind it and
+ * months of work behind that.
+ */
+function trendNote(rate, priorRate, days) {
+  if (rate === null) return null;
+  if (priorRate === null) return `nothing logged the previous ${days} days`;
+  if (rate - priorRate >= 0.03) return `up from ${pct(priorRate)} the previous ${days} days`;
+  if (priorRate - rate >= 0.03) return `down from ${pct(priorRate)} the previous ${days} days`;
+  return `steady against the previous ${days} days`;
+}
+
 function render() {
   const { sessions, incidents } = inRange(rangeDays);
   const prior = priorRange(rangeDays);
@@ -103,18 +129,24 @@ function render() {
   const rate = successRate(sessions);
   const priorRate = successRate(prior);
 
-  const trend =
-    rate !== null && priorRate !== null
-      ? rate - priorRate >= 0.03
-        ? `up from ${pct(priorRate)} the previous ${rangeDays} days`
-        : priorRate - rate >= 0.03
-          ? `down from ${pct(priorRate)} the previous ${rangeDays} days`
-          : `steady against the previous ${rangeDays} days`
-      : null;
+  const trend = trendNote(rate, priorRate, rangeDays);
 
+  // Every live activity gets a row, including the ones with nothing in this
+  // window. Dropping them left three rows under a sentence that said "of 4",
+  // and a trainer reading a list that disagrees with its own count reasonably
+  // concludes something is being withheld. Something was: which activity had
+  // been left alone for a fortnight, which is a thing worth asking about.
   const skills = LIVE_ACTIVITIES.map((activity) => {
     const mine = sessions.filter((s) => s.activityId === activity.id);
-    if (!mine.length) return null;
+    if (!mine.length) {
+      return html`<div class="mastery-row">
+        <strong>${activity.title}</strong>
+        <div class="under">
+          <small>No sessions in the last ${rangeDays} days</small>
+          ${badge(activityMastery(activity.id))}
+        </div>
+      </div>`;
+    }
     const level = currentLevel(activity);
     const myRate = successRate(mine);
     return html`<div class="mastery-row">
@@ -128,7 +160,7 @@ function render() {
         ${badge(activityMastery(activity.id))}
       </div>
     </div>`;
-  }).filter(Boolean);
+  });
 
   const jumped = watchCount(sessions, 'jumped');
   const nipped = watchCount(sessions, 'nipped');

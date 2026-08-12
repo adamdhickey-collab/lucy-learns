@@ -327,6 +327,31 @@ over seven. Every reader raised it independently; one put it plainly — *"77% o
 *Doorbell Predicts Rewards*, which itself scores 77% — so the top-line number
 is close to a restatement of one skill, presented as a statement about the dog.
 
+### Two of the four are fixed
+
+Both in [report.js](../js/views/report.js), in 1.76.0.
+
+**The trend line always says something now.** `trendNote()` handles the empty
+prior window explicitly instead of returning `null`: *"nothing logged the
+previous 14 days"* sits where *"up from 73%"* would. It names the window rather
+than claiming there is no earlier practice at all, because a seven-day view can
+have a quiet week behind it and months of work behind that. Verified across all
+three ranges on the demo data — 7 days gives *"up from 73% the previous 7
+days"*, 14 and 30 both report the empty window.
+
+**Every live activity has a row**, whether or not it was practised in the
+window. *Controlled Real Greeting* now shows *"No sessions in the last 14
+days"* against a **Not started** badge, and the list agrees with the "of 4"
+above it. This is the better fix than correcting the denominator: the trainers
+who spotted the mismatch were not confused about arithmetic, they wanted to know
+which activity was missing. The same line was added to the share text, so the
+screen and the thing pasted into a message say the same thing.
+
+**Not fixed:** the missing denominators and the headline being mostly one
+activity. Both are real, and both change what the top of the report claims
+rather than adding a line to it — worth doing deliberately rather than in the
+same pass.
+
 ### True, and not defects
 
 The criterion behind "went well" is undefined and self-scored, and the mastery
