@@ -18,7 +18,7 @@
 // source on every run beats hand-cropping eight boxes and keeping them aligned.
 //
 // What it does:
-//   1. reads the approved sheet (img/pilot/approved/lucy-run-sheet.png,
+//   1. reads the approved sheet (art/pilot/approved/lucy-run-sheet.png,
 //      straight RGBA, transparent background),
 //   2. finds the eight frames by scanning for fully-transparent columns,
 //   3. trims the sheet vertically to the art,
@@ -40,7 +40,7 @@ import { fileURLToPath } from 'node:url';
 import { deflateSync, inflateSync } from 'node:zlib';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const SRC = resolve(root, 'img/pilot/approved/lucy-run-sheet.png');
+const SRC = resolve(root, 'art/pilot/approved/lucy-run-sheet.png');
 const OUT = resolve(root, 'img/lucy-run.png');
 
 const EXPECTED_FRAMES = 8;

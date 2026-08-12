@@ -50,7 +50,7 @@ change — that is what makes five images look like one set.
 
 **Order matters:**
 
-1. **Always attach an approved image**, from `img/pilot/approved/`. Every prompt
+1. **Always attach an approved image**, from `art/pilot/approved/`. Every prompt
    `pilot.mjs` copies now opens with *"Match this attached image exactly for
    style, palette and the dog's appearance — same dog, same woman, same room"*,
    so there is nothing to type; there just has to be something attached for it
@@ -300,7 +300,7 @@ handler — the same fault the image it replaces has.*
 
 **Done, and the pilot is closed.** 3A was kept and 3B reverted; 3C was never
 run, because 3B showed what a second edit costs. The five approved images are in
-`img/pilot/approved/`, and the results are in
+`art/pilot/approved/`, and the results are in
 [§7.3 of the audit](illustration-audit.md).
 
 The prompts below are kept as the record of how the edits were written, and as
@@ -316,8 +316,8 @@ rather than re-pasting them, or the model will redraw the whole scene.
 
 ### 3A — `door-cover`: give her the scruffy muzzle back
 
-*Attach `img/pilot/round-2/door-cover.png`, and also
-`img/pilot/round-2/door-sound-01-setup.png` as the reference for her head.*
+*Attach `art/pilot/round-2/door-cover.png`, and also
+`art/pilot/round-2/door-sound-01-setup.png` as the reference for her head.*
 
 > Keep this image exactly as it is — same composition, same camera, same three
 > figures in the same positions, same collar and blue tag, same slack leash,
@@ -337,7 +337,7 @@ rather than re-pasting them, or the model will redraw the whole scene.
 
 ### 3B — `door-greet-07-approach`: bring her forward, clear of the legs
 
-*Attach `img/pilot/round-2/door-greet-07-approach.png`.*
+*Attach `art/pilot/round-2/door-greet-07-approach.png`.*
 
 > Keep this image exactly as it is — same composition, same camera, same room,
 > same handler and guest, same collar and blue tag, same J of slack in the leash.
@@ -362,7 +362,7 @@ guest kept his head on the Today screen, which letterboxes this cover to a
 horizontal band across the middle of the frame and currently cuts him off at the
 jaw. Everything instructional survives the crop either way.
 
-*Attach `img/pilot/round-2/door-greet-08-petting.png`.*
+*Attach `art/pilot/round-2/door-greet-08-petting.png`.*
 
 > Keep this image exactly as it is — same composition, same camera, same figures,
 > same collar and blue tag, same hand on the chest, same leash.
@@ -1754,7 +1754,7 @@ not at the full frames. If a scene only reads at full size it has failed the
 one test that applies to it.
 
 ```bash
-cd img/pilot/round-16 && for f in *.png; do sips -c 1086 1086 "$f" --out "/tmp/${f%.png}-sq.png"; sips -Z 84 "/tmp/${f%.png}-sq.png" --out "/tmp/${f%.png}-84.png"; done
+cd art/pilot/round-16 && for f in *.png; do sips -c 1086 1086 "$f" --out "/tmp/${f%.png}-sq.png"; sips -Z 84 "/tmp/${f%.png}-sq.png" --out "/tmp/${f%.png}-84.png"; done
 ```
 
 ---
@@ -1959,7 +1959,7 @@ to be run again — not the crop tests on the new one alone.
 Round 2 cleared these. Re-run them on any replacement before approving it:
 
 ```bash
-cd "/Users/ahickey/dev/claude-local/Lucy Learns/img/pilot/round-2" && for f in *.png; do sips -c 634 1448 "$f" --out "/tmp/${f%.png}-today-16x7.png"; sips -c 1086 1086 "$f" --out "/tmp/${f%.png}-sq.png"; sips -Z 56 "/tmp/${f%.png}-sq.png" --out "/tmp/${f%.png}-thumb56.png"; done
+cd "/Users/ahickey/dev/claude-local/Lucy Learns/art/pilot/round-2" && for f in *.png; do sips -c 634 1448 "$f" --out "/tmp/${f%.png}-today-16x7.png"; sips -c 1086 1086 "$f" --out "/tmp/${f%.png}-sq.png"; sips -Z 56 "/tmp/${f%.png}-sq.png" --out "/tmp/${f%.png}-thumb56.png"; done
 ```
 
 **Nobody stands in a cover.** The band keeps 634px of a 1086px master — 58% of
@@ -2001,11 +2001,11 @@ See [§2 of the audit](illustration-audit.md) for which surface uses which.
 
 ## Landing the files
 
-Only after all five are approved. Raw generations stay in `img/pilot/`; none of
+Only after all five are approved. Raw generations stay in `art/pilot/`; none of
 the current `IMAGES` keys should be repointed until the style is signed off.
 
 ```bash
-cd "/Users/ahickey/dev/claude-local/Lucy Learns/img/pilot" && for f in pilot-*.png; do sips -Z 1100 -s format jpeg -s formatOptions 72 "$f" --out "${f%.png}.jpg"; done
+cd "/Users/ahickey/dev/claude-local/Lucy Learns/art/pilot" && for f in pilot-*.png; do sips -Z 1100 -s format jpeg -s formatOptions 72 "$f" --out "${f%.png}.jpg"; done
 ```
 
 Under the naming scheme proposed in the audit (§3.8) the approved five would
@@ -2043,8 +2043,8 @@ Three things it will not do, each of which cost something once:
   — it once claimed a 1448 × 1086 image was 1920 × 2749.
 - **Write over an image that already exists.** It names the file and stops. An
   earlier version overwrote the round 2 cover it was meant to be replacing, and
-  since `img/pilot/` is untracked there was nothing to restore it from. Start a
-  new round instead: `mkdir img/pilot/round-4`.
+  since `art/pilot/` is untracked there was nothing to restore it from. Start a
+  new round instead: `mkdir art/pilot/round-4`.
 - **Accept bytes we already have.** It names the twin. This is what catches a
   batch being re-downloaded and re-added as if it were new.
 
@@ -2061,6 +2061,6 @@ node scripts/pilot.mjs sheet
 Builds `sheet.html` — all of them side by side with their dimensions, for
 reviewing in one go rather than one file at a time.
 
-Rounds are folders: `img/pilot/round-1/`, `round-2/`, and so on. `add`, `check`
+Rounds are folders: `art/pilot/round-1/`, `round-2/`, and so on. `add`, `check`
 and `sheet` all use the highest-numbered one unless given a path. Start a new
 round by making the folder.

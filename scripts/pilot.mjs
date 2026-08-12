@@ -29,7 +29,7 @@ import os from 'node:os';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const PROMPTS = path.join(ROOT, 'docs/pilot-prompts.md');
-const PILOT = path.join(ROOT, 'img/pilot');
+const PILOT = path.join(ROOT, 'art/pilot');
 // Where a fresh generation gets dropped. Both, newest wins, so it does not
 // matter which one the browser is pointed at today.
 const INBOX = [path.join(os.homedir(), 'Desktop'), path.join(os.homedir(), 'Downloads')];
@@ -153,10 +153,16 @@ const dims = (file) => {
 
 const isImage = (f) => /\.(png|jpe?g)$/i.test(f);
 
-/** Every image already in img/, so a re-add can be caught by its bytes. */
+/**
+ * Every image the project already holds, so a re-add can be caught by its
+ * bytes. Both trees, because they answer different halves of "have I seen
+ * this before": art/ catches the same generation being filed twice, img/
+ * catches it being installed twice under different keys.
+ */
 function knownHashes() {
   const seen = new Map();
   const walk = (dir) => {
+    if (!fs.existsSync(dir)) return;
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
       const full = path.join(dir, entry.name);
       if (entry.isDirectory()) walk(full);
@@ -164,6 +170,7 @@ function knownHashes() {
     }
   };
   walk(path.join(ROOT, 'img'));
+  walk(path.join(ROOT, 'art'));
   return seen;
 }
 

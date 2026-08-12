@@ -66,18 +66,18 @@ looking like one set.
 ## Filenames
 
 The app loads a 1100px JPEG from `img/` and a 240px thumb beside it. Originals
-live in `img/source/<Program Name>/`.
+live in `art/source/<Program Name>/`.
 
 1. Save each generated image as the **source** filename below.
 2. Run the resize for that group.
 3. Register the key in the `IMAGES` map in `js/content.js` with its alt text.
 
 ```bash
-cd "/Users/ahickey/dev/claude-local/Lucy Learns" && for f in img/source/Calm\ Door\ Greetings/*.png; do sips -Z 1100 -s format jpeg -s formatOptions 72 "$f" --out "img/dg-$(basename "$f" .png).jpg"; done
+cd "/Users/ahickey/dev/claude-local/Lucy Learns" && for f in art/source/Calm\ Door\ Greetings/*.png; do sips -Z 1100 -s format jpeg -s formatOptions 72 "$f" --out "img/dg-$(basename "$f" .png).jpg"; done
 ```
 
 ```bash
-cd "/Users/ahickey/dev/claude-local/Lucy Learns" && for f in img/source/Next\ Programs/*.png; do sips -Z 1100 -s format jpeg -s formatOptions 72 "$f" --out "img/$(basename "$f" .png).jpg"; done
+cd "/Users/ahickey/dev/claude-local/Lucy Learns" && for f in art/source/Next\ Programs/*.png; do sips -Z 1100 -s format jpeg -s formatOptions 72 "$f" --out "img/$(basename "$f" .png).jpg"; done
 ```
 
 Then regenerate thumbs:
@@ -93,7 +93,7 @@ cd "/Users/ahickey/dev/claude-local/Lucy Learns" && for f in img/dg-*.jpg img/cg
 These are the eleven that stop the same picture repeating. Highest value first.
 
 ### A1 · One step away from the bed
-- **Source** `img/source/Calm Door Greetings/13.png` → **App** `img/dg-13.jpg` → **Key** `dg-13`
+- **Source** `art/source/Calm Door Greetings/13.png` → **App** `img/dg-13.jpg` → **Key** `dg-13`
 - **Replaces** `dg-07` on Stay While the Door Opens, level 1
 - **Prompt** — Lucy lies settled on a flat grey dog bed on a wooden floor in a
   home entryway. The handler stands very close, only one short step away from
@@ -103,7 +103,7 @@ These are the eleven that stop the same picture repeating. Highest value first.
 - **Alt** — "Lucy lies on her bed while a handler takes a single step away from her toward the closed front door."
 
 ### A2 · Halfway to the door
-- **Source** `img/source/Calm Door Greetings/14.png` → `img/dg-14.jpg` → `dg-14`
+- **Source** `art/source/Calm Door Greetings/14.png` → `img/dg-14.jpg` → `dg-14`
 - **Replaces** `dg-07` on level 2
 - **Prompt** — Same entryway. Lucy holds a down-stay on her grey bed in the
   foreground. The handler has walked roughly halfway across the room toward the
@@ -112,7 +112,7 @@ These are the eleven that stop the same picture repeating. Highest value first.
 - **Alt** — "Lucy holds her bed while a handler pauses halfway across the room and glances back at her."
 
 ### A3 · Hand on the handle
-- **Source** `img/source/Calm Door Greetings/15.png` → `img/dg-15.jpg` → `dg-15`
+- **Source** `art/source/Calm Door Greetings/15.png` → `img/dg-15.jpg` → `dg-15`
 - **Replaces** `dg-07` on level 3
 - **Prompt** — Same entryway. Lucy holds a down-stay on her grey bed in the
   foreground, some distance away. The handler has reached the closed dark grey
@@ -121,7 +121,7 @@ These are the eleven that stop the same picture repeating. Highest value first.
 - **Alt** — "A handler rests a hand on the front door handle while Lucy holds her bed across the room."
 
 ### A4 · Door cracked a few inches
-- **Source** `img/source/Calm Door Greetings/16.png` → `img/dg-16.jpg` → `dg-16`
+- **Source** `art/source/Calm Door Greetings/16.png` → `img/dg-16.jpg` → `dg-16`
 - **Replaces** `dg-07` on level 4
 - **Prompt** — Same entryway. The front door is open just a few inches, a
   narrow bright vertical slice of daylight showing at the gap. Nobody is
@@ -130,7 +130,7 @@ These are the eleven that stop the same picture repeating. Highest value first.
 - **Alt** — "The front door is open a few inches onto daylight while Lucy stays lying on her bed."
 
 ### A5 · Paying for the sound
-- **Source** `img/source/Calm Door Greetings/17.png` → `img/dg-17.jpg` → `dg-17`
+- **Source** `art/source/Calm Door Greetings/17.png` → `img/dg-17.jpg` → `dg-17`
 - **Replaces** `dg-04` on Doorbell Predicts Rewards, step 4 (currently shares an
   image with the step before it)
 - **Prompt** — Close, warm view. The handler crouches slightly beside Lucy just
@@ -141,7 +141,7 @@ These are the eleven that stop the same picture repeating. Highest value first.
 - **Alt** — "A handler feeds Lucy two small treats from an open palm while Lucy looks up at her hand."
 
 ### A6 · The quiet gap between reps
-- **Source** `img/source/Calm Door Greetings/18.png` → `img/dg-18.jpg` → `dg-18`
+- **Source** `art/source/Calm Door Greetings/18.png` → `img/dg-18.jpg` → `dg-18`
 - **Fills** Doorbell Predicts Rewards, step 5 — currently has no image at all
 - **Prompt** — A quiet pause. Lucy stands loosely on the wooden floor of the
   entryway with a relaxed body and a soft open mouth, no tension. The handler
@@ -151,7 +151,7 @@ These are the eleven that stop the same picture repeating. Highest value first.
 - **Alt** — "Lucy stands relaxed on a loose leash beside her handler in a quiet moment between repetitions."
 
 ### A7 · The release
-- **Source** `img/source/Calm Door Greetings/19.png` → `img/dg-19.jpg` → `dg-19`
+- **Source** `art/source/Calm Door Greetings/19.png` → `img/dg-19.jpg` → `dg-19`
 - **Fills** Stay While the Door Opens step 5 and Doorbell Means Place step 6 —
   neither currently has an image
 - **Prompt** — Lucy is just getting up off her flat grey dog bed, front paws
@@ -161,7 +161,7 @@ These are the eleven that stop the same picture repeating. Highest value first.
 - **Alt** — "Lucy steps up off her bed as her handler releases her from the stay."
 
 ### A8 · You make the sound, right beside her
-- **Source** `img/source/Calm Door Greetings/20.png` → `img/dg-20.jpg` → `dg-20`
+- **Source** `art/source/Calm Door Greetings/20.png` → `img/dg-20.jpg` → `dg-20`
 - **Replaces** `dg-03` on Doorbell Predicts Rewards, level 1, which currently
   shows a generic doorbell and knock
 - **Prompt** — Interior view beside the closed front door. The handler stands
@@ -172,7 +172,7 @@ These are the eleven that stop the same picture repeating. Highest value first.
 - **Alt** — "A handler knocks on the door frame while standing right beside Lucy with the leash under her foot."
 
 ### A9 · Guest steps inside and stands still
-- **Source** `img/source/Calm Door Greetings/21.png` → `img/dg-21.jpg` → `dg-21`
+- **Source** `art/source/Calm Door Greetings/21.png` → `img/dg-21.jpg` → `dg-21`
 - **Replaces** `dg-09` on Controlled Real Greeting, level 2
 - **Prompt** — The front door is open. A guest has stepped just inside onto the
   doormat and stands still with his hands at his sides, not looking at the dog.
@@ -181,7 +181,7 @@ These are the eleven that stop the same picture repeating. Highest value first.
 - **Alt** — "A guest stands just inside the open front door without approaching while Lucy stays on her bed."
 
 ### A10 · Guest sits down and ignores her
-- **Source** `img/source/Calm Door Greetings/22.png` → `img/dg-22.jpg` → `dg-22`
+- **Source** `art/source/Calm Door Greetings/22.png` → `img/dg-22.jpg` → `dg-22`
 - **Replaces** `dg-09` on Controlled Real Greeting, level 3
 - **Prompt** — A guest sits in an armchair in a warm living room, turned away
   from Lucy, relaxed, looking at nothing in particular. Lucy lies on her grey
@@ -190,7 +190,7 @@ These are the eleven that stop the same picture repeating. Highest value first.
 - **Alt** — "A guest sits in an armchair ignoring Lucy while she settles on her bed a few feet away."
 
 ### A11 · Real conversation at the open door
-- **Source** `img/source/Calm Door Greetings/23.png` → `img/dg-23.jpg` → `dg-23`
+- **Source** `art/source/Calm Door Greetings/23.png` → `img/dg-23.jpg` → `dg-23`
 - **Replaces** `dg-08` on Stay While the Door Opens, level 7, distinguishing a
   short conversation from a bare "hello"
 - **Prompt** — The handler stands in the open front doorway mid-conversation,
@@ -200,7 +200,7 @@ These are the eleven that stop the same picture repeating. Highest value first.
 - **Alt** — "A handler holds a relaxed conversation in the open doorway while Lucy stays settled on her bed."
 
 ### A12 · The other three "too excited" images
-- **Source** `img/source/Calm Door Greetings/24.png` … `26.png` → `img/dg-24.jpg` … `dg-26.jpg` → keys `dg-24`, `dg-25`, `dg-26`
+- **Source** `art/source/Calm Door Greetings/24.png` … `26.png` → `img/dg-24.jpg` … `dg-26.jpg` → keys `dg-24`, `dg-25`, `dg-26`
 - **Replaces** `dg-12`, which is currently the `fallbackImage` for **all four**
   activities. One picture stands behind four different escalations, and the
   sheet is the screen someone opens when it is going badly — the moment worth
@@ -231,7 +231,7 @@ One each. These are what the placeholder cards in the library will use once
 those programs are written.
 
 ### B1 · Four Paws on the Floor
-- **Source** `img/source/Next Programs/cg-01.png` → `img/cg-01.jpg` → `cg-01`
+- **Source** `art/source/Next Programs/cg-01.png` → `img/cg-01.jpg` → `cg-01`
 - **Prompt** — Lucy stands squarely on all four paws on a wooden floor in a
   bright hallway, front feet clearly planted on the ground, looking up at a
   person who is turned slightly toward her with hands held calmly at chest
@@ -240,7 +240,7 @@ those programs are written.
 - **Alt** — "Lucy stands with all four paws on the floor, looking up at a person who keeps their hands to themselves."
 
 ### B2 · Settle on a Mat
-- **Source** `img/source/Next Programs/sr-01.png` → `img/sr-01.jpg` → `sr-01`
+- **Source** `art/source/Next Programs/sr-01.png` → `img/sr-01.jpg` → `sr-01`
 - **Prompt** — Lucy lies fully relaxed on her side on a flat grey mat in the
   corner of a warm, lived-in living room, eyes soft and half closed, hips
   rolled over. In the background the household carries on ordinarily: someone
@@ -249,7 +249,7 @@ those programs are written.
 - **Alt** — "Lucy lies fully relaxed on her mat while the household carries on around her."
 
 ### B3 · People Passing on Walks
-- **Source** `img/source/Next Programs/wp-01.png` → `img/wp-01.jpg` → `wp-01`
+- **Source** `art/source/Next Programs/wp-01.png` → `img/wp-01.jpg` → `wp-01`
 - **Prompt** — Outdoor scene on a quiet suburban pavement, soft daylight,
   trees and low hedges. Lucy walks on a loose leash beside her handler,
   looking up at her rather than ahead. A stranger walks past in the opposite
@@ -258,7 +258,7 @@ those programs are written.
 - **Alt** — "Lucy walks on a loose leash looking up at her handler as a stranger passes by on the pavement."
 
 ### B4 · Name Response Around Distractions
-- **Source** `img/source/Next Programs/fd-01.png` → `img/fd-01.jpg` → `fd-01`
+- **Source** `art/source/Next Programs/fd-01.png` → `img/fd-01.jpg` → `fd-01`
 - **Prompt** — Lucy turns her head sharply toward her handler, ears forward,
   clearly responding to her name, while something mildly interesting happens
   behind her in the soft-focus background: a squirrel on a lawn, or another dog

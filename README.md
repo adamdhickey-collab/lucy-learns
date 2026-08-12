@@ -99,7 +99,7 @@ js/app.js                hash router
 js/views/                one file per screen
 fonts/                   Fraunces + Karla, variable, SIL OFL
 img/                     what the app loads: 1100px JPEGs and 240px thumbs
-img/source/              the full-resolution originals they are made from
+art/source/              the full-resolution originals they are made from
 icons/                   PWA icons
 scripts/make-icons.mjs   rebuilds the icon set
 ```
@@ -164,12 +164,12 @@ parses as UTC midnight, which renders a day early anywhere west of Greenwich.
 
 ### Illustrations
 
-`img/source/Calm Door Greetings/01.png` … `26.png` are the originals (~2.2 MB each).
+`art/source/Calm Door Greetings/01.png` … `26.png` are the originals (~2.2 MB each).
 `img/dg-01.jpg` … `dg-12.jpg` are the web versions the app loads, at 1100 px
 wide and about 200 KB each. To regenerate them after adding or replacing art:
 
 ```bash
-cd "/Users/ahickey/dev/claude-local/Lucy Learns" && for f in img/source/*/*.png; do sips -Z 1100 -s format jpeg -s formatOptions 72 "$f" --out "img/dg-$(basename "$f" .png).jpg"; done
+cd "/Users/ahickey/dev/claude-local/Lucy Learns" && for f in art/source/*/*.png; do sips -Z 1100 -s format jpeg -s formatOptions 72 "$f" --out "img/dg-$(basename "$f" .png).jpg"; done
 ```
 
 Every image key in `js/content.js` carries alt text. Keep writing it — the whole
@@ -201,7 +201,7 @@ cleanly (chrome and controls are stripped in print styles).
 
 All content is data. Nothing about a new activity requires touching a screen.
 
-1. **Add the images.** Drop the artwork in `img/source/<Program Name>/`, resize
+1. **Add the images.** Drop the artwork in `art/source/<Program Name>/`, resize
    into `img/`, and register each one in the `IMAGES` map in `js/content.js` with a
    real alt description.
 

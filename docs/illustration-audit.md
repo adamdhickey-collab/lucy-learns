@@ -22,7 +22,7 @@ as a record of how today's set was made.
 | Thumbs (one per illustration) | 30 | 240 × 180 | 4:3 | 0.44 MB |
 | Brand marks (`lucy-portrait`, `splash-mark`) | 2 | 400², 640² | 1:1 | 0.19 MB |
 | Generated splash screens (`splash/`) | 12 | various | various | 1.8 MB |
-| Source PNGs (`img/source/`) | 31 | ~2400² | — | 65 MB |
+| Source PNGs (`art/source/`) | 31 | ~2400² | — | 65 MB |
 
 Every illustration is JPEG, every one is exactly 1100 × 825, and no two files
 are byte-identical. Naming is `dg-NN` for the door-greetings program and
@@ -797,12 +797,12 @@ warm cream ground, and the most aggressive crop in the app (21:9) alongside the
 
 ## 7. Pilot results
 
-**Seven approved images sit in `img/pilot/approved/`** — the five from the style
+**Seven approved images sit in `art/pilot/approved/`** — the five from the style
 pilot, plus the two the `dg-07` / `dg-09` split needed.
 
 Nothing has been installed. No `IMAGES` key points at any pilot image, and the
 existing thirty are untouched. Each round is kept where it landed —
-`img/pilot/round-1/`, `round-2/`, `round-3/` — and `approved/` holds copies, so
+`art/pilot/round-1/`, `round-2/`, `round-3/` — and `approved/` holds copies, so
 the provenance of every approved frame stays readable.
 
 | Approved | From | Replaces |
@@ -815,7 +815,7 @@ the provenance of every approved frame stays readable.
 | `door-stay-02-cue.png` | round 5 | new — from the `dg-07` split |
 | `door-greet-01-settle.png` | round 6 | new — from the `dg-09` split |
 
-`img/pilot/approved/` is committed. The six working rounds are not — 34 MB of
+`art/pilot/approved/` is committed. The six working rounds are not — 34 MB of
 superseded drafts, kept locally, with what they taught written down here
 instead.
 
@@ -1154,7 +1154,7 @@ The style question is closed — five approved images, §7. What is left is scop
 4. **Renaming** — do it during the restyle or not at all; it touches
    `content.js`, `sw.js` and this document.
 5. **Source PNGs in git** — 65 MB today for the painted set, and the restyle will
-   add a second. Half-settled: `img/pilot/approved/` is committed and the working
-   rounds are not (§7). The older `img/source/` is left alone for now — removing
+   add a second. Half-settled: `art/pilot/approved/` is committed and the working
+   rounds are not (§7). The older `art/source/` is left alone for now — removing
    it from HEAD would not reclaim the history anyway, so the real decision is
    whether to keep both generations once the restyle lands.

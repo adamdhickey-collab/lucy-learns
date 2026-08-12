@@ -1,16 +1,20 @@
 #!/usr/bin/env node
 // Builds the iOS startup images ("apple-touch-startup-image") from
-// img/source/splash-source.png.
+// art/source/splash-source.png.
 //
 //   node scripts/make-splash.mjs
-//   cd splash && for f in *.png; do sips -s format jpeg -s formatOptions 85 \
-//     "$f" --out "${f%.png}.jpg"; done && rm *.png
 //
-// Two steps for the same reason the illustrations are: this script stays pure
-// Node and portable, and `sips` does the lossy pass. It is worth doing — these
-// are a flat field with one crisp badge, which JPEG handles without visible
-// ringing, and it takes the set from 6.7MB to 2.1MB. Update the link tags in
-// index.html if the extension ever changes back.
+// Two formats for the same reason the illustrations are: this script stays
+// pure Node and portable, and `sips` does the lossy pass. It is worth doing —
+// these are a flat field with one crisp badge, which JPEG handles without
+// visible ringing, and it takes the set from 6.7MB to 2.1MB. Update the link
+// tags in index.html if the extension ever changes back.
+//
+// The `sips` pass used to be a second command in this comment, to run by hand.
+// It ran often enough to be automated and, more to the point, forgetting it
+// left eleven 10MB PNG intermediates sitting in splash/ looking like shipped
+// assets. The script now converts and removes them itself, so a bare run
+// leaves exactly the files that ship.
 //
 // iOS shows a static image while a standalone PWA boots, but only if an exact
 // pixel-size match exists for the device — so one file per screen. Each image
@@ -33,12 +37,13 @@
 // bilinear-resizes, composes, and re-encodes. No dependencies to install.
 
 import { deflateSync, inflateSync } from 'node:zlib';
-import { mkdirSync, readFileSync, writeFileSync, statSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync, statSync, rmSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const SOURCE = resolve(root, 'img/source/splash-source.png');
+const SOURCE = resolve(root, 'art/source/splash-source.png');
 const OUT_DIR = resolve(root, 'splash');
 
 // Portrait screens of iPhones in current circulation.
@@ -287,10 +292,20 @@ for (const [width, height, ptW, ptH, dpr, devices] of SCREENS) {
     }
   }
   const name = `apple-splash-${width}-${height}.png`;
-  writeRgbPng(resolve(OUT_DIR, name), width, height, canvas);
-  const size = statSync(resolve(OUT_DIR, name)).size;
+  const jpg = name.replace(/\.png$/, '.jpg');
+  const pngPath = resolve(OUT_DIR, name);
+  const jpgPath = resolve(OUT_DIR, jpg);
+  writeRgbPng(pngPath, width, height, canvas);
+  // Straight to JPEG and drop the intermediate. quality 85 is where this
+  // artwork stops improving: one badge on a flat field has nothing for the
+  // encoder to ring against.
+  execFileSync('sips', ['-s', 'format', 'jpeg', '-s', 'formatOptions', '85', pngPath, '--out', jpgPath], {
+    stdio: 'ignore',
+  });
+  rmSync(pngPath);
+  const size = statSync(jpgPath).size;
   total += size;
-  console.log(`${name}  ${(size / 1024).toFixed(0)}KB  ${ptW}×${ptH}@${dpr}x  ${devices}`);
+  console.log(`${jpg}  ${(size / 1024).toFixed(0)}KB  ${ptW}×${ptH}@${dpr}x  ${devices}`);
 
   tags.push(
     `    <!-- ${devices} -->\n` +
