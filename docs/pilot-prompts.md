@@ -1952,6 +1952,92 @@ it was put beside its neighbours. The four are meant to be four shapes:
 If a fifth activity is ever added, it needs a fifth shape, and the set test has
 to be run again — not the crop tests on the new one alone.
 
+## Batch 7 — the whole man at the door
+
+Scenes 8 and 9 shipped what their briefs asked for: a disembodied hand and
+forearm entering from the frame edge, pressing the bell and knocking. The
+briefs even made the sleeve anonymous on purpose — "sometimes a helper and
+sometimes the guest, and it has to work for both." In the app, the arm reads
+as out of proportion: a forearm the width of the doormat, attached to nothing.
+The owner called it, and the fix is to show the whole person.
+
+That retires the anonymity rule, and it is worth saying why that is safe: the
+app has exactly one adult male in its cast, and he already plays both parts —
+he is the "familiar person outside" in dg-2's level 8 *and* the guest in every
+dg-4 scene. Drawing him at the bell does not cast the picture as one step or
+the other any more than his face at the open door already does. Anonymity was
+protecting a distinction the cast never had.
+
+The claims do not change. The composition does: the camera pulls back enough
+to hold a standing man head to shoe, and everything else — the door, the
+window, Lucy behind it — stays where Scene 8 put it.
+
+### Scene 40 — The doorbell, rung by someone you can see
+
+*Redraws `door-sound-02-bell` (Scene 8's key). Attach
+`art/pilot/approved/door-greet-04-open.png` — it is the character reference for
+the man: same face, same short brown hair, same blue plaid shirt, khaki
+trousers, brown shoes.*
+
+> Exterior view of a closed charcoal panelled front door with a small
+> four-pane window, seen from the porch. The camera is far enough back that
+> **the man from the attached reference stands in frame whole, head to shoes**
+> — the same man, same plaid shirt and khaki trousers. He stands to the right
+> of the door, on the edge of the woven doormat, **one arm raised at a natural
+> bend, one finger pressing the round doorbell button mounted on the door
+> frame.** The press is the whole action. His body is relaxed; he is a visitor
+> ringing a bell, not a figure straining to reach it.
+>
+> Through the door's window, **Lucy is visible inside**: head and shoulders
+> only, head up, ears forward, alert to the sound. A small round blue tag
+> hangs from her purple collar. **The man must not overlap the window** — she
+> has to stay visible behind the glass.
+>
+> Background: the door, its frame, the doormat below, and a plain porch wall.
+> No garden, no view, no plants.
+>
+> The single thing this image must make obvious: the bell is being pressed,
+> and she has heard it.
+>
+> Landscape 4:3, wider than tall. One single scene — **not two panels.**
+
+Reject if: only an arm or a partial figure comes back (the whole point), the
+man is cropped at the waist or knees, he covers the window, or the scene gains
+a garden.
+
+### Scene 41 — The knock, from the same man
+
+*Redraws `door-sound-02-knock` (Scene 9's key). Generate straight after Scene
+40 in the same conversation, with the approved Scene 40 attached — these two
+are a matched pair and should differ only in the arm.*
+
+> Same door, same camera, same distance, same light, same window and doormat
+> as the previous image. Lucy is visible through the window in the same
+> position, head up, ears forward. The same man stands in the same place,
+> whole, head to shoes.
+>
+> Change one thing: **he is knocking instead of pressing the bell** — knuckles
+> against the door panel, mid-knock, wrist relaxed, arm at a natural bend. The
+> doorbell button is still on the frame, untouched.
+>
+> The single thing this image must make obvious: the door is being knocked on.
+>
+> Landscape 4:3, wider than tall. One single scene — **not two panels.**
+
+Reject on the same list as Scene 40, plus: anything else moving between the
+two images — if the pair differ anywhere but the arm, the pair is broken.
+
+### Landing these two
+
+Each lands under its existing key, so nothing in `js/content.js` moves:
+
+node scripts/pilot.mjs add door-sound-02-bell
+
+node scripts/pilot.mjs add door-sound-02-knock
+
+Then update `SHIPPED_AS` in `scripts/make-survey.mjs` (8 → 40, 9 → 41) and
+regenerate the survey, since the scoring keys follow the briefs.
+
 ---
 
 ## The crop tests, and how to re-run them
