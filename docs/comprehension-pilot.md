@@ -13,8 +13,15 @@ Block A images in a **different order**, each asked one question per image:
 They were told only that these are illustrations from a dog-training app, and
 were instructed to describe what they could see, to say so when something was
 ambiguous, and not to read any other file in the repository. None of them saw
-the briefs, the scoring keys, the filenames beyond the paths, or each other's
-answers. Scoring was done afterwards against the keys.
+the briefs, the scoring keys, or each other's answers. Scoring was done
+afterwards against the keys.
+
+> **This run's results are not safe, and the second run below says why.** Viewers
+> here saw the real filenames, and a name like `door-sound-03-name-distant.jpg`
+> states the answer to the question being asked. At least one pass in the table
+> below is the filename talking rather than the picture working. Later runs blind
+> the filenames; this section is left as written because the correction is worth
+> more than a tidy record.
 
 **This is not user research and the numbers must not be reported as if it
 were.** Models are not people; they describe more thoroughly than a participant
@@ -150,6 +157,156 @@ one is ever redrawn again, fix the gaze at the same time.
 Eight images, two redrawn, all eight now passing their claim under blind check.
 Worth putting in front of a paid panel — which is the only question this dry run
 was ever able to answer.
+
+---
+
+# Block A, second run — 15 images, and a hole in the first run's method
+
+Re-run after batch 8, against the corrected Block A: the survey generator had
+been reporting 8 images when the real answer is 15 (see the batch 8 notes in
+[pilot-prompts.md](pilot-prompts.md) — a parser bug read only the first line of
+each scene's note, so seven pictures that replaced a recorded §5 defect were
+never in the panel).
+
+Four viewers, no memory of this project, each shown the same 15 in a **different
+order**, one question per image: *what is the person doing, and what is the dog
+doing?*
+
+## The method changed, and it mattered more than the images did
+
+**This run stripped the filenames.** Every image was copied to `image-01.jpg`
+… `image-15.jpg`, in a different order per viewer, so nobody saw a path.
+
+The first run did not do that. Viewers there were handed
+`door-sound-03-name-distant.jpg` and asked what the dog was doing — and the
+filename says *name*, and says *distant*. That is the answer to the question,
+written on the thing being tested.
+
+It changed a result. `door-sound-03-name-distant` **passed 4/4 in the first run
+and failed 0/4 here**, on a file that has not been touched since it was
+installed (verified: one commit in its history, and the checksum of what the
+viewer opened matches what ships). Looking at it myself, the viewers are right —
+her gaze goes up and past, the handler is at floor level far down the hall, and
+the two never meet. The first run's pass was the filename talking.
+
+So one of the eight results in the section above is unsafe, and it is recorded
+here rather than quietly corrected. Blinded filenames are the method from now
+on; the cost is one `cp` loop.
+
+## Results
+
+| Image | Claim confirmed | |
+| --- | --- | --- |
+| `door-stay-03-cross` | 4/4 | |
+| `door-greet-04-open` | 4/4 | |
+| `door-greet-05-reward` | 4/4 | the treat is in frame for all four, again |
+| `door-sound-03-name` | 4/4 | up from 3/4 |
+| `door-place-cover` | 4/4 | |
+| `plan-mat` | 4/4 | the batch 8 coat redraw broke nothing |
+| `door-stay-03-halfway` | 4/4 | but see P2 below |
+| `door-stay-05-release` | 4/4 departure | **0/4 read the hands as an invitation** |
+| `door-greet-06-enter` | 4/4 inside and stopped | **4/4 could not tell arriving from leaving** |
+| `door-stay-cover` | 4/4 she stayed | 2/4 called the door only *part* open |
+| `door-sound-cover` | 4/4 mutual attention | **0/4 "the sound happened"** |
+| `door-stay-03-onestep` | 3/4 | one read "a couple of paces", not at her heel |
+| `door-place-03-send` | 3/4 | **4/4 flagged the direction; one read it as leaving** |
+| `door-stay-03-pretend` | 4/4 door open | **0/4 "onto nobody"** |
+| `door-sound-03-name-distant` | **0/4** | her gaze does not meet the handler |
+
+### The one outright failure
+
+**`door-sound-03-name-distant`.** Every viewer: *"looking up and off to the
+side"*, *"looking upward at nothing I can see"*, *"looking up and away toward
+the upper right rather than at her"*. The claim is that she heard her name and
+turned toward it, and the picture does not carry it. All four also could not
+read what the distant handler's raised hand is doing — signal, wave, or reaching
+for a light switch.
+
+This is the same defect §5 recorded against `dg-05`, which this image was
+commissioned to replace: *the dog facing away from the person calling her.* The
+redraw turned her head part of the way and stopped.
+
+### Three claims the pictures cannot carry as written
+
+Not picture problems. Key problems, and the same shape as *"one step, and no
+more"* from the first run.
+
+- **`door-sound-cover` — "the sound happened and she has turned to her person."**
+  All four described a close, warm two-shot with the dog looking into the
+  handler's face. None mentioned a sound, because **there is no sound in it** —
+  no bell, no door, no hand at a button. A still cannot show that an event
+  occurred a moment ago with nothing in frame to indicate it. The cover works;
+  it is the archetype that fixed Block C. The claim should be about attention.
+- **`door-stay-03-pretend` — "wide open onto nobody."** All four saw the open
+  door. None could confirm nobody was there: *"a plain white glare"*, *"a
+  featureless pale glare"*, *"flat pale white with no detail"*. Nobody invented a
+  visitor, which is what the first run tested and what `dg-08` got wrong — but
+  an unrendered white void reads as *cannot tell*, not as *empty porch*. An
+  absence needs something drawn to be an absence of.
+- **`door-greet-06-enter` — "he is inside, he has stopped."** All four placed him
+  inside and stopped, and all four then said they could not tell whether he had
+  just arrived or was about to leave. The door behind him is shut in both
+  readings. This collides with *The guest leaves* in Block D and both should go
+  to a panel together.
+
+### `door-place-03-send` is not fixed
+
+Scored 3/4, and the number flatters it: **all four volunteered that they could
+not tell whether she is getting on the bed or off it**, and the one who chose
+said *"walking away from her off the far side"*. One called it *"the image I was
+least sure about"* of the fifteen.
+
+That is `dg-06`'s recorded defect — *the direction backwards* — surviving its own
+replacement. Looking at the picture: only her front paws are on the bed, her
+whole body is still on the floor, and her head is low and turned away from the
+handler. Nothing in it says *sent*.
+
+It also breaks the rule the first run produced: *a claim that names a transition
+needs the body most of the way through it.* Front-paws-on is the same pose that
+failed for `door-stay-05-release`, drawn from the other side.
+
+### And the invitation is now confirmed lost
+
+`door-stay-05-release` passes its departure clause 4/4 — she is clearly coming
+off the bed, which is what the first re-run bought. But **all four could not read
+the open hands as an invitation**: *"inviting or blocking"*, *"inviting it in,
+offering something, or signalling to stop"*, *"holding something, inviting the
+dog to come, or gesturing it back"*.
+
+The first re-run saw this in one viewer of three and recorded it as *"worth
+watching in the panel"*. Four of four is no longer worth watching. The claim is
+*"coming off the bed, **invited**, toward open hands"* and half of it is gone.
+
+### P2 confirmed, and it is a trio
+
+The three-rung ladder still does not separate. One viewer, unprompted:
+*"this reads as very similar to image-03 with a slightly larger gap"* (halfway
+vs onestep). Another: *"images 05, 07 and 11 are near-identical setups differing
+mainly in the woman's distance and posture, and I could not reliably tell them
+apart on direction of travel"* — cross, halfway and onestep.
+
+Every one passes its own claim in isolation. The set does not separate. That is
+Block C's lesson arriving in Block A: **each was tested against its own key and
+never against its neighbours.**
+
+## What to do
+
+Nothing here is urgent enough to jump the usability study, and two of the five
+findings are text edits rather than redraws.
+
+1. **Rewrite three keys** — `door-sound-cover` (attention, not sound),
+   `door-stay-03-pretend` (an open door and a dog who stayed; drop the porch),
+   `door-greet-06-enter` (inside and ignored, drop the arrival). Free, and two
+   of them are currently unscoreable.
+2. **Redraw `door-sound-03-name-distant`** — the one clear failure, and it is
+   the second attempt at this defect. Her eyes must meet the handler's, and the
+   handler needs to be doing something legible at that distance.
+3. **Redraw `door-place-03-send`** — most of her on the bed, head up and turned
+   back to the handler.
+4. **Leave the ladder alone for now.** Fixing `cross`/`halfway`/`onestep` means
+   redrawing three images to be different from each other, which is the batch 6
+   problem, and they are correctly ordered when seen in sequence — which is how
+   the app shows them.
 
 ---
 
