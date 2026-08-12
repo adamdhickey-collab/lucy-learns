@@ -438,18 +438,49 @@ a.visually-hidden:focus {
   color: var(--primary-dark);
 }
 
+/* The icon sits in a pill-shaped seat that only the current tab fills.
+   ------------------------------------------------------------------------
+   Colour alone was not carrying this. Inactive is #5c6a70 and current was
+   #125d63 — different hues, but almost the same *lightness*, so at 24px the
+   only real cue was a half-pixel of extra stroke weight and the row read as
+   four identical tabs. Value contrast is what the eye finds first; hue is what
+   it confirms with.
+
+   So the mark of the current tab is a filled shape, which is the same idiom
+   the program row already uses for "you are here" (`.route-stop--next
+   .route-node`: primary-wash behind primary). One vocabulary, two places.
+
+   The padding is inline-only, and that is a hard constraint rather than a
+   preference. The bar measures 60.5px against `--nav-h: 60px`, which is what
+   `.screen` pads the page by — it is already half a pixel over its own budget,
+   so any vertical padding here hides the bottom of every screen behind the
+   bar. Widen, never heighten. Raise --nav-h first if that ever has to change.
+
+   The seat is reserved on all four tabs so that switching tabs moves no
+   layout; only the fill appears. */
 .tabbar svg {
   width: 24px;
   height: 24px;
+  box-sizing: content-box;
+  padding-inline: 13px;
+  border-radius: 999px;
   stroke: currentColor;
   fill: none;
   stroke-width: 1.75;
   stroke-linecap: round;
   stroke-linejoin: round;
+  transition: background-color 140ms ease;
 }
 
 .tabbar a[aria-current='page'] svg {
   stroke-width: 2.25;
+  background: var(--primary-wash);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabbar svg {
+    transition: none;
+  }
 }
 
 /* On wider screens the bar follows the content column rather than the window. */
@@ -3829,9 +3860,20 @@ details.disclosure .disclosure-body {
   color: var(--primary);
 }
 
-.route-line .route-stop--complete .route-node {
-  color: var(--success);
-}
+/* Finished is the one stop in this row that is *filled* rather than washed —
+   see the rule further down that sets its background. So it is also the one
+   stop whose glyph must not be the state colour, and there is deliberately no
+   `color` here.
+
+   There used to be one, `color: var(--success)`, left over from before the
+   fill existed. It out-specified the white set alongside the fill (three
+   classes to two) and painted a #427459 check on a #427459 disc — the mark was
+   rendered, correctly, and invisible. It read as a stop with no icon at all
+   while its neighbours all had one.
+
+   The lesson is the specificity, not the colour: state rules for this row live
+   in two blocks, and the `.route-line`-scoped one silently wins. Set a colour
+   here only alongside a background here. */
 
 /* The finish keeps its gold, as a wash rather than a border. */
 .route-line .route-stop--end .route-node {
