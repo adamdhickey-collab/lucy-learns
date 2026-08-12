@@ -338,6 +338,67 @@ done; what is left is two redraws and one deliberate refusal.
 
 ---
 
+# Batch 9, checked blind before installing
+
+Both redraws were blind-checked with the filenames stripped before either went
+near the app. One passed and shipped; one is on its third failure and is
+recorded here unfixed.
+
+## `door-place-03-send` — passed, and its claim was rewritten
+
+Three viewers, both images, two orders. All three: four feet on the bed, high
+confidence she is on it, attention on the handler. **Nobody read her as
+leaving** — the previous version had a viewer say "walking away off the far
+side", and that is gone.
+
+All three also said they could not tell whether she had just stepped on, was
+holding, or was about to step off. That is the transition problem for the
+fourth time in this document, so the claim was rewritten rather than the
+picture redrawn again: *"she is standing on her bed, all four feet, looking up
+at the person pointing at it"*. Arrival is a transition and "sent" is a cause;
+a still frame reports neither.
+
+Installed at 1.71.0.
+
+## `door-sound-03-name-distant` — improved, still failing, and now three deep
+
+| Version | What three blind viewers said |
+| --- | --- |
+| Shipped | *"looking up at nothing I can see"* — 0/4 |
+| Body squared to the door, head turned back | *"roughly 180 degrees away from her"*, *"definitely not looking at her"* — 0/3 |
+| Whole body turned down the hallway | *"I cannot tell"* — 0/3 |
+
+Wrong became unclear, which is progress, and the reason is in every transcript:
+**her face is no longer visible.** Turning her body to face the handler put the
+camera behind her. *"The dog is drawn from behind and slightly to the side …
+its eyes are not visible."* *"A rear three-quarter view of a black dog, so a
+first-time viewer gets no expression or eye contact to read."*
+
+So the two fixes are in opposition as the shot is currently framed:
+
+- Face visible → body squared to the door → reads as *looking at the door*.
+- Body turned to the handler → camera behind her → reads as *cannot tell*.
+
+Neither is a drawing failure. **The camera is in the wrong place.** It sits
+beside the door looking down the hall, which is the one position where a dog
+facing down the hall must have her back to it. The shot that resolves it puts
+the camera side-on to the hallway axis — her flank to the lens, sitting upright
+facing the handler, muzzle and eye in clear profile, the handler beyond her in
+the same plane. Body, head, gaze and camera then all agree.
+
+**Two things worth saying against my own conclusion.** These are language
+models, and left/right spatial reading is a known weak spot for them; I zoomed
+in and her muzzle genuinely *is* turned down the hallway in both versions, so a
+human panel might well score this differently. And the app never shows this
+picture alone — it sits under the instruction "call her from another room".
+
+Neither gets it off the hook. It is the only Block A image that has never once
+been read correctly by anyone who did not commission it, across three attempts
+and ten viewers. But it is also the point at which the honest options are a
+camera move or a rewritten claim, **not** a fourth attempt at the same shot.
+
+---
+
 # Block C, second run — the covers as a set
 
 ## First run: three of four were the same picture

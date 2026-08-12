@@ -55,7 +55,7 @@ const SHIPPED_AS = {
   12: 'door-sound-04-treats',
   13: 'door-sound-05-settle',
   14: 'door-sound-03-name-distant',
-  16: 'door-place-03-send',
+  46: 'door-place-03-send',
   17: 'door-greet-04-open',
   18: 'door-greet-05-reward',
   19: 'door-greet-06-enter',
@@ -87,7 +87,7 @@ const SHIPPED_AS = {
 // look like the same photograph.
 const CONFUSABLE = [
   {
-    a: 16,
+    a: 46,
     b: 25,
     ask: 'Which one shows the dog being sent TO her bed?',
     answer: 'a',
@@ -301,6 +301,32 @@ for one.
 CONFUSABLE.forEach((pair, i) => {
   const a = scenes.get(pair.a);
   const b = scenes.get(pair.b);
+
+  // Throw rather than emit. These are scene numbers written by hand, and a
+  // scene number is not stable: when a redraw supersedes a scene, SHIPPED_AS
+  // moves the key to the new number and the old one stops owning a picture.
+  // This list pointed at scene 16 after batch 9 moved that key to 46, and the
+  // block rendered `undefined.jpg` for the image, the caption *and* the answer
+  // — a survey question that scores nothing, in a file whose whole job is to
+  // be trustworthy.
+  //
+  // Exactly the failure COVERS had one batch earlier, in the sibling code path
+  // that was not guarded at the same time. Fixing one instance of a bug and
+  // leaving its twin is how it comes back.
+  for (const [side, scene, number] of [
+    ['a', a, pair.a],
+    ['b', b, pair.b],
+  ]) {
+    if (!scene) throw new Error(`pair P${i + 1} side ${side}: no scene ${number} in the briefs`);
+    if (!scene.key) {
+      throw new Error(
+        `pair P${i + 1} side ${side}: scene ${number} ("${scene.title}") owns no key — ` +
+          `it was probably superseded by a redraw, so point this pair at the scene ` +
+          `that owns the key now, per SHIPPED_AS`
+      );
+    }
+  }
+
   out.push(`
 ### P${i + 1}. ${a.title} vs ${b.title}
 

@@ -2362,8 +2362,18 @@ and turned away from the handler — nothing in it says* sent.
 > tufted brows, wiry along the back. The picture being replaced drew her
 > smooth-faced, the same drift batch 8 corrected in the planned covers.
 >
-> The single thing this image must make obvious: **she has arrived on the bed
-> and is looking back at the person who sent her.**
+> The single thing this image must make obvious: **she is standing on her bed,
+> all four feet, looking up at the person pointing at it.**
+>
+> *(Claim rewritten after the redraw was checked blind. It used to end "she has
+> **arrived** on the bed and is looking back at the person who **sent** her",
+> and three viewers confirmed both halves that a picture can hold — four feet
+> on the bed, high confidence, and her attention on the handler — while all
+> three said they could not tell whether she had just stepped on, was holding,
+> or was about to step off. Arrival is a transition and a still cannot report
+> one; "sent" is a cause and a still cannot report that either. What matters is
+> that the old failure is gone: nobody read her as leaving, where the previous
+> version had a viewer say "walking away off the far side".)*
 >
 > Landscape 4:3, wider than tall.
 
