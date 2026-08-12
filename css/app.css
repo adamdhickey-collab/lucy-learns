@@ -2470,13 +2470,20 @@ details.disclosure .disclosure-body {
      images. Change one, change the other, and regenerate. */
   --badge-y: 50%;
 
-  /* Overwritten by app.js with the real hold, and with how much of it is
-     left once the boot is paid for. The run is the one the lane animates
-     against — it starts at the left every time and is stretched to land on
-     the dismissal. The fallbacks keep the lane sane if the script never
-     runs. */
+  /* Overwritten by app.js with the real numbers before it adds
+     .splash--running, which is what actually starts the traversal — the
+     animations that consume these live behind that class, so their clock
+     cannot start until the values are real. It used to be a fallback run that
+     began at first paint and was re-stretched mid-flight when the script
+     caught up, which is why the first visible frame of the dog was a dog
+     already mid-lane, finishing early.
+
+     The fallbacks are only for a boot where the script never runs at all. In
+     that case nothing dismisses the splash either, and a dog parked at the
+     start line is the honest picture. */
   --splash-hold: 1300ms;
   --splash-run: 1300ms;
+  --splash-run-delay: 0ms;
 }
 
 /* A slow warm vignette at the very edges of the field. It gives the flat
@@ -2743,8 +2750,10 @@ details.disclosure .disclosure-body {
     )
     left bottom / 100% 2px no-repeat;
   /* Last to arrive, and the sequence reads top to bottom: the name lands, the
-     tagline sets, the imprint line surfaces, and then the ground rolls out
-     under a dog who is already however far along the boot actually is. */
+     tagline sets, the imprint line surfaces, the ground rolls out with the
+     dog waiting at its start line, and then she sets off. app.js times her
+     departure to when this entrance finishes — the 820ms + 460ms here are
+     mirrored there as LANE_IN_END_MS, by hand. Change one, change both. */
   animation: splash-progress-in 460ms 820ms ease-out both;
 }
 
@@ -2759,12 +2768,17 @@ details.disclosure .disclosure-body {
   }
 }
 
-/* The ground already covered. Same duration, same negative delay, same linear
-   clock as the traversal — so its leading edge is always under her body (she
-   moves over `100% - 37px` while the trail scales over 100%, which puts the
-   tip at most one sprite-width ahead of her left edge, i.e. under the dog).
-   scaleX rather than width because it is the one part of the lane that runs
-   for the whole hold, and stretching a solid line costs nothing. */
+/* The ground already covered. Same duration, same delay, same linear clock
+   as the traversal — so its leading edge is always under her body (she moves
+   over `100% - 37px` while the trail scales over 100%, which puts the tip at
+   most one sprite-width ahead of her left edge, i.e. under the dog). scaleX
+   rather than width because it is the one part of the lane that runs for the
+   whole hold, and stretching a solid line costs nothing.
+
+   Empty in the base state, animated only under .splash--running: the run must
+   not start until app.js has the real numbers, and a trail already drawn
+   before the dog has moved would say she ran while the lane was still
+   fading in. */
 .splash-trail {
   position: absolute;
   left: 0;
@@ -2773,7 +2787,11 @@ details.disclosure .disclosure-body {
   height: 2px;
   background: color-mix(in srgb, var(--primary) 60%, transparent);
   transform-origin: left center;
-  animation: splash-trail-across var(--splash-run) linear both;
+  transform: scaleX(0);
+}
+
+.splash--running .splash-trail {
+  animation: splash-trail-across var(--splash-run) var(--splash-run-delay) linear both;
 }
 
 @keyframes splash-trail-across {
@@ -2795,12 +2813,19 @@ details.disclosure .disclosure-body {
 
    `splash-run-across` is the progress: it carries her from the left of the
    lane to the right over --splash-run, which app.js sets to the hold that is
-   left after the boot. She starts at the start on every load and arrives as
-   the splash leaves, so the lane still reads as "how much longer" — boot time
-   sets her speed rather than her starting line. (It used to set her starting
-   line, via a negative delay. A one-second boot then opened the animation
-   with the dog already a third of the way across, which read as a glitch
-   rather than as information.)
+   left after the boot and the lane's entrance are both paid for. She waits at
+   the start line while the ground rolls out, sets off when it has finished
+   arriving, and crosses in one unbroken linear run that lands exactly on the
+   dismissal — boot time sets her speed, never her starting line.
+
+   Both animations live behind .splash--running, which app.js adds only after
+   writing --splash-run and --splash-run-delay. That ordering is the fix for a
+   bug this file shipped twice: any animation consuming those variables from
+   the base rule starts its clock at first paint, when the values are still
+   the fallbacks — so the real numbers arrived mid-flight, and the first frame
+   of dog anyone saw (the lane fades in at 820ms) was a dog already mid-lane,
+   arriving early. The legs are gated with her for the same reason in reverse:
+   galloping on the spot at the start line would read as stuck, not waiting.
 
    `left` rather than a transform because the distance is "the width of the lane
    minus her own width", and a percentage on `left` already means that against
@@ -2840,9 +2865,12 @@ details.disclosure .disclosure-body {
      pixel art upscaled 2× and needed its edges protected; this one is
      anti-aliased art displayed at native resolution, where the hint would
      only roughen what the artist smoothed. */
+}
+
+.splash--running .splash-runner {
   animation:
-    splash-run-cycle 600ms steps(8) infinite,
-    splash-run-across var(--splash-run) linear both;
+    splash-run-cycle 600ms var(--splash-run-delay) steps(8) infinite,
+    splash-run-across var(--splash-run) var(--splash-run-delay) linear both;
 }
 
 @keyframes splash-run-cycle {
@@ -2982,6 +3010,10 @@ details.disclosure .disclosure-body {
   .splash-tagline::after,
   .splash-trail,
   .splash-runner,
+  /* The gated run rules are two classes deep, so the bare classes above
+     would lose to them — the kill has to name the gated selectors too. */
+  .splash--running .splash-trail,
+  .splash--running .splash-runner,
   .splash--done .splash-mark,
   .splash--done .splash-head {
     animation: none;

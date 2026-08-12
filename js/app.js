@@ -214,24 +214,41 @@ if (splash) {
   const versionSlot = splash.querySelector('#splash-version');
   if (versionSlot) versionSlot.textContent = `Version ${APP_VERSION}`;
 
-  // Hand the lane the actual numbers.
+  // Hand the lane the actual numbers, then start its clock.
   //
-  // This used to run the full hold with a negative delay equal to the boot
-  // time, so Lucy's position on the lane read as how far the load had got —
-  // reload halfway through and she started halfway across. It was a nice idea
-  // and it was wrong to look at: a boot costing a second of a three-second
-  // hold dropped her a third of the way in, so the animation the household
-  // actually sees began with the dog already mid-screen and then finished
+  // Order matters more than the numbers do. The traversal lives behind the
+  // .splash--running class, added here *after* the variables are written —
+  // because a CSS animation's clock starts the moment its rule first applies,
+  // and any version of this that lets the rule apply at first paint starts
+  // the run before the numbers are real. This file has now shipped that bug
+  // in both available directions: first as a negative delay that opened with
+  // the dog mid-lane by design, then as a fallback duration that opened with
+  // the dog mid-lane by accident when the real value arrived mid-flight and
+  // re-stretched a run already in progress. Both times, what the household saw
+  // was a dog partway across a lane that had only just faded in, finishing
   // early.
   //
-  // Now she always starts at the left of the lane and the run is *stretched*
-  // to whatever hold is left, so she crosses the finish exactly as the splash
-  // leaves. Boot time still governs — it just sets her speed instead of her
-  // starting line, which is the version that reads as intended on every load.
+  // The delay holds her at the start line until the lane's own entrance has
+  // finished, so the sequence reads: ground rolls out, dog sets off, dog
+  // arrives exactly as the splash leaves. The run is stretched to whatever
+  // hold is left after the delay — boot time sets her speed, never her
+  // starting line. On a boot slow enough to eat the entrance, the delay
+  // collapses to zero and she simply runs what remains; past the hold
+  // entirely, both go to zero and the splash is already leaving.
+  //
+  // LANE_IN_END_MS mirrors `splash-progress-in 460ms 820ms` in app.css, by
+  // hand — change one, change both. The two clocks differ by first paint
+  // (this one starts at navigation, the CSS one at first style), so she can
+  // set off a few tens of milliseconds into the entrance's ease-out tail;
+  // that is under one leg-cycle frame and reads as nothing.
+  const LANE_IN_END_MS = 820 + 460;
   const elapsed = performance.now();
   const remaining = Math.max(SPLASH_HOLD_MS - elapsed, 0);
+  const runDelay = Math.min(Math.max(LANE_IN_END_MS - elapsed, 0), remaining);
   splash.style.setProperty('--splash-hold', `${SPLASH_HOLD_MS}ms`);
-  splash.style.setProperty('--splash-run', `${Math.round(remaining)}ms`);
+  splash.style.setProperty('--splash-run-delay', `${Math.round(runDelay)}ms`);
+  splash.style.setProperty('--splash-run', `${Math.round(remaining - runDelay)}ms`);
+  splash.classList.add('splash--running');
 
   if (!location.search.includes('splash-hold')) {
     let dismissed = false;
