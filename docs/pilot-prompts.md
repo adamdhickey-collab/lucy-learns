@@ -2127,7 +2127,12 @@ with hands together at the waist, one flat wall and floor.*
 
 *Redraws `plan-mat` (Scene 34's key). Hardest of the three: she is asleep on
 her side with her head down, so the beard and brows have to read on a face
-in profile with the eyes closed.*
+in profile with the eyes closed. **The fix:** the coat, and it inherits
+Scene 34's — §5 called the original "the busiest background in the whole
+library", and the stripped background has to survive this redraw too. Said
+in these words because the survey generator reads them: `isFix` puts a scene
+in Block A by looking for this phrase, so dropping it would quietly retire a
+picture from the panel that still needs one.*
 
 > Match the attached image for the dog's coat, face and markings, and keep
 > the composition of the image being replaced exactly.
@@ -2196,6 +2201,40 @@ frame side by side with `plan-name`:
 
 If the beard is not visible at full size the redraw failed, and if the
 composition moved the redraw overreached.
+
+### When batch 8 is done
+
+All three landed in one sitting and all three fixed the coat — beard, brow
+tufts and a wiry back on every one, including the hard case: `plan-mat` has
+her asleep in profile with her eyes shut and the beard still reads. At 84px
+the four now look like one dog, which is the whole point.
+
+Two things came back different from the brief, and both were accepted:
+
+- **`plan-mat`'s bed is flatter** than the deep cushion it replaced. Allowed
+  to stand because this activity is *Settle on a Mat* and a mat is what it
+  should have been; the deep bed belongs to the door routine. Block B pins
+  *her bed* as a mattress, and that pin is still right — this is a different
+  object.
+- **`plan-walkpeople` is mirrored**, handler moved from left to right, and
+  the passer-by changed from the blue-plaid man to a plain figure. The brief
+  said keep the composition exactly and this did not, so by the letter it was
+  a reject. Kept because the change is an improvement nobody asked for: the
+  old one used **the app's guest character** as an anonymous stranger in the
+  street, which is a cast error — he is somebody in this app, and a random
+  passer-by must not be. Worth remembering that "keep the composition" also
+  freezes whatever is wrong with it.
+
+**And the batch found a bug in the survey generator.** `make-survey.mjs`
+gathered a scene's italic note by testing every line against `/^\*[^*]/`,
+which only matches the line an italic *opens* on — so any note wrapped across
+more than one line contributed its first line and nothing else. Every
+`**The fix:**` and every reference count sitting on line two was invisible.
+Block A is chosen by that phrase, so it had been reporting **8 images when the
+real answer was 15**: seven pictures that replaced a recorded §5 defect were
+being left out of the panel that exists to check exactly that. Fixed to gather
+the whole italic block. The session estimate is now computed from the counts
+rather than hardcoded, because that is how it went stale unnoticed.
 
 ---
 

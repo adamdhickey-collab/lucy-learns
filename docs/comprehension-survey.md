@@ -28,12 +28,17 @@ required — needing expertise to read the picture *is* the failure.
 the same hallway, and a participant who has seen eight of them starts pattern-
 matching rather than looking.
 
-**Blocks A to C are one session, roughly 8 minutes.** Block D is another 29
-open-text questions and belongs in its own panel — bolting it on would push a
-participant past the point where they are still looking rather than skimming.
-Run Block A alone first if you want a cheap pilot; it carries the highest-stakes
-images and will tell you whether the scoring key is written tightly enough
-before you spend a full panel on it.
+**Blocks A to C are one session, roughly 15 minutes** —
+15 open-text questions, 4 pairs and the cover
+match, at about 45 seconds each. Block D is another 22 open-text
+questions and belongs in its own panel — bolting it on would push a participant
+past the point where they are still looking rather than skimming.
+
+If that is longer than a panel you want to buy, cut Block A by reference count
+rather than by feel: the questions are emitted most-referenced first, so the
+later ones are the images a household meets least often. Do not cut Block B or
+C to make room — a confusable pair and a duplicate cover are failures a
+single-image question cannot find.
 
 **Scoring.** Open text, marked by hand against the key. A pass is a participant
 naming the action in the key without prompting. Do not credit a description that
@@ -43,12 +48,32 @@ what they said instead tells you what to change.
 
 ---
 
-## Block A — the redraws (8 images)
+## Block A — the redraws (15 images)
 
 These replaced a picture §5 recorded as saying the wrong thing. If the fix
 landed, it lands here.
 
-### Q1. Release and reset
+### Q1. Crossing to the door while she holds
+
+![door-stay-03-cross](https://adamdhickey-collab.github.io/lucy-learns/img/door-stay-03-cross.jpg)
+
+`door-stay-03-cross.jpg` · **redraw of a recorded defect** · 30 references
+
+> **Ask:** In one sentence, what is the person doing, and what is the dog doing?
+
+**Scoring key —** she is staying put while the handler walks away.
+
+### Q2. Send her to her bed
+
+![door-place-03-send](https://adamdhickey-collab.github.io/lucy-learns/img/door-place-03-send.jpg)
+
+`door-place-03-send.jpg` · **redraw of a recorded defect** · 22 references
+
+> **Ask:** In one sentence, what is the person doing, and what is the dog doing?
+
+**Scoring key —** she is arriving on the bed, sent there from behind.
+
+### Q3. Release and reset
 
 ![door-stay-05-release](https://adamdhickey-collab.github.io/lucy-learns/img/door-stay-05-release.jpg)
 
@@ -58,7 +83,7 @@ landed, it lands here.
 
 **Scoring key —** she is coming off the bed, invited, toward open hands.
 
-### Q2. Say her name
+### Q4. Say her name
 
 ![door-sound-03-name](https://adamdhickey-collab.github.io/lucy-learns/img/door-sound-03-name.jpg)
 
@@ -68,7 +93,7 @@ landed, it lands here.
 
 **Scoring key —** her name was said and she looked away from the door.
 
-### Q3. The door opens, the guest stays put
+### Q5. The door opens, the guest stays put
 
 ![door-greet-04-open](https://adamdhickey-collab.github.io/lucy-learns/img/door-greet-04-open.jpg)
 
@@ -78,7 +103,17 @@ landed, it lands here.
 
 **Scoring key —** the door is open, the guest has not moved, and she is being held on the bed on a slack leash.
 
-### Q4. Paid on the bed
+### Q6. The guest comes in and does nothing
+
+![door-greet-06-enter](https://adamdhickey-collab.github.io/lucy-learns/img/door-greet-06-enter.jpg)
+
+`door-greet-06-enter.jpg` · **redraw of a recorded defect** · 7 references
+
+> **Ask:** In one sentence, what is the person doing, and what is the dog doing?
+
+**Scoring key —** he is inside, he has stopped, and nobody is paying her any attention.
+
+### Q7. Paid on the bed
 
 ![door-greet-05-reward](https://adamdhickey-collab.github.io/lucy-learns/img/door-greet-05-reward.jpg)
 
@@ -88,7 +123,7 @@ landed, it lands here.
 
 **Scoring key —** the treat is arriving while she is still on the bed and the door is still open.
 
-### Q5. Greeting nobody at the open door
+### Q8. Greeting nobody at the open door
 
 ![door-stay-03-pretend](https://adamdhickey-collab.github.io/lucy-learns/img/door-stay-03-pretend.jpg)
 
@@ -98,7 +133,7 @@ landed, it lands here.
 
 **Scoring key —** the door is wide open onto nobody, and she is still on her bed.
 
-### Q6. Called from another room
+### Q9. Called from another room
 
 ![door-sound-03-name-distant](https://adamdhickey-collab.github.io/lucy-learns/img/door-sound-03-name-distant.jpg)
 
@@ -108,7 +143,7 @@ landed, it lands here.
 
 **Scoring key —** she heard her name from far away and turned toward it.
 
-### Q7. One step away
+### Q10. One step away
 
 ![door-stay-03-onestep](https://adamdhickey-collab.github.io/lucy-learns/img/door-stay-03-onestep.jpg)
 
@@ -118,7 +153,47 @@ landed, it lands here.
 
 **Scoring key —** she has barely moved — the bed is still right at her heel.
 
-### Q8. Settled on the mat
+### Q11. Halfway to the door
+
+![door-stay-03-halfway](https://adamdhickey-collab.github.io/lucy-learns/img/door-stay-03-halfway.jpg)
+
+`door-stay-03-halfway.jpg` · **redraw of a recorded defect** · 1 reference
+
+> **Ask:** In one sentence, what is the person doing, and what is the dog doing?
+
+**Scoring key —** half the room between them, and the handler has stopped to check.
+
+### Q12. The sound, as a close two-shot
+
+![door-sound-cover](https://adamdhickey-collab.github.io/lucy-learns/img/door-sound-cover.jpg)
+
+`door-sound-cover.jpg` · **redraw of a recorded defect** · 1 reference
+
+> **Ask:** In one sentence, what is the person doing, and what is the dog doing?
+
+**Scoring key —** the sound happened and she has turned to her person.
+
+### Q13. The stay, as an open door
+
+![door-stay-cover](https://adamdhickey-collab.github.io/lucy-learns/img/door-stay-cover.jpg)
+
+`door-stay-cover.jpg` · **redraw of a recorded defect** · 1 reference
+
+> **Ask:** In one sentence, what is the person doing, and what is the dog doing?
+
+**Scoring key —** the door is wide open and she has stayed where she is.
+
+### Q14. Place, as a dog on a bed and nothing else
+
+![door-place-cover](https://adamdhickey-collab.github.io/lucy-learns/img/door-place-cover.jpg)
+
+`door-place-cover.jpg` · **redraw of a recorded defect** · 1 reference
+
+> **Ask:** In one sentence, what is the person doing, and what is the dog doing?
+
+**Scoring key —** she is settled on her own bed.
+
+### Q15. Settled on the mat, redrawn with her own coat
 
 ![plan-mat](https://adamdhickey-collab.github.io/lucy-learns/img/plan-mat.jpg)
 
@@ -216,33 +291,13 @@ place is doing no work; two that swap are worse than one bad one.
 
 ---
 
-## Block D — everything else (29 images)
+## Block D — everything else (22 images)
 
 Same question and scoring as Block A. Run these once Block A is clean, or split
-them across two panels — 29 more open-text questions is too long to bolt onto the
+them across two panels — 22 more open-text questions is too long to bolt onto the
 same session.
 
-### Q1. Crossing to the door while she holds
-
-![door-stay-03-cross](https://adamdhickey-collab.github.io/lucy-learns/img/door-stay-03-cross.jpg)
-
-`door-stay-03-cross.jpg` · 30 references
-
-> **Ask:** In one sentence, what is the person doing, and what is the dog doing?
-
-**Scoring key —** she is staying put while the handler walks away.
-
-### Q2. Send her to her bed
-
-![door-place-03-send](https://adamdhickey-collab.github.io/lucy-learns/img/door-place-03-send.jpg)
-
-`door-place-03-send.jpg` · 22 references
-
-> **Ask:** In one sentence, what is the person doing, and what is the dog doing?
-
-**Scoring key —** she is arriving on the bed, sent there from behind.
-
-### Q3. You make the sound
+### Q1. You make the sound
 
 ![door-sound-02-self](https://adamdhickey-collab.github.io/lucy-learns/img/door-sound-02-self.jpg)
 
@@ -252,17 +307,7 @@ same session.
 
 **Scoring key —** she is making the sound herself, standing right beside the dog, hands free because the leash is underfoot.
 
-### Q4. The guest comes in and does nothing
-
-![door-greet-06-enter](https://adamdhickey-collab.github.io/lucy-learns/img/door-greet-06-enter.jpg)
-
-`door-greet-06-enter.jpg` · 7 references
-
-> **Ask:** In one sentence, what is the person doing, and what is the dog doing?
-
-**Scoring key —** he is inside, he has stopped, and nobody is paying her any attention.
-
-### Q5. Two treats, straight away
+### Q2. Two treats, straight away
 
 ![door-sound-04-treats](https://adamdhickey-collab.github.io/lucy-learns/img/door-sound-04-treats.jpg)
 
@@ -272,7 +317,7 @@ same session.
 
 **Scoring key —** two treats, arriving immediately.
 
-### Q6. The pause between reps
+### Q3. The pause between reps
 
 ![door-sound-05-settle](https://adamdhickey-collab.github.io/lucy-learns/img/door-sound-05-settle.jpg)
 
@@ -282,7 +327,7 @@ same session.
 
 **Scoring key —** the rep is over and nothing is happening.
 
-### Q7. The guest leaves
+### Q4. The guest leaves
 
 ![door-greet-09-leaves](https://adamdhickey-collab.github.io/lucy-learns/img/door-greet-09-leaves.jpg)
 
@@ -292,7 +337,7 @@ same session.
 
 **Scoring key —** it is over, he is going, and she stayed sitting.
 
-### Q8. Setup at the door
+### Q5. Setup at the door
 
 ![door-sound-01-setup](https://adamdhickey-collab.github.io/lucy-learns/img/door-sound-01-setup.jpg)
 
@@ -302,7 +347,7 @@ same session.
 
 **Scoring key —** the leash is trapped under the foot and both hands are free.
 
-### Q9. Walking her over on a loose leash
+### Q6. Walking her over on a loose leash
 
 ![door-greet-07-approach](https://adamdhickey-collab.github.io/lucy-learns/img/door-greet-07-approach.jpg)
 
@@ -312,7 +357,7 @@ same session.
 
 **Scoring key —** the leash is slack and she is walking *with* the handler, not out in front of her.
 
-### Q10. The calm greeting
+### Q7. The calm greeting
 
 ![door-greet-08-petting](https://adamdhickey-collab.github.io/lucy-learns/img/door-greet-08-petting.jpg)
 
@@ -322,7 +367,7 @@ same session.
 
 **Scoring key —** four paws down, and a hand on the chest rather than over the head.
 
-### Q11. The same greeting going wrong
+### Q8. The same greeting going wrong
 
 ![door-greet-08-jumping](https://adamdhickey-collab.github.io/lucy-learns/img/door-greet-08-jumping.jpg)
 
@@ -332,7 +377,7 @@ same session.
 
 **Scoring key —** this is the same greeting as before, and it has gone wrong.
 
-### Q12. Guest at the door, Lucy holding her bed
+### Q9. Guest at the door, Lucy holding her bed
 
 ![door-cover](https://adamdhickey-collab.github.io/lucy-learns/img/door-cover.jpg)
 
@@ -342,7 +387,7 @@ same session.
 
 **Scoring key —** a guest has arrived, Lucy is checking in with her handler, and nothing has gone wrong.
 
-### Q13. Cue the stay
+### Q10. Cue the stay
 
 ![door-stay-02-cue](https://adamdhickey-collab.github.io/lucy-learns/img/door-stay-02-cue.jpg)
 
@@ -352,7 +397,7 @@ same session.
 
 **Scoring key —** the signal has just been given, the handler is still standing over her dog, and neither of them has moved.
 
-### Q14. Leash on, settled on the bed
+### Q11. Leash on, settled on the bed
 
 ![door-greet-01-settle](https://adamdhickey-collab.github.io/lucy-learns/img/door-greet-01-settle.jpg)
 
@@ -362,7 +407,7 @@ same session.
 
 **Scoring key —** the leash is on and she is being settled, before the session starts.
 
-### Q15. The guest sits down
+### Q12. The guest sits down
 
 ![door-greet-06-seated](https://adamdhickey-collab.github.io/lucy-learns/img/door-greet-06-seated.jpg)
 
@@ -372,7 +417,7 @@ same session.
 
 **Scoring key —** the room has moved on and she is not part of it.
 
-### Q16. The calm hello, composed as a cover
+### Q13. The calm hello, composed as a cover
 
 ![door-greet-cover](https://adamdhickey-collab.github.io/lucy-learns/img/door-greet-cover.jpg)
 
@@ -382,7 +427,7 @@ same session.
 
 **Scoring key —** four paws on the floor and a hand on her chest.
 
-### Q17. Paying her on the bed
+### Q14. Paying her on the bed
 
 ![door-stay-04-pay](https://adamdhickey-collab.github.io/lucy-learns/img/door-stay-04-pay.jpg)
 
@@ -392,17 +437,7 @@ same session.
 
 **Scoring key —** the treat arrives down at the bed, and she has not moved to get it.
 
-### Q18. Halfway to the door
-
-![door-stay-03-halfway](https://adamdhickey-collab.github.io/lucy-learns/img/door-stay-03-halfway.jpg)
-
-`door-stay-03-halfway.jpg` · 1 reference
-
-> **Ask:** In one sentence, what is the person doing, and what is the dog doing?
-
-**Scoring key —** half the room between them, and the handler has stopped to check.
-
-### Q19. Hand on the handle
+### Q15. Hand on the handle
 
 ![door-stay-03-handle](https://adamdhickey-collab.github.io/lucy-learns/img/door-stay-03-handle.jpg)
 
@@ -412,7 +447,7 @@ same session.
 
 **Scoring key —** her hand is on the handle and the door has not opened.
 
-### Q20. Crack the door
+### Q16. Crack the door
 
 ![door-stay-03-crack](https://adamdhickey-collab.github.io/lucy-learns/img/door-stay-03-crack.jpg)
 
@@ -422,7 +457,7 @@ same session.
 
 **Scoring key —** a few inches of daylight, and she is still on her bed.
 
-### Q21. The imaginary conversation
+### Q17. The imaginary conversation
 
 ![door-stay-03-conversation](https://adamdhickey-collab.github.io/lucy-learns/img/door-stay-03-conversation.jpg)
 
@@ -432,27 +467,7 @@ same session.
 
 **Scoring key —** a long, relaxed conversation at the open door, and she is holding the bed right through it.
 
-### Q22. Four paws on the floor
-
-![plan-fourpaws](https://adamdhickey-collab.github.io/lucy-learns/img/plan-fourpaws.jpg)
-
-`plan-fourpaws.jpg` · 1 reference
-
-> **Ask:** In one sentence, what is the person doing, and what is the dog doing?
-
-**Scoring key —** all four feet are down.
-
-### Q23. Someone passes on the pavement
-
-![plan-walkpeople](https://adamdhickey-collab.github.io/lucy-learns/img/plan-walkpeople.jpg)
-
-`plan-walkpeople.jpg` · 1 reference
-
-> **Ask:** In one sentence, what is the person doing, and what is the dog doing?
-
-**Scoring key —** she is looking up at her handler while somebody walks by.
-
-### Q24. Her name, with something better going on
+### Q18. Her name, with something better going on
 
 ![plan-name](https://adamdhickey-collab.github.io/lucy-learns/img/plan-name.jpg)
 
@@ -462,37 +477,7 @@ same session.
 
 **Scoring key —** her head has turned to her handler and away from the squirrel.
 
-### Q25. The sound, as a close two-shot
-
-![door-sound-cover](https://adamdhickey-collab.github.io/lucy-learns/img/door-sound-cover.jpg)
-
-`door-sound-cover.jpg` · 1 reference
-
-> **Ask:** In one sentence, what is the person doing, and what is the dog doing?
-
-**Scoring key —** the sound happened and she has turned to her person.
-
-### Q26. The stay, as an open door
-
-![door-stay-cover](https://adamdhickey-collab.github.io/lucy-learns/img/door-stay-cover.jpg)
-
-`door-stay-cover.jpg` · 1 reference
-
-> **Ask:** In one sentence, what is the person doing, and what is the dog doing?
-
-**Scoring key —** the door is wide open and she has stayed where she is.
-
-### Q27. Place, as a dog on a bed and nothing else
-
-![door-place-cover](https://adamdhickey-collab.github.io/lucy-learns/img/door-place-cover.jpg)
-
-`door-place-cover.jpg` · 1 reference
-
-> **Ask:** In one sentence, what is the person doing, and what is the dog doing?
-
-**Scoring key —** she is settled on her own bed.
-
-### Q28. The doorbell, rung by someone you can see
+### Q19. The doorbell, rung by someone you can see
 
 ![door-sound-02-bell](https://adamdhickey-collab.github.io/lucy-learns/img/door-sound-02-bell.jpg)
 
@@ -502,7 +487,7 @@ same session.
 
 **Scoring key —** the bell is being pressed.
 
-### Q29. The knock, from the same man
+### Q20. The knock, from the same man
 
 ![door-sound-02-knock](https://adamdhickey-collab.github.io/lucy-learns/img/door-sound-02-knock.jpg)
 
@@ -511,6 +496,26 @@ same session.
 > **Ask:** In one sentence, what is the person doing, and what is the dog doing?
 
 **Scoring key —** the door is being knocked on.
+
+### Q21. Four paws on the floor, redrawn with her own coat
+
+![plan-fourpaws](https://adamdhickey-collab.github.io/lucy-learns/img/plan-fourpaws.jpg)
+
+`plan-fourpaws.jpg` · 1 reference
+
+> **Ask:** In one sentence, what is the person doing, and what is the dog doing?
+
+**Scoring key —** all four feet are down.
+
+### Q22. Someone passes on the pavement, redrawn with her own coat
+
+![plan-walkpeople](https://adamdhickey-collab.github.io/lucy-learns/img/plan-walkpeople.jpg)
+
+`plan-walkpeople.jpg` · 1 reference
+
+> **Ask:** In one sentence, what is the person doing, and what is the dog doing?
+
+**Scoring key —** she is looking up at her handler while somebody walks by.
 
 ---
 
@@ -527,8 +532,9 @@ The survey is the first chance to find out whether accepting them was right.
   are a deep mattress, and it sits next to one of them in the same activity. If
   anyone describes it as a mat, a towel, or a rug rather than a bed, that is the
   drift showing.
-- **The four `plan-*` covers — the coat.** All four drifted toward a smooth
-  Labrador rather than the wirehaired mix. Invisible at 56px, which is the only
-  size they render. If a participant seeing one full-size calls her a different
-  breed from the rest of the set, they should be redrawn before any of those
-  programmes is written.
+- **The four `plan-*` covers — the coat.** Three of the four drifted toward a
+  smooth Labrador rather than the wirehaired mix, and were redrawn in batch 8;
+  `plan-name` never drifted. All four should now read as one dog. This stays
+  on the list because it is the thing to watch rather than a known fault: if a
+  participant seeing one full-size calls her a different breed from the rest of
+  the set, the drift came back.

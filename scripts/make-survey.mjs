@@ -71,9 +71,9 @@ const SHIPPED_AS = {
   30: 'door-stay-03-handle',
   31: 'door-stay-03-crack',
   32: 'door-stay-03-conversation',
-  33: 'plan-fourpaws',
-  34: 'plan-mat',
-  35: 'plan-walkpeople',
+  42: 'plan-fourpaws',
+  43: 'plan-mat',
+  44: 'plan-walkpeople',
   36: 'plan-name',
   37: 'door-sound-cover',
   38: 'door-stay-cover',
@@ -147,7 +147,22 @@ for (let i = 0; i < lines.length; i++) {
 
   // The italic note under the heading carries the provenance: what it replaces,
   // how many references it had, and whether §5 recorded a defect against it.
-  if (!current.claim && /^\*[^*]/.test(lines[i])) current.note.push(lines[i]);
+  //
+  // Gathered as a block rather than line by line. The first version tested
+  // every line against /^\*[^*]/, which only ever matches the line the italic
+  // *opens* on — so a note wrapped across three lines contributed its first
+  // line and nothing else, and "**The fix:**" or a reference count sitting on
+  // line two was invisible. That silently decided Block A membership, which is
+  // the kind of wrong that looks like a judgement call.
+  if (!current.claim && !current.note.length && /^\*[^*]/.test(lines[i])) {
+    for (let j = i; j < lines.length; j++) {
+      current.note.push(lines[j]);
+      // The italic closes on the first line ending in a lone `*` — `**bold**`
+      // at a line end would be a false positive, so require a non-`*` before it.
+      if (/[^*]\*$/.test(lines[j])) break;
+      if (lines[j].trim() === '') break; // unterminated; do not run into the brief
+    }
+  }
 
   const claimStart = lines[i].match(/single thing this image must make obvious[^:]*:\s*(.*)$/);
   if (claimStart && !current.claim) {
@@ -244,12 +259,17 @@ required — needing expertise to read the picture *is* the failure.
 the same hallway, and a participant who has seen eight of them starts pattern-
 matching rather than looking.
 
-**Blocks A to C are one session, roughly 8 minutes.** Block D is another ${rest.length}
-open-text questions and belongs in its own panel — bolting it on would push a
-participant past the point where they are still looking rather than skimming.
-Run Block A alone first if you want a cheap pilot; it carries the highest-stakes
-images and will tell you whether the scoring key is written tightly enough
-before you spend a full panel on it.
+**Blocks A to C are one session, roughly ${Math.round((priority.length + CONFUSABLE.length + 1) * 0.75)} minutes** —
+${priority.length} open-text questions, ${CONFUSABLE.length} pairs and the cover
+match, at about 45 seconds each. Block D is another ${rest.length} open-text
+questions and belongs in its own panel — bolting it on would push a participant
+past the point where they are still looking rather than skimming.
+
+If that is longer than a panel you want to buy, cut Block A by reference count
+rather than by feel: the questions are emitted most-referenced first, so the
+later ones are the images a household meets least often. Do not cut Block B or
+C to make room — a confusable pair and a duplicate cover are failures a
+single-image question cannot find.
 
 **Scoring.** Open text, marked by hand against the key. A pass is a participant
 naming the action in the key without prompting. Do not credit a description that
@@ -351,11 +371,12 @@ The survey is the first chance to find out whether accepting them was right.
   are a deep mattress, and it sits next to one of them in the same activity. If
   anyone describes it as a mat, a towel, or a rug rather than a bed, that is the
   drift showing.
-- **The four \`plan-*\` covers — the coat.** All four drifted toward a smooth
-  Labrador rather than the wirehaired mix. Invisible at 56px, which is the only
-  size they render. If a participant seeing one full-size calls her a different
-  breed from the rest of the set, they should be redrawn before any of those
-  programmes is written.
+- **The four \`plan-*\` covers — the coat.** Three of the four drifted toward a
+  smooth Labrador rather than the wirehaired mix, and were redrawn in batch 8;
+  \`plan-name\` never drifted. All four should now read as one dog. This stays
+  on the list because it is the thing to watch rather than a known fault: if a
+  participant seeing one full-size calls her a different breed from the rest of
+  the set, the drift came back.
 `);
 
 writeFileSync(OUT, out.join('\n').replace(/\n{3,}/g, '\n\n'));
