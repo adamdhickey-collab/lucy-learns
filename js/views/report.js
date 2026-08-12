@@ -16,9 +16,12 @@ import { getState, exportSummary } from '../store.js';
 import {
   activityMastery,
   currentLevel,
+  repCount,
   successRate,
   relativeDay,
 } from '../metrics.js';
+
+const reps = (n) => `${n} rep${n === 1 ? '' : 's'}`;
 import { html, join, badge, pct, toast, focusHeading } from '../ui.js';
 
 // 14 days covers the common every-other-week lesson cadence by default.
@@ -67,7 +70,9 @@ function composeShareText(days) {
   const lines = [
     `${DOG.name} — training report, last ${days} days`,
     `${sessions.length} practice session${sessions.length === 1 ? '' : 's'}` +
-      (rate !== null ? `, ${pct(rate)} of repetitions went well` : ''),
+      (rate !== null
+        ? `, ${pct(rate)} of ${repCount(sessions)} repetitions went well`
+        : ''),
   ];
   LIVE_ACTIVITIES.forEach((activity) => {
     const mine = sessions.filter((s) => s.activityId === activity.id);
@@ -79,7 +84,7 @@ function composeShareText(days) {
     }
     const level = currentLevel(activity);
     lines.push(
-      `- ${activity.title}: level ${level.number}, ${activityMastery(activity.id).label.toLowerCase()}, ${pct(successRate(mine))} over ${mine.length} session${mine.length === 1 ? '' : 's'}`
+      `- ${activity.title}: level ${level.number}, ${activityMastery(activity.id).label.toLowerCase()}, ${pct(successRate(mine))} of ${reps(repCount(mine))} over ${mine.length} session${mine.length === 1 ? '' : 's'}`
     );
   });
   const jumped = watchCount(sessions, 'jumped');
@@ -128,6 +133,7 @@ function render() {
   const prog = programProgress(PROGRAMS[0].id);
   const rate = successRate(sessions);
   const priorRate = successRate(prior);
+  const totalReps = repCount(sessions);
 
   const trend = trendNote(rate, priorRate, rangeDays);
 
@@ -154,7 +160,7 @@ function render() {
       <div class="under">
         <small>
           Level ${level.number} · ${mine.length} session${mine.length === 1 ? '' : 's'}${
-            myRate !== null ? ` · ${pct(myRate)} went well` : ''
+            myRate !== null ? ` · ${pct(myRate)} of ${reps(repCount(mine))} went well` : ''
           }
         </small>
         ${badge(activityMastery(activity.id))}
@@ -229,9 +235,16 @@ function render() {
                   <b>${sessions.length}</b>
                   <span>${sessions.length === 1 ? 'Session' : 'Sessions'}</span>
                 </div>
+                ${/* The denominator rides in the label rather than on a line
+                      of its own: "77%" over "of 205 reps went well" reads as
+                      one sentence, and the card is half a phone wide. Without
+                      it the number is a claim with its weight left off — 77%
+                      of thirteen reps and 77% of two hundred print identically
+                      and mean different things to the person deciding what to
+                      work on next. */ ''}
                 <div class="metric">
                   <b>${pct(rate)}</b>
-                  <span>Reps went well</span>
+                  <span>${rate === null ? 'Reps went well' : `of ${reps(totalReps)} went well`}</span>
                   ${trend ? html`<small>${trend}</small>` : ''}
                 </div>
               </div>

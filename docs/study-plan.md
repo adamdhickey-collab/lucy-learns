@@ -347,10 +347,35 @@ who spotted the mismatch were not confused about arithmetic, they wanted to know
 which activity was missing. The same line was added to the share text, so the
 screen and the thing pasted into a message say the same thing.
 
-**Not fixed:** the missing denominators and the headline being mostly one
-activity. Both are real, and both change what the top of the report claims
-rather than adding a line to it — worth doing deliberately rather than in the
-same pass.
+### Then the denominators, in 1.77.0
+
+Every percentage on the report now carries the count under it. The headline
+reads **77%** over *"of 56 reps went well"* — the denominator sits in the label
+rather than on a line of its own, because the card is half a phone wide and
+"77% of 56 reps went well" is one sentence. Each skill row gained the same
+thing (*"Level 4 · 7 sessions · 77% of 35 reps went well"*), as did the share
+text.
+
+`repCount()` was pulled out of `successRate()` in [metrics.js](../js/metrics.js)
+and exported, so the rate and its denominator can never be computed from
+different sets.
+
+The change immediately earns itself on the demo data: the fortnight's headline
+turns out to rest on **56 reps across 12 sessions** — under five reps a session
+— and the seven-day view of *Doorbell Predicts Rewards* is a perfect 100% off a
+single session of five. Both were true before; neither was legible. That is the
+whole argument for printing the denominator.
+
+**Left alone deliberately:** the same bare percentages appear on the progress
+screen ([progress.js](../js/views/progress.js), the mastery rows) and on an
+activity's detail screen. The blind read was of the report — the document a
+trainer acts on — and the fix stops there rather than sweeping the app on the
+strength of a finding from one screen.
+
+**Still not fixed:** the headline is largely one activity. 7 of the 12 sessions
+are *Doorbell Predicts Rewards*, so the top-line number is close to a
+restatement of one skill. That one changes what the number *is*, not what is
+printed beside it, and wants deciding rather than patching.
 
 ### True, and not defects
 

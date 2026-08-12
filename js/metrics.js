@@ -25,8 +25,20 @@ export const MASTERY_LADDER = [
 
 const WATCH = ['barked', 'jumped', 'nipped', 'pulled', 'broke_position'];
 
+/**
+ * Total repetitions behind a set of sessions — the denominator under every
+ * percentage this app prints.
+ *
+ * Exported because a rate without its count is a claim without its weight:
+ * 77% of thirteen reps and 77% of two hundred are the same number and
+ * different evidence, and the screens that hand a percentage to a trainer
+ * should be able to say which one they mean.
+ */
+export const repCount = (sessions) =>
+  sessions.reduce((n, s) => n + (s.repetitions || 0), 0);
+
 export const successRate = (sessions) => {
-  const reps = sessions.reduce((n, s) => n + (s.repetitions || 0), 0);
+  const reps = repCount(sessions);
   if (!reps) return null;
   const ok = sessions.reduce((n, s) => n + (s.successfulRepetitions || 0), 0);
   return ok / reps;
