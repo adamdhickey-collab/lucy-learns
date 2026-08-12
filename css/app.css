@@ -2730,11 +2730,13 @@ details.disclosure .disclosure-body {
 
 .splash-progress {
   position: absolute;
-  /* Under the meta, which is itself under the art. The 3.4em clears both lines
-     of version and date at their own size. */
-  top: calc(var(--badge-y) + var(--badge-h) / 2 + var(--s-5) + 3.4em);
+  /* Under the meta, which is itself under the art. 3.4em cleared both lines
+     of version and date when the runner was a 25px dog; the walking pair is
+     44px and rises above the lane box, so the extra 0.6em is headroom for
+     the walker — measured at 2px of clearance without it. */
+  top: calc(var(--badge-y) + var(--badge-h) / 2 + var(--s-5) + 4em);
   /* A lane, not a pill. This was a 190px bar filling up; it is now the ground
-     Lucy runs along, so it wants the width of the screen to run across. */
+     the pair walks along, so it wants the width of the screen to walk across. */
   left: 8%;
   right: 8%;
   height: 34px;
@@ -2770,7 +2772,7 @@ details.disclosure .disclosure-body {
 
 /* The ground already covered. Same duration, same delay, same linear clock
    as the traversal — so its leading edge is always under her body (she moves
-   over `100% - 37px` while the trail scales over 100%, which puts the tip at
+   over `100% - 40px` while the trail scales over 100%, which puts the tip at
    most one sprite-width ahead of her left edge, i.e. under the dog). scaleX
    rather than width because it is the one part of the lane that runs for the
    whole hold, and stretching a solid line costs nothing.
@@ -2807,14 +2809,13 @@ details.disclosure .disclosure-body {
    ------------------------------------------------------------------------
    Two animations on one element, doing two different jobs.
 
-   `splash-run-cycle` is the legs: an eight-frame sprite sheet stepped through
-   on a fixed 1200ms loop. That number is half real-speed on purpose — the
-   whole run is in slow motion, and slow motion is a ratio, not a leg speed.
-   At 600ms per stride she covered ~78px of lane per cycle on a 2.1s crossing;
-   the 1200ms gait against the ~4.1s crossing app.js now budgets keeps the
-   ground covered per stride the same, which is what makes it read as the
-   world slowed down rather than a dog skating. Change either number alone and
-   she glides.
+   `splash-run-cycle` is the legs: an eight-frame walk cycle stepped through
+   on a fixed 850ms loop. The number is derived from the crossing, not
+   chosen: the pair covers the lane at ~1.5 body-heights per second, which
+   for a person is a brisk walk, and a brisk walk's cadence is ~140 steps a
+   minute — 850ms for a full two-step cycle. Cadence and ground speed have
+   to agree or the figures skate; change the crossing and this number moves
+   with it.
 
    `splash-run-across` is the progress: it carries her from the left of the
    lane to the right over --splash-run, which app.js sets to the hold that is
@@ -2844,29 +2845,31 @@ details.disclosure .disclosure-body {
   bottom: 2px;
   left: 0;
   display: block;
-  /* A sixth of the sprite's native 222×150 cell — the numbers
+  /* A sixth of the sprite's native 240×264 cell — the numbers
      scripts/make-runner.mjs prints, and it prints them because the divisor is
      baked into how it packs the cells. Don't edit these by hand; change
      DIVISOR there and paste what it says.
 
      The size on the lane is the judgement, and it holds across sheets: around
-     37px leaves her an eighth of the run, which is what makes the distance
-     look like a distance. A fifth of the lane and she appears to arrive
-     almost as soon as she sets off.
+     40px of figure leaves the pair an eighth of the run, which is what makes
+     the distance look like a distance. The height is new with this sheet —
+     the runner is a walking pair now, and a standing person at the dog's old
+     scale is simply taller. She rises above the lane's own 34px box, which
+     is fine: the dashes are the ground, and the ground is at the bottom.
 
-     Sixths because 222 and 150 both divide by 6 exactly. Every cell boundary
+     Sixths because 240 and 264 both divide by 6 exactly. Every cell boundary
      stays on a whole CSS pixel, which is the thing that matters: a fractional
      step would slide a sliver of the next frame into view on every tick. */
-  width: 37px;
-  height: 25px;
+  width: 40px;
+  height: 44px;
   background-image: url('../img/lucy-run.png');
   background-repeat: no-repeat;
   /* Pixels, not percentages. A percentage background-position is proportional
      — it aligns the image's X% point with the box's X% point — so stepping it
      to -800% would run the sheet clean off the end and draw nothing at all.
-     Eight 37px cells at display size, so the sheet is 296px wide and each
-     step is exactly -37px. */
-  background-size: 296px 25px;
+     Eight 40px cells at display size, so the sheet is 320px wide and each
+     step is exactly -40px. */
+  background-size: 320px 44px;
   background-position-x: 0;
   /* No image-rendering: pixelated here any more. The old sprite was hard
      pixel art upscaled 2× and needed its edges protected; this one is
@@ -2876,13 +2879,13 @@ details.disclosure .disclosure-body {
 
 .splash--running .splash-runner {
   animation:
-    splash-run-cycle 1200ms var(--splash-run-delay) steps(8) infinite,
+    splash-run-cycle 850ms var(--splash-run-delay) steps(8) infinite,
     splash-run-across var(--splash-run) var(--splash-run-delay) linear both;
 }
 
 @keyframes splash-run-cycle {
   to {
-    background-position-x: -296px;
+    background-position-x: -320px;
   }
 }
 
@@ -2891,7 +2894,7 @@ details.disclosure .disclosure-body {
     left: 0;
   }
   to {
-    left: calc(100% - 37px);
+    left: calc(100% - 40px);
   }
 }
 
@@ -3034,7 +3037,7 @@ details.disclosure .disclosure-body {
      scale; only her `left` needs saying, because the traversal keyframes
      carry it. */
   .splash-runner {
-    left: calc(100% - 37px);
+    left: calc(100% - 40px);
   }
 }
 

@@ -240,7 +240,7 @@ const rowHasInk = (y) => {
 };
 
 // Runs of inked columns, separated by fully-transparent gaps, are the frames.
-const frames = [];
+let frames = [];
 let start = null;
 for (let x = 0; x <= w; x++) {
   const ink = x < w && columnHasInk(x);
@@ -250,10 +250,79 @@ for (let x = 0; x <= w; x++) {
     start = null;
   }
 }
-if (frames.length !== EXPECTED_FRAMES) {
-  throw new Error(
-    `found ${frames.length} frames, expected ${EXPECTED_FRAMES} — either the ` +
-      `sheet changed or two frames touch and need a wider gap in the source`
+
+// A frame count of eight is not the same as eight frames. On the loose-leash
+// sheet the gap scan found exactly eight runs — two of them 640px blobs of
+// three touching figures, two of them 2px slivers of a stray tail — and the
+// count alone would have waved it through. A real frame is about a pitch
+// wide, so make the widths prove it.
+const pitch = w / EXPECTED_FRAMES;
+const gapScanIsSane =
+  frames.length === EXPECTED_FRAMES &&
+  frames.every((f) => {
+    const fw = f.x1 - f.x0;
+    return fw >= pitch * 0.15 && fw <= pitch * 1.25;
+  });
+
+// When the gap scan fails, cut on the grid instead — at the emptiest column
+// near each grid line.
+//
+// The loose-leash sheet is why this exists: eight walking pairs drawn so
+// close that a tail tip sits within a pixel of the next figure, and the gap
+// scan sees three big blobs instead of eight frames. But the sheet is
+// generated on a regular pitch (width / 8), so the boundaries are known to
+// within a few pixels — the job is only to avoid cutting *through* ink where
+// a leash or a nose strays over the line. Searching ±40px around each grid
+// line for the column with the least ink does that; ties go to the column
+// closest to the grid, so a clean gap cuts exactly where the generator drew
+// it.
+//
+// After cutting, each slice is tightened to its own ink bounds, which is the
+// same shape the gap scan would have produced. A slice with no ink at all
+// still fails hard — a sheet with a missing frame should break the build,
+// not ship a stutter.
+if (!gapScanIsSane) {
+  const inkCount = new Array(w).fill(0);
+  for (let x = 0; x < w; x++) {
+    for (let y = 0; y < h; y++) if (px[(y * w + x) * 4 + 3] > ALPHA_FLOOR) inkCount[x]++;
+  }
+  const cuts = [0];
+  for (let i = 1; i < EXPECTED_FRAMES; i++) {
+    const centre = Math.round(i * pitch);
+    let best = centre;
+    for (let x = Math.max(0, centre - 40); x <= Math.min(w - 1, centre + 40); x++) {
+      if (
+        inkCount[x] < inkCount[best] ||
+        (inkCount[x] === inkCount[best] && Math.abs(x - centre) < Math.abs(best - centre))
+      ) {
+        best = x;
+      }
+    }
+    cuts.push(best);
+  }
+  cuts.push(w);
+
+  frames = [];
+  for (let i = 0; i < EXPECTED_FRAMES; i++) {
+    let x0 = cuts[i];
+    let x1 = cuts[i + 1];
+    while (x0 < x1 && !columnHasInk(x0)) x0++;
+    while (x1 > x0 && !columnHasInk(x1 - 1)) x1--;
+    if (x0 === x1) {
+      throw new Error(
+        `grid cell ${i + 1} (${cuts[i]}-${cuts[i + 1]}) holds no ink — the sheet ` +
+          `does not have ${EXPECTED_FRAMES} frames on a regular pitch`
+      );
+    }
+    frames.push({ x0, x1 });
+  }
+  const leak = cuts.slice(1, -1).filter((c) => inkCount[c] > 0);
+  console.log(
+    `gap scan failed (frames touch); cut on the ${Math.round(pitch)}px grid instead` +
+      (leak.length
+        ? ` — ${leak.length} cut${leak.length === 1 ? '' : 's'} pass through ink ` +
+          `(${leak.map((c) => `${inkCount[c]}px at x=${c}`).join(', ')})`
+        : ', every cut through clear space')
   );
 }
 

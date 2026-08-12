@@ -184,17 +184,18 @@ route();
 // short enough not to show up in the numbers.
 //
 // Five seconds, and the number is derived, not chosen: the lane entrance ends
-// at 1280ms, Lucy's slow-motion crossing needs ~4.2s to keep her 1200ms gait
-// honest against the ground (see splash-run-cycle in app.css — slow motion is
-// a ratio, and breaking it turns running into skating), and she runs 420ms of
-// that through the fade. 1280 + 4140 - 420 = 5000.
+// at 1280ms, the loose-leash walk gets a ~4.1s crossing — which at the pair's
+// size is brisk-walk speed, with the 850ms cadence in app.css matched to it
+// (see splash-run-cycle: cadence and ground speed have to agree or the
+// figures skate) — and they walk 420ms of that through the fade.
+// 1280 + 4140 - 420 = 5000.
 //
 // This hold has been every value in the range: five, cut to three because a
 // static card past three seconds stopped reading as a title card and started
-// reading as loading, and now five again on purpose — the run is the show
+// reading as loading, and now five again on purpose — the walk is the show
 // now, and a lane that visibly reports progress is the thing a plain wait
-// never had. If the slow-motion run ever goes, the three-second finding still
-// stands; do not keep five out of inertia.
+// never had. If the walk ever goes, the three-second finding still stands;
+// do not keep five out of inertia.
 
 const SPLASH_HOLD_MS = STUDY ? STUDY_SPLASH_HOLD_MS : 5000;
 const SPLASH_FADE_MS = 420;
