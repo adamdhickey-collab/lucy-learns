@@ -32,15 +32,35 @@ function activityCard(activity) {
         style="view-transition-name: card-${activity.id}"
       />
       <div class="body">
+        ${/* The same mark and one-word name the program strip uses, and Today's
+              hero above it. Three places name each activity — the strip, the
+              homework card, and this library — and only two of them agreed.
+              Someone who has learned the row of marks arrives here and has to
+              re-identify all four by full title and thumbnail, which is a
+              second naming system for the same things. Carrying the pair
+              through costs one line and makes the strip and the card
+              obviously the same object. */ ''}
+        <p class="eyebrow eyebrow--marked activity-card-mark">
+          <span class="eyebrow-mark">${icon(activity.icon)}</span>
+          ${activity.shortTitle}
+        </p>
         <h3>${activity.title}</h3>
         <p>${activity.shortPurpose}</p>
         <div class="meta">
           ${badge(activityMastery(activity.id))}
           <span>Level ${level.number}</span>
           <span>${activity.estimatedMinutes} min</span>
-          ${difficultyDots(activity.difficulty)}
         </div>
+        ${/* Difficulty leads the second row rather than trailing the first.
+              The interpunct rule is `.meta > *:not(:first-child)::before`,
+              which is right until the row wraps — the item that lands at the
+              start of the wrapped line keeps its separator, and four items
+              wrapped on every phone width. What that produced was a dot and a
+              space before the pips, reading as an indent against everything
+              above it. As the first child of its own row it gets no
+              separator and sits flush. */ ''}
         <div class="meta">
+          ${difficultyDots(activity.difficulty)}
           <span>${relativeDay(lastPracticed(activity.id))}</span>
         </div>
         <div class="card-progress">

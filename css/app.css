@@ -2584,7 +2584,7 @@ details.disclosure .disclosure-body {
      a 375×812 phone and left the wordmark nowhere to go — the artwork's own
      cream painted straight over it. Backing off to 88% and centring properly
      opens a real band above the art for the title and still leaves room for
-     the meta and the bar below. */
+     the meta below. */
   --badge: min(88vw, 50vh, 460px);
 
   /* The art is 3:4, so its height is a derived number rather than a second
@@ -2592,26 +2592,12 @@ details.disclosure .disclosure-body {
      --badge, which is only the width. */
   --badge-h: calc(var(--badge) * 4 / 3);
 
-  /* Where the art sits. Named because the meta and the bar are stacked
-     underneath it and all three have to move together — and because
+  /* Where the art sits. Named because the meta is stacked underneath it and
+     the two have to move together — and because
      scripts/make-splash.mjs bakes the same two numbers into the iOS launch
      images. Change one, change the other, and regenerate. */
   --badge-y: 50%;
 
-  /* Overwritten by app.js with the real numbers before it adds
-     .splash--running, which is what actually starts the traversal — the
-     animations that consume these live behind that class, so their clock
-     cannot start until the values are real. It used to be a fallback run that
-     began at first paint and was re-stretched mid-flight when the script
-     caught up, which is why the first visible frame of the dog was a dog
-     already mid-lane, finishing early.
-
-     The fallbacks are only for a boot where the script never runs at all. In
-     that case nothing dismisses the splash either, and a dog parked at the
-     start line is the honest picture. */
-  --splash-hold: 1300ms;
-  --splash-run: 1300ms;
-  --splash-run-delay: 0ms;
 }
 
 /* A slow warm vignette at the very edges of the field. It gives the flat
@@ -2719,12 +2705,25 @@ details.disclosure .disclosure-body {
   margin: 0;
   font-family: var(--font-display);
   /* The line box is tighter than the glyphs need, which is what pulls the two
-     words into one mass rather than two lines with air between them. */
-  line-height: 0.84;
-  /* Up an eighth from 17vw. The head band is 274px on a 375×812 phone and the
-     lockup uses ~150px of it, so there is room; the cap is what stops a
-     desktop window turning it into a poster. */
-  font-size: clamp(2.375rem, min(19vw, 9.5vh), 5rem);
+     words into one mass rather than two lines with air between them.
+
+     0.46, arrived at by eye in two steps: 0.78 less 20px, then less another
+     10, measured against the 93.75px this renders at on a 375-wide phone.
+     Kept as a ratio rather than a pixel value so it holds across the clamp —
+     a fixed 43px would be right on that one screen and wrong on every other.
+
+     Leading this tight is only survivable because each word is masked with
+     0.35em of padding on the block axis: the line box no longer contains the
+     glyphs at all, and without that padding the "y" loses its tail and the
+     "L" loses its head. The two numbers move together. */
+  line-height: 0.46;
+  /* The tagline used to sit under this and take a share of the head band.
+     With it gone the name is the only thing in that space and can have all of
+     it: 25vw against the 19vw it was, which is 94px on a 375-wide phone. Two
+     lines at 0.78 leading is ~146px of a 274px band, so it fills the space
+     without crowding the art below. The cap stops a desktop window turning
+     it into a billboard. */
+  font-size: clamp(3rem, min(25vw, 12vh), 6.5rem);
   font-weight: 600;
   letter-spacing: -0.03em;
   /* Reads on the artwork's cream at 8.9:1 — the field is warmer than the app's
@@ -2739,14 +2738,19 @@ details.disclosure .disclosure-body {
    leak onto the wrong element. `>` is what keeps the two levels apart. */
 .splash-title > span {
   display: block;
-  /* The mask. Padding opens the clip box past the line box in both
-     directions and the negative margin takes the space straight back, so
-     nothing moves: line-height is 0.84, tighter than the glyphs need, and
-     without this the ascenders of "L" and the descender of "y" would be
-     shaved off permanently rather than just during the reveal. */
+  /* The mask. Padding opens the clip box past the line box and the negative
+     margin takes the space straight back, so nothing moves.
+
+     Both axes, and generously. The line box is 0.567em while Fraunces needs
+     roughly 1.25em from ascender to descender, so vertically the box has to
+     grow about 0.35em each way or it shaves the tail off the "y" and the top
+     off the "L". Horizontally the letters are tracked -0.03em and the final
+     glyph's sidebearing overhangs the line box — which clipped the right
+     edge of the "s" in "Learns". A block-only pad fixed the first and left
+     the second, so it is padding on all four sides. */
   overflow: hidden;
-  padding-block: 0.2em;
-  margin-block: -0.2em;
+  padding: 0.35em 0.14em;
+  margin: -0.35em -0.14em;
 }
 
 .splash-title > span > span {
@@ -2760,22 +2764,26 @@ details.disclosure .disclosure-body {
    `font-weight` properties stay as fallbacks for anything that cannot do
    variations; where variations work, these settings win. */
 
-/* Both words at one size and now in one ink. "Lucy" used to sit a step warmer
-   in --primary against "Learns" in --primary-dark, on the theory that two
-   tones stopped the lockup reading as one wall. Two colours in a two-word
-   name reads as two things, though, and the name is one thing — so the
-   separation is carried by weight alone, which is what a variable display
-   face is for. 460 against 640 on the same axis is a clear difference without
-   being a different voice. */
-.splash-title > span:first-child {
-  font-weight: 500;
-  font-variation-settings:
-    'opsz' 144,
-    'wght' 460;
-  letter-spacing: 0.015em;
-}
+/* One size, one ink, and now one weight.
+   ---------------------------------------------------------------------------
+   This lockup has lost a distinction at every pass and been better for each.
+   "Lucy" was smaller, then it was a warmer colour, then it was lighter at 460
+   against 640 — each time on the theory that the two words needed separating
+   or they would read as one wall. Reading as one thing is the point: it is a
+   name, not a sentence with a subject and a verb. Both words are now 640.
 
-.splash-title > span:last-child {
+   And one tracking. Both words inherit the -0.03em set on the title, with no
+   per-word override at all — "Lucy" used to carry +0.015em against the other
+   word's inherited value, which is a difference small enough to look like a
+   rendering accident rather than a decision.
+
+   A justified lockup was tried here and taken out: tracking "Lucy" to the
+   measured width of "Learns" (0.758 of it at wght 640, so 0.211em across
+   three gaps) squares the pair into a rectangle, but it does it by setting
+   one word loose and the other tight, and matching tracking was the ask. It
+   is recorded here because the arithmetic is the hard part and the next
+   person to want it should not have to measure the font again. */
+.splash-title > span > span {
   font-variation-settings:
     'opsz' 144,
     'wght' 640;
@@ -2820,37 +2828,6 @@ details.disclosure .disclosure-body {
   }
 }
 
-/* Under the name, and last of the head to arrive.
-   ---------------------------------------------------------------------------
-   This was wide-tracked caps flanked by a pair of drawn rules, which framed it
-   as a set mark. Now it is a sentence and is set like one — no rules, no caps,
-   normal tracking. The line is a promise the app makes, and a promise reads
-   better spoken than engraved.
-
-   The letter-spacing tween is gone with the caps: it was there to make wide
-   tracking feel like it settled into place, and animating tracking on
-   sentence-case text just makes the words look like they are being squeezed. */
-.splash-tagline {
-  margin: clamp(0.5rem, 1.8vh, 1rem) 0 0;
-  text-align: center;
-  font-size: var(--step-0);
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  color: color-mix(in srgb, var(--primary-dark) 72%, transparent);
-  animation: splash-tagline-in 620ms 480ms ease-out both;
-}
-
-@keyframes splash-tagline-in {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
 /* The art is deliberately the one thing that does not animate in. It is the
    only element the iOS launch image already has on screen, so it has to be at
    exactly its final size and position on the first frame — anything else, a
@@ -2858,94 +2835,6 @@ details.disclosure .disclosure-body {
    and reads as a flicker at the handoff. The liveliness comes from the three
    things that were never in the launch image: the name, the line, and the dog.
    `splash-breathe` on the mark still starts at scale(1) for the same reason. */
-
-.splash-progress {
-  position: absolute;
-  /* Under the meta, which is itself under the art. The 3.4em clears both
-     lines of version and date at their own size. (It was 4em while a 44px
-     walking sprite needed headroom; a 3px bar does not.) */
-  top: calc(var(--badge-y) + var(--badge-h) / 2 + var(--s-5) + 3.4em);
-  /* Wordmark-width, centred: the bar underlines the composition above it
-     rather than running wall to wall. A screen-wide line was right when it
-     was ground being walked across; as a bar it read as a border. */
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(46vw, 240px);
-  height: 3px;
-  border-radius: 999px;
-  overflow: hidden;
-  /* The distance not yet covered, in the same ink as everything quiet on
-     this screen — visible against the field, but only just. */
-  background: color-mix(in srgb, var(--primary-dark) 14%, transparent);
-  /* Last to arrive, and the sequence reads top to bottom: the name lands,
-     the tagline sets, the imprint line surfaces, the track fades up, and
-     then the fill sets off. app.js times the fill to when this entrance
-     finishes — the 820ms + 460ms here are mirrored there as
-     LANE_IN_END_MS, by hand. Change one, change both. */
-  animation: splash-progress-in 460ms 820ms ease-out both;
-}
-
-@keyframes splash-progress-in {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%);
-  }
-}
-
-/* The fill. scaleX from the left edge, because a transform is the one way to
-   grow a line that never re-rasterises mid-animation — width would round to
-   whole pixels and tick like a second hand, and this element exists to be
-   smooth.
-
-   Linear on purpose, everywhere else on this screen eases: the bar is the
-   one element reporting a physical quantity (time left), and easing it would
-   make the app look faster than it is for the first half and slower for the
-   second. The gradient tip is the only flourish — a slightly brighter head
-   on the advancing edge, so the motion has somewhere to look without
-   costing a single extra element.
-
-   Empty in the base state, animated only under .splash--running: the fill
-   must not start until app.js has the real numbers, and a bar already
-   partway along before then would be reporting a boot that has not been
-   measured yet. The fallback vars cover a boot where the script never runs
-   at all — nothing fills, nothing dismisses, and an empty track is the
-   honest picture of a boot that stalled. */
-.splash-bar {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(
-    90deg,
-    var(--primary) 0%,
-    var(--primary) 82%,
-    color-mix(in srgb, var(--primary) 72%, white) 100%
-  );
-  transform: scaleX(0);
-  transform-origin: left center;
-}
-
-.splash--running .splash-bar {
-  animation: splash-bar-fill var(--splash-run) var(--splash-run-delay) linear both;
-}
-
-@keyframes splash-bar-fill {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
-
-/* The bar has finished its job by the time the splash leaves; fading it with
-   everything else is enough. */
-.splash--done .splash-progress {
-  animation: none;
-}
 
 .splash-mark {
   display: block;
@@ -2999,8 +2888,8 @@ details.disclosure .disclosure-body {
   left: 0;
   right: 0;
   /* Directly under the badge rather than pinned to the bottom of the screen,
-     so the mark, the build it is showing, and the bar reporting the wait read
-     as one centred stack instead of three things at three heights. */
+     so the mark and the build it is showing read as one centred stack
+     instead of two things at two heights. */
   top: calc(var(--badge-y) + var(--badge-h) / 2 + var(--s-5));
   margin: 0;
   text-align: center;
@@ -3027,10 +2916,22 @@ details.disclosure .disclosure-body {
    imprint line rather than debug output that wandered on. */
 .splash-version {
   margin: 0;
-  font-family: var(--font-display);
-  color: color-mix(in srgb, var(--primary-dark) 80%, transparent);
-  font-size: var(--step--1);
-  font-weight: 600;
+  /* Sans, where the rest of the composition is serif. The version and its
+     date are the one piece of this screen that is not the brand talking —
+     they are a build stamp, and setting them in the display face dressed
+     machine output up as part of the wordmark. The app's own text face says
+     "this is information" and lets the name above keep the serif to
+     itself. */
+  font-family: var(--font-body);
+  /* Full-strength ink, matching the date below. The two lines were 80% and
+     62% of --primary-dark, which set up a hierarchy between a build number
+     and its date — two halves of one colophon that have no reason to rank
+     against each other. */
+  color: var(--primary-dark);
+  font-size: var(--step-0);
+  /* Same weight as the date under it. They were 600 against 500, which put a
+     hierarchy inside a two-line colophon that has no hierarchy in it. */
+  font-weight: 500;
   letter-spacing: 0.01em;
   /* Tabular figures so the line cannot reflow if the number changes width. */
   font-variant-numeric: tabular-nums;
@@ -3044,9 +2945,9 @@ details.disclosure .disclosure-body {
    hierarchy carried by size and colour alone. */
 .splash-date {
   margin: var(--s-1) 0 0;
-  font-family: var(--font-display);
-  color: color-mix(in srgb, var(--primary-dark) 62%, transparent);
-  font-size: var(--step--1);
+  font-family: var(--font-body);
+  color: var(--primary-dark);
+  font-size: var(--step-0);
   font-weight: 500;
   letter-spacing: 0.01em;
   font-variant-numeric: tabular-nums;
@@ -3080,24 +2981,10 @@ details.disclosure .disclosure-body {
   .splash-mark,
   .splash-meta,
   .splash-title span,
-  .splash-tagline,
-  /* The gated fill rule is two classes deep, so a bare class here would
-     lose to it — the kill has to name the gated selector too. */
-  .splash--running .splash-bar,
   .splash--done .splash-mark,
   .splash--done .splash-head {
     animation: none;
     transform: none;
-  }
-
-  /* The track still appears (its entrance is animation: none like everything
-     else, so it is simply visible), and the bar sits full rather than empty:
-     transform: none on the gated fill leaves scaleX at 1, which reads as
-     "arriving" rather than "stalled". The keyframes carry the empty state,
-     so there is nothing to clean up. */
-  .splash-progress {
-    animation: none;
-    transform: translateX(-50%);
   }
 }
 
@@ -5335,4 +5222,46 @@ svg.icon--solid {
   .cleared-burst {
     display: none;
   }
+}
+
+/* The activity's program mark inside its library card. Tighter than the
+   eyebrow on Today's hero, which is the first line of a full-width card and
+   can afford the room; here it sits above a title in a compact row.
+
+   Selector is this long on purpose. `.activity-card .body > p` line-clamps
+   every paragraph in the card to two lines with `display: -webkit-box`, and
+   at (0,2,1) it outranks `.eyebrow--marked` at (0,1,0) — so the mark came
+   out stacked above its own label and clamped as a block of body copy. This
+   has to beat that rule, not tie with it. */
+.activity-card .body > p.activity-card-mark {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-bottom: var(--s-1);
+  /* The strip's own label style, copied deliberately: same size, tracking,
+     weight and ink as .route-label above. The point of putting the mark on
+     the card is that it is recognisably the same token as the one in the
+     row — setting it in a different style would make it a third way of
+     naming the activity rather than a repeat of the second. */
+  font-size: 0.625rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+/* No ring on the library cards. The circle earns itself in the program strip,
+   where five marks in a row need to read as tokens on a track, and on Today's
+   hero where the mark is the only graphic on the line. Here it sits beside a
+   thumbnail inside a bordered card, and a third enclosed shape in that stack
+   is one too many. Dropping the fixed 22px box with it lets the glyph sit
+   right against its label instead of centred in a circle's worth of air. */
+.activity-card .body > p.activity-card-mark {
+  gap: var(--s-1);
+}
+
+.activity-card .body > p.activity-card-mark .eyebrow-mark {
+  width: auto;
+  height: auto;
+  border: 0;
 }

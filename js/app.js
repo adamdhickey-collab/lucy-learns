@@ -18,7 +18,32 @@ import program from './views/program.js';
 // modes exists. Without the parameter this is a no-op and the household's own
 // data is never touched.
 const STUDY = studyMode();
-if (STUDY) applyStudyMode(STUDY);
+if (STUDY) {
+  applyStudyMode(STUDY);
+
+  // Then take the parameter out of the address bar.
+  //
+  // Applying the mode wipes stored data and rebuilds a baseline, and it did
+  // that on every single load while the parameter stayed in the URL. A bare
+  // `?study` means demo, so one forgotten query string turned every refresh
+  // into "delete everything this person logged and reseed twelve days of
+  // someone else's practice" — which looks, from the outside, exactly like
+  // resetting the app and being dropped into the middle of the program with
+  // activities already finished.
+  //
+  // It cost nothing while the only URLs carrying it were pasted by hand
+  // during research. It is unacceptable the moment a link is handed to
+  // someone to try, and links get shared.
+  //
+  // replaceState rather than a redirect: the baseline for this load is
+  // already built, so the only job is to stop the *next* load rebuilding it.
+  // A genuine fresh navigation to a ?study URL still resets, which is what
+  // the research flow needs — each mission link rebuilds the world. What no
+  // longer happens is a reload silently destroying work.
+  const url = new URL(location.href);
+  url.searchParams.delete('study');
+  history.replaceState(null, '', url.pathname + url.search + url.hash);
+}
 
 const routes = [
   { pattern: /^#\/welcome$/, view: welcome },
@@ -191,35 +216,27 @@ route();
 // they get the title card, just briefly. Long enough for the wordmark to land,
 // short enough not to show up in the numbers.
 //
-// How long the bar takes to fill, once it starts. Three seconds, chosen by
-// eye and requested by name.
+// How long the card holds. Three seconds, which is where this landed after a
+// long detour.
 //
-// The bar is the third occupant of this slot. First a galloping sprite, then a
-// walking pair with a millisecond countdown at their heels — each carried real
-// choreography (cadence locked to ground speed, a lap timer synced to the
-// landing) and each was, in the end, louder than the thing it reported. A
-// title card should settle the room, not perform in it. What survives from
-// those iterations is the discipline, not the dog: the fill starts only after
-// the entrance finishes and the numbers are real, runs linear because it
-// reports a physical quantity, and lands exactly as the fade completes.
+// Four things have occupied the space under the art: a galloping sprite, a
+// walking pair with a millisecond countdown at their heels, a filling bar,
+// and now nothing. Each of the first three carried real choreography, and
+// each was in the end louder than the thing it reported. The last of them was
+// already quiet, and taking it away turns out to cost nothing — the wait is
+// three seconds, which nobody needs a bar to sit through, and what is left is
+// a name, a picture and a build number. A title card should settle the room.
 //
-// Study mode is exempt. Its 1.2s card is calibrated for a timed task, and the
-// bar simply does not get to fill in it.
+// Three rather than the 4.3s the bar's arithmetic produced: with nothing
+// reporting progress there is no longer anything to justify a longer wait,
+// and three is the number this app already learned once — one full pass of
+// the entrance choreography plus a beat, past which a static card stops
+// reading as a title card and starts reading as loading.
+//
+// Study mode still gets its own short card, calibrated for a timed task.
 
-const FILL_MS = 3000;
+const SPLASH_HOLD_MS = STUDY ? STUDY_SPLASH_HOLD_MS : 3000;
 const SPLASH_FADE_MS = 420;
-
-// Mirrors `splash-progress-in 460ms 820ms` in app.css, by hand — the track has
-// to have finished arriving before the fill sets off. Change one, change both.
-const LANE_IN_END_MS = 820 + 460;
-
-// The hold is what the bar needs, not a number picked for its own sake: the
-// track has to arrive, the fill has to run its three seconds, and the last
-// 420ms of the fill happen during the fade. 1280 + 3000 - 420 = 3860, so the
-// splash is on screen for 4.3s all told.
-const SPLASH_HOLD_MS = STUDY
-  ? STUDY_SPLASH_HOLD_MS
-  : LANE_IN_END_MS + FILL_MS - SPLASH_FADE_MS;
 
 const splash = document.getElementById('splash');
 if (splash) {
@@ -239,57 +256,11 @@ if (splash) {
 
   // The version is stated, not performed. An earlier pass counted it up from
   // zero, which animated a number that was never in doubt and had to be
-  // guarded against landing on a version that does not exist. The progress bar
-  // does the work of showing something is happening, and it does it about
-  // something real.
+  // guarded against landing on a version that does not exist. With the
+  // progress bar gone this and the date are the only things under the art,
+  // which suits them: a colophon, not a status readout.
   const versionSlot = splash.querySelector('#splash-version');
   if (versionSlot) versionSlot.textContent = `Version ${APP_VERSION}`;
-
-  // Hand the lane the actual numbers, then start its clock.
-  //
-  // Order matters more than the numbers do. The traversal lives behind the
-  // .splash--running class, added here *after* the variables are written —
-  // because a CSS animation's clock starts the moment its rule first applies,
-  // and any version of this that lets the rule apply at first paint starts
-  // the run before the numbers are real. This file has now shipped that bug
-  // in both available directions: first as a negative delay that opened with
-  // the dog mid-lane by design, then as a fallback duration that opened with
-  // the dog mid-lane by accident when the real value arrived mid-flight and
-  // re-stretched a run already in progress. Both times, what the household saw
-  // was a dog partway across a lane that had only just faded in, finishing
-  // early.
-  //
-  // The delay holds her at the start line until the lane's own entrance has
-  // finished, so the sequence reads: ground rolls out, dog sets off, dog
-  // crosses the finish as the last of the splash fades out. The run is
-  // stretched to whatever hold is left after the delay *plus the fade*: the
-  // dismissal starts the fade at the hold, and she runs on through it,
-  // reaching the end exactly as opacity reaches zero. Ending the run at the
-  // start of the fade instead meant 420ms of dog standing at the finish line
-  // on a splash that was still perfectly visible — which read as arriving
-  // early, because it was. Boot time sets her speed, never her starting
-  // line. On a boot slow enough to eat the entrance, the delay collapses to
-  // zero and she simply runs what remains; past the hold entirely, both go
-  // to zero and the splash is already leaving.
-  //
-  // The two clocks differ by first paint — this one starts at navigation, the
-  // CSS one at first style — so they can set off a few tens of milliseconds
-  // into the entrance's ease-out tail. That is a fraction of one cadence frame
-  // and reads as nothing.
-  //
-  // The cadence goes out as a variable rather than living in the stylesheet so
-  // that the two halves of the walk — how fast the legs move, how long the
-  // crossing takes — are decided in one place and can be read side by side.
-  const elapsed = performance.now();
-  const remaining = Math.max(SPLASH_HOLD_MS - elapsed, 0);
-  const runDelay = Math.min(Math.max(LANE_IN_END_MS - elapsed, 0), remaining);
-  splash.style.setProperty('--splash-hold', `${SPLASH_HOLD_MS}ms`);
-  splash.style.setProperty('--splash-run-delay', `${Math.round(runDelay)}ms`);
-  splash.style.setProperty(
-    '--splash-run',
-    `${Math.round(remaining - runDelay + SPLASH_FADE_MS)}ms`
-  );
-  splash.classList.add('splash--running');
 
   if (!location.search.includes('splash-hold')) {
     let dismissed = false;

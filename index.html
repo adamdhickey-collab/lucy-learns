@@ -101,7 +101,7 @@
          real content is announced when the router paints. -->
     <div id="splash" class="splash" aria-hidden="true">
       <!-- The wordmark. Two spans because they arrive one after the other, and
-           a stagger needs something to stagger. Like the bar below, it animates
+           a stagger needs something to stagger. It animates
            in rather than being painted at t=0: the iOS launch image is the
            artwork on its field and nothing else, so anything already on screen
            at the handoff would pop. Arriving a beat later reads as the app
@@ -114,25 +114,11 @@
         <p class="splash-title">
           <span><span>Lucy</span></span><span><span>Learns</span></span>
         </p>
-        <p class="splash-tagline">Practice makes polite</p>
       </div>
       <!-- The slot holds the position the launch image baked in; the img
            inside it does the scaling, so the two transforms never fight. -->
       <div class="splash-slot">
         <img class="splash-mark" src="img/splash-mark.jpg" alt="" />
-      </div>
-      <!-- The wait, as one line filling. app.js hands it the real duration and
-           how much of the boot has already gone, so it reports the time left
-           rather than miming it.
-
-           This was a walking pair on a dashed lane with a millisecond clock at
-           their heels, and before that a galloping dog. Both were charming and
-           both were louder than the thing they were reporting — a title card
-           should settle the room, not perform in it. The track keeps every
-           property that mattered: same element, same clock, same landing on the
-           dismissal. Only the vocabulary is quieter. -->
-      <div class="splash-progress">
-        <span class="splash-bar"></span>
       </div>
       <div class="splash-meta">
         <p id="splash-version" class="splash-version"></p>
