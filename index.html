@@ -146,6 +146,28 @@
       Offline. Your sessions are saved on this device.
     </p>
 
+    <!-- Shown once, on a phone, only while the app is running in a browser tab.
+         Everything built for the installed app — the launch images above, the
+         splash handoff, the standalone chrome, the address bar not eating the
+         top of every screen — is invisible until it is on a home screen, and
+         nothing else in the app mentions that it can be. app.js decides
+         whether this appears and writes the text, because the wording depends
+         on what the browser supports. -->
+    <div id="install-hint" class="install-hint" role="complementary" aria-label="Install" hidden>
+      <p class="install-hint-body"></p>
+      <div class="install-hint-actions">
+        <button class="btn btn--quiet install-hint-go" type="button" data-install hidden>
+          Install
+        </button>
+        <button class="install-hint-close" type="button" data-dismiss aria-label="Dismiss">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
     <noscript>
       <div style="padding: 2rem; max-width: 34rem; margin: 0 auto">
         <h1>Lucy Learns</h1>

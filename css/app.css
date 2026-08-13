@@ -2534,6 +2534,118 @@ details.disclosure .disclosure-body {
   margin-bottom: var(--s-2);
 }
 
+/* Sits above the tab bar and inside the content column, so on a laptop it does
+   not float off in the empty field beside the app. `--page-max` minus the
+   gutters the screens already use, then centred the same way they are.
+
+   Not a modal and not a toast: it does not steal focus, it does not time out,
+   and the app underneath stays entirely usable with it up. The only two things
+   it can do are install and go away. */
+.install-hint {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(var(--nav-h) + var(--s-3));
+  z-index: 45;
+  width: calc(100vw - var(--s-5));
+  max-width: calc(var(--page-max) - var(--s-5));
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-3) var(--s-3) var(--s-4);
+  background: var(--text-primary);
+  color: var(--text-on-dark);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lift);
+  /* Its own keyframe rather than the shared `rise`, because this element is
+     centred with `translateX(-50%)` and `rise` animates `transform` — it would
+     replace the centring with `translateY(8px)` for the length of the
+     animation and snap the card back into place at the end. */
+  animation: install-hint-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes install-hint-in {
+  from {
+    transform: translate(-50%, 10px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .install-hint {
+    animation: none;
+  }
+}
+
+.install-hint-body {
+  flex: 1;
+  font-size: var(--step--1);
+  line-height: 1.4;
+}
+
+.install-hint-body strong {
+  font-weight: 650;
+  /* The two tap targets it is naming. They are the content of the sentence,
+     not emphasis inside it, so they read as the labels they are quoting. */
+  white-space: nowrap;
+}
+
+.install-hint-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  flex: none;
+}
+
+/* On the dark surface the quiet button's own colours disappear. */
+.install-hint-go {
+  background: var(--text-on-dark);
+  color: var(--text-primary);
+  border: 0;
+}
+
+/* 32px, under the app's own 48px floor, and deliberately so: it is the
+   dismiss-by-accident control of the pair, sitting next to an Install button
+   people do want to hit. The ::after gives it a full-size hit area without a
+   full-size circle. */
+.install-hint-close {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.install-hint-close::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+}
+
+.install-hint-close svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.install-hint-close:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
 .offline-note {
   position: fixed;
   left: 50%;
@@ -2808,16 +2920,46 @@ details.disclosure .disclosure-body {
   /* The mask. Padding opens the clip box past the line box and the negative
      margin takes the space straight back, so nothing moves.
 
-     Both axes, and generously. The line box is 0.567em while Fraunces needs
-     roughly 1.25em from ascender to descender, so vertically the box has to
-     grow about 0.35em each way or it shaves the tail off the "y" and the top
-     off the "L". Horizontally the letters are tracked -0.03em and the final
-     glyph's sidebearing overhangs the line box — which clipped the right
-     edge of the "s" in "Learns". A block-only pad fixed the first and left
-     the second, so it is padding on all four sides. */
+     Four sides, and no longer the same number on each, because the four
+     distances are not the same. These are measured rather than judged: the
+     first two passes at this were eyeballed, both times left the "y" docked,
+     and "roughly 0.35em each way" turned out to be under on one side and
+     nearly three times over on another.
+
+     Where the numbers come from, at any font-size, since all of it is in em:
+
+       line-height          0.46em      (the whole point — glyphs exceed it)
+       font asc / desc      0.981 / 0.256em
+       half-leading         (0.46 - 1.237) / 2  =  -0.389em
+       baseline sits        -0.389 + 0.981 - 0.46  =  0.133em BELOW the line box
+       "y" ink descent      0.244em below the baseline
+
+     so the tail of the "y" ends 0.133 + 0.244 = 0.377em below the line box,
+     against the 0.35em it was given. Two and a half pixels at the size this
+     renders on a phone, which is exactly enough to read as a typo in the
+     logo. 0.45em now — 0.073em of slack, and checked at wght 600, 640 and 700
+     where the descender moves by less than a thousandth of an em.
+
+     The top needs only 0.107em (cap height 0.70em, less the 0.133em the
+     baseline is already carried down, less the 0.46em line box). It keeps
+     0.35em regardless: it is the axis the reveal slides along, nothing is
+     clipped there, and tightening it would only shorten a mask that has no
+     reason to be short.
+
+     Horizontally the mask is a full-width block with centred text, so the
+     padding does not push the glyphs anywhere — it is the negative margin
+     that widens the clip box, and the two move the edge together at roughly
+     1em of padding to 1em of edge. Measured by sweeping the value: 0.14em
+     clipped the right of the "s" in "Learns" by 5.25px, 0.2em cleared it by
+     0.37px, 0.3em clears it by 9.75px. 0.3em.
+
+     (An earlier note here put that first overhang at 0.3px. That came out of
+     a canvas measurement left at the CSS `font-weight` of 600 while the text
+     actually renders at `wght` 640 — the real cut is wider, and the error was
+     entirely in the measuring, not the font.) */
   overflow: hidden;
-  padding: 0.35em 0.14em;
-  margin: -0.35em -0.14em;
+  padding: 0.35em 0.3em 0.45em;
+  margin: -0.35em -0.3em -0.45em;
 }
 
 .splash-title > span > span {
@@ -3247,6 +3389,35 @@ details.disclosure .disclosure-body {
 .choice:hover {
   border-color: var(--primary);
   background: var(--primary-wash);
+}
+
+/* The recommended path, marked rather than merely listed first. Order alone
+   is a weak signal on a screen with exactly two options — both are visible at
+   once, so there is no "first" in the way a long list has one. */
+.choice--recommended {
+  border-color: var(--primary);
+}
+
+.choice-tag {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--primary);
+  font-size: var(--step--2);
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* The example-dog note on the dog setup screen. Quieter than a section-note,
+   because it is context rather than help for the field above it. */
+.setup-aside {
+  margin-top: var(--s-5);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--border);
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--text-secondary);
 }
 
 .choice strong {

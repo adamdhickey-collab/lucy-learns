@@ -322,6 +322,164 @@ if (splash) {
 }
 
 
+// --- add to home screen ------------------------------------------------------
+
+/**
+ * A one-time nudge to install, shown on a phone that is running this in a tab.
+ *
+ * The gap this closes: everything built for the installed app is invisible
+ * until it is installed. The launch images, the splash handoff, the standalone
+ * chrome, the address bar not taking a fifth of a small screen — a visitor who
+ * opens a link sees none of it, and nothing in the app has ever mentioned that
+ * there is more to see. The difference is between somebody looking at the app
+ * and somebody looking at a website.
+ *
+ * Kept under its own storage key rather than in the app state on purpose.
+ * "I have already been told how to install this" is a fact about the browser,
+ * not about the training log, and it should survive `clearAll()` — otherwise
+ * resetting the demo re-nags a person who reset it precisely because they were
+ * exploring. It is also why a failed write here is swallowed: in a private
+ * window the hint reappearing is a far smaller problem than the app throwing.
+ */
+const INSTALL_KEY = 'lucy-learns/install-hint-dismissed';
+
+// Two of the three cases can be answered without asking the user agent what it
+// is. `display-mode: standalone` is the installed app, and `navigator.standalone`
+// is the same question on older iOS. Sniffing would be guessing at the answer
+// the browser already reports.
+const isInstalled = () =>
+  window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+
+const installHint = document.getElementById('install-hint');
+
+if (installHint) {
+  // Chromium fires this and lets the page trigger the real install dialog.
+  // Safari does not, which is the whole reason the copy below has two forms.
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // It can arrive after the hint is already up — Chromium fires this when it
+    // decides the install criteria are met, which is not tied to load. Without
+    // this the card would keep whatever wording it was painted with and never
+    // grow the button that makes it one tap instead of four.
+    if (!installHint.hidden) paint();
+  });
+
+  // Set once the question has been answered one way or the other — shown and
+  // acted on, shown and dismissed, or installed — so nothing reschedules it.
+  let settled = false;
+
+  const dismiss = () => {
+    installHint.hidden = true;
+    settled = true;
+    try {
+      localStorage.setItem(INSTALL_KEY, '1');
+    } catch {
+      /* private mode: the hint comes back next launch, which is survivable */
+    }
+  };
+
+  installHint.querySelector('[data-dismiss]').addEventListener('click', dismiss);
+
+  const goBtn = installHint.querySelector('[data-install]');
+  goBtn.addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    // Dismissed either way: accepted means it is installed, declined means
+    // they have answered the question and should not be asked again.
+    dismiss();
+  });
+
+  /**
+   * The wording, which depends on what the browser can actually do.
+   *
+   * Three cases, and only the first is a real install: Chromium hands the page
+   * an event and a one-tap dialog, iOS Safari has a Home Screen but no API for
+   * it, and anything else gets told where to look. The iOS wording names the
+   * two taps literally — a vague "add this to your home screen" is worse than
+   * saying nothing on a phone where the control is an unlabelled icon.
+   *
+   * Separated from `maybeShow` because it can be called twice: see the
+   * `beforeinstallprompt` handler.
+   */
+  const paint = () => {
+    const body = installHint.querySelector('.install-hint-body');
+    if (deferredPrompt) {
+      body.textContent = 'Install this and it opens full screen, without the browser bar.';
+      goBtn.hidden = false;
+    } else if ('standalone' in navigator) {
+      body.innerHTML =
+        'Add this to your Home Screen for the full app — tap <strong>Share</strong>, ' +
+        'then <strong>Add to Home Screen</strong>.';
+      goBtn.hidden = true;
+    } else {
+      body.textContent =
+        'Add this to your home screen from the browser menu and it opens full screen.';
+      goBtn.hidden = true;
+    }
+  };
+
+  const maybeShow = () => {
+    if (settled || !installHint.hidden) return;
+    if (isInstalled()) return;
+    // Never over a session or the setup flow. Both are full-screen states with
+    // one thing to do, and both paint above this: it would sit behind them,
+    // unseen, and still count as shown. The tab bar is the tell — where there
+    // is no tab bar there is no room for this.
+    if (!/^#\/(today|activities|progress|profile)/.test(location.hash || '#/today')) return;
+    // A phone, not a laptop. `pointer: coarse` is the closest thing to "this
+    // is a touch device" that is not a user-agent string, and the pitch —
+    // full screen, no address bar, an icon on the home screen — is a phone
+    // pitch. On a desktop the tab is a perfectly good way to use this.
+    if (!window.matchMedia('(pointer: coarse)').matches) return;
+    if (!isOnboarded()) return;
+    try {
+      if (localStorage.getItem(INSTALL_KEY)) return;
+    } catch {
+      /* unreadable storage: show it, the dismiss button still works */
+    }
+
+    paint();
+    installHint.hidden = false;
+    settled = true;
+  };
+
+  /**
+   * Checked repeatedly rather than once, and always after a pause.
+   *
+   * The pause: the hint sits above the tab bar, and firing it during the
+   * splash would have it animate in behind the veil and be waiting, already
+   * there, on the first screen anybody sees. A beat after the app has proved
+   * it works is the earliest point at which "you can keep this" means
+   * anything.
+   *
+   * The repetition, which matters more: a single check at boot is a check run
+   * against the wrong person. A returning household is onboarded at boot and
+   * would see it — but a first-time visitor is still in setup five seconds in,
+   * so the one check would find `isOnboarded()` false, bail, and never run
+   * again. The person the hint was written for would meet it on their *second*
+   * launch, if there was one. Rescheduling on navigation also means it waits
+   * for a gap rather than interrupting: somebody tapping through the app every
+   * two seconds is busy, and this can wait until they are not.
+   */
+  const HINT_DELAY_MS = 2600;
+  let hintTimer = null;
+  const scheduleHint = (delay) => {
+    if (settled) return;
+    clearTimeout(hintTimer);
+    hintTimer = setTimeout(maybeShow, delay);
+  };
+
+  scheduleHint(SPLASH_HOLD_MS + HINT_DELAY_MS);
+  window.addEventListener('hashchange', () => scheduleHint(HINT_DELAY_MS));
+
+  // Installing while the hint is up should retire it without a tap.
+  window.addEventListener('appinstalled', dismiss);
+}
+
 // --- offline ---------------------------------------------------------------
 
 const offlineNote = document.getElementById('offline-note');

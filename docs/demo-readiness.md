@@ -52,33 +52,54 @@ outstanding.
 
 ## P1 — worth doing before a wide send
 
-### 4. Every picture is one specific dog
+### 4. Every picture is one specific dog — **named, not fixed**
 
 Thirty-odd illustrations, one black Lab / German Wirehaired Pointer mix. Someone
 who sets up "Rufus, golden retriever" gets Lucy's portrait on the profile and
-Lucy in every scene.
+Lucy in every scene. Not fixable — regenerating an illustrated set per breed is
+not a thing — so it is framed instead.
 
-Not fixable — regenerating the set per breed is not a thing. It is **frameable**:
-one line during setup, or on the profile, saying the illustrations show an
-example dog. Cheap, and it converts a bug report into an understood convention.
+Said once, on the dog setup screen, directly under the name and breed fields:
+the moment somebody has just typed their own dog's name is the moment the
+mismatch is about to start. Deliberately not an apology — the pictures are
+demonstrating handling, and handling does not depend on the coat.
 
-### 5. Decide what a stranger lands in
+### 5. What a stranger lands in — **example data, and it says why**
 
-The final setup screen offers "Start empty" and "Fill in example data first"
-even-handedly. For a household, empty is right — their first session should be
-their first session. For a stranger evaluating the app, empty hides Progress,
-the report, mastery, the program map and the streak: most of the product.
+Was two options presented as equals, in the order empty-then-example. Now the
+example path is first, marked Recommended, and the lede gives the reason rather
+than implying it: *if you are looking around* start with example data, *if this
+is your own dog and you are here to train* start empty. The reader knows which
+of those two people they are and the app does not, so the app states the
+condition instead of guessing.
 
-I would make example data the recommended path for the demo and say why in the
-copy.
+### 6. Nobody will know to install it — **done**
 
-### 6. Nobody will know to install it
+A one-time hint above the tab bar, on a phone, only while running in a browser
+tab. Three wordings, because only one of the three cases is a real install:
+Chromium hands the page an event and a one-tap dialog, iOS Safari has a Home
+Screen but no API for it and gets the two taps named literally, anything else is
+pointed at the browser menu.
 
-It is a PWA. On a phone it opens in a browser tab with the address bar eating
-the top of the screen, and every launch image, the splash handoff and the
-standalone chrome only exist once it is on the home screen. A first-run hint —
-"Add to Home Screen for the full thing" — is the difference between people
-seeing the app you built and people seeing a website.
+Details that matter more than they look:
+
+- **It re-checks rather than checking once.** A single check at boot is a check
+  run against the wrong person — a first-time visitor is still in setup five
+  seconds in, so it would find them un-onboarded, bail, and never run again.
+  The one reader it was written for would have met it on their second launch.
+- **It waits for a gap.** Rescheduled on navigation with a delay, so somebody
+  tapping through the app is never interrupted.
+- **Never over a session or the setup flow**, which paint above it — it would
+  have sat there unseen and still counted as shown.
+- **Its dismissal lives outside the app state**, under its own storage key, so
+  resetting the demo does not re-nag somebody who reset it *because* they were
+  exploring.
+- **It upgrades in place** if Chromium fires `beforeinstallprompt` late, which
+  it can: that is not tied to load.
+
+Not verifiable here: the real iOS Share sheet and the real Chromium install
+dialog. Both copy branches and the prompt call were exercised against a
+synthetic event; the actual OS dialogs need a real device.
 
 ### 7. Check it on a laptop — done, and it did not behave
 
@@ -156,9 +177,20 @@ optimistic read, because the number itself is unadjusted.
 
 ## The short version
 
-Three things before you send anything: **the phone number**, **the greeting**,
-and a **decision about what strangers land in**. The first has a cost outside
-your project, the second is the identity work you have already asked for, and
-the third is one line of copy.
+**Nothing on this list is blocking a send any more.** The three P0s are closed —
+the trainer's number and site are `null` and all three call sites guard on them,
+the greeting is whoever set the app up, and `?study` strips itself from the URL.
+P1 is closed too.
 
-Everything below that improves the demo. Nothing below that should stop it.
+What is left is P2 and P3, and P2 is the interesting part: three findings from
+the blind reads that are each a **decision about what a number means** rather
+than a patch. The strongest of them is #9 — three trainer-readers independently
+called the household's typed note the most useful thing on the report, two said
+they would open the lesson with it, and it is still the last section in the
+smallest type.
+
+One thing not on this list, because it came out of the identity work rather than
+the readiness pass: the avatar switcher (step 4 of
+[identity-plan.md](identity-plan.md)) was asked for and has not been built. The
+data side is already real — every session and moment carries `completedByUserId`
+— so it is a sheet, not a rebuild.

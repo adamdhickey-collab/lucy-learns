@@ -209,6 +209,23 @@ function render() {
             good answers.
           </p>
         </div>
+
+        ${/* Said once, here, on the screen where somebody has just typed their
+              own dog's name — which is the moment the mismatch is about to
+              start. Every illustration in the app is one black Lab mix, so a
+              golden retriever's household is about to meet Lucy thirty times.
+              That cannot be fixed (there is no per-breed regeneration of an
+              illustrated set) but it can be named, and naming it converts a
+              bug report into a convention the reader understood in advance.
+
+              Deliberately not an apology. The pictures are demonstrating a
+              technique, and a technique does not depend on the coat. */ ''}
+        <p class="setup-aside">
+          One thing worth knowing: the pictures throughout the app are all of
+          the same dog — Lucy, a black Labrador mix, who this was first built
+          for. Yours will look nothing like her. The pictures are there to show
+          you the handling, and that part is the same for every dog.
+        </p>
       `,
     });
   }
@@ -228,21 +245,51 @@ function render() {
               <p class="eyebrow">Ready</p>
               <h1>How do you want to start?</h1>
               <p class="lede" style="margin-top: var(--s-3)">
-                You can switch either way later from the profile tab.
+                ${/* These two were offered even-handedly, in the order
+                      empty-then-example, and that order was wrong for the
+                      person most likely to be reading it.
+
+                      For a household starting their own training, empty is
+                      plainly right: their first session should be their first
+                      session, and seeding it with fiction would corrupt the
+                      one number they care about.
+
+                      For somebody who has been sent a link and has ten
+                      minutes, empty hides most of the app. Progress has no
+                      chart, the report has nothing to report, mastery is
+                      "Not started" four times over, the streak is zero and
+                      the program map is an unstarted row of grey. They would
+                      be evaluating the shell.
+
+                      So the recommendation is stated rather than implied, and
+                      the reason is given, because the reader knows which of
+                      those two people they are and the app does not. */ ''}
+                If you are looking around, start with the example data — an
+                empty app has nothing in Progress or the report yet. If this is
+                your own dog and you are here to train, start empty. Either way
+                you can switch later from the profile tab.
               </p>
+
+              <button class="choice choice--recommended" type="button" data-choice="demo">
+                <span>
+                  ${/* Above the title, not beside it. Inline, the tag wrapped
+                        to a line of its own on a 375px screen and set in caps
+                        it then read as a second heading, louder than the
+                        choice it was qualifying. */ ''}
+                  <em class="choice-tag">Recommended</em>
+                  <strong>Look around with example data</strong>
+                  <small>
+                    Twelve days of made-up practice, so Progress, the report and
+                    the program map have something in them. Removable in one tap.
+                  </small>
+                </span>
+                ${icon('arrow')}
+              </button>
 
               <button class="choice" type="button" data-choice="fresh">
                 <span>
                   <strong>Start empty</strong>
                   <small>Nothing logged yet. Your first session will be the first one.</small>
-                </span>
-                ${icon('arrow')}
-              </button>
-
-              <button class="choice" type="button" data-choice="demo">
-                <span>
-                  <strong>Fill in example data first</strong>
-                  <small>Twelve days of made-up practice, so you can see what Progress looks like. Removable in one tap.</small>
                 </span>
                 ${icon('arrow')}
               </button>
