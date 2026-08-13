@@ -107,7 +107,13 @@
            at the handoff would pop. Arriving a beat later reads as the app
            waking up instead. -->
       <div class="splash-head">
-        <p class="splash-title"><span>Lucy</span><span>Learns</span></p>
+        <!-- Two spans per word, not one. The outer is the mask — a fixed box
+             with overflow hidden — and the inner is what moves, rising up
+             through it from below. One element cannot do both: whatever
+             clips has to hold still while the thing being clipped travels. -->
+        <p class="splash-title">
+          <span><span>Lucy</span></span><span><span>Learns</span></span>
+        </p>
         <p class="splash-tagline">Practice makes polite</p>
       </div>
       <!-- The slot holds the position the launch image baked in; the img

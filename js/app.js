@@ -297,6 +297,26 @@ if (splash) {
       if (dismissed) return;
       dismissed = true;
       splash.classList.add('splash--done');
+
+      // Replay the first screen's entrance as the splash lifts.
+      //
+      // The app renders behind the splash, so its arrival cascade — the
+      // sections drifting up, the bars growing — has already played to
+      // completion by the time anyone can see it. What the household actually
+      // saw was a finished screen appearing all at once underneath a fading
+      // veil, which is the other half of "it jumps": nothing was moving on the
+      // side being revealed.
+      //
+      // Restarting it here means the two halves cross-dissolve — the splash
+      // fades over 420ms while the screen rises into place over roughly the
+      // same window. The remove/reflow/add is the same trick the rep tally
+      // uses to re-fire a one-shot: the class list is only consulted at the
+      // next style recalculation, so setting it straight back is a no-op
+      // unless something forces that recalculation in between.
+      document.body.classList.remove('nav-fresh');
+      void document.body.offsetWidth;
+      document.body.classList.add('nav-fresh');
+
       setTimeout(() => splash.remove(), SPLASH_FADE_MS);
     };
 

@@ -2721,7 +2721,10 @@ details.disclosure .disclosure-body {
   /* The line box is tighter than the glyphs need, which is what pulls the two
      words into one mass rather than two lines with air between them. */
   line-height: 0.84;
-  font-size: clamp(2.125rem, min(17vw, 8.5vh), 4.5rem);
+  /* Up an eighth from 17vw. The head band is 274px on a 375×812 phone and the
+     lockup uses ~150px of it, so there is room; the cap is what stops a
+     desktop window turning it into a poster. */
+  font-size: clamp(2.375rem, min(19vw, 9.5vh), 5rem);
   font-weight: 600;
   letter-spacing: -0.03em;
   /* Reads on the artwork's cream at 8.9:1 — the field is warmer than the app's
@@ -2729,7 +2732,24 @@ details.disclosure .disclosure-body {
   color: var(--primary-dark);
 }
 
-.splash-title span {
+/* Every rule here uses the child combinator, and it is not decoration. Each
+   word is now two nested spans, so a bare `.splash-title span:first-child`
+   matches the outer span of "Lucy" *and* the inner span of both words — the
+   inner one is the first child of its own parent. Weight and colour would
+   leak onto the wrong element. `>` is what keeps the two levels apart. */
+.splash-title > span {
+  display: block;
+  /* The mask. Padding opens the clip box past the line box in both
+     directions and the negative margin takes the space straight back, so
+     nothing moves: line-height is 0.84, tighter than the glyphs need, and
+     without this the ascenders of "L" and the descender of "y" would be
+     shaved off permanently rather than just during the reveal. */
+  overflow: hidden;
+  padding-block: 0.2em;
+  margin-block: -0.2em;
+}
+
+.splash-title > span > span {
   display: block;
 }
 
@@ -2740,46 +2760,59 @@ details.disclosure .disclosure-body {
    `font-weight` properties stay as fallbacks for anything that cannot do
    variations; where variations work, these settings win. */
 
-/* Both words at one size now. "Lucy" used to sit back at 0.58em so the verb
-   carried the lockup, but the two names are the product and shrinking half of
-   it made the smaller word read as a label attached to the bigger one. They
-   are the same size and the hierarchy is carried by weight and colour alone —
-   "Learns" heavier and darker, "Lucy" lighter and a step warmer, which is
-   enough separation to stop them reading as one wall. */
-.splash-title span:first-child {
+/* Both words at one size and now in one ink. "Lucy" used to sit a step warmer
+   in --primary against "Learns" in --primary-dark, on the theory that two
+   tones stopped the lockup reading as one wall. Two colours in a two-word
+   name reads as two things, though, and the name is one thing — so the
+   separation is carried by weight alone, which is what a variable display
+   face is for. 460 against 640 on the same axis is a clear difference without
+   being a different voice. */
+.splash-title > span:first-child {
   font-weight: 500;
   font-variation-settings:
     'opsz' 144,
     'wght' 460;
   letter-spacing: 0.015em;
-  color: var(--primary);
 }
 
-.splash-title span:last-child {
+.splash-title > span:last-child {
   font-variation-settings:
     'opsz' 144,
     'wght' 640;
 }
 
-/* Each word drops in, the second a beat behind the first. The overshoot in the
-   curve is the whole "fun": they settle like something landing rather than
-   sliding to a stop. The hidden state lives in the keyframe's `from`, not in
-   the base rule, so `animation: none` under reduced motion leaves everything
-   visible with no cleanup. */
-.splash-title span {
-  animation: splash-word-in 560ms cubic-bezier(0.18, 1.5, 0.32, 1) both;
-}
-.splash-title span:first-child {
-  animation-delay: 140ms;
-}
-.splash-title span:last-child {
-  animation-delay: 300ms;
+/* Each word rises up into its own mask, the second a beat behind the first.
+   The word begins wholly below the clip edge and travels its own height, so
+   what you see is a name being revealed rather than a name being moved — the
+   letters appear to be uncovered by an edge that never itself moves.
+   Deliberately not the overshoot bounce this replaced: a spring drew the eye
+   to the motion, and the interesting thing here should be the name.
+
+   115%, not 100%: the padding above has made the mask taller than the line
+   box, and the extra covers that margin so the first frame is genuinely
+   empty.
+
+   Transform and opacity only — this plays while the app is booting, which is
+   the worst moment on the device to ask for layout or paint work. The hidden
+   state lives in the keyframe's `from`, not the base rule, so `animation:
+   none` under reduced motion leaves the name sitting visible with nothing to
+   clean up. */
+.splash-title > span > span {
+  animation: splash-word-rise 700ms var(--ease-soft) both;
 }
 
-@keyframes splash-word-in {
+.splash-title > span:first-child > span {
+  animation-delay: 140ms;
+}
+
+.splash-title > span:last-child > span {
+  animation-delay: 290ms;
+}
+
+@keyframes splash-word-rise {
   from {
     opacity: 0;
-    transform: translateY(-0.4em) scale(0.93);
+    transform: translateY(115%);
   }
   to {
     opacity: 1;
@@ -2938,9 +2971,26 @@ details.disclosure .disclosure-body {
 }
 
 /* Leaving: the mark falls back and away as the app comes forward. */
-.splash--done .splash-mark {
-  animation: none;
-  transform: scale(0.93);
+/* Leaving: the art settles back as the app comes forward.
+   ---------------------------------------------------------------------------
+   The transform lives on the slot, not on the mark, and that is the whole
+   fix. It used to sit on the mark itself as `animation: none` plus
+   `transform: scale(0.93)` — which meant the breathe animation was torn off
+   and a new transform applied in the same tick, so there was no before-value
+   for the transition to start from. Measured: the art went from scale(1.07)
+   to scale(0.93) in a single frame. Thirteen percent of a full-width
+   illustration, instantly, which is exactly what "it jumps and the image
+   resizes oddly" looks like.
+
+   Two elements, two transforms, no argument: the mark keeps breathing on its
+   own axis and the slot carries the departure. Because nothing else animates
+   the slot, its transition has a real starting value and actually runs.
+
+   The scale is gentler than the old one too — 0.98, not 0.93. The art is a
+   full-bleed illustration now rather than a small badge, so the same
+   percentage moves several times as many pixels. */
+.splash--done .splash-slot {
+  transform: translate(-50%, -50%) scale(0.98);
   transition: transform 420ms cubic-bezier(0.4, 0, 0.9, 0.4);
 }
 
