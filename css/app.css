@@ -2731,11 +2731,13 @@ details.disclosure .disclosure-body {
    `font-weight` properties stay as fallbacks for anything that cannot do
    variations; where variations work, these settings win. */
 
-/* "Learns" is the verb and the point, so it carries the weight and the colour
-   while "Lucy" sits back a step — lighter, smaller, warmer-tracked. Optical,
-   not semantic: at this size two words in identical ink read as a wall. */
+/* Both words at one size now. "Lucy" used to sit back at 0.58em so the verb
+   carried the lockup, but the two names are the product and shrinking half of
+   it made the smaller word read as a label attached to the bigger one. They
+   are the same size and the hierarchy is carried by weight and colour alone —
+   "Learns" heavier and darker, "Lucy" lighter and a step warmer, which is
+   enough separation to stop them reading as one wall. */
 .splash-title span:first-child {
-  font-size: 0.58em;
   font-weight: 500;
   font-variation-settings:
     'opsz' 144,
@@ -2776,66 +2778,34 @@ details.disclosure .disclosure-body {
   }
 }
 
-/* Under the name, and last of the head to arrive. Wide-tracked caps flanked
-   by a pair of rules, so it reads as a set mark rather than a sentence — it
-   is a tagline, not copy. Flex rather than text-align because the rules are
-   flex items: no vertical-align arithmetic, and centring is true without the
-   old text-indent compensation (the tracking's trailing space now misplaces
-   the line by half a letter-space split across a flex centre — under a
-   pixel — instead of visibly shoving it left). */
+/* Under the name, and last of the head to arrive.
+   ---------------------------------------------------------------------------
+   This was wide-tracked caps flanked by a pair of drawn rules, which framed it
+   as a set mark. Now it is a sentence and is set like one — no rules, no caps,
+   normal tracking. The line is a promise the app makes, and a promise reads
+   better spoken than engraved.
+
+   The letter-spacing tween is gone with the caps: it was there to make wide
+   tracking feel like it settled into place, and animating tracking on
+   sentence-case text just makes the words look like they are being squeezed. */
 .splash-tagline {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.7em;
   margin: clamp(0.5rem, 1.8vh, 1rem) 0 0;
-  font-size: var(--step--1);
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--primary-dark) 68%, transparent);
+  text-align: center;
+  font-size: var(--step-0);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: color-mix(in srgb, var(--primary-dark) 72%, transparent);
   animation: splash-tagline-in 620ms 480ms ease-out both;
-}
-
-/* The flanking rules. They draw outward from the words — origin at the text
-   side — a beat after the words fade up, which is the difference between a
-   lockup arriving and two dashes being there. */
-.splash-tagline::before,
-.splash-tagline::after {
-  content: '';
-  flex: none;
-  width: 1.9em;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.55;
-  animation: splash-rule-in 480ms 620ms cubic-bezier(0.33, 1, 0.68, 1) both;
-}
-
-.splash-tagline::before {
-  transform-origin: right center;
-}
-
-.splash-tagline::after {
-  transform-origin: left center;
-}
-
-@keyframes splash-rule-in {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
 }
 
 @keyframes splash-tagline-in {
   from {
     opacity: 0;
-    letter-spacing: 0.32em;
+    transform: translateY(4px);
   }
   to {
     opacity: 1;
-    letter-spacing: 0.16em;
+    transform: none;
   }
 }
 
@@ -3003,11 +2973,15 @@ details.disclosure .disclosure-body {
 /* A lap timer clipped to the walker's heels: the milliseconds left before the
    app opens, counting to zero exactly as they reach the end of the lane.
 
-   6.5px is far under anything readable at a glance, and that is the point —
-   it is texture, not information. Everything it could tell you is already
-   said by the distance left in front of the dog. It is set in tabular figures
-   because proportional digits at 60fps make the whole string twitch as the
-   glyph widths change, which turns a quiet detail into a flicker.
+   Set in tabular figures because proportional digits at 60fps make the whole
+   string twitch as the glyph widths change, which turns a detail into a
+   flicker. It started at 6.5px and near-invisible grey, which was too shy to
+   be worth having; at 11px in the app's ink it reads as an instrument on the
+   walker rather than a smudge under them.
+
+   It is still decoration — everything it says is already said by the distance
+   left in front of the dog — which is why it stays aria-hidden and silent
+   under reduced motion no matter how prominent it looks.
 
    It fades in with their departure rather than sitting at zero-motion during
    the wait: a clock ticking beside two figures standing still reads as a
@@ -3016,15 +2990,16 @@ details.disclosure .disclosure-body {
   position: absolute;
   top: 100%;
   left: 50%;
-  margin-top: 4px;
+  margin-top: 6px;
   transform: translateX(-50%);
-  font-size: 6.5px;
+  font-size: 11px;
   line-height: 1;
-  letter-spacing: 0.09em;
+  font-weight: 650;
+  letter-spacing: 0.04em;
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1;
   white-space: nowrap;
-  color: color-mix(in srgb, var(--primary-dark) 50%, transparent);
+  color: var(--text-primary);
   animation: splash-clock-in 420ms var(--splash-run-delay) ease-out both;
 }
 
@@ -3130,14 +3105,20 @@ details.disclosure .disclosure-body {
   font-variant-numeric: tabular-nums;
 }
 
+/* Same face as the version above it, a step down in size and lighter in ink.
+   It was 11px wide-tracked uppercase at 0.75 opacity, which is four separate
+   things all working against legibility at once on a warm field — and it is a
+   date, the one kind of string that is hardest to read in caps because the
+   month abbreviation loses its shape. Sentence case, normal tracking, and the
+   hierarchy carried by size and colour alone. */
 .splash-date {
   margin: var(--s-1) 0 0;
-  color: var(--text-secondary);
-  font-size: 0.6875rem;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+  font-family: var(--font-display);
+  color: color-mix(in srgb, var(--primary-dark) 62%, transparent);
+  font-size: var(--step--1);
+  font-weight: 500;
+  letter-spacing: 0.01em;
   font-variant-numeric: tabular-nums;
-  opacity: 0.75;
 }
 
 .splash--done {
@@ -3170,8 +3151,6 @@ details.disclosure .disclosure-body {
   .splash-progress,
   .splash-title span,
   .splash-tagline,
-  .splash-tagline::before,
-  .splash-tagline::after,
   .splash-trail,
   .splash-runner,
   .splash-clock,
