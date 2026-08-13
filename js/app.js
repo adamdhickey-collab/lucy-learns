@@ -183,44 +183,35 @@ route();
 // they get the title card, just briefly. Long enough for the wordmark to land,
 // short enough not to show up in the numbers.
 //
-// Two numbers, deliberately independent: how long the crossing takes, and how
-// fast the legs move.
+// How long the bar takes to fill, once it starts. Three seconds, chosen by
+// eye and requested by name.
 //
-// They were locked to one another for a while — cadence times the 4.87 stride
-// cycles a crossing contains — on the principle that a walk whose feet
-// disagree with the ground they cover reads as skating. The principle is
-// sound; holding to it strictly is what is set aside, because at the leg speed
-// that looks unhurried it costs a 12.4s crossing and a 13.7s splash, and
-// nobody should wait that long to open an app they use daily.
-//
-// So the crossing is fixed at what the splash can afford and the cadence is
-// tuned by eye against it. 850ms over 3000ms is 3.5 stride cycles for 275px of
-// lane — about 78px of ground per stride against the ~57px the legs actually
-// describe. A 1.4x glide, which is inside what the eye forgives; the 2550ms
-// this briefly ran at was 230px per stride, four times over, and read as
-// floating rather than walking.
-//
-// If it ever wants to be exact, the arithmetic is WALK_MS / 4.87 — 616ms here.
-// Faster legs than these, same three seconds.
+// The bar is the third occupant of this slot. First a galloping sprite, then a
+// walking pair with a millisecond countdown at their heels — each carried real
+// choreography (cadence locked to ground speed, a lap timer synced to the
+// landing) and each was, in the end, louder than the thing it reported. A
+// title card should settle the room, not perform in it. What survives from
+// those iterations is the discipline, not the dog: the fill starts only after
+// the entrance finishes and the numbers are real, runs linear because it
+// reports a physical quantity, and lands exactly as the fade completes.
 //
 // Study mode is exempt. Its 1.2s card is calibrated for a timed task, and the
-// pair simply do not get to walk in it.
+// bar simply does not get to fill in it.
 
-const WALK_MS = 3000;
-const WALK_CADENCE_MS = 850;
+const FILL_MS = 3000;
 const SPLASH_FADE_MS = 420;
 
-// Mirrors `splash-progress-in 460ms 820ms` in app.css, by hand — the lane has
-// to have finished arriving before anyone steps onto it. Change one, change both.
+// Mirrors `splash-progress-in 460ms 820ms` in app.css, by hand — the track has
+// to have finished arriving before the fill sets off. Change one, change both.
 const LANE_IN_END_MS = 820 + 460;
 
-// The hold is what the walk needs, not a number picked for its own sake: the
-// lane has to arrive, the pair has to cross it, and the last 420ms of that
-// crossing happen during the fade. 1280 + 3000 - 420 = 3860, so the splash is
-// on screen for 4.3s all told.
+// The hold is what the bar needs, not a number picked for its own sake: the
+// track has to arrive, the fill has to run its three seconds, and the last
+// 420ms of the fill happen during the fade. 1280 + 3000 - 420 = 3860, so the
+// splash is on screen for 4.3s all told.
 const SPLASH_HOLD_MS = STUDY
   ? STUDY_SPLASH_HOLD_MS
-  : LANE_IN_END_MS + WALK_MS - SPLASH_FADE_MS;
+  : LANE_IN_END_MS + FILL_MS - SPLASH_FADE_MS;
 
 const splash = document.getElementById('splash');
 if (splash) {
@@ -290,31 +281,7 @@ if (splash) {
     '--splash-run',
     `${Math.round(remaining - runDelay + SPLASH_FADE_MS)}ms`
   );
-  splash.style.setProperty('--splash-cadence', `${WALK_CADENCE_MS}ms`);
   splash.classList.add('splash--running');
-
-  // The lap timer at the walker's heels. It counts the crossing down rather
-  // than the hold, so it reaches 0.000 on the same frame they reach the end of
-  // the lane — one clock for one event, instead of two numbers about the same
-  // wait disagreeing by the length of a fade.
-  //
-  // Left empty under reduced motion. The element is decorative and the CSS
-  // already stops it fading in, but a number changing sixty times a second is
-  // motion whatever its opacity is doing, and this is the request that setting
-  // exists to answer.
-  const clock = splash.querySelector('.splash-clock');
-  if (clock && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const lands = performance.now() + runDelay + (remaining - runDelay + SPLASH_FADE_MS);
-    const tick = () => {
-      // isConnected, not a stored flag: dismiss() removes the whole splash, and
-      // asking the node whether it is still in the document is the one check
-      // that cannot fall out of step with that.
-      if (!clock.isConnected) return;
-      clock.textContent = (Math.max(0, lands - performance.now()) / 1000).toFixed(3);
-      requestAnimationFrame(tick);
-    };
-    tick();
-  }
 
   if (!location.search.includes('splash-hold')) {
     let dismissed = false;

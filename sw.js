@@ -17,7 +17,6 @@ const SHELL = [
   './icons/icon-512.png',
   './icons/icon-maskable-512.png',
   './css/app.css',
-  './img/lucy-run.png',
   './fonts/fraunces-latin.woff2',
   './fonts/karla-latin.woff2',
   './js/app.js',

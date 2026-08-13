@@ -95,7 +95,12 @@ const ART_CENTER_Y = 0.5;
 // Keep in step with `--splash-field` in css/app.css. The in-app splash paints
 // that colour, so the OS image and the first frame still match exactly; what
 // changed is which colour both of them use.
-const FIELD = [0xf6, 0xe6, 0xd0];
+// Measured from the current art's own borders (median of all four edges), not
+// chosen: the field has to be the colour the illustration already is at its
+// edges or the art sits on the splash as a visible rectangle. The squirrel-
+// illustration art is a peachier cream than the last one — re-measure and
+// update this and --splash-field together whenever the art changes.
+const FIELD = [0xfa, 0xde, 0xc3];
 
 // --- decode ----------------------------------------------------------------
 

@@ -2560,7 +2560,7 @@ details.disclosure .disclosure-body {
      illustration already has at its edges — otherwise the art reads as a
      lighter rectangle on paper. Keep in step with FIELD in
      scripts/make-splash.mjs. The fade to the app is where paper arrives. */
-  --splash-field: #f6e6d0;
+  --splash-field: #fadec3;
   background: var(--splash-field);
   transition: opacity 420ms ease-in;
 
@@ -2602,7 +2602,6 @@ details.disclosure .disclosure-body {
   --splash-hold: 1300ms;
   --splash-run: 1300ms;
   --splash-run-delay: 0ms;
-  --splash-cadence: 850ms;
 }
 
 /* A slow warm vignette at the very edges of the field. It gives the flat
@@ -2819,211 +2818,83 @@ details.disclosure .disclosure-body {
 
 .splash-progress {
   position: absolute;
-  /* Under the meta, which is itself under the art. 3.4em cleared both lines
-     of version and date when the runner was a 25px dog; the walking pair is
-     44px and rises above the lane box, so the extra 0.6em is headroom for
-     the walker — measured at 2px of clearance without it. */
-  top: calc(var(--badge-y) + var(--badge-h) / 2 + var(--s-5) + 4em);
-  /* A lane, not a pill. This was a 190px bar filling up; it is now the ground
-     the pair walks along, so it wants the width of the screen to walk across. */
-  left: 8%;
-  right: 8%;
-  height: 34px;
-  /* The ground she has yet to cover: a dashed line rather than a solid one,
-     so the distance ahead reads as a path — and so the solid trail she draws
-     behind her (below) reads as something happening to the ground rather
-     than a second decoration. Dashes are whole pixels on the same 2px grid
-     as the sprite's feet. */
-  background: repeating-linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--primary-dark) 24%, transparent) 0 8px,
-      transparent 8px 16px
-    )
-    left bottom / 100% 2px no-repeat;
-  /* Last to arrive, and the sequence reads top to bottom: the name lands, the
-     tagline sets, the imprint line surfaces, the ground rolls out with the
-     dog waiting at its start line, and then she sets off. app.js times her
-     departure to when this entrance finishes — the 820ms + 460ms here are
-     mirrored there as LANE_IN_END_MS, by hand. Change one, change both. */
+  /* Under the meta, which is itself under the art. The 3.4em clears both
+     lines of version and date at their own size. (It was 4em while a 44px
+     walking sprite needed headroom; a 3px bar does not.) */
+  top: calc(var(--badge-y) + var(--badge-h) / 2 + var(--s-5) + 3.4em);
+  /* Wordmark-width, centred: the bar underlines the composition above it
+     rather than running wall to wall. A screen-wide line was right when it
+     was ground being walked across; as a bar it read as a border. */
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(46vw, 240px);
+  height: 3px;
+  border-radius: 999px;
+  overflow: hidden;
+  /* The distance not yet covered, in the same ink as everything quiet on
+     this screen — visible against the field, but only just. */
+  background: color-mix(in srgb, var(--primary-dark) 14%, transparent);
+  /* Last to arrive, and the sequence reads top to bottom: the name lands,
+     the tagline sets, the imprint line surfaces, the track fades up, and
+     then the fill sets off. app.js times the fill to when this entrance
+     finishes — the 820ms + 460ms here are mirrored there as
+     LANE_IN_END_MS, by hand. Change one, change both. */
   animation: splash-progress-in 460ms 820ms ease-out both;
 }
 
 @keyframes splash-progress-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateX(-50%) translateY(8px);
   }
   to {
     opacity: 1;
-    transform: none;
+    transform: translateX(-50%);
   }
 }
 
-/* The ground already covered. Same duration, same delay, same linear clock
-   as the traversal — so its leading edge is always under her body (she moves
-   over `100% - 40px` while the trail scales over 100%, which puts the tip at
-   most one sprite-width ahead of her left edge, i.e. under the dog). scaleX
-   rather than width because it is the one part of the lane that runs for the
-   whole hold, and stretching a solid line costs nothing.
+/* The fill. scaleX from the left edge, because a transform is the one way to
+   grow a line that never re-rasterises mid-animation — width would round to
+   whole pixels and tick like a second hand, and this element exists to be
+   smooth.
 
-   Empty in the base state, animated only under .splash--running: the run must
-   not start until app.js has the real numbers, and a trail already drawn
-   before the dog has moved would say she ran while the lane was still
-   fading in. */
-.splash-trail {
+   Linear on purpose, everywhere else on this screen eases: the bar is the
+   one element reporting a physical quantity (time left), and easing it would
+   make the app look faster than it is for the first half and slower for the
+   second. The gradient tip is the only flourish — a slightly brighter head
+   on the advancing edge, so the motion has somewhere to look without
+   costing a single extra element.
+
+   Empty in the base state, animated only under .splash--running: the fill
+   must not start until app.js has the real numbers, and a bar already
+   partway along before then would be reporting a boot that has not been
+   measured yet. The fallback vars cover a boot where the script never runs
+   at all — nothing fills, nothing dismisses, and an empty track is the
+   honest picture of a boot that stalled. */
+.splash-bar {
   position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 2px;
-  background: color-mix(in srgb, var(--primary) 60%, transparent);
-  transform-origin: left center;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    var(--primary) 0%,
+    var(--primary) 82%,
+    color-mix(in srgb, var(--primary) 72%, white) 100%
+  );
   transform: scaleX(0);
+  transform-origin: left center;
 }
 
-.splash--running .splash-trail {
-  animation: splash-trail-across var(--splash-run) var(--splash-run-delay) linear both;
+.splash--running .splash-bar {
+  animation: splash-bar-fill var(--splash-run) var(--splash-run-delay) linear both;
 }
 
-@keyframes splash-trail-across {
+@keyframes splash-bar-fill {
   from {
     transform: scaleX(0);
   }
   to {
     transform: scaleX(1);
-  }
-}
-
-/* Lucy, running the hold out.
-   ------------------------------------------------------------------------
-   Two animations on one element, doing two different jobs.
-
-   `splash-run-cycle` is the legs: an eight-frame walk cycle stepped through
-   on --splash-cadence, which app.js sets alongside the crossing so the two
-   halves of the walk are decided together. They are deliberately not locked
-   to each other — see WALK_CADENCE_MS there for why the pair glide slightly
-   rather than paying 12s of splash for honest footfalls.
-
-   `splash-run-across` is the progress: it carries her from the left of the
-   lane to the right over --splash-run, which app.js sets to the hold that is
-   left after the boot and the lane's entrance are both paid for, plus the
-   fade. She waits at the start line while the ground rolls out, sets off when
-   it has finished arriving, and crosses in one unbroken linear run that lands
-   exactly as the fade finishes — still moving while the splash dims, never
-   parked at the finish on a visible screen. Boot time sets her speed, never
-   her starting line.
-
-   Both animations live behind .splash--running, which app.js adds only after
-   writing --splash-run and --splash-run-delay. That ordering is the fix for a
-   bug this file shipped twice: any animation consuming those variables from
-   the base rule starts its clock at first paint, when the values are still
-   the fallbacks — so the real numbers arrived mid-flight, and the first frame
-   of dog anyone saw (the lane fades in at 820ms) was a dog already mid-lane,
-   arriving early. The legs are gated with her for the same reason in reverse:
-   galloping on the spot at the start line would read as stuck, not waiting.
-
-   `left` rather than a transform because the distance is "the width of the lane
-   minus her own width", and a percentage on `left` already means that against
-   the parent while a percentage on translateX would mean it against herself.
-   Three seconds of linear tween on one small element is not the place to fight
-   for the compositor. */
-.splash-runner {
-  position: absolute;
-  bottom: 2px;
-  left: 0;
-  display: block;
-  /* A sixth of the sprite's native 240×264 cell — the numbers
-     scripts/make-runner.mjs prints, and it prints them because the divisor is
-     baked into how it packs the cells. Don't edit these by hand; change
-     DIVISOR there and paste what it says.
-
-     The size on the lane is the judgement, and it holds across sheets: around
-     40px of figure leaves the pair an eighth of the run, which is what makes
-     the distance look like a distance. The height is new with this sheet —
-     the runner is a walking pair now, and a standing person at the dog's old
-     scale is simply taller. She rises above the lane's own 34px box, which
-     is fine: the dashes are the ground, and the ground is at the bottom.
-
-     Sixths because 240 and 264 both divide by 6 exactly. Every cell boundary
-     stays on a whole CSS pixel, which is the thing that matters: a fractional
-     step would slide a sliver of the next frame into view on every tick. */
-  width: 40px;
-  height: 44px;
-  background-image: url('../img/lucy-run.png');
-  background-repeat: no-repeat;
-  /* Pixels, not percentages. A percentage background-position is proportional
-     — it aligns the image's X% point with the box's X% point — so stepping it
-     to -800% would run the sheet clean off the end and draw nothing at all.
-     Eight 40px cells at display size, so the sheet is 320px wide and each
-     step is exactly -40px. */
-  background-size: 320px 44px;
-  background-position-x: 0;
-  /* No image-rendering: pixelated here any more. The old sprite was hard
-     pixel art upscaled 2× and needed its edges protected; this one is
-     anti-aliased art displayed at native resolution, where the hint would
-     only roughen what the artist smoothed. */
-}
-
-.splash--running .splash-runner {
-  animation:
-    splash-run-cycle var(--splash-cadence) var(--splash-run-delay) steps(8) infinite,
-    splash-run-across var(--splash-run) var(--splash-run-delay) linear both;
-}
-
-/* A lap timer clipped to the walker's heels: the milliseconds left before the
-   app opens, counting to zero exactly as they reach the end of the lane.
-
-   Set in tabular figures because proportional digits at 60fps make the whole
-   string twitch as the glyph widths change, which turns a detail into a
-   flicker. It started at 6.5px and near-invisible grey, which was too shy to
-   be worth having; at 11px in the app's ink it reads as an instrument on the
-   walker rather than a smudge under them.
-
-   It is still decoration — everything it says is already said by the distance
-   left in front of the dog — which is why it stays aria-hidden and silent
-   under reduced motion no matter how prominent it looks.
-
-   It fades in with their departure rather than sitting at zero-motion during
-   the wait: a clock ticking beside two figures standing still reads as a
-   stall. */
-.splash-clock {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-top: 6px;
-  transform: translateX(-50%);
-  font-size: 11px;
-  line-height: 1;
-  font-weight: 650;
-  letter-spacing: 0.04em;
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: 'tnum' 1;
-  white-space: nowrap;
-  color: var(--text-primary);
-  animation: splash-clock-in 420ms var(--splash-run-delay) ease-out both;
-}
-
-@keyframes splash-clock-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes splash-run-cycle {
-  to {
-    background-position-x: -320px;
-  }
-}
-
-@keyframes splash-run-across {
-  from {
-    left: 0;
-  }
-  to {
-    left: calc(100% - 40px);
   }
 }
 
@@ -3148,30 +3019,25 @@ details.disclosure .disclosure-body {
   .splash::after,
   .splash-mark,
   .splash-meta,
-  .splash-progress,
   .splash-title span,
   .splash-tagline,
-  .splash-trail,
-  .splash-runner,
-  .splash-clock,
-  /* The gated run rules are two classes deep, so the bare classes above
-     would lose to them — the kill has to name the gated selectors too. */
-  .splash--running .splash-trail,
-  .splash--running .splash-runner,
+  /* The gated fill rule is two classes deep, so a bare class here would
+     lose to it — the kill has to name the gated selector too. */
+  .splash--running .splash-bar,
   .splash--done .splash-mark,
   .splash--done .splash-head {
     animation: none;
     transform: none;
   }
 
-  /* Lucy still reports progress, she just does it without running: the legs
-     stop cycling and she is parked at the far end of the lane with the trail
-     drawn behind her, because a dog frozen at the start line says the boot
-     has stalled. `transform: none` above already leaves the trail at full
-     scale; only her `left` needs saying, because the traversal keyframes
-     carry it. */
-  .splash-runner {
-    left: calc(100% - 40px);
+  /* The track still appears (its entrance is animation: none like everything
+     else, so it is simply visible), and the bar sits full rather than empty:
+     transform: none on the gated fill leaves scaleX at 1, which reads as
+     "arriving" rather than "stalled". The keyframes carry the empty state,
+     so there is nothing to clean up. */
+  .splash-progress {
+    animation: none;
+    transform: translateX(-50%);
   }
 }
 

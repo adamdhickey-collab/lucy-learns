@@ -115,25 +115,18 @@
       <div class="splash-slot">
         <img class="splash-mark" src="img/splash-mark.jpg" alt="" />
       </div>
-      <!-- Runs across the hold. app.js hands it the real duration and how much
-           of it has already gone, so she covers exactly the ground the boot has
-           left rather than miming it: reload halfway through and she starts
-           halfway across.
+      <!-- The wait, as one line filling. app.js hands it the real duration and
+           how much of the boot has already gone, so it reports the time left
+           rather than miming it.
 
-           The track is still a progress bar in every way that matters — it is
-           the same element, the same timing, the same negative delay. What
-           changed is that the thing reporting the time is a dog.
-
-           The trail is the ground she has covered, drawn on the same clock
-           with the same negative delay, so it always ends under her feet. -->
+           This was a walking pair on a dashed lane with a millisecond clock at
+           their heels, and before that a galloping dog. Both were charming and
+           both were louder than the thing they were reporting — a title card
+           should settle the room, not perform in it. The track keeps every
+           property that mattered: same element, same clock, same landing on the
+           dismissal. Only the vocabulary is quieter. -->
       <div class="splash-progress">
-        <span class="splash-trail"></span>
-        <!-- The clock rides inside the runner rather than beside it, so it
-             inherits the traversal instead of running a second copy of the
-             animation that could drift a subpixel out of step. aria-hidden
-             because a screen reader reciting milliseconds would be a torment,
-             and it says nothing the progress bar does not already say. -->
-        <span class="splash-runner"><span class="splash-clock" aria-hidden="true"></span></span>
+        <span class="splash-bar"></span>
       </div>
       <div class="splash-meta">
         <p id="splash-version" class="splash-version"></p>

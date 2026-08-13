@@ -40,18 +40,20 @@ are all level-3 images and sort together.
 | `door-cover.jpg` | the program cover, used by the welcome panel |
 | `lucy-portrait.jpg` | Lucy's picture on her own tab (`js/config.js`) — a head crop of the app icon, see below |
 | `splash-mark.jpg` | the splash artwork; iOS launch images are baked from it |
-| `lucy-run.png` | the 8-frame sprite that runs the splash out |
 | `icon-*.png`, `apple-*.png` | generated — see `scripts/make-icons.mjs` |
 
 ## Generated files
 
-`lucy-run.png`, the icons and the iOS launch images are **build outputs, not
-originals**. Editing them by hand works until someone re-runs the generator.
-Change the source in `art/` and re-run:
+The icons and the iOS launch images are **build outputs, not originals**.
+Editing them by hand works until someone re-runs the generator. Change the
+source in `art/` and re-run:
 
-    node scripts/make-runner.mjs     lucy-run.png, from art/pilot/approved/lucy-run-sheet.png
     node scripts/make-icons.mjs      the icon set
     node scripts/make-splash.mjs     the iOS launch images, from art/source/splash-source.png
+
+(`scripts/make-runner.mjs` built `lucy-run.png`, the sprite that used to run
+the splash out. The splash reports with a plain bar now; the script and its
+sheet stay in `art/` and `scripts/` as process, but nothing ships from them.)
 
 `lucy-portrait.jpg` is also derived, but by hand rather than by a script — it
 is one crop that has been re-cut twice, which is not enough to earn a
