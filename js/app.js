@@ -302,10 +302,22 @@ if (splash) {
     };
 
     // Measured from navigation start, so the hold overlaps the boot rather
-    // than following it. Timers still fire in a hidden tab where animation
-    // frames do not, which is what keeps a backgrounded launch from coming
-    // back to a splash that never left.
-    setTimeout(dismiss, Math.max(SPLASH_HOLD_MS - elapsed, 0));
+    // than following it. `performance.now()` is that measurement directly —
+    // the page clock is zeroed at navigation — and this line runs during
+    // module evaluation, so reading it here reads it at boot.
+    //
+    // It used to read a local the progress bar's arithmetic kept, and when the
+    // bar came out the local went with it while this reference stayed. A bare
+    // ReferenceError inside the `if (splash)` block skips the rest of it, so
+    // `dismiss` was never scheduled: the splash sat there until it was tapped,
+    // on every launch. Nothing failed loudly and nothing looked broken — it
+    // just looked like a slow app. Worth remembering that the splash is the
+    // one place where a dead timer is indistinguishable from a long one.
+    //
+    // Timers still fire in a hidden tab where animation frames do not, which
+    // is what keeps a backgrounded launch from coming back to a splash that
+    // never left.
+    setTimeout(dismiss, Math.max(SPLASH_HOLD_MS - performance.now(), 0));
   }
 }
 
