@@ -142,6 +142,11 @@ function render() {
               data-person
               value="${draft.person}"
               placeholder="Fabiola"
+              ${/* Generous enough for any real name, short enough that the
+                    greeting and the CSV cannot be handed something absurd.
+                    The heading scales down for long names; it does not scale
+                    down for a paragraph. */ ''}
+              maxlength="32"
               autocapitalize="words"
               autocomplete="given-name"
               enterkeyhint="next"
@@ -173,6 +178,7 @@ function render() {
             data-dog
             value="${draft.dog}"
             placeholder="Lucy"
+            maxlength="24"
             autocapitalize="words"
             ${/* Off, or the browser offers the human names it has saved for
                   this person. */ ''}
@@ -190,6 +196,7 @@ function render() {
             value="${draft.breed}"
             list="breed-list"
             placeholder="Mixed breed, Labrador, not sure…"
+            maxlength="48"
             autocapitalize="words"
             autocomplete="off"
             enterkeyhint="done"

@@ -523,7 +523,11 @@ export const DEFAULT_COMMANDS = [
   { id: 'place', situation: 'Move to bed', cue: 'Go to bed' },
   { id: 'boundary', situation: 'Stay behind boundary', cue: 'Back' },
   { id: 'stay', situation: 'Remain in position', cue: 'Stay' },
-  { id: 'attention', situation: 'Look toward handler', cue: 'Lucy!' },
+  // The one cue that is the dog's own name. Stored as a token rather than a
+  // literal so it can follow the name in state — setDog rewrites it, and
+  // cueFor resolves it for anyone who never touches the commands screen. It
+  // was "Lucy!", which is the right cue for exactly one household.
+  { id: 'attention', situation: 'Look toward handler', cue: '{dog}!' },
   { id: 'release', situation: 'End position', cue: 'Okay' },
   { id: 'greet', situation: 'Calm approach', cue: 'Go say hi' },
   { id: 'sit', situation: 'Sit', cue: 'Sit' },
@@ -716,7 +720,7 @@ export const ACTIVITIES = [
       },
       {
         instruction: 'Say her name in a bright, happy voice.',
-        cue: 'Lucy!',
+        cue: '{dog}!',
         image: 'door-sound-03-name',
       },
       {
@@ -763,7 +767,7 @@ export const ACTIVITIES = [
         reps: 5,
         successCriteria: ['Comes to you after the sound', 'No charging the door'],
         overrides: {
-          2: { instruction: 'Call her name from a few feet away.', cue: 'Lucy!', image: 'door-sound-03-name-distant' },
+          2: { instruction: 'Call her name from a few feet away.', cue: '{dog}!', image: 'door-sound-03-name-distant' },
         },
       },
       {
@@ -773,7 +777,7 @@ export const ACTIVITIES = [
         reps: 5,
         successCriteria: ['Leaves the door and finds you', 'Arrives without barking'],
         overrides: {
-          2: { instruction: 'Call her name from another room.', cue: 'Lucy!', image: 'door-sound-03-name-distant' },
+          2: { instruction: 'Call her name from another room.', cue: '{dog}!', image: 'door-sound-03-name-distant' },
         },
       },
     ],
@@ -920,7 +924,7 @@ export const ACTIVITIES = [
     fallbackSteps: FALLBACK_STEPS,
     steps: [
       { instruction: 'Ring or knock once.', image: 'door-sound-02-self' },
-      { instruction: 'Say her name brightly.', cue: 'Lucy!', image: 'door-sound-03-name' },
+      { instruction: 'Say her name brightly.', cue: '{dog}!', image: 'door-sound-03-name' },
       { instruction: 'Send her to her bed.', cue: 'Go to bed', image: 'door-place-03-send' },
       { instruction: 'Reward her twice on the bed.', image: 'door-stay-04-pay' },
       {

@@ -24,6 +24,12 @@ import { html, raw, join, icon, badge, initialsOf, firstNameOf, focusHeading } f
 // schedule. "Hello" is right whenever the app is opened.
 const greeting = () => 'Hello';
 
+const nameLength = (name) => {
+  if (name.length > 13) return 'very-long';
+  if (name.length > 8) return 'long';
+  return 'short';
+};
+
 function render() {
   const state = getState();
   const person = getPerson();
@@ -82,10 +88,16 @@ function render() {
             decoration. */ ''}
       <div class="today-head">
         <div>
-          <h1>${greeting()}, ${firstNameOf(person.name)}</h1>
+          ${/* Measured, not guessed at with a media query: the thing that
+                overflows here is the name, and the viewport knows nothing
+                about it. Nine and fourteen are where "Hello, {name}" starts
+                to crowd the avatar at each size on a 375px screen. */ ''}
+          <h1 data-name-length="${nameLength(firstNameOf(person.name))}">
+            ${greeting()}, ${firstNameOf(person.name)}
+          </h1>
           ${week.count ? '' : html`<p>The first session takes about five minutes</p>`}
         </div>
-        <a class="avatar" href="#/lucy" aria-label="${person.name}, profile and settings">
+        <a class="avatar" href="#/profile" aria-label="${person.name}, profile and settings">
           <span aria-hidden="true">${initialsOf(person.name)}</span>
         </a>
       </div>

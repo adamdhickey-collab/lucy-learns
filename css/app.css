@@ -448,49 +448,56 @@ a.visually-hidden:focus {
   color: var(--primary-dark);
 }
 
-/* The icon sits in a pill-shaped seat that only the current tab fills.
+/* The whole tab lights up, not a pill around its icon.
    ------------------------------------------------------------------------
    Colour alone was not carrying this. Inactive is #5c6a70 and current was
    #125d63 — different hues, but almost the same *lightness*, so at 24px the
    only real cue was a half-pixel of extra stroke weight and the row read as
    four identical tabs. Value contrast is what the eye finds first; hue is what
-   it confirms with.
+   it confirms with. So the current tab is a filled shape, the same idiom the
+   program row uses for "you are here".
 
-   So the mark of the current tab is a filled shape, which is the same idiom
-   the program row already uses for "you are here" (`.route-stop--next
-   .route-node`: primary-wash behind primary). One vocabulary, two places.
+   The fill was a seat around the icon and is now the tap target itself, which
+   is what a person is actually aiming at — highlighting a 50px pill inside a
+   94px button describes the icon rather than the control.
 
-   The padding is inline-only, and that is a hard constraint rather than a
-   preference. The bar measures 60.5px against `--nav-h: 60px`, which is what
-   `.screen` pads the page by — it is already half a pixel over its own budget,
-   so any vertical padding here hides the bottom of every screen behind the
-   bar. Widen, never heighten. Raise --nav-h first if that ever has to change.
+   It is painted by an absolutely positioned ::before rather than a background
+   on the anchor, and that is a hard constraint rather than a preference. The
+   bar measures 60.5px against `--nav-h: 60px`, which is what `.screen` pads
+   the page by — it is already half a pixel over its own budget, so anything
+   here that takes vertical space hides the bottom of every screen behind the
+   bar. A ::before is out of flow and costs none: the inset gives the highlight
+   its breathing room without adding a pixel of height. Raise --nav-h first if
+   that ever has to change. */
+.tabbar a {
+  position: relative;
+}
 
-   The seat is reserved on all four tabs so that switching tabs moves no
-   layout; only the fill appears. */
+.tabbar a[aria-current='page']::before {
+  content: '';
+  position: absolute;
+  inset: 4px 8px;
+  border-radius: 14px;
+  background: var(--primary-wash);
+}
+
+/* Above the fill, which is a sibling painted first. */
+.tabbar a > * {
+  position: relative;
+}
+
 .tabbar svg {
   width: 24px;
   height: 24px;
-  box-sizing: content-box;
-  padding-inline: 13px;
-  border-radius: 999px;
   stroke: currentColor;
   fill: none;
   stroke-width: 1.75;
   stroke-linecap: round;
   stroke-linejoin: round;
-  transition: background-color 140ms ease;
 }
 
 .tabbar a[aria-current='page'] svg {
   stroke-width: 2.25;
-  background: var(--primary-wash);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tabbar svg {
-    transition: none;
-  }
 }
 
 /* On wider screens the bar follows the content column rather than the window. */
@@ -924,14 +931,28 @@ a.visually-hidden:focus {
 }
 
 /* Bigger than every other screen's h1, which is the point: this is the line
-   that says the app knows who opened it. It was a step below the rest, then
-   level with them; "Hello, Fabiola" is short enough to take the top step
-   without wrapping on a narrow phone, and the extra size is what makes the
-   name read as a welcome rather than a page title. */
+   that says the app knows who opened it. The extra size is what makes the name
+   read as a welcome rather than a page title.
+
+   It steps down as the name gets longer, because the size that makes
+   "Fabiola" feel like a greeting makes "Bartholomew" wrap into the avatar.
+   today.js measures the first name and sets data-name-length; three sizes is
+   enough to cover everything from "Al" to a name that has no business being
+   in a heading. Wrapping is still allowed as the last resort — a balanced
+   two-line greeting beats a clipped one. */
 .today-head h1 {
   font-size: var(--step-4);
   line-height: 1.15;
   text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.today-head h1[data-name-length='long'] {
+  font-size: var(--step-3);
+}
+
+.today-head h1[data-name-length='very-long'] {
+  font-size: var(--step-2);
 }
 
 .today-head > div:first-child {

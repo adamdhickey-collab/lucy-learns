@@ -189,16 +189,26 @@ export function updateCommand(id, cue) {
   }
 }
 
+/**
+ * Fill the dog-name token. The token only survives in an install that never
+ * went through setup with a name — a demo seeded straight into state, say —
+ * but it must never reach a screen, because "{dog}!" is not something anyone
+ * would say to a dog.
+ */
+const fillToken = (cue) => String(cue || '').replace('{dog}', state.dog.name);
+
 export const cueFor = (id) => {
   const command = state.commands.find((c) => c.id === id);
-  return command ? command.cue : '';
+  return command ? fillToken(command.cue) : '';
 };
 
 /** Map a seed cue like "Go to bed" onto whatever the household actually says. */
 export function resolveCue(seedCue) {
   if (!seedCue) return seedCue;
   const seeded = DEFAULT_COMMANDS.find(
-    (c) => c.cue.toLowerCase() === seedCue.toLowerCase()
+    (c) =>
+      c.cue.toLowerCase() === seedCue.toLowerCase() ||
+      fillToken(c.cue).toLowerCase() === seedCue.toLowerCase()
   );
   return seeded ? cueFor(seeded.id) : seedCue;
 }
@@ -229,7 +239,19 @@ export const getPerson = () =>
   state.people.find((p) => p.id === state.activePersonId) || state.people[0];
 
 export function setDog(patch) {
+  const before = state.dog.name;
   state.dog = { ...state.dog, ...patch };
+
+  // The attention cue is the dog's name being called, so renaming the dog
+  // renames it — unless the household has already written their own, in which
+  // case theirs wins and nothing here touches it. Compared against the old
+  // name rather than the token so this keeps working after the first rename.
+  if (patch.name && patch.name !== before) {
+    const attention = state.commands.find((c) => c.id === 'attention');
+    if (attention && (attention.cue === '{dog}!' || attention.cue === `${before}!`)) {
+      attention.cue = `${patch.name}!`;
+    }
+  }
   persist();
 }
 

@@ -52,6 +52,27 @@ export const ICONS = {
     '<path d="M8 7.2A6.6 6.6 0 0 1 12 6c1.5 0 2.9.4 4 1.2v5.4a4.5 4.5 0 0 1-1.9 3.7l-1 .7a2 2 0 0 1-2.2 0l-1-.7A4.5 4.5 0 0 1 8 12.6z"/>' +
     '<path d="M10.3 11h.01M13.7 11h.01"/>' +
     '</svg>',
+  // Profile — a paw. The tab it marks used to be the dog's own name beside a
+  // dog's head; the name could not survive a long one, and the head is the
+  // app's mascot everywhere else.
+  //
+  // An ID tag was tried first and failed the only test that matters: shown the
+  // icon cold, nobody could say what it was. A ring and a disc is a tag if you
+  // already know it is a tag and a balloon otherwise. A paw needs no such
+  // help.
+  //
+  // Four toes, not five, and generous gaps between them. The star icon's
+  // comment further up records a paw being rejected at 15px because the toes
+  // closed into a blob; this is 24px, and the toes are spaced for that size
+  // rather than scaled down from a bigger drawing.
+  profile:
+    '<svg viewBox="0 0 24 24">' +
+    '<ellipse cx="7.2" cy="10.4" rx="2" ry="2.4"/>' +
+    '<ellipse cx="16.8" cy="10.4" rx="2" ry="2.4"/>' +
+    '<ellipse cx="10.9" cy="6.6" rx="1.9" ry="2.3"/>' +
+    '<ellipse cx="15.6" cy="6.2" rx="1.7" ry="2.1"/>' +
+    '<path d="M12 20.8c-2.7 0-4.8-1.6-4.8-3.8 0-2.2 2.1-4.4 4.8-4.4s4.8 2.2 4.8 4.4c0 2.2-2.1 3.8-4.8 3.8z"/>' +
+    '</svg>',
   back: '<svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>',
   close: '<svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>',
   plus: '<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',

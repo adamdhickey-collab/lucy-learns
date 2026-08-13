@@ -280,4 +280,4 @@ function mount(root) {
   focusHeading(root);
 }
 
-export default { render, mount, tab: 'lucy' };
+export default { render, mount, tab: 'profile' };

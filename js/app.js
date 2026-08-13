@@ -1,4 +1,4 @@
-import { isStorageOk, isOnboarded, onStorageChange, getDog } from './store.js';
+import { isStorageOk, isOnboarded, onStorageChange } from './store.js';
 import { APP_VERSION, APP_UPDATED } from './version.js';
 import { studyMode, applyStudyMode, STUDY_SPLASH_HOLD_MS } from './study.js';
 import { ICONS, announceScreen, markNavigated, withTransition } from './ui.js';
@@ -54,17 +54,25 @@ const routes = [
   { pattern: /^#\/play\/([^/]+)$/, view: player, keys: ['slug'] },
   { pattern: /^#\/progress$/, view: progressView },
   { pattern: /^#\/report$/, view: report },
-  { pattern: /^#\/lucy$/, view: lucy },
+  { pattern: /^#\/profile$/, view: lucy },
   { pattern: /^#\/moment$/, view: moment },
 ];
 
-// A function, not a constant: the fourth tab is named after the dog, and the
-// dog's name is stored state now rather than something baked in at load.
-const tabs = () => [
+// The fourth tab is "Profile", not the dog's name.
+//
+// It briefly was the name — which is charming for "Lucy" and unusable for
+// "Bartholomew". A tab label has a quarter of a phone to live in and no room
+// to wrap or truncate gracefully, so it cannot be the one string in the app
+// that a stranger gets to make arbitrarily long. The screen is the dog's
+// profile plus the household's settings, and "Profile" describes that at any
+// name length.
+//
+// A plain constant again, now that nothing in it varies.
+const TABS = [
   { id: 'today', href: '#/today', label: 'Today', icon: ICONS.today },
   { id: 'activities', href: '#/activities', label: 'Activities', icon: ICONS.activities },
   { id: 'progress', href: '#/progress', label: 'Progress', icon: ICONS.progress },
-  { id: 'lucy', href: '#/lucy', label: getDog().name, icon: ICONS.dog },
+  { id: 'profile', href: '#/profile', label: 'Profile', icon: ICONS.profile },
 ];
 
 const app = document.getElementById('app');
@@ -85,7 +93,7 @@ function match(hash) {
 }
 
 function renderTabs(activeId) {
-  tabbar.innerHTML = tabs().map(
+  tabbar.innerHTML = TABS.map(
     (tab) => `
       <a href="${tab.href}" ${tab.id === activeId ? 'aria-current="page"' : ''}>
         ${tab.icon}
