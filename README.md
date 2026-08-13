@@ -180,6 +180,37 @@ ready-to-paste prompt plus target filename for every image the app still wants.
 Twelve illustrations currently cover fifty-odd distinct moments, so several are
 reused heavily: `dg-07` alone stands in for twelve.
 
+### Icons
+
+Every mark in `ICONS` in `js/ui.js` comes from [Lucide](https://lucide.dev),
+copyright the Lucide contributors, used under the ISC licence. Each entry names
+the Lucide icon it is drawn from in a comment above it, so a mark can be
+re-fetched or swapped without guessing.
+
+They are copied in rather than installed. There is no build step here and the
+service worker precaches the app for offline use, so a package or a CDN link
+would break both. Only the geometry is copied — the `<svg>` wrapper is ours,
+because the stroke, cap and join come from CSS at each place a mark is used. To
+add one:
+
+    curl -s https://unpkg.com/lucide-static@1.31.0/icons/<name>.svg
+
+and paste the child elements into a `<svg viewBox="0 0 24 24">` wrapper. Pin the
+version in the URL so a later Lucide redraw does not silently change a mark you
+have already checked at 17 px.
+
+A handful of marks live in `css/app.css` as data-URI backgrounds instead — the
+check on a completed chip, the chevrons on a details row, the caution triangle —
+because a pseudo-element draws them rather than a view placing them. Those are
+Lucide's geometry too.
+
+The marks were hand-drawn until 1.99.2. They were drawn to Feather's
+construction, which is what Lucide inherited, so the switch was a change of hand
+rather than of house style. What forced it: the profile tab wanted a dog, four
+hand-drawn attempts all read as crude at 24 px, and once one mark came from a
+set that draws them properly the rest had to follow or it would have read as one
+good icon among fifteen homemade ones.
+
 ## Setting up a new client
 
 The install is two things: `js/config.js` (the dog, the handler, and

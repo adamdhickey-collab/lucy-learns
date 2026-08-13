@@ -2093,11 +2093,26 @@ details.disclosure .disclosure-body {
   animation: mark-settle 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* The dash has to be at least as long as the longest path it is drawing, or
+   the pattern repeats and the mark finishes with a permanent gap in it —
+   48 units of ink, 48 of nothing, then ink again. The check is 22.6 units and
+   was always fine; the caution shield is 58.8, and 48 sheared a piece out of
+   its lower edge that never filled in.
+
+   Measured with getTotalLength() rather than guessed, and given its own value
+   rather than raising both, because the dash length is also the draw speed:
+   a path finishes at (dash − length) / dash through the animation, so lifting
+   the check to 60 would have it land at 62% and then sit still for the rest. */
 .recommend .mark svg polyline,
 .recommend .mark svg path {
   stroke-dasharray: 48;
   stroke-dashoffset: 48;
   animation: mark-draw 0.45s cubic-bezier(0.65, 0, 0.35, 1) 0.22s forwards;
+}
+
+.recommend .mark--caution svg path {
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
 }
 
 .recommend h1 {

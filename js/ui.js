@@ -38,154 +38,275 @@ export function html(strings, ...values) {
 /** Concatenate a list of already-rendered chunks. */
 export const join = (parts) => raw(parts.map(renderValue).join(''));
 
+/**
+ * Every mark in the app, and all of them from Lucide.
+ *
+ * https://lucide.dev — copyright the Lucide contributors, ISC licence, credited
+ * in the README. The Lucide name each entry is drawn from is named in its
+ * comment, so a mark can be re-fetched or swapped without guessing.
+ *
+ * These used to be hand-drawn. They were drawn to Feather's construction — a
+ * 24px grid, a 1.75px stroke, round caps and joins, no fill — which is the same
+ * construction Lucide inherited, so the switch is a change of hand rather than
+ * of house style. The reason for making it was the profile dog: I drew four
+ * attempts at one and the best of them still read as crude at 24px. Once one
+ * icon came from a set that draws them properly, every icon had to, or the
+ * set would read as one good mark among fifteen homemade ones.
+ *
+ * They are copied in, not installed. There is no build step here and the
+ * service worker precaches the app for offline use, so a package or a CDN link
+ * would break both. Only the geometry is copied: the wrappers are ours, because
+ * the stroke, the cap and the join come from CSS at each place a mark is used —
+ * the tab bar wants 1.75 and 2.25 when current, the route nodes want their own.
+ *
+ * A handful of marks — the check on a completed chip, the chevrons on a
+ * details row, the caution triangle — live in css/app.css as data-URI
+ * backgrounds instead, because they are drawn by a pseudo-element rather than
+ * placed by a view. Those were already Lucide's geometry and are left alone.
+ */
 export const ICONS = {
-  today: '<svg viewBox="0 0 24 24"><path d="M12 3v2M5 6l1.4 1.4M3 13h2M19 13h2M17.6 7.4 19 6"/><path d="M8 20h8"/><path d="M9 17a5 5 0 1 1 6 0 2 2 0 0 0-.8 1.6V19H9.8v-.4A2 2 0 0 0 9 17z"/></svg>',
-  activities:
-    '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h4"/></svg>',
-  progress:
-    '<svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="m7 15 3.5-4 3 2.5L20 7"/></svg>',
-  // Dog head with floppy ears. Reads as Lucy at 24px without a paw print.
-  dog:
-    '<svg viewBox="0 0 24 24">' +
-    '<path d="M8 7.4C6.4 6.8 4.8 7.9 4.8 10c0 2 1.3 3.6 3.2 4"/>' +
-    '<path d="M16 7.4c1.6-.6 3.2.5 3.2 2.6 0 2-1.3 3.6-3.2 4"/>' +
-    '<path d="M8 7.2A6.6 6.6 0 0 1 12 6c1.5 0 2.9.4 4 1.2v5.4a4.5 4.5 0 0 1-1.9 3.7l-1 .7a2 2 0 0 1-2.2 0l-1-.7A4.5 4.5 0 0 1 8 12.6z"/>' +
-    '<path d="M10.3 11h.01M13.7 11h.01"/>' +
-    '</svg>',
-  // Profile — a whole dog, side on.
-  //
-  // Third attempt at this tab's mark. An ID tag failed cold-reading, and a paw
-  // read as a paw but not as "the dog's page". This is the dog.
-  //
-  // Solid, and composed of overlapping primitives rather than one traced
-  // outline. Both parts of that are deliberate. At 24px an outlined dog is
-  // four legs, two ears and a tail rendered in 1.75px stroke, which closes up
-  // into a scribble — the same failure the star icon's comment records for an
-  // outlined paw at 15px. A filled silhouette has no interior lines to lose.
-  // And because the shapes are filled in one colour, overlapping them unions
-  // them visually, so an ellipse, a circle and four rounded rectangles make a
-  // dog without anybody having to write a single continuous path around it.
-  //
-  // `icon--solid` is the existing opt-out that lets the tab bar's stroke rules
-  // step aside; the star uses it for the same reason.
-  profile:
-    '<svg viewBox="0 0 24 24" class="icon--solid">' +
-    '<ellipse cx="11" cy="13" rx="6" ry="3.4"/>' +
-    '<rect x="13.9" y="9.2" width="3.6" height="4.6" rx="1.4"/>' +
-    '<circle cx="18" cy="9.5" r="3.15"/>' +
-    '<rect x="19.4" y="9.4" width="3.4" height="2.7" rx="1.35"/>' +
-    '<path d="M16.35 6.6 15.6 3.7c-.1-.4.3-.7.7-.5l2.5 1.5z"/>' +
-    '<rect x="14.4" y="14.6" width="2.3" height="5.6" rx="1.15"/>' +
-    '<rect x="6.4" y="14.6" width="2.3" height="5.6" rx="1.15"/>' +
-    '<path d="M5.3 11.7c-1.8-.5-2.9-2.1-2.6-3.7.1-.6.9-.7 1.1-.1.4 1.1 1.3 1.9 2.4 2.1z"/>' +
-    '</svg>',
-  back: '<svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>',
-  close: '<svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>',
-  plus: '<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
-  spark:
-    '<svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M3 12h3M18 12h3M4.9 19.1 7 17M17 7l2.1-2.1"/><circle cx="12" cy="12" r="3"/></svg>',
+  // --- the four tabs -------------------------------------------------------
+  // These four are the only marks a household sees on every screen, so they
+  // have to stay apart from each other at a glance and at 24px.
 
-  // The end of the route. A sun said "nice day" rather than "this is what you
-  // are working towards", and the paw that replaced it was five separate
-  // shapes trying to survive at 15px in the Today strip — at that size the
-  // toes closed up and it read as a blob.
-  //
-  // A star is one shape, it is the only solid mark in a set of line-work, and
-  // "the star at the end" needs no explaining. Solid is the point: the marks
-  // before it are outlines of things still to be done, and this one is filled
-  // because it is the prize. It is drawn `class="icon--solid"` so the stroke
-  // rules that every other icon lives by can step aside for it — a 2px stroke
-  // on a filled star swells the points until they touch.
+  // Today — `lightbulb`. The idea for today, not the date; a calendar page
+  // would promise a schedule the app does not keep.
+  today:
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>' +
+    '<path d="M9 18h6"/>' +
+    '<path d="M10 22h4"/>' +
+    '</svg>',
+
+  // Activities — `clipboard-list`. A plain panel of lines read as a document;
+  // the clip and the bulleted rows read as the list of things to work through.
+  activities:
+    '<svg viewBox="0 0 24 24">' +
+    '<rect width="8" height="4" x="8" y="2" rx="1" ry="1"/>' +
+    '<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>' +
+    '<path d="M12 11h4"/><path d="M12 16h4"/>' +
+    '<path d="M8 11h.01"/><path d="M8 16h.01"/>' +
+    '</svg>',
+
+  // Progress — `chart-line`. The same two axes and rising line as before,
+  // with the axis drawn as one cornered path rather than two crossing strokes.
+  progress:
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M3 3v16a2 2 0 0 0 2 2h16"/>' +
+    '<path d="m19 9-5 5-4-4-3 3"/>' +
+    '</svg>',
+
+  // Profile — `dog`. Fourth attempt at this tab's mark and the first not drawn
+  // here. An ID tag failed cold-reading, a paw read as a paw but not as "the
+  // dog's page", and the silhouette I drew to replace it read as a dog but a
+  // crude one: the ear looked detached and the muzzle merged into the skull.
+  // This is the mark that started the switch.
+  profile:
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M11.25 16.25h1.5L12 17z"/>' +
+    '<path d="M16 14v.5"/>' +
+    '<path d="M4.42 11.247A13.152 13.152 0 0 0 4 14.556C4 18.728 7.582 21 12 21s8-2.272 8-6.444a11.702 11.702 0 0 0-.493-3.309"/>' +
+    '<path d="M8 14v.5"/>' +
+    '<path d="M8.5 8.5c-.384 1.05-1.083 2.028-2.344 2.5-1.931.722-3.576-.297-3.656-1-.113-.994 1.177-6.53 4-7 1.923-.321 3.651.845 3.651 2.235A7.497 7.497 0 0 1 14 5.277c0-1.39 1.844-2.598 3.767-2.277 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.855-1.45-2.239-2.5"/>' +
+    '</svg>',
+
+  // --- chrome --------------------------------------------------------------
+
+  // `chevron-left`, `x`, `plus`, `arrow-right`. Already identical to what was
+  // here — Feather and Lucide draw these the same way, which is the clearest
+  // evidence the two hands agree on construction.
+  back: '<svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>',
+  close: '<svg viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>',
+  plus: '<svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></svg>',
+  arrow: '<svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>',
+
+  // The insight row's mark — `sparkles`. What was here was a sun with rays,
+  // which is very nearly the lightbulb the Today tab now uses; two radiant
+  // marks on one screen were reading as the same thing. This one does not.
+  spark:
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/>' +
+    '<path d="M20 2v4"/><path d="M22 4h-4"/>' +
+    '<circle cx="4" cy="20" r="2"/>' +
+    '</svg>',
+
+  // The end of the route — `star`. Solid is the point: the marks before it are
+  // outlines of things still to be done, and this one is filled because it is
+  // the prize. `icon--solid` is what lets the stroke rules every other icon
+  // lives by step aside, since a 2px stroke on a filled star swells the points
+  // until they touch. Lucide's star has rounded joins built into the path, so
+  // it survives the fill better than the sharp-cornered one it replaces.
   star:
     '<svg viewBox="0 0 24 24" class="icon--solid">' +
-    '<path d="M12 3.1 14.29 9.4 21.04 9.66 15.71 13.81 17.58 20.29 12 16.5 6.42 20.29 8.29 13.81 2.96 9.66 9.71 9.4Z"/>' +
+    '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>' +
     '</svg>',
-  check: '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
+
+  // `check`. One path rather than a polyline, which the session-complete
+  // draw-on animation handles either way — it dashes `svg path, svg polyline`.
+  check: '<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>',
+
+  // `trash-2`.
   trash:
-    '<svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M10 11v6M14 11v6"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>',
-  arrow: '<svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>',
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M10 11v6"/><path d="M14 11v6"/>' +
+    '<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>' +
+    '<path d="M3 6h18"/>' +
+    '<path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>' +
+    '</svg>',
+
+  // The trainer summary — `book-open`. The old mark was a book seen from the
+  // side with one visible cover, which at 20px read as a filled rectangle.
   book:
-    '<svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H19v3H6.5A2.5 2.5 0 0 1 4 20.5z"/></svg>',
-  clock:
-    '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M12 5v16"/>' +
+    '<path d="M20.001 19A2 2 0 0 0 22 17V5a2 2 0 0 0-1.999-2L16 3.002A5 5 0 0 0 12 5a5 5 0 0 0-4-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 1.999 2H8a5 5 0 0 1 4 2 5 5 0 0 1 4-2z"/>' +
+    '</svg>',
+
+  // The safety note — `shield-alert`. It stands opposite `check` in the
+  // player's step rail, so it has to read as "mind this", not as "protected":
+  // the bar and dot inside say that where a plain shield did not.
   shield:
-    '<svg viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.4 3 8.5 7 10 4-1.5 7-5.6 7-10V6l-7-3z"/><path d="M12 9v4"/></svg>',
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>' +
+    '<path d="M12 8v4"/><path d="M12 16h.01"/>' +
+    '</svg>',
 
   // --- the four activities of the door program ----------------------------
   // One mark per activity, used wherever that activity appears: the route on
-  // the welcome, the strip on Today, and the rail on the program map. The
-  // number it replaced said only "which one", and said it in three different
-  // shapes; the mark says which one it is.
+  // the welcome, the strip on Today, and the rail on the program map.
   //
   // They have to stay apart from each other at 18px, so each is a different
-  // silhouette rather than a different detail: waves, a hand, a low bed, an
-  // upright door.
+  // silhouette rather than a different detail: a sound, a hand, a bed, a door.
 
-  // Sound — rings coming off a point. Not a bell, which reads as a
-  // notification rather than a doorbell.
+  // Sound — `volume-2`. A source with two arcs coming off it, which is what
+  // was drawn here by hand. Deliberately not `bell-ring`: a bell in an app
+  // reads as a notification before it reads as a doorbell.
   'act-sound':
-    '<svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="2"/><path d="M11.5 8.5a5 5 0 0 1 0 7"/><path d="M15.5 5.5a10 10 0 0 1 0 13"/></svg>',
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/>' +
+    '<path d="M16 9a5 5 0 0 1 0 6"/>' +
+    '<path d="M19.364 18.364a9 9 0 0 0 0-12.728"/>' +
+    '</svg>',
 
-  // Stay — the flat raised palm the handler actually gives.
+  // Stay — `hand`. The flat raised palm the handler actually gives.
   'act-stay':
-    '<svg viewBox="0 0 24 24"><path d="M9.5 12.5V6a1.5 1.5 0 0 1 3 0v5.5"/><path d="M12.5 11.5V5a1.5 1.5 0 0 1 3 0v7"/><path d="M15.5 12V8.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-.5a5 5 0 0 1-3.5-1.5l-2.4-2.4a1.5 1.5 0 0 1 2.1-2.1l1.3 1.3"/></svg>',
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/>' +
+    '<path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/>' +
+    '<path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"/>' +
+    '<path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>' +
+    '</svg>',
 
-  // Place — a mat with a raised back, read as the bed she is sent to.
+  // Place — `bed-single`. The bed she is sent to, raised at both ends so it
+  // stays distinct from the flat mat of 'plan-mat'.
   'act-place':
-    '<svg viewBox="0 0 24 24"><rect x="3" y="12" width="18" height="7" rx="3"/><path d="M6.5 12V9.5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2V12"/></svg>',
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M3 20v-8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v8"/>' +
+    '<path d="M5 10V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4"/>' +
+    '<path d="M3 18h18"/>' +
+    '</svg>',
 
-  // Greet — the door itself, the thing the whole program is about.
+  // Greet — `door-closed`. The door itself, front on, which is the thing the
+  // whole program is about.
   'act-greet':
-    '<svg viewBox="0 0 24 24"><path d="M6 20V4.5a1.5 1.5 0 0 1 1.5-1.5h9A1.5 1.5 0 0 1 18 4.5V20"/><path d="M4 20h16"/><circle cx="14.5" cy="12" r="1"/></svg>',
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M10 12h.01"/>' +
+    '<path d="M18 20V6a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v14"/>' +
+    '<path d="M2 20h20"/>' +
+    '</svg>',
 
   // --- the six goals, and the activities named under them ------------------
-  // The library was the last place still showing bare titles. These sit at a
-  // heading rather than in a route, so they only have to be distinct from each
-  // other and from the four activity marks above — a door with a swing arc is
-  // not the plain door of 'act-greet', and a flat mat is not the raised bed of
-  // 'act-place'.
+  // These sit at a heading rather than in a route, so they only have to be
+  // distinct from each other and from the four activity marks above.
 
-  // Door routine — a door standing open, drawn in perspective so it is not the
-  // flat front-on door of 'act-greet'. The swing arc that was here as well put
-  // four separate marks inside 17px and the whole thing read as a smudge.
+  // Door routine — `door-open`. In perspective and standing open, so it is not
+  // the flat front-on door of 'act-greet'.
   'goal-door':
-    '<svg viewBox="0 0 24 24"><path d="M8 21V5.4a1 1 0 0 1 1.3-1l7 2a1 1 0 0 1 .7 1V21"/><path d="M3.5 21h17"/><circle cx="10.5" cy="13.5" r="1"/></svg>',
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M11 20H2"/>' +
+    '<path d="M11 4.562v16.157a1 1 0 0 0 1.242.97L19 20V5.562a2 2 0 0 0-1.515-1.94l-4-1A2 2 0 0 0 11 4.561z"/>' +
+    '<path d="M11 4H8a2 2 0 0 0-2 2v14"/>' +
+    '<path d="M14 12h.01"/>' +
+    '<path d="M22 20h-3"/>' +
+    '</svg>',
 
-  // Calm greetings — two people meeting, no door involved.
+  // Calm greetings — `users`. Two people meeting, no door involved.
   'goal-greeting':
-    '<svg viewBox="0 0 24 24"><circle cx="8.5" cy="8" r="2.6"/><circle cx="16" cy="9.5" r="2.2"/><path d="M3.5 19a5 5 0 0 1 10 0"/><path d="M14 19a4.2 4.2 0 0 1 6.6-3.4"/></svg>',
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>' +
+    '<path d="M16 3.128a4 4 0 0 1 0 7.744"/>' +
+    '<path d="M22 21v-2a4 4 0 0 0-3-3.87"/>' +
+    '<circle cx="9" cy="7" r="4"/>' +
+    '</svg>',
 
-  // Impulse control — waiting, made of time.
+  // Impulse control — `hourglass`. Waiting, made of time.
   'goal-impulse':
-    '<svg viewBox="0 0 24 24"><path d="M7 3h10"/><path d="M7 21h10"/><path d="M8 3c0 4 4 5.2 4 9s-4 5-4 9"/><path d="M16 3c0 4-4 5.2-4 9s4 5 4 9"/></svg>',
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M5 22h14"/><path d="M5 2h14"/>' +
+    '<path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/>' +
+    '<path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/>' +
+    '</svg>',
 
-  // Walks — the leash.
+  // Walks — `route`. A leash was the obvious drawing and the wrong one: it is
+  // a thin curve between two small blobs, and at 17px the curve closed up
+  // against the handle. A route is three shapes that stay apart at any size,
+  // and "the walk" is the thing being named, not the equipment.
   'goal-walk':
-    '<svg viewBox="0 0 24 24"><circle cx="7" cy="5.5" r="2.5"/><path d="M7 8c0 4.5 3 5 5.5 6.5S17 18 17 21"/><path d="M14.5 20.4a2.6 2.6 0 0 0 5 0c0-1.6-2.5-4-2.5-4s-2.5 2.4-2.5 4z"/></svg>',
+    '<svg viewBox="0 0 24 24">' +
+    '<circle cx="6" cy="19" r="3"/>' +
+    '<path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/>' +
+    '<circle cx="18" cy="5" r="3"/>' +
+    '</svg>',
 
-  // Settle and recovery — coming back down.
+  // Settle and recovery — `moon`. Coming back down.
   'goal-settle':
-    '<svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4 8.2 8.2 0 1 0 20 14.5z"/></svg>',
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/>' +
+    '</svg>',
 
-  // Foundation skills — what the rest is stacked on.
+  // Foundation skills — `layers`. What the rest is stacked on.
   'goal-foundation':
-    '<svg viewBox="0 0 24 24"><rect x="3" y="15" width="18" height="5" rx="1.3"/><rect x="6" y="9.5" width="12" height="5" rx="1.3"/><rect x="9" y="4" width="6" height="5" rx="1.3"/></svg>',
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/>' +
+    '<path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/>' +
+    '<path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/>' +
+    '</svg>',
 
-  // Four Paws on the Floor — keep it down.
+  // Four Paws on the Floor — `arrow-down-to-line`. Keep it down.
   'plan-fourpaws':
-    '<svg viewBox="0 0 24 24"><path d="M12 3v11"/><path d="m7.5 9.5 4.5 4.5 4.5-4.5"/><path d="M4 20h16"/></svg>',
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M12 17V3"/>' +
+    '<path d="m6 11 6 6 6-6"/>' +
+    '<path d="M19 21H5"/>' +
+    '</svg>',
 
-  // Settle on a Mat — a flat mat, not the raised bed of 'act-place'.
+  // Settle on a Mat — `bed`. Low and open at one end, against the two raised
+  // ends of 'act-place'. The pair keeps the flat-mat / raised-bed distinction
+  // the two hand-drawn marks were carrying.
   'plan-mat':
-    '<svg viewBox="0 0 24 24"><rect x="2.5" y="13" width="19" height="5.5" rx="2.2"/><path d="M6.5 13V11M12 13V11M17.5 13V11"/></svg>',
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M2 4v16"/>' +
+    '<path d="M2 8h18a2 2 0 0 1 2 2v10"/>' +
+    '<path d="M2 17h20"/>' +
+    '<path d="M6 8v9"/>' +
+    '</svg>',
 
-  // People Passing on Walks — someone going by.
+  // People Passing on Walks — `person-standing`. The one person you meet,
+  // against the two of 'goal-greeting' and the route of 'goal-walk'.
   'plan-walkpeople':
-    '<svg viewBox="0 0 24 24"><circle cx="8" cy="4.8" r="2.2"/><path d="M8 7.5v6M8 13.5 5.5 20M8 13.5 11 20M5 10h6"/><path d="M15 8h6M18 5l3 3-3 3"/></svg>',
+    '<svg viewBox="0 0 24 24">' +
+    '<circle cx="12" cy="5" r="1"/>' +
+    '<path d="m9 20 3-6 3 6"/>' +
+    '<path d="m6 8 6 2 6-2"/>' +
+    '<path d="M12 10v4"/>' +
+    '</svg>',
 
-  // Name Response — her name, said out loud.
+  // Name Response — `message-circle-more`. Her name, said out loud.
   'plan-name':
-    '<svg viewBox="0 0 24 24"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v6a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4A2.5 2.5 0 0 1 4 12.5z"/><path d="M9 9.5h.01M12 9.5h.01M15 9.5h.01"/></svg>',
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/>' +
+    '<path d="M8 12h.01"/><path d="M12 12h.01"/><path d="M16 12h.01"/>' +
+    '</svg>',
 };
 
 export const icon = (name) => raw(ICONS[name] || '');
