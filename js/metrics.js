@@ -1,7 +1,7 @@
 // Mastery, progression, and weekly summary calculations.
 
 import { LIVE_ACTIVITIES, activityById, levelOf } from './content.js';
-import { getState, chosenLevel } from './store.js';
+import { getState, chosenLevel, getDog } from './store.js';
 
 export const MASTERY = {
   learning: { id: 'learning', label: 'Learning', rank: 0, short: 'Learning' },
@@ -338,7 +338,7 @@ export function headlineInsight() {
   const prior = weekSummary(1);
 
   if (!week.count && !prior.count) {
-    return say('Log a few sessions and Lucy’s trends will show up here.');
+    return say(`Log a few sessions and ${getDog().name}’s trends will show up here.`);
   }
   // A watch behaviour getting worse outranks everything, including good news.
   //
@@ -367,7 +367,7 @@ export function headlineInsight() {
 
   if (week.successRate !== null && prior.successRate !== null) {
     const delta = Math.round((week.successRate - prior.successRate) * 100);
-    if (delta >= 5) return say(`Lucy’s success rate is up ${delta} points on last week.`);
+    if (delta >= 5) return say(`${getDog().name}’s success rate is up ${delta} points on last week.`);
     if (delta <= -5) return say(`Success dipped ${Math.abs(delta)} points this week. Try dropping back a level.`, 'watch');
   }
 

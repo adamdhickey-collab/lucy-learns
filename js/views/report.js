@@ -6,13 +6,12 @@
 import {
   ACTIVITIES,
   LIVE_ACTIVITIES,
-  DOG,
   INCIDENT_CONTEXTS,
   PROGRAMS,
   TRAINER,
 } from '../content.js';
 import { programProgress } from '../program.js';
-import { getState, exportSummary } from '../store.js';
+import { getState, exportSummary, getDog } from '../store.js';
 import {
   activityMastery,
   currentLevel,
@@ -21,6 +20,14 @@ import {
   relativeDay,
 } from '../metrics.js';
 import { html, join, badge, pct, reps, toast, focusHeading } from '../ui.js';
+
+// Filename-safe version of the dog's name. The CSV used to be named from a
+// hardcoded `DOG.id`, which was the literal string "lucy" for every install.
+const slug = (name) =>
+  String(name || 'dog')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '') || 'dog';
 
 // 14 days covers the common every-other-week lesson cadence by default.
 let rangeDays = 14;
@@ -66,7 +73,7 @@ function composeShareText(days) {
   const { sessions, incidents } = inRange(days);
   const rate = successRate(sessions);
   const lines = [
-    `${DOG.name} — training report, last ${days} days`,
+    `${getDog().name} — training report, last ${days} days`,
     `${sessions.length} practice session${sessions.length === 1 ? '' : 's'}` +
       (rate !== null
         ? `, ${pct(rate)} of ${repCount(sessions)} repetitions went well`
@@ -200,7 +207,7 @@ function render() {
     <div class="screen report">
       <div class="screen-head">
         <p class="eyebrow">For your next lesson</p>
-        <h1>${DOG.name}’s report</h1>
+        <h1>${getDog().name}’s report</h1>
         <p>Prepared for ${TRAINER.name} · everything below is from home practice.</p>
       </div>
 
@@ -328,7 +335,7 @@ export function downloadCsv() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `${DOG.id}-training-log-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.download = `${slug(getDog().name)}-training-log-${new Date().toISOString().slice(0, 10)}.csv`;
   document.body.appendChild(a);
   a.click();
   a.remove();
@@ -353,7 +360,7 @@ function mount(root, params, options = {}) {
       const text = composeShareText(rangeDays);
       if (navigator.share) {
         try {
-          await navigator.share({ title: `${DOG.name} — training report`, text });
+          await navigator.share({ title: `${getDog().name} — training report`, text });
           return;
         } catch {
           /* cancelled, or unsupported payload — fall through to the clipboard */

@@ -4,7 +4,12 @@
 
 // Who this install belongs to lives in config.js; re-exported here so views
 // keep a single import point for content and configuration alike.
-export { DOG, HANDLER, TRAINER } from './config.js';
+// TRAINER only. DOG and HANDLER used to be re-exported here and read directly
+// by six screens, which is what made the household a compile-time constant.
+// They are stored state now: import getDog / getPerson from store.js instead.
+// The re-export is gone rather than deprecated so that a missed call site is a
+// module error at load, not a screen quietly rendering the wrong dog.
+export { TRAINER } from './config.js';
 
 // ---------------------------------------------------------------------------
 // Images

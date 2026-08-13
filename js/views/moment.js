@@ -6,7 +6,7 @@ import {
   INCIDENT_HELPERS,
   RECOVERY_BANDS,
 } from '../content.js';
-import { addIncident, isStorageOk } from '../store.js';
+import { addIncident, getDog, isStorageOk } from '../store.js';
 import { html, join, icon, toast, focusOnNavigate, confirmSheet } from '../ui.js';
 
 let draft = null;
@@ -117,7 +117,7 @@ function render() {
           </div>
 
           <div class="result-group">
-            <h2>Lucy’s response</h2>
+            <h2>${getDog().name}’s response</h2>
             <div class="chips">
               ${join(
                 INCIDENT_RESPONSES.map(

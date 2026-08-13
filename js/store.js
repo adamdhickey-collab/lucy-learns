@@ -7,19 +7,42 @@ import {
   ASSISTANCE,
   BEHAVIORS,
   DEFAULT_COMMANDS,
-  DOG,
   INCIDENT_CONTEXTS,
   INCIDENT_HELPERS,
   INCIDENT_RESPONSES,
-  HANDLER,
   RECOVERY_BANDS,
 } from './content.js';
+// Imported as defaults, not as truth. Who the dog and the household are is
+// stored state now — see emptyState below — and config.js only supplies what a
+// brand new install starts from. Nothing outside this module reads them.
+import { DOG as DOG_DEFAULT, HANDLER as HANDLER_DEFAULT } from './config.js';
 
 const KEY = 'lucy-learns/v1';
 
 const emptyState = () => ({
   version: 1,
   commands: DEFAULT_COMMANDS.map((c) => ({ ...c })),
+
+  /**
+   * Who this install is about, and who is using it.
+   *
+   * These were module constants in config.js, which meant setting up the next
+   * household was a developer editing a file. They are state now, written by
+   * the welcome and editable afterwards, and config.js supplies the defaults
+   * a fresh install begins with.
+   *
+   * Migration needs no code: load() spreads stored state over emptyState(), so
+   * an install saved before this existed simply has no `dog` or `people` keys
+   * and inherits these. The consequence worth knowing is the other direction —
+   * once an install has run, editing config.js no longer changes it.
+   *
+   * `people` is an array with one entry rather than a single person, because
+   * every session and moment already records `completedByUserId`. The plural
+   * is the shape the data has always had; only the UI for it was missing.
+   */
+  dog: { ...DOG_DEFAULT },
+  people: [{ id: HANDLER_DEFAULT.id, name: HANDLER_DEFAULT.fullName }],
+  activePersonId: HANDLER_DEFAULT.id,
   sessions: [],
   incidents: [],
   levelOverrides: {}, // activityId -> level number chosen manually
@@ -81,20 +104,13 @@ export const subscribe = (fn) => {
 const uid = () =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 
-// --- handler ---------------------------------------------------------------
-
-// One handler, from config. Kept as a function so callers do not have to care
-// whether this is stored state or a constant, which is what it becomes again
-// the day a second person is added back.
-export const activeMember = () => HANDLER;
-
 // --- sessions --------------------------------------------------------------
 
 export function addSession(session) {
   const record = {
     id: uid(),
     dogId: 'lucy',
-    completedByUserId: HANDLER.id,
+    completedByUserId: state.activePersonId,
     startedAt: new Date().toISOString(),
     ...session,
   };
@@ -107,7 +123,7 @@ export function addIncident(incident) {
   const record = {
     id: uid(),
     dogId: 'lucy',
-    completedByUserId: HANDLER.id,
+    completedByUserId: state.activePersonId,
     occurredAt: new Date().toISOString(),
     ...incident,
   };
@@ -197,6 +213,41 @@ export function setNotes(text) {
   persist();
 }
 
+// --- who this is ------------------------------------------------------------
+
+/** The dog this install is about. */
+export const getDog = () => state.dog;
+
+/**
+ * The person currently using the app.
+ *
+ * Falls back to the first person rather than returning undefined: a state with
+ * an `activePersonId` pointing at somebody deleted is recoverable, and a
+ * greeting that throws is not.
+ */
+export const getPerson = () =>
+  state.people.find((p) => p.id === state.activePersonId) || state.people[0];
+
+export function setDog(patch) {
+  state.dog = { ...state.dog, ...patch };
+  persist();
+}
+
+/**
+ * Rename the active person. One field — `name`, as they typed it.
+ *
+ * The greeting takes the first word and the avatar takes first-plus-last
+ * initials, so "Fabiola Hickey" gives "Hello, Fabiola" over "FH" and "Fabiola"
+ * gives "Hello, Fabiola" over "F". Storing one string and deriving both is
+ * what stops a rename leaving stale initials behind.
+ */
+export function setPersonName(name) {
+  const person = getPerson();
+  if (!person) return;
+  person.name = name;
+  persist();
+}
+
 // --- demo data -------------------------------------------------------------
 
 export const isOnboarded = () => state.onboarded;
@@ -275,7 +326,7 @@ export function seedDemoSessions({ force = false } = {}) {
         assistanceUsed: assistance,
         context: { location: 'home', trigger: 'imaginary_guest', distractionLevel: level },
         note: '',
-        completedByUserId: HANDLER.id,
+        completedByUserId: state.activePersonId,
         demo: true,
       };
     })
@@ -294,7 +345,7 @@ export function seedDemoSessions({ force = false } = {}) {
       helpers: ['leash', 'treats'],
       recoveryBand: '30_60',
       note: 'Neighbor stopped by unannounced. She recovered once she was on her bed.',
-      completedByUserId: HANDLER.id,
+      completedByUserId: state.activePersonId,
       demo: true,
     },
   ];
@@ -320,9 +371,10 @@ const labelFrom = (list, id) => {
   return found ? found.label : id;
 };
 
-// Single-handler install: anything on record was run by them, including rows
-// written before the app stopped asking who was practicing.
-const memberName = () => HANDLER.name;
+// Whoever is active. Rows written before the app asked who was practising are
+// attributed to them too, which is right for a single-person install and the
+// best available guess for any other.
+const memberName = () => getPerson()?.name || '';
 
 const prettyDate = (iso) =>
   new Date(iso).toLocaleString(undefined, {
@@ -357,8 +409,8 @@ export function exportSummary() {
   const goodReps = sessions.reduce((n, s) => n + (s.successfulRepetitions || 0), 0);
 
   const lines = [
-    csvRow([`${DOG.name} — training log`]),
-    csvRow([DOG.breed]),
+    csvRow([`${getDog().name} — training log`]),
+    csvRow([getDog().breed || '']),
     csvRow([
       'Range',
       stamps.length ? `${prettyDate(stamps[0])} to ${prettyDate(stamps[stamps.length - 1])}` : 'No entries yet',

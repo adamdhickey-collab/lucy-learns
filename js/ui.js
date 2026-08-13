@@ -436,6 +436,20 @@ export function focusHeading(root, _params, options = {}) {
  * of a blank circle. Latin-only is a real limitation of taking the first
  * character of each word, but it matches the audience this install has.
  */
+/**
+ * The name to greet somebody by: the first word of whatever they typed.
+ *
+ * People write their name into one field and mean different amounts by it.
+ * "Fabiola Hickey" should still produce "Hello, Fabiola" — greeting somebody
+ * by their full name reads like a letter from a bank. Pairs with initialsOf,
+ * which takes the other end of the same string, so one stored value drives
+ * both and a rename cannot leave the two disagreeing.
+ */
+export function firstNameOf(name) {
+  const first = String(name || '').trim().split(/\s+/)[0];
+  return first || '';
+}
+
 export function initialsOf(fullName) {
   const parts = String(fullName || '')
     .trim()

@@ -7,22 +7,58 @@
 // the last-panel button copy all follow.
 
 import { IMAGES, PROGRAMS, TRAINER } from '../content.js';
-import { completeOnboarding, seedDemoSessions } from '../store.js';
+import { completeOnboarding, seedDemoSessions, setDog, setPersonName } from '../store.js';
 import { programProgress } from '../program.js';
 import { routePreview } from '../programui.js';
-import { html, join, icon, raw, focusOnNavigate, withTransition } from '../ui.js';
+import { html, join, icon, raw, initialsOf, focusOnNavigate, withTransition } from '../ui.js';
 
 let step = 0;
 
+/**
+ * What the setup screens are collecting, held here until the last screen.
+ *
+ * Nothing is written to the store until the household picks how to start, so
+ * abandoning the welcome half way leaves no trace — the same promise the demo
+ * choice already made.
+ */
+let draft = { person: '', dog: '', breed: '' };
+
 export const restart = () => {
   step = 0;
+  draft = { person: '', dog: '', breed: '' };
 };
+
+/**
+ * Suggestions, not a taxonomy. The field accepts anything typed into it.
+ *
+ * A single-select of two hundred breeds is the usual answer here and it is the
+ * wrong one: a third to a half of dogs in US homes are mixed, and rescues
+ * routinely arrive with a guess on the paperwork and nothing behind it. Those
+ * owners have to either pick something false or give up on the field.
+ *
+ * A datalist suggests without constraining — "lab" offers Labrador Retriever,
+ * and "some kind of terrier" is accepted exactly as typed. It can afford to be
+ * this relaxed because the answer is never computed with: breed is printed on
+ * the profile and in one CSV header and touches no threshold, no
+ * recommendation and no metric anywhere in the app.
+ */
+const BREEDS = [
+  'Mixed breed', 'Not sure', 'Australian Shepherd', 'Beagle', 'Bernese Mountain Dog',
+  'Border Collie', 'Boxer', 'Bulldog', 'Cavalier King Charles Spaniel', 'Chihuahua',
+  'Cocker Spaniel', 'Corgi', 'Dachshund', 'Dalmatian', 'Doberman', 'French Bulldog',
+  'German Shepherd', 'German Shorthaired Pointer', 'Golden Retriever', 'Great Dane',
+  'Greyhound', 'Havanese', 'Husky', 'Jack Russell Terrier', 'Labradoodle',
+  'Labrador Retriever', 'Maltese', 'Mastiff', 'Newfoundland', 'Pit Bull Terrier',
+  'Pomeranian', 'Poodle', 'Pug', 'Rottweiler', 'Schnauzer', 'Shar Pei', 'Shiba Inu',
+  'Shih Tzu', 'Staffordshire Bull Terrier', 'Vizsla', 'Weimaraner', 'Whippet',
+  'Yorkshire Terrier',
+];
 
 const PANELS = [
   {
     image: 'door-cover',
     eyebrow: 'Welcome',
-    title: 'Practice with Lucy, five minutes at a time',
+    title: 'Five minutes of practice at a time',
     body: `This turns The Canine Coach's handouts into short guided sessions, so you both practice the same way and can see whether it is working.`,
     note: 'It supports your trainer. It does not replace one.',
   },
@@ -39,7 +75,7 @@ const PANELS = [
     eyebrow: 'How a session goes',
     title: 'One instruction at a time',
     body: 'No handout to reread. Each step fills the screen with a picture, the exact words to say, and nothing else. You can run it one-handed with a leash in the other.',
-    note: 'Tap "Lucy is too excited" any time to make it easier.',
+    note: 'There is a button on every session that makes it easier, any time.',
   },
   {
     // The board, not a picture. It is the last thing before the choice to
@@ -54,8 +90,123 @@ const PANELS = [
   },
 ];
 
+// The story panels, then the two questions, then the start choice.
+const PERSON_STEP = PANELS.length;
+const DOG_STEP = PANELS.length + 1;
+const CHOICE_STEP = PANELS.length + 2;
+
+/** Shared chrome for the two question screens. */
+function setupScreen({ eyebrow, title, body, canContinue }) {
+  return html`
+    <div class="player welcome">
+      <div class="player-top">
+        <button class="btn btn--ghost" type="button" data-back>Back</button>
+        <span style="flex:1"></span>
+      </div>
+      <div class="player-scroll">
+        <div class="player-inner welcome-inner">
+          <div class="welcome-finish">
+            <p class="eyebrow">${eyebrow}</p>
+            <h1>${title}</h1>
+            ${body}
+          </div>
+        </div>
+      </div>
+      <div class="player-foot">
+        <button class="btn btn--lg btn--block" type="button" data-next ${canContinue ? '' : 'disabled'}>
+          Next
+        </button>
+      </div>
+    </div>
+  `;
+}
+
 function render() {
-  const isLast = step === PANELS.length;
+  if (step === PERSON_STEP) {
+    return setupScreen({
+      eyebrow: 'Setup',
+      title: 'Who is practising?',
+      canContinue: Boolean(draft.person.trim()),
+      body: html`
+        ${/* The avatar previews as they type. It is the only reason to ask for
+              a name in a field of its own rather than lumping it in with the
+              dog's: the initials are a consequence of the answer, and showing
+              them makes that a decision rather than something that happens
+              afterwards. */ ''}
+        <div class="field setup-field">
+          <label for="setup-person">Your name</label>
+          <div class="setup-with-avatar">
+            <input
+              id="setup-person"
+              type="text"
+              data-person
+              value="${draft.person}"
+              placeholder="Fabiola"
+              autocapitalize="words"
+              autocomplete="given-name"
+              enterkeyhint="next"
+            />
+            <span class="avatar avatar--preview" aria-hidden="true" data-initials>
+              ${initialsOf(draft.person)}
+            </span>
+          </div>
+          <p class="section-note">
+            The app greets you by your first name and puts your initials on the
+            avatar. Both are easy to change later.
+          </p>
+        </div>
+      `,
+    });
+  }
+
+  if (step === DOG_STEP) {
+    return setupScreen({
+      eyebrow: 'Setup',
+      title: 'Who are you training?',
+      canContinue: Boolean(draft.dog.trim()),
+      body: html`
+        <div class="field setup-field">
+          <label for="setup-dog">Their name</label>
+          <input
+            id="setup-dog"
+            type="text"
+            data-dog
+            value="${draft.dog}"
+            placeholder="Lucy"
+            autocapitalize="words"
+            ${/* Off, or the browser offers the human names it has saved for
+                  this person. */ ''}
+            autocomplete="off"
+            enterkeyhint="next"
+          />
+        </div>
+
+        <div class="field setup-field">
+          <label for="setup-breed">Breed <span class="setup-optional">optional</span></label>
+          <input
+            id="setup-breed"
+            type="text"
+            data-breed
+            value="${draft.breed}"
+            list="breed-list"
+            placeholder="Mixed breed, Labrador, not sure…"
+            autocapitalize="words"
+            autocomplete="off"
+            enterkeyhint="done"
+          />
+          <datalist id="breed-list">
+            ${join(BREEDS.map((b) => raw(`<option value="${b}"></option>`)))}
+          </datalist>
+          <p class="section-note">
+            However you would describe them. “Mixed” and “not sure” are perfectly
+            good answers.
+          </p>
+        </div>
+      `,
+    });
+  }
+
+  const isLast = step === CHOICE_STEP;
 
   if (isLast) {
     return html`
@@ -70,7 +221,7 @@ function render() {
               <p class="eyebrow">Ready</p>
               <h1>How do you want to start?</h1>
               <p class="lede" style="margin-top: var(--s-3)">
-                You can switch either way later from the Lucy tab.
+                You can switch either way later from the profile tab.
               </p>
 
               <button class="choice" type="button" data-choice="fresh">
@@ -153,9 +304,21 @@ function refresh(direction) {
 }
 
 function finish(withDemo) {
+  const person = draft.person.trim();
+  const dog = draft.dog.trim();
+  if (person) setPersonName(person);
+  if (dog) {
+    // `about` is cleared rather than kept. The default carries Lucy's
+    // temperament — "gets over-aroused around arrivals" — which is a claim
+    // about one specific dog, and setup never asks for it. Better an empty
+    // line on the profile than a description somebody else's app wrote about
+    // a dog it has never met. The profile renders it only when present.
+    setDog({ name: dog, breed: draft.breed.trim(), about: '' });
+  }
   if (withDemo) seedDemoSessions({ force: true });
   completeOnboarding();
   step = 0;
+  draft = { person: '', dog: '', breed: '' };
   location.hash = '#/today';
 }
 
@@ -169,14 +332,38 @@ function mount(root) {
   });
 
   on('[data-back]', 'click', () => {
-    step = Math.min(Math.max(0, step - 1), PANELS.length - 1);
+    // Clamp to the whole flow, not to the panels. This used to cap at
+    // PANELS.length - 1, which was right while the panels were everything
+    // after them; now Back from the dog screen has to reach the person screen.
+    step = Math.max(0, step - 1);
     refresh('back');
   });
 
+  // Skip is for the story, and lands on the first question rather than past
+  // it. The name is the one thing the app cannot invent for itself.
   on('[data-skip]', 'click', () => {
-    step = PANELS.length;
+    step = PERSON_STEP;
     refresh('forward');
   });
+
+  const field = (selector, key) =>
+    on(selector, 'input', (e) => {
+      draft[key] = e.currentTarget.value;
+      // Only the Next button and the avatar depend on this, so they are
+      // updated in place. Re-rendering on every keystroke would take the
+      // caret with it.
+      const next = root.querySelector('[data-next]');
+      if (next) {
+        const ready = step === PERSON_STEP ? draft.person.trim() : draft.dog.trim();
+        next.disabled = !ready;
+      }
+      const initials = root.querySelector('[data-initials]');
+      if (initials && key === 'person') initials.textContent = initialsOf(draft.person);
+    });
+
+  field('[data-person]', 'person');
+  field('[data-dog]', 'dog');
+  field('[data-breed]', 'breed');
 
   on('[data-choice]', 'click', (e) => {
     finish(e.currentTarget.dataset.choice === 'demo');

@@ -5265,3 +5265,53 @@ svg.icon--solid {
   height: auto;
   border: 0;
 }
+
+/* --- welcome setup questions ---------------------------------------------
+   The two screens that ask who this install is about. They reuse .field for
+   the label and input styling; only the spacing and the avatar preview are
+   new. */
+
+.setup-field {
+  margin-top: var(--s-5);
+  text-align: left;
+}
+
+.setup-field .section-note {
+  margin-top: var(--s-2);
+}
+
+/* "optional" as a word beside the label, rather than an asterisk on the two
+   fields that are not. Marking the exception is one mark on the screen; the
+   convention it replaces puts a mark on everything else. */
+.setup-optional {
+  margin-left: var(--s-2);
+  font-weight: 500;
+  font-size: var(--step--1);
+  color: var(--text-secondary);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* The name field and its live avatar, side by side. The avatar is the reason
+   this question gets a screen of its own. */
+.setup-with-avatar {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+
+.setup-with-avatar input {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Not a link, unlike the avatar on Today — a preview of a consequence. It is
+   aria-hidden, because a screen reader gets the name from the field it is
+   derived from and initials read aloud are noise. */
+.avatar--preview {
+  transition: opacity 160ms ease;
+}
+
+.avatar--preview:empty {
+  opacity: 0.35;
+}

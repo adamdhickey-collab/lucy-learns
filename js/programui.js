@@ -4,7 +4,8 @@
 // program screen itself, so the household sees the same map wherever they meet
 // it and does not have to re-learn the shape.
 
-import { DOG, IMAGES } from './content.js';
+import { IMAGES } from './content.js';
+import { getDog } from './store.js';
 import { STAGE, programPitch, setupDone } from './program.js';
 import { MASTERY_LADDER } from './metrics.js';
 import { getState } from './store.js';
@@ -130,7 +131,7 @@ function setupNode() {
         <span class="stage-top"><strong>Before you start</strong></span>
         <span class="stage-purpose">
           ${cues} cue words are set and ready to use. Change any of the wording on the
-          ${DOG.name} tab and every activity updates.
+          ${getDog().name} tab and every activity updates.
         </span>
       </span>
     </div>

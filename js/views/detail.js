@@ -1,13 +1,12 @@
 import {
   activityBySlug,
-  DOG,
   isAvailable,
   IMAGES,
   programById,
   stepsForLevel,
   TRAINER,
 } from '../content.js';
-import { setLevel, resolveCue, sessionsFor } from '../store.js';
+import { setLevel, resolveCue, sessionsFor, getDog } from '../store.js';
 import {
   currentLevel,
   masteryFor,
@@ -224,7 +223,7 @@ function render({ slug }) {
             <p class="section-note" style="margin-top: var(--s-4)">
               ${history.length
                 ? 'Reliable takes 90% across three sessions, on three different days, without heavy help.'
-                : `Every level starts here. Run a session and ${DOG.name} climbs.`}
+                : `Every level starts here. Run a session and ${getDog().name} climbs.`}
             </p>
           </div>
         </div>

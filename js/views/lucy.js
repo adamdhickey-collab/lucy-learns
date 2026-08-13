@@ -1,4 +1,4 @@
-import { DOG, PROGRAMS, TRAINER } from '../content.js';
+import { PROGRAMS, TRAINER } from '../content.js';
 import { downloadCsv } from './report.js';
 import {
   getState,
@@ -7,6 +7,7 @@ import {
   hasDemoData,
   clearDemoData,
   clearAll,
+  getDog,
   startFresh,
   seedDemoSessions,
 } from '../store.js';
@@ -15,6 +16,7 @@ import { APP_VERSION } from '../version.js';
 import { html, join, icon, focusHeading, toast, confirmSheet } from '../ui.js';
 
 function render() {
+  const dog = getDog();
   const state = getState();
   const program = PROGRAMS[0];
 
@@ -29,16 +31,21 @@ function render() {
     <div class="screen">
       <div class="screen-head">
         <p class="eyebrow">Profile</p>
-        <h1>${DOG.name}</h1>
+        <h1>${dog.name}</h1>
       </div>
 
       <div class="card">
         <div class="profile">
-          <img src="${DOG.photo}" alt="Lucy, a black Lab and German Wirehaired Pointer mix." />
+          ${/* The alt names the dog in state rather than hardcoding "Lucy",
+                but still describes the picture that is actually there — the
+                illustration is one specific dog and does not change with the
+                name. Saying so is more use to a screen reader than pretending
+                otherwise. */ ''}
+          <img src="${dog.photo}" alt="${dog.name}, a black Lab and German Wirehaired Pointer mix." />
           <div>
-            <h2>${DOG.name}</h2>
-            <p>${DOG.breed}</p>
-            <p>${DOG.about}</p>
+            <h2>${dog.name}</h2>
+            ${dog.breed ? html`<p>${dog.breed}</p>` : ''}
+            ${dog.about ? html`<p>${dog.about}</p>` : ''}
           </div>
         </div>
       </div>

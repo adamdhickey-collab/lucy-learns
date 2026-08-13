@@ -1,6 +1,6 @@
-import { HANDLER, IMAGES, programById } from '../content.js';
+import { IMAGES, programById } from '../content.js';
 import { requestQuickStart } from './player.js';
-import { getState } from '../store.js';
+import { getState, getPerson } from '../store.js';
 import {
   suggestedActivity,
   headlineInsight,
@@ -15,7 +15,7 @@ import {
 // answer a question Today does not ask.
 import { programProgress } from '../program.js';
 import { programStrip } from '../programui.js';
-import { html, raw, join, icon, badge, initialsOf, focusHeading } from '../ui.js';
+import { html, raw, join, icon, badge, initialsOf, firstNameOf, focusHeading } from '../ui.js';
 
 // One greeting, at any hour. The three time-of-day variants were a clock
 // reading dressed up as warmth: they changed the heading three times a day
@@ -26,6 +26,7 @@ const greeting = () => 'Hello';
 
 function render() {
   const state = getState();
+  const person = getPerson();
   const insight = headlineInsight();
   // suggestedActivity() scores every open activity by the mastery of its
   // current level. That is a sensible ranking on its own, but the strip
@@ -81,11 +82,11 @@ function render() {
             decoration. */ ''}
       <div class="today-head">
         <div>
-          <h1>${greeting()}, ${HANDLER.name}</h1>
+          <h1>${greeting()}, ${firstNameOf(person.name)}</h1>
           ${week.count ? '' : html`<p>The first session takes about five minutes</p>`}
         </div>
-        <a class="avatar" href="#/lucy" aria-label="${HANDLER.fullName}, profile and settings">
-          <span aria-hidden="true">${initialsOf(HANDLER.fullName)}</span>
+        <a class="avatar" href="#/lucy" aria-label="${person.name}, profile and settings">
+          <span aria-hidden="true">${initialsOf(person.name)}</span>
         </a>
       </div>
 

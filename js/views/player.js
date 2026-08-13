@@ -19,6 +19,7 @@ import {
 } from '../content.js';
 import {
   addSession,
+  getDog,
   isStorageOk,
   resolveCue,
   setLevel,
@@ -253,7 +254,7 @@ function stepScreen(activity, level) {
 
         <div class="panic-slot">
           <button class="btn btn--caution panic" type="button" data-panic>
-            Lucy is too excited
+            ${getDog().name} is too excited
           </button>
         </div>
       </div>
@@ -350,7 +351,7 @@ function practiceScreen(activity, level) {
 
         <div class="panic-slot">
           <button class="btn btn--caution panic" type="button" data-panic>
-            Lucy is too excited
+            ${getDog().name} is too excited
           </button>
         </div>
       </div>
@@ -407,7 +408,7 @@ function resultScreen(activity, level) {
     <div class="player-scroll">
       <div class="player-inner">
         <p class="step-count">${activity.title} · Level ${level.number}</p>
-        <h1 class="step-instruction">How did Lucy do?</h1>
+        <h1 class="step-instruction">How did ${getDog().name} do?</h1>
         <p class="section-note">
           One tap saves it. You can add detail after.
         </p>
