@@ -115,6 +115,14 @@ function doRender({ keepScroll = false } = {}) {
   currentHash = hash;
 
   const scrollY = window.scrollY;
+  // Entrance animations are for arrivals, not refreshes. The nav-fresh class
+  // gates every screen-entrance rule in app.css: present when this render is
+  // a navigation, absent when it is refreshApp() re-painting the same screen
+  // after an edit — without the gate, toggling Edit on the log would replay
+  // the whole cascade, and a screen that performs its entrance twice reads as
+  // a glitch, not a welcome. On the body rather than #app because the tab bar
+  // sits outside #app and its active-tab pop wants the same gate.
+  document.body.classList.toggle('nav-fresh', !keepScroll);
   app.innerHTML = String(view.render(params));
   renderTabs(view.tab);
   tabbar.hidden = Boolean(view.fullscreen);

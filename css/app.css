@@ -87,6 +87,16 @@
   --r-lg: 20px;
   --r-pill: 999px;
 
+  /* --- motion ----------------------------------------------------------- */
+  /* Two curves cover every animation in the app. --spring overshoots and
+     settles — it is the arrival curve, for things that should land with a
+     little life (tab icons, seals, the tally's kick already uses its own
+     tuned copy). --ease-soft decelerates without overshoot — the departure
+     and drift curve, for entrances that should be felt rather than seen.
+     Anything needing a third curve should argue for it here first. */
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
+
   --shadow-card: 0 1px 2px rgba(35, 50, 57, 0.05);
   --shadow-lift: 0 6px 20px rgba(35, 50, 57, 0.1);
 
@@ -5050,4 +5060,229 @@ svg.icon--solid {
 
 .level-moved .btn {
   margin-top: var(--s-4);
+}
+
+/* ---------------------------------------------------------------------------
+   Screen entrances and celebration moments.
+
+   All of it is gated behind body.nav-fresh, which app.js sets only when a
+   render is a navigation — refreshApp() re-painting the same screen after an
+   edit drops the class, so nothing here ever replays behind a toggle. The
+   player is untouched by design: its phases re-render on every rep tap, and
+   its feedback (the tally kicks, the drawn checkmark, the growing band) is
+   already tuned per element. This section is for the screens around it.
+
+   Two rules of the house apply throughout. Entrances animate transform and
+   opacity only, and every hidden state lives in a keyframe's `from` — never
+   in a base rule — so the reduced-motion block at the bottom can kill the
+   lot with `animation: none` and leave everything sitting visible in its
+   final place with no cleanup. */
+
+/* Sections drift up as a screen arrives, each a beat behind the last. Eight
+   pixels and 260ms: felt, not watched. The cap at nth-child(6) keeps a long
+   screen from making its tail wait — anything below the fold just arrives
+   with the sixth beat. */
+.nav-fresh .screen > * {
+  animation: screen-rise 260ms var(--ease-soft) both;
+}
+
+.nav-fresh .screen > :nth-child(2) { animation-delay: 40ms; }
+.nav-fresh .screen > :nth-child(3) { animation-delay: 80ms; }
+.nav-fresh .screen > :nth-child(4) { animation-delay: 120ms; }
+.nav-fresh .screen > :nth-child(5) { animation-delay: 160ms; }
+.nav-fresh .screen > :nth-child(n + 6) { animation-delay: 200ms; }
+
+@keyframes screen-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The active tab acknowledges the switch: one springy dip-and-recover on the
+   icon that just became current. Gated on nav-fresh so an in-place refresh
+   (Edit toggled on the log) does not make the tab jump about. */
+.nav-fresh .tabbar a[aria-current='page'] svg {
+  animation: tab-pop 380ms var(--spring);
+}
+
+@keyframes tab-pop {
+  0% {
+    transform: scale(0.82);
+  }
+  55% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+/* The practice-frequency bars grow out of the baseline, left to right. scaleY
+   because the heights are inline styles the animation must not fight; the
+   stagger makes seven bars read as one gesture rather than seven events. */
+.nav-fresh .bars .bar i {
+  animation: bar-grow 420ms var(--ease-soft) both;
+  transform-origin: bottom;
+}
+
+.nav-fresh .bars .bar:nth-child(2) i { animation-delay: 40ms; }
+.nav-fresh .bars .bar:nth-child(3) i { animation-delay: 80ms; }
+.nav-fresh .bars .bar:nth-child(4) i { animation-delay: 120ms; }
+.nav-fresh .bars .bar:nth-child(5) i { animation-delay: 160ms; }
+.nav-fresh .bars .bar:nth-child(6) i { animation-delay: 200ms; }
+.nav-fresh .bars .bar:nth-child(7) i { animation-delay: 240ms; }
+
+@keyframes bar-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* The insight's spark turns in as the banner settles — one twinkle, late
+   enough to be noticed after the headline is read, small enough to be missed
+   without loss. */
+.nav-fresh .insight svg {
+  animation: spark-turn 600ms var(--ease-soft) 260ms both;
+}
+
+@keyframes spark-turn {
+  from {
+    opacity: 0;
+    transform: rotate(-30deg) scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Level cleared: the seal lands with a spring, a ring washes out from behind
+   it, and six particles are thrown clear. This is the app's jackpot moment
+   and the one place a burst is earned — it renders once, on the done screen,
+   when a level is actually behind them.
+
+   The ring is a border scaling up through transparency rather than a filled
+   circle, so it reads as a shockwave and never covers the checkmark. */
+.cleared-seal {
+  animation: seal-land 480ms var(--spring) 100ms both;
+}
+
+@keyframes seal-land {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.cleared {
+  overflow: hidden;
+}
+
+.cleared-burst {
+  position: absolute;
+  /* Centred on the seal: the banner's top padding plus half the seal. */
+  top: calc(var(--s-5) + 22px);
+  left: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.cleared-burst::before {
+  content: '';
+  position: absolute;
+  top: -22px;
+  left: -22px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--primary);
+  animation: burst-ring 640ms var(--ease-soft) 180ms both;
+}
+
+@keyframes burst-ring {
+  from {
+    opacity: 0.55;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2.4);
+  }
+}
+
+.cleared-burst i {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  background: var(--primary);
+  /* Each particle flies along its own angle; the rotate spends the throw. */
+  animation: burst-fly 700ms var(--ease-soft) 180ms both;
+}
+
+.cleared-burst i:nth-child(2) { --fx: 34px;  --fy: -44px; background: var(--success); }
+.cleared-burst i:nth-child(3) { --fx: 52px;  --fy: 6px;   background: var(--caution-text); width: 5px; height: 5px; }
+.cleared-burst i:nth-child(4) { --fx: -34px; --fy: -44px; background: var(--caution-text); width: 5px; height: 5px; }
+.cleared-burst i:nth-child(5) { --fx: -52px; --fy: 6px;   background: var(--success); }
+.cleared-burst i:nth-child(6) { --fx: 0;     --fy: -58px; }
+.cleared-burst i:nth-child(1) { --fx: 14px;  --fy: -52px; }
+
+@keyframes burst-fly {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg);
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--fx, 20px), var(--fy, -40px)) rotate(140deg);
+  }
+}
+
+/* The finale (activity or program complete) rises like a section but with the
+   spring, because it is the bigger news and has earned the bigger landing. */
+.finale {
+  animation: finale-land 480ms var(--spring) 200ms both;
+}
+
+@keyframes finale-land {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-fresh .screen > *,
+  .nav-fresh .tabbar a[aria-current='page'] svg,
+  .nav-fresh .bars .bar i,
+  .nav-fresh .insight svg,
+  .cleared-seal,
+  .cleared-burst::before,
+  .cleared-burst i,
+  .finale {
+    animation: none;
+  }
+
+  /* The particles only exist to fly; parked, they would sit on the banner as
+     six specks. The end state of their animation is opacity 0 — mirror it. */
+  .cleared-burst {
+    display: none;
+  }
 }

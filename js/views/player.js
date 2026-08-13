@@ -620,7 +620,16 @@ function stageCelebration(gain) {
 function clearedBanner(gain, level) {
   if (!gain || gain.clearedLevel === null) return '';
   const stage = gain.stage;
+  // Six particles behind the seal, thrown outward once as the banner lands.
+  // Markup rather than pseudo-elements because six directions need six
+  // elements; aria-hidden because they are pure celebration and a screen
+  // reader has the "Level cleared" heading one line down. The done screen
+  // renders once per arrival, so this plays once — the one place a burst is
+  // earned, and the only place it happens.
   return html`<div class="cleared">
+    <span class="cleared-burst" aria-hidden="true">
+      <i></i><i></i><i></i><i></i><i></i><i></i>
+    </span>
     <div class="cleared-seal">${icon('check')}</div>
     <h2>Level ${level.number} cleared</h2>
     <p>${stage.cleared} of ${stage.total} in ${stage.activity.title}</p>
