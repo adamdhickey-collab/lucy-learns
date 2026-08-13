@@ -1,0 +1,265 @@
+DOG AVATARS — ten side profiles for the profile picker
+=======================================================================
+
+Ten 1:1 dog portraits, one flat shared background, cropped the way the
+app icon was cropped: one subject, big, centred, nothing that matters
+near the edge.
+
+  OUT ->  art/source/avatars/dog-01.png  …  dog-10.png   (1:1, 2048²)
+  IN  ->  img/avatars/dog-01.jpg          …  dog-10.jpg   (400²)
+
+
+-----------------------------------------------------------------------
+WHY THESE TEN
+-----------------------------------------------------------------------
+
+The brief was "the ten most common dog types". Straight popularity is
+the wrong list for a picker, and it is worth saying why before you spend
+ten generations on it.
+
+The AKC's most-registered breeds run roughly: French Bulldog, Labrador,
+Golden Retriever, German Shepherd, Poodle, Dachshund, English Bulldog,
+Beagle, Rottweiler, German Shorthaired Pointer. Four of those are near-
+duplicates of each other *as silhouettes* — an English Bulldog reads as
+a French Bulldog at 40px, a Rottweiler reads as a black-and-tan German
+Shepherd, a Shorthaired Pointer reads as a Labrador. Spending three of
+ten slots on those leaves whole categories of real dog with nothing to
+pick.
+
+It also misses the two largest populations in actual homes. Registration
+counts purebreds; roughly half of US dogs are mixed, and "pit bull type"
+is not one AKC breed so it does not appear at all despite being one of
+the most common dogs in the country.
+
+So these ten are chosen for **coverage of shape** — the question a person
+is really answering is "which of these looks most like my dog", not
+"which breed is mine". Between them they cover short-coat large,
+long-coat large, erect-ear working, flat-faced small, curly, elongated,
+small hound, medium herding mix, blocky short-coat, and toy fluffy.
+Almost any real dog lands near one.
+
+  01  Labrador Retriever, black     short coat, drop ears, broad head
+  02  Golden Retriever              long feathered coat, warm gold
+  03  German Shepherd               erect ears, black-and-tan saddle
+  04  French Bulldog                flat face, bat ears, compact
+  05  Poodle / doodle mix           dense curly coat, apricot
+  06  Dachshund, smooth red         long body, short legs, long muzzle
+  07  Beagle                        small tricolour hound, long ears
+  08  Border Collie type            semi-erect ears, black and white
+  09  Pit bull type / Staffordshire blocky head, rose ears, fawn
+  10  Shih Tzu type                 toy, long silky coat, short muzzle
+
+01 is the anchor and is deliberately Lucy's build, so the set ties to
+the art already in the app and a black-Lab household picks the dog they
+already know.
+
+
+-----------------------------------------------------------------------
+HOW TO RUN IT — THIS PART MATTERS MORE THAN THE PROMPTS
+-----------------------------------------------------------------------
+
+The icon and splash file tells you to start a fresh conversation for
+each image. **Do the opposite here, with one twist.** Those two images
+had nothing to do with each other. These ten have to look like one set,
+and ten independent generations will come back at ten different head
+sizes on ten different creams.
+
+  1. Generate 01 on its own. Iterate until it is right — the background
+     cream, the crop, the head size in frame. Everything else inherits
+     from it, so time spent here is spent ten times.
+
+  2. For 02 through 10: START A NEW CONVERSATION, and ATTACH THE
+     FINISHED 01 as a reference. Say "match this exactly: background
+     colour, crop, head size in frame, lighting, rendering."
+
+New conversation each time stops breed detail from the previous dog
+bleeding into the next one — ask for a Beagle right after a Dachshund in
+one thread and it will give you a long-backed Beagle. Attaching 01 each
+time is what keeps the set together without that drift.
+
+Check 02–10 against 01 side by side at 40px, not at full size. That is
+the size this is actually used at, and it is where a head half a size
+too big is obvious and a whisker count is not.
+
+
+-----------------------------------------------------------------------
+THE CROP, WHICH IS THE SAME PROBLEM THE ICON HAD
+-----------------------------------------------------------------------
+
+The icon note says: three sizes get cut from it, Android keeps only the
+middle 80%, so one subject, big, centred, nothing important near the
+edges. Same here, for a different reason — **the avatar is a circle.**
+
+A circle inscribed in a square throws away the corners: about 21% of the
+image is never seen. So the head has to sit inside a centred circle of
+roughly 80% of the width, and the corners have to be nothing but
+background. An ear tip or a muzzle in the corner is an ear tip or a
+muzzle that gets sliced off.
+
+That is also why the framing below is head-and-upper-chest rather than
+the whole dog. A full-body side profile at 40px in a circle is a dark
+smudge, which is exactly the failure the icon note records for the full
+scene at 180px.
+
+All ten face **right**. One direction or the set looks like a crowd
+arguing; right because in the person rows the avatar sits to the left of
+the name, so the dog looks into the text rather than off the edge.
+
+No collar on any of them. A purple collar would say "this is Lucy" on
+ten different dogs, and any other colour introduces a second brand
+colour to keep consistent across ten generations. Bare neck is one less
+thing to get wrong. If you want the collar, add it to 01 before you use
+it as the anchor and it will carry through the rest.
+
+
+=======================================================================
+SHARED BLOCK — paste this above every prompt, all ten times
+=======================================================================
+
+STYLE — Contemporary dog-training instruction manual illustration.
+Simplified vector-like forms, crisp edges, restrained detail. Mostly
+flat colour with subtle dimensional shading. Muted green, teal, blue and
+charcoal palette. Warm, approachable, premium, adult. No photorealism,
+no painterly texture, no childish cartoon treatment, no sketch lines.
+
+FRAMING — Square 1:1. Strict side profile, facing right. Head, neck and
+upper chest only; no legs, no body below the shoulder. The near eye is
+visible and open, ears fully within frame, muzzle pointing right and
+stopping well short of the right edge.
+
+PLACEMENT — The head is centred and occupies about 70% of the frame
+height. Everything that matters sits inside a centred circle covering
+80% of the width, because this image is masked to a circle: all four
+corners must be plain background and nothing else. Generous even margin
+on every side. No part of the dog touches or crosses any edge.
+
+BACKGROUND — One completely flat, uniform warm cream, hex #F6E6D0, edge
+to edge. No gradient, no vignette, no texture, no cast shadow, no
+ground, no horizon, no props, no scenery, no border, no frame, no circle
+drawn in the image.
+
+LIGHTING — Soft, even, from the upper left. Gentle dimensional shading
+to give the head form. No harsh shadows, no rim light, no highlights
+that read as gloss.
+
+The dog wears no collar, no harness, no tag, no bandana.
+
+No text, lettering, labels, watermarks, logos or UI of any kind.
+
+=======================================================================
+
+
+-----------------------------------------------------------------------
+01  LABRADOR RETRIEVER, BLACK  — the anchor, generate this one first
+-----------------------------------------------------------------------
+A black Labrador Retriever in side profile facing right. Glossy solid
+black short coat, broad skull, soft floppy drop ears hanging close to
+the cheek, a fairly wide muzzle, dark eye, calm and alert expression
+with the mouth closed. A small white blaze may show at the base of the
+chest. Adult dog, relaxed, ears at rest.
+
+
+-----------------------------------------------------------------------
+02  GOLDEN RETRIEVER
+-----------------------------------------------------------------------
+A Golden Retriever in side profile facing right. Long feathered coat in
+warm mid-gold, slightly wavy, with visible feathering at the ear and
+under the neck. Softer, rounder skull than a Labrador, drop ears set
+level with the eye, gentle expression, mouth closed. Adult dog, relaxed.
+
+
+-----------------------------------------------------------------------
+03  GERMAN SHEPHERD
+-----------------------------------------------------------------------
+A German Shepherd in side profile facing right. Large upright pointed
+ears standing clear of the head, long straight muzzle, black-and-tan
+saddle marking with a dark mask over the muzzle and a rich tan neck and
+cheek. Short dense coat with a slight ruff at the neck. Alert,
+composed, mouth closed. Adult dog.
+
+
+-----------------------------------------------------------------------
+04  FRENCH BULLDOG
+-----------------------------------------------------------------------
+A French Bulldog in side profile facing right. Very short flat muzzle
+with a pronounced stop, large upright rounded bat ears, heavy wrinkled
+brow, thick short neck, compact and stocky. Short smooth fawn coat with
+a darker mask. Mouth closed, calm expression. Adult dog. Keep the ears
+fully inside the frame with clear margin above them.
+
+
+-----------------------------------------------------------------------
+05  POODLE / DOODLE MIX
+-----------------------------------------------------------------------
+A curly-coated poodle-type dog in side profile facing right. Dense
+uniform apricot curls over the whole head and neck, longer curls at the
+ear so the ear reads as a soft rounded shape rather than a flap, a
+slightly rounded muzzle with a visible beard, dark eye and dark nose
+against the light coat. Soft, friendly, mouth closed. Adult dog.
+
+
+-----------------------------------------------------------------------
+06  DACHSHUND, SMOOTH RED
+-----------------------------------------------------------------------
+A smooth-coated red Dachshund in side profile facing right. Long
+tapering muzzle, domed skull, very long soft drop ears set high and
+hanging well below the jaw, short sleek coat in warm russet red. Fine
+neck. Bright dark eye, mouth closed. Adult dog. Head and neck only —
+do not try to show the long body.
+
+
+-----------------------------------------------------------------------
+07  BEAGLE
+-----------------------------------------------------------------------
+A Beagle in side profile facing right. Small hound with a broad flat
+skull, square muzzle, very long soft rounded drop ears reaching past the
+jaw, short tricolour coat — black saddle at the shoulder, tan over the
+head and cheek, white at the muzzle and throat. Soft pleading eye,
+mouth closed. Adult dog.
+
+
+-----------------------------------------------------------------------
+08  BORDER COLLIE TYPE
+-----------------------------------------------------------------------
+A Border Collie type dog in side profile facing right. Medium-length
+black and white coat with a clear white blaze up the muzzle and a white
+neck and chest, semi-erect ear — the base standing up and the tip
+folding forward — moderate tapering muzzle, feathering at the neck.
+Keen, focused expression, mouth closed. Adult dog.
+
+
+-----------------------------------------------------------------------
+09  PIT BULL TYPE / STAFFORDSHIRE
+-----------------------------------------------------------------------
+A pit bull type dog in side profile facing right. Broad blocky skull
+with pronounced cheek muscle, short deep muzzle, small natural rose ears
+folded back — natural uncropped ears, never cropped — thick short neck,
+very short smooth fawn coat with a white throat. Soft, calm, friendly
+expression with the mouth closed. Adult dog.
+
+
+-----------------------------------------------------------------------
+10  SHIH TZU TYPE
+-----------------------------------------------------------------------
+A small Shih Tzu type companion dog in side profile facing right. Long
+flowing silky coat in cream and warm grey falling over the neck, short
+pushed-in muzzle, large dark round eye, long heavily coated drop ears
+blending into the neck coat, small domed skull. Sweet, calm, mouth
+closed. Adult dog. Keep the flowing coat clear of all four corners.
+
+
+=======================================================================
+AFTER GENERATION
+=======================================================================
+
+Save each as art/source/avatars/dog-NN.png, then:
+
+  mkdir -p "img/avatars" && cd "/Users/ahickey/dev/claude-local/Lucy Learns" && for f in art/source/avatars/dog-*.png; do sips -Z 400 -s format jpeg -s formatOptions 80 "$f" --out "img/avatars/$(basename "$f" .png).jpg"; done
+
+400² because the existing brand mark `lucy-portrait` is 400² and this is
+used no larger. Ten at ~40 KB is ~400 KB, which the service worker
+precaches with everything else — worth checking against the current
+payload before adding a second set at a larger size.
+
+Then check all ten together, circle-masked, at 40px. That is the only
+review that counts.
