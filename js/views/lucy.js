@@ -8,16 +8,30 @@ import {
   clearDemoData,
   clearAll,
   getDog,
+  getPerson,
+  getPeople,
   startFresh,
   seedDemoSessions,
 } from '../store.js';
 import { restart as restartWelcome } from './welcome.js';
+import { openPersonSwitcher } from '../person.js';
 import { APP_VERSION } from '../version.js';
-import { html, join, icon, focusHeading, toast, confirmSheet } from '../ui.js';
+import {
+  html,
+  join,
+  icon,
+  focusHeading,
+  toast,
+  confirmSheet,
+  initialsOf,
+  firstNameOf,
+} from '../ui.js';
 
 function render() {
   const dog = getDog();
   const state = getState();
+  const person = getPerson();
+  const people = getPeople();
   const program = PROGRAMS[0];
 
   const cues = state.commands.map(
@@ -49,6 +63,35 @@ function render() {
           </div>
         </div>
       </div>
+
+      ${/* Directly under the dog, above everything about the training.
+            The screen is headed with the dog's name and the household reads
+            it as "the dog's page", so the people belong at the top of it
+            rather than filed under Settings — who is holding the phone is a
+            fact about the household, not a preference.
+
+            The row states the count as well as the name because the whole
+            point of the feature is invisible with one person on the install:
+            "Just you so far" is what tells somebody the app has a notion of
+            more than one, without a banner announcing a feature. */ ''}
+      <section class="section">
+        <h2>Who practises with ${dog.name}</h2>
+        <div class="card">
+          <button class="setting-row" type="button" data-person-switch>
+            <span>
+              ${person.name}
+              <small>
+                ${people.length > 1
+                  ? `Logging as ${firstNameOf(person.name)} · ${people.length} people on this device`
+                  : 'Just you so far — tap to add someone else'}
+              </small>
+            </span>
+            <span class="value">
+              <span class="avatar avatar--sm" aria-hidden="true">${initialsOf(person.name)}</span>
+            </span>
+          </button>
+        </div>
+      </section>
 
       <section class="section">
         <h2>Commands we use</h2>
@@ -200,6 +243,8 @@ const downloadExport = downloadCsv;
 function mount(root) {
   const on = (selector, event, handler) =>
     root.querySelectorAll(selector).forEach((el) => el.addEventListener(event, handler));
+
+  on('[data-person-switch]', 'click', openPersonSwitcher);
 
   on('[data-cue]', 'change', (e) => {
     const value = e.currentTarget.value.trim();

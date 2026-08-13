@@ -169,7 +169,27 @@ setup.
 
 ---
 
-## 6. Switching people, simulated honestly
+## 6. Switching people, simulated honestly — **built**
+
+> Built as described. The avatar on Today opens it, and so does a row at the
+> top of the profile, under the dog and above the training. The avatar stopped
+> being a link to the profile to do it: that shortcut made sense when the
+> profile was the only place a person appeared and the tab was named after the
+> dog, but there is a Profile tab in the bar now, so the avatar was pointing at
+> something already on screen. It depicts who is holding the phone, so that is
+> what it should open.
+>
+> **One thing this uncovered.** `memberName()` in the CSV export ignored its
+> argument and returned the *active* person for every row. With one person on
+> the install that is indistinguishable from correct, and it would have stayed
+> invisible until the moment switching shipped — at which point the trainer's
+> export would have credited the entire history to whoever happened to be
+> holding the phone when it was exported. The bug predates the feature that
+> exposes it, which is the usual order. Fixed and verified per row.
+>
+> Removing somebody keeps their sessions, with their id intact; the export
+> names them "Someone else" rather than blanking the cell, which would read as
+> a logging failure rather than a deletion. The last person cannot be removed.
 
 **Scope: one household, one dog, several people who practise with it.** That is
 the real product shape, and it is what the stored data already describes.
@@ -220,13 +240,19 @@ recorded on every session all along.
 
 ## 9. Rough shape of the work
 
-| Step | What | Size |
-| --- | --- | --- |
-| 1 | Identity into state, accessors, migration | Medium — 8 files, mechanical |
-| 2 | Two setup screens in the existing welcome | Small |
-| 3 | Breed field with datalist | Small |
-| 4 | Avatar sheet: switch and add | Small–medium |
-| 5 | Profile screen edits name, breed, initials | Small |
+| Step | What | Size | State |
+| --- | --- | --- | --- |
+| 1 | Identity into state, accessors, migration | Medium — 8 files, mechanical | Done |
+| 2 | Two setup screens in the existing welcome | Small | Done |
+| 3 | Breed field with datalist | Small | Done |
+| 4 | Avatar sheet: switch and add | Small–medium | Done |
+| 5 | Profile screen edits name, breed, initials | Small | Open |
 
-Steps 1–3 alone deliver "the app is not Fabiola's any more", which is the part
-that blocks the demo. Steps 4–5 are the simulation.
+Steps 1–3 delivered "the app is not Fabiola's any more", which was the part
+blocking the demo. Step 4 is the switching.
+
+Step 5 is what is left, and it is smaller than it was: the switcher covers
+adding and removing people, so what remains is **editing** — renaming a person
+or the dog, and changing the breed, after setup. Today the only way to correct
+a typo in either is to reset the whole app. `setPersonName` and `setDog` are
+already there and already used by the welcome; step 5 is a screen for them.

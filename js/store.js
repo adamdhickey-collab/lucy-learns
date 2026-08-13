@@ -255,6 +255,9 @@ export function setDog(patch) {
   persist();
 }
 
+/** Everyone who practises with this dog, in the order they were added. */
+export const getPeople = () => state.people;
+
 /**
  * Rename the active person. One field — `name`, as they typed it.
  *
@@ -268,6 +271,53 @@ export function setPersonName(name) {
   if (!person) return;
   person.name = name;
   persist();
+}
+
+/**
+ * Add somebody and hand the app to them.
+ *
+ * Switching on add is the whole point of the interaction: nobody adds a person
+ * in the abstract, they add themselves because they are about to practise. An
+ * add that left the previous person active would attribute the next session to
+ * the wrong one, which is the single thing this feature exists to get right.
+ */
+export function addPerson(name) {
+  const person = { id: uid(), name: name.trim() };
+  state.people.push(person);
+  state.activePersonId = person.id;
+  persist();
+  return person;
+}
+
+/**
+ * Hand the app to somebody already on it.
+ *
+ * Only the attribution of what is logged from here on changes. The dog, the
+ * sessions, the program position and the report stay the household's — this is
+ * one dog several people practise with, not several accounts.
+ */
+export function setActivePerson(id) {
+  if (!state.people.some((p) => p.id === id)) return;
+  state.activePersonId = id;
+  persist();
+}
+
+/**
+ * Remove somebody, and never the last one.
+ *
+ * Their sessions stay, with their `completedByUserId` intact — deleting a
+ * person is "they do not practise here any more", not "the practice did not
+ * happen", and the report would be wrong if the history moved. `memberName`
+ * handles the dangling id by name, so the CSV keeps saying who did it.
+ */
+export function removePerson(id) {
+  if (state.people.length < 2) return false;
+  const before = state.people.length;
+  state.people = state.people.filter((p) => p.id !== id);
+  if (state.people.length === before) return false;
+  if (state.activePersonId === id) state.activePersonId = state.people[0].id;
+  persist();
+  return true;
 }
 
 // --- demo data -------------------------------------------------------------
@@ -393,10 +443,26 @@ const labelFrom = (list, id) => {
   return found ? found.label : id;
 };
 
-// Whoever is active. Rows written before the app asked who was practising are
-// attributed to them too, which is right for a single-person install and the
-// best available guess for any other.
-const memberName = () => getPerson()?.name || '';
+/**
+ * Who did this row, by the id stored on it.
+ *
+ * This used to ignore its argument and return the active person for every
+ * row. With one person on the install that was indistinguishable from correct,
+ * and it stayed that way right up until the app could switch people — at which
+ * point the trainer's CSV would have credited the whole history to whoever
+ * happened to be holding the phone when it was exported. The bug was written
+ * long before the feature that exposes it, which is the usual order.
+ *
+ * The fallback is for a person who has since been removed: their sessions keep
+ * their id and no longer resolve. "Someone else" is honest — the app genuinely
+ * no longer knows — and it is better than a blank cell, which reads as a
+ * logging failure rather than a deletion.
+ */
+const memberName = (id) => {
+  const person = state.people.find((p) => p.id === id);
+  if (person) return person.name;
+  return id ? 'Someone else' : getPerson()?.name || '';
+};
 
 const prettyDate = (iso) =>
   new Date(iso).toLocaleString(undefined, {

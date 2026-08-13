@@ -2513,6 +2513,145 @@ details.disclosure .disclosure-body {
   stroke-linejoin: round;
 }
 
+/* =========================================================================
+   Who is practising
+   ========================================================================= */
+
+.person-list {
+  list-style: none;
+  margin: var(--s-4) 0 0;
+  padding: 0;
+}
+
+.person-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.person-row {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-2) var(--s-3);
+  border: 1.5px solid transparent;
+  border-radius: var(--r-lg);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.person-row--active {
+  border-color: var(--primary);
+  background: var(--primary-wash);
+}
+
+.person-row-name {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+  /* A name is free text capped at 32 characters, which overruns this row long
+     before it overruns the field. One line, clipped with an ellipsis: the
+     avatar beside it carries the identification when the tail is lost. */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.person-row-mark svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Deliberately quiet, and deliberately not inside the row it removes: nesting
+   a button in a button is invalid, and a destructive control sharing a hit
+   area with "switch to this person" is a mis-tap waiting to happen. */
+.person-row-remove {
+  flex: none;
+  width: var(--tap);
+  height: var(--tap);
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.person-row-remove svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (hover: hover) {
+  .person-row:hover {
+    border-color: var(--border);
+  }
+
+  .person-row--active:hover {
+    border-color: var(--primary);
+  }
+
+  .person-row-remove:hover {
+    background: var(--surface-sunken);
+    color: var(--caution-text);
+  }
+}
+
+.person-add {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  width: 100%;
+  margin-top: var(--s-2);
+  padding: var(--s-3);
+  border: 0;
+  border-radius: var(--r-lg);
+  background: transparent;
+  color: var(--primary);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.person-add svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.person-add-form {
+  display: flex;
+  gap: var(--s-2);
+  margin-top: var(--s-2);
+}
+
+.person-add-form input {
+  flex: 1;
+  min-width: 0;
+}
+
 .setting-row.danger {
   color: var(--caution-text);
   font-weight: 600;
@@ -5120,9 +5259,23 @@ svg.icon--solid {
   font-weight: 700;
   letter-spacing: 0.02em;
   text-decoration: none;
+  /* It is a <button> on Today now, so the UA's border, padding and font have
+     to be cleared or the circle renders as a grey rounded rectangle with the
+     initials in the system face. */
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
   /* Optical centring: uppercase initials have no descenders, so they sit low
      in the box by a hair without this. */
-  padding-top: 1px;
+  padding: 1px 0 0;
+}
+
+/* In a list, where it labels a row rather than being the control. */
+.avatar--sm {
+  width: 34px;
+  height: 34px;
+  font-size: var(--step--2);
+  cursor: inherit;
 }
 
 @media (hover: hover) {

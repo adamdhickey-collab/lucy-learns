@@ -518,6 +518,146 @@ export function confirmSheet({
   return close;
 }
 
+/**
+ * Who is practising: pick somebody, or add somebody.
+ *
+ * Built here rather than in a view because two screens open it — the avatar on
+ * Today and the row on the profile — and a sheet that lives in one view cannot
+ * be opened from the other without the wrong view owning it.
+ *
+ * The list is radios, not buttons. Exactly one person is active at a time and
+ * the sheet shows which, which is a radio group whichever way it is painted;
+ * building it out of buttons and a tick glyph would leave a screen reader to
+ * infer the selection from an icon. `aria-checked` says it outright, and
+ * arrow-key navigation comes free.
+ *
+ * @param {object}   opts
+ * @param {Array}    opts.people        [{ id, name }]
+ * @param {string}   opts.activeId
+ * @param {Function} opts.onSelect      (id) => void
+ * @param {Function} opts.onAdd         (name) => void
+ * @param {Function} [opts.onRemove]    (id) => void, omitted when only one person
+ * @param {Function} [opts.onClose]
+ */
+export function personSheet({ people, activeId, onSelect, onAdd, onRemove, onClose }) {
+  const backdrop = document.createElement('div');
+  backdrop.className = 'sheet-backdrop';
+
+  const row = (p) => `
+    <li>
+      <button
+        class="person-row ${p.id === activeId ? 'person-row--active' : ''}"
+        type="button"
+        role="radio"
+        aria-checked="${p.id === activeId}"
+        data-person="${esc(p.id)}"
+      >
+        <span class="avatar avatar--sm" aria-hidden="true">${esc(initialsOf(p.name))}</span>
+        <span class="person-row-name">${esc(p.name)}</span>
+        ${p.id === activeId ? `<span class="person-row-mark">${ICONS.check}</span>` : ''}
+      </button>
+      ${
+        onRemove && p.id !== activeId
+          ? `<button class="person-row-remove" type="button" data-remove="${esc(p.id)}"
+               aria-label="Remove ${esc(p.name)}">${ICONS.close}</button>`
+          : ''
+      }
+    </li>`;
+
+  backdrop.innerHTML = `
+    <div class="sheet sheet--dialog" role="dialog" aria-modal="true" aria-labelledby="person-sheet-title">
+      <h2 id="person-sheet-title">Who is practising?</h2>
+      <p class="section-note">
+        This changes who the next session is logged under. Everything else — the
+        training, the progress, the report — belongs to the household.
+      </p>
+
+      <ul class="person-list" role="radiogroup" aria-labelledby="person-sheet-title">
+        ${people.map(row).join('')}
+      </ul>
+
+      <button class="person-add" type="button" data-add-open>
+        ${ICONS.plus}<span>Add someone</span>
+      </button>
+
+      ${/* One field, revealed in place rather than on a second screen. Adding
+            a person is one question and a screen change would make it feel
+            like more. */ ''}
+      <form class="person-add-form" data-add-form hidden>
+        <label class="visually-hidden" for="person-add-name">Their name</label>
+        <input id="person-add-name" type="text" data-add-name placeholder="Their name"
+               maxlength="32" autocapitalize="words" autocomplete="off" enterkeyhint="done" />
+        <button class="btn" type="submit" data-add-save disabled>Add</button>
+      </form>
+
+      <div class="btn-row" style="margin-top: var(--s-4)">
+        <button class="btn btn--quiet btn--block" type="button" data-close>Done</button>
+      </div>
+    </div>`;
+
+  let release = () => {};
+  const close = () => {
+    release();
+    backdrop.remove();
+    if (onClose) onClose();
+  };
+
+  backdrop.addEventListener('click', (e) => {
+    if (e.target === backdrop) close();
+  });
+  backdrop.querySelector('[data-close]').addEventListener('click', close);
+
+  backdrop.querySelectorAll('[data-person]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.person;
+      // Picking the person who is already picked is a no-op, not a re-select:
+      // it should not write to storage or announce a switch that did not
+      // happen. Closing is the right response — they have confirmed.
+      if (id !== activeId) onSelect(id);
+      close();
+    });
+  });
+
+  backdrop.querySelectorAll('[data-remove]').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      onRemove(btn.dataset.remove);
+      close();
+    });
+  });
+
+  const form = backdrop.querySelector('[data-add-form]');
+  const nameInput = backdrop.querySelector('[data-add-name]');
+  const saveBtn = backdrop.querySelector('[data-add-save]');
+  const addOpen = backdrop.querySelector('[data-add-open]');
+
+  addOpen.addEventListener('click', () => {
+    addOpen.hidden = true;
+    form.hidden = false;
+    nameInput.focus();
+  });
+
+  // A blank or whitespace name would render an empty avatar and greet nobody.
+  nameInput.addEventListener('input', () => {
+    saveBtn.disabled = !nameInput.value.trim();
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = nameInput.value.trim();
+    if (!name) return;
+    onAdd(name);
+    close();
+  });
+
+  document.body.appendChild(backdrop);
+  release = trapModal(backdrop, {
+    onEscape: close,
+    initialFocus: backdrop.querySelector('[data-person][aria-checked="true"]') || addOpen,
+  });
+  return close;
+}
+
 export const pct = (value) => (value === null || value === undefined ? '—' : `${Math.round(value * 100)}%`);
 
 /**

@@ -15,6 +15,7 @@ import {
 // answer a question Today does not ask.
 import { programProgress } from '../program.js';
 import { programStrip } from '../programui.js';
+import { openPersonSwitcher } from '../person.js';
 import { html, raw, join, icon, badge, initialsOf, firstNameOf, focusHeading } from '../ui.js';
 
 // One greeting, at any hour. The three time-of-day variants were a clock
@@ -97,9 +98,21 @@ function render() {
           </h1>
           ${week.count ? '' : html`<p>The first session takes about five minutes</p>`}
         </div>
-        <a class="avatar" href="#/profile" aria-label="${person.name}, profile and settings">
+        ${/* A button now, not a link to the profile.
+              It pointed at the profile back when the profile was the only
+              place a person appeared and the tab was named after the dog.
+              There is a Profile tab in the bar now, two taps' worth of screen
+              away, so the avatar was a shortcut to somewhere already on
+              screen. What it is good for is the thing it actually depicts:
+              who the app currently thinks is holding it. */ ''}
+        <button
+          class="avatar"
+          type="button"
+          data-person-switch
+          aria-label="Practising as ${person.name}. Change who is practising."
+        >
           <span aria-hidden="true">${initialsOf(person.name)}</span>
-        </a>
+        </button>
       </div>
 
       ${/* Above the hero on purpose. It used to sit under it, which put it
@@ -240,6 +253,9 @@ function alignCaret(root) {
 }
 
 function mount(root) {
+  const switcher = root.querySelector('[data-person-switch]');
+  if (switcher) switcher.addEventListener('click', openPersonSwitcher);
+
   alignCaret(root);
   // Layout can settle after first paint — a font swapping in, an image landing
   // and reflowing the row. Measure once more on the next frame.
