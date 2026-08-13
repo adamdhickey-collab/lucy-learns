@@ -186,26 +186,28 @@ route();
 // Two numbers, deliberately independent: how long the crossing takes, and how
 // fast the legs move.
 //
-// They used to be locked to one another — cadence times the 4.87 stride cycles
-// a crossing contains — on the principle that a walk whose feet disagree with
-// the ground it covers reads as skating. That principle is real, and it is
-// being knowingly set aside here. Held to it, the slow cadence that looks right
-// costs a 12.4s crossing and a 13.7s splash, which is far too long to sit in
-// front of an app somebody opens daily. The choice is between honest physics
-// and a splash worth shipping, and the splash wins: the legs keep the unhurried
-// step, the pair covers the lane in three seconds, and they glide a little.
+// They were locked to one another for a while — cadence times the 4.87 stride
+// cycles a crossing contains — on the principle that a walk whose feet
+// disagree with the ground they cover reads as skating. The principle is
+// sound; holding to it strictly is what is set aside, because at the leg speed
+// that looks unhurried it costs a 12.4s crossing and a 13.7s splash, and
+// nobody should wait that long to open an app they use daily.
 //
-// At 3000ms the crossing contains 1.2 stride cycles for 275px of lane — about
-// 230px of ground per stride against the ~57px their legs actually describe.
-// If that ever reads as wrong rather than as stylised, the honest fix is one
-// line: WALK_CADENCE_MS = Math.round(WALK_MS / 4.87), which is 616ms. Faster
-// legs, same three seconds.
+// So the crossing is fixed at what the splash can afford and the cadence is
+// tuned by eye against it. 850ms over 3000ms is 3.5 stride cycles for 275px of
+// lane — about 78px of ground per stride against the ~57px the legs actually
+// describe. A 1.4x glide, which is inside what the eye forgives; the 2550ms
+// this briefly ran at was 230px per stride, four times over, and read as
+// floating rather than walking.
+//
+// If it ever wants to be exact, the arithmetic is WALK_MS / 4.87 — 616ms here.
+// Faster legs than these, same three seconds.
 //
 // Study mode is exempt. Its 1.2s card is calibrated for a timed task, and the
 // pair simply do not get to walk in it.
 
 const WALK_MS = 3000;
-const WALK_CADENCE_MS = 2550;
+const WALK_CADENCE_MS = 850;
 const SPLASH_FADE_MS = 420;
 
 // Mirrors `splash-progress-in 460ms 820ms` in app.css, by hand — the lane has
