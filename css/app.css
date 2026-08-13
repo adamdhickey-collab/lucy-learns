@@ -2484,6 +2484,7 @@ details.disclosure .disclosure-body {
   --splash-hold: 1300ms;
   --splash-run: 1300ms;
   --splash-run-delay: 0ms;
+  --splash-cadence: 850ms;
 }
 
 /* A slow warm vignette at the very edges of the field. It gives the flat
@@ -2810,12 +2811,11 @@ details.disclosure .disclosure-body {
    Two animations on one element, doing two different jobs.
 
    `splash-run-cycle` is the legs: an eight-frame walk cycle stepped through
-   on a fixed 850ms loop. The number is derived from the crossing, not
-   chosen: the pair covers the lane at ~1.5 body-heights per second, which
-   for a person is a brisk walk, and a brisk walk's cadence is ~140 steps a
-   minute — 850ms for a full two-step cycle. Cadence and ground speed have
-   to agree or the figures skate; change the crossing and this number moves
-   with it.
+   on --splash-cadence. That value comes from app.js rather than living here,
+   because it is derived from the same PACE constant as the crossing and the
+   two have to agree — cadence and ground speed out of step is what makes a
+   walk cycle skate. At PACE 1 it is 850ms, the two-step cadence of a brisk
+   walk, matched to the ~1.5 body-heights per second the crossing gives them.
 
    `splash-run-across` is the progress: it carries her from the left of the
    lane to the right over --splash-run, which app.js sets to the hold that is
@@ -2879,7 +2879,7 @@ details.disclosure .disclosure-body {
 
 .splash--running .splash-runner {
   animation:
-    splash-run-cycle 850ms var(--splash-run-delay) steps(8) infinite,
+    splash-run-cycle var(--splash-cadence) var(--splash-run-delay) steps(8) infinite,
     splash-run-across var(--splash-run) var(--splash-run-delay) linear both;
 }
 

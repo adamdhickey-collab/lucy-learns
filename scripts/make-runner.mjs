@@ -351,6 +351,252 @@ frames.forEach((f, i) => {
   }
 });
 
+// --- repair the leash --------------------------------------------------------
+
+/**
+ * Give every frame the leash the generator forgot, and clear the fragments the
+ * grid cut left behind.
+ *
+ * The loose-leash sheet arrived with the leash drawn in six frames of eight.
+ * At a sixth scale it is a hairline, but a hairline that blinks on and off
+ * eight times a second is exactly the kind of thing the eye catches without
+ * being able to say what it saw — and the leash is the whole subject. Frames
+ * one and five had none, and four frames carried small orphans in the leash
+ * band: severed leash ends stranded on the wrong side of a grid cut.
+ *
+ * Nothing here is drawn from imagination. The frames that *have* a leash are
+ * measured first — where it meets the hand, where it meets the collar, how far
+ * it sags, how thick the line is — and the missing ones are drawn to that
+ * average, anchored to their own figures. If fewer than three frames have a
+ * measurable leash there is nothing to copy and the build fails rather than
+ * inventing a house style.
+ *
+ * Everything runs on the packed sheet rather than the source, so it works in
+ * the same coordinates the CSS will show.
+ */
+const CELL_AREA = cellW * cellH;
+const cellMask = (i) => {
+  const m = new Uint8Array(cellW * cellH);
+  for (let y = 0; y < cellH; y++) {
+    for (let x = 0; x < cellW; x++) {
+      m[y * cellW + x] = out[((y * sheetW) + i * cellW + x) * 4 + 3] > ALPHA_FLOOR ? 1 : 0;
+    }
+  }
+  return m;
+};
+
+// Square-kernel erode/dilate. An opening (erode then dilate) keeps the thick
+// masses and drops anything thinner than 2R — which on this art is the leash
+// and nothing else, the figures being solid silhouettes.
+const LEASH_R = 3;
+function morph(src, r, want) {
+  const dst = new Uint8Array(cellW * cellH);
+  for (let y = 0; y < cellH; y++) {
+    for (let x = 0; x < cellW; x++) {
+      let hit = 0;
+      for (let dy = -r; dy <= r && !hit; dy++) {
+        for (let dx = -r; dx <= r; dx++) {
+          const xx = x + dx;
+          const yy = y + dy;
+          const v = xx < 0 || xx >= cellW || yy < 0 || yy >= cellH ? 0 : src[yy * cellW + xx];
+          if (v === want) {
+            hit = 1;
+            break;
+          }
+        }
+      }
+      dst[y * cellW + x] = want ? hit : hit ? 0 : 1;
+    }
+  }
+  return dst;
+}
+
+/** Connected pixels of `pixels`, 8-connected with a 2px bridge for dashed art. */
+function groups(pixels) {
+  const set = new Set(pixels.map((p) => p.y * cellW + p.x));
+  const seen = new Set();
+  const found = [];
+  for (const p of pixels) {
+    const k = p.y * cellW + p.x;
+    if (seen.has(k)) continue;
+    seen.add(k);
+    const stack = [p];
+    const group = [];
+    while (stack.length) {
+      const q = stack.pop();
+      group.push(q);
+      for (let dy = -2; dy <= 2; dy++) {
+        for (let dx = -2; dx <= 2; dx++) {
+          const kk = (q.y + dy) * cellW + (q.x + dx);
+          if (set.has(kk) && !seen.has(kk)) {
+            seen.add(kk);
+            stack.push({ x: q.x + dx, y: q.y + dy });
+          }
+        }
+      }
+    }
+    found.push(group);
+  }
+  return found;
+}
+
+// The band the leash lives in — between the walker's hand and the dog's neck,
+// as fractions of cell height so it survives a sheet of a different size.
+const BAND_TOP = Math.round(cellH * 0.45);
+const BAND_BOTTOM = Math.round(cellH * 0.82);
+
+const measured = [];
+const cells = [];
+for (let i = 0; i < frames.length; i++) {
+  const mask = cellMask(i);
+  const opened = morph(morph(mask, LEASH_R, 0), LEASH_R, 1);
+  const residue = [];
+  for (let y = BAND_TOP; y < BAND_BOTTOM; y++) {
+    for (let x = 0; x < cellW; x++) {
+      if (mask[y * cellW + x] && !opened[y * cellW + x]) residue.push({ x, y });
+    }
+  }
+  const best = groups(residue).sort((a, b) => b.length - a.length)[0] || [];
+
+  // Whether a frame has a leash is a question about connectivity, not length:
+  // a leash is the thing that joins the two figures into one shape. Measuring
+  // the residue's span instead got frame two wrong — its leash is the
+  // steepest on the sheet and spans only 29px, under any threshold that also
+  // rejects the stranded stub in frame one — and drew a second leash over the
+  // one already there.
+  //
+  // The dilation is what makes it a fair question. The generator's leashes
+  // stop a pixel short of the collar, which is invisible and still counts as
+  // disconnected; bridging 2px closes that without closing the 13px and 30px
+  // voids in the frames that genuinely have nothing.
+  const bridged = morph(mask, 1, 1);
+  const wide = [];
+  for (let y = 0; y < cellH; y++) {
+    for (let x = 0; x < cellW; x++) if (bridged[y * cellW + x]) wide.push({ x, y });
+  }
+  const bodies = groups(wide).filter((g) => g.length > CELL_AREA * 0.02);
+  const hasLeash = bodies.length === 1;
+  cells.push({ mask, opened, best, hasLeash });
+  if (!hasLeash || !best.length) continue;
+
+  const sorted = [...best].sort((a, b) => a.x - b.x);
+  const collar = sorted[0];
+  const hand = sorted[sorted.length - 1];
+  let sag = 0;
+  for (const p of best) {
+    const t = (p.x - collar.x) / Math.max(1, hand.x - collar.x);
+    sag = Math.max(sag, p.y - (collar.y + t * (hand.y - collar.y)));
+  }
+  const length = Math.hypot(hand.x - collar.x, hand.y - collar.y);
+  measured.push({ collarY: collar.y, handY: hand.y, sag, width: best.length / Math.max(1, length) });
+}
+
+const drawn = [];
+if (measured.length >= 3) {
+  const mean = (k) => measured.reduce((s, m) => s + m[k], 0) / measured.length;
+  const handY = Math.round(mean('handY'));
+  const collarY = Math.round(mean('collarY'));
+  const sag = mean('sag');
+  const stroke = Math.max(2, mean('width'));
+
+  for (let i = 0; i < cells.length; i++) {
+    // Clear stranded fragments first, so a severed end cannot sit beside a
+    // freshly drawn leash. Anything in the band that is small and touches
+    // neither figure is debris — a real leash reaches all the way across.
+    const { mask } = cells[i];
+    const loose = [];
+    for (let y = BAND_TOP; y < BAND_BOTTOM; y++) {
+      for (let x = 0; x < cellW; x++) if (mask[y * cellW + x]) loose.push({ x, y });
+    }
+    for (const g of groups(loose)) {
+      const gxs = g.map((p) => p.x);
+      const gys = g.map((p) => p.y);
+      const touchesFigure =
+        Math.min(...gys) <= BAND_TOP || Math.max(...gys) >= BAND_BOTTOM - 1;
+      if (touchesFigure || g.length > CELL_AREA * 0.02) continue;
+      if (Math.max(...gxs) - Math.min(...gxs) > cellW * 0.15) continue;
+      for (const p of g) {
+        const o = ((p.y * sheetW) + i * cellW + p.x) * 4;
+        out[o] = out[o + 1] = out[o + 2] = out[o + 3] = 0;
+      }
+    }
+
+    if (cells[i].hasLeash) continue;
+
+    // Anchor to this frame's own figures: the hand is the walker's leading
+    // edge at the height the other frames hold the leash, the collar the dog's
+    // trailing edge at the height the other frames attach to it. The split
+    // between the two figures is the emptiest column in the middle third.
+    const fresh = cellMask(i);
+    const colInk = new Array(cellW).fill(0);
+    for (let x = 0; x < cellW; x++) {
+      for (let y = 0; y < cellH; y++) if (fresh[y * cellW + x]) colInk[x]++;
+    }
+    let split = Math.round(cellW / 2);
+    for (let x = Math.round(cellW * 0.35); x < Math.round(cellW * 0.65); x++) {
+      if (colInk[x] < colInk[split]) split = x;
+    }
+
+    const scan = (from, to, y0, step) => {
+      for (let y = y0 - 6; y <= y0 + 6; y++) {
+        for (let x = from; step > 0 ? x <= to : x >= to; x += step) {
+          if (y >= 0 && y < cellH && fresh[y * cellW + x]) return { x, y };
+        }
+      }
+      return null;
+    };
+    const hand = scan(split, cellW - 1, handY, 1);
+    const collar = scan(split, 0, collarY, -1);
+    if (!hand || !collar) {
+      throw new Error(
+        `frame ${i + 1} has no leash and no place to attach one ` +
+          `(hand ${hand ? 'ok' : 'missing'}, collar ${collar ? 'ok' : 'missing'} ` +
+          `around y ${handY}/${collarY}) — check the band fractions against this sheet`
+      );
+    }
+
+    // Quadratic Bézier with the measured sag, stamped as overlapping discs so
+    // the line is round-capped and anti-aliased like the art around it.
+    const mx = (collar.x + hand.x) / 2;
+    const my = (collar.y + hand.y) / 2 + sag * 2;
+    const steps = Math.ceil(Math.hypot(hand.x - collar.x, hand.y - collar.y) * 3);
+    const rad = stroke / 2;
+    for (let s = 0; s <= steps; s++) {
+      const t = s / steps;
+      const u = 1 - t;
+      const cx = u * u * collar.x + 2 * u * t * mx + t * t * hand.x;
+      const cy = u * u * collar.y + 2 * u * t * my + t * t * hand.y;
+      for (let y = Math.floor(cy - rad - 1); y <= Math.ceil(cy + rad + 1); y++) {
+        for (let x = Math.floor(cx - rad - 1); x <= Math.ceil(cx + rad + 1); x++) {
+          if (x < 0 || x >= cellW || y < 0 || y >= cellH) continue;
+          const d = Math.hypot(x + 0.5 - cx, y + 0.5 - cy);
+          const cover = Math.max(0, Math.min(1, rad + 0.5 - d));
+          if (cover <= 0) continue;
+          const o = ((y * sheetW) + i * cellW + x) * 4;
+          const a = Math.round(cover * 255);
+          if (a <= out[o + 3]) continue;
+          out[o] = 0;
+          out[o + 1] = 0;
+          out[o + 2] = 0;
+          out[o + 3] = a;
+        }
+      }
+    }
+    drawn.push(i + 1);
+  }
+  console.log(
+    `leash: measured in ${measured.length} frames ` +
+      `(hand y${handY}, collar y${collarY}, sag ${sag.toFixed(0)}px, ${stroke.toFixed(1)}px wide)` +
+      (drawn.length ? `; drew it into ${drawn.length} — frames ${drawn.join(', ')}` : '; none missing')
+  );
+} else {
+  throw new Error(
+    `only ${measured.length} frames have a measurable leash — too few to copy from. ` +
+      `Either the sheet has no leash at all (drop this pass) or the band fractions ` +
+      `(${BAND_TOP}-${BAND_BOTTOM} of ${cellH}) miss it.`
+  );
+}
+
 const bytes = encode(OUT, sheetW, cellH, out);
 
 console.log(

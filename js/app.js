@@ -183,22 +183,41 @@ route();
 // they get the title card, just briefly. Long enough for the wordmark to land,
 // short enough not to show up in the numbers.
 //
-// Five seconds, and the number is derived, not chosen: the lane entrance ends
-// at 1280ms, the loose-leash walk gets a ~4.1s crossing — which at the pair's
-// size is brisk-walk speed, with the 850ms cadence in app.css matched to it
-// (see splash-run-cycle: cadence and ground speed have to agree or the
-// figures skate) — and they walk 420ms of that through the fade.
-// 1280 + 4140 - 420 = 5000.
+// The hold is derived from the walk, and the walk from one number: PACE.
 //
-// This hold has been every value in the range: five, cut to three because a
-// static card past three seconds stopped reading as a title card and started
-// reading as loading, and now five again on purpose — the walk is the show
-// now, and a lane that visibly reports progress is the thing a plain wait
-// never had. If the walk ever goes, the three-second finding still stands;
-// do not keep five out of inertia.
+// PACE 1 is the speed the pair were drawn at — a 4.14s crossing with an 850ms
+// two-step cadence, which at their size on the lane is a brisk walk. Every
+// other value scales both together, because cadence and ground speed have to
+// agree or the figures skate: half the cadence alone and they moonwalk, half
+// the crossing alone and they churn. One knob is the only way that invariant
+// survives being edited.
+//
+// PACE 3 is a deliberate choice for an unhurried, watchable crossing, and it
+// is expensive: it puts the hold at thirteen seconds. That is a long time to
+// look at a title card, and this app has been here before — the hold was five,
+// cut to three because a static card past three seconds stopped reading as a
+// title card and started reading as loading, then five again when the walk
+// arrived and gave the wait something to report. Thirteen is a bet that a slow
+// walk on a loose leash is the product's whole thesis in one picture and worth
+// watching. If it ever grates, this is the number to turn down: 2 gives ~9s,
+// 1 gives ~5s, and nothing else has to move.
+//
+// Study mode is exempt. Its 1.2s card is calibrated for a timed task, and the
+// pair simply do not get to walk in it.
 
-const SPLASH_HOLD_MS = STUDY ? STUDY_SPLASH_HOLD_MS : 5000;
+const WALK_PACE = 3;
+const WALK_BASE_MS = 4140;
+const WALK_CADENCE_BASE_MS = 850;
 const SPLASH_FADE_MS = 420;
+
+// Mirrors `splash-progress-in 460ms 820ms` in app.css, by hand — the lane has
+// to have finished arriving before anyone steps onto it. Change one, change both.
+const LANE_IN_END_MS = 820 + 460;
+
+const WALK_MS = WALK_BASE_MS * WALK_PACE;
+const SPLASH_HOLD_MS = STUDY
+  ? STUDY_SPLASH_HOLD_MS
+  : LANE_IN_END_MS + WALK_MS - SPLASH_FADE_MS;
 
 const splash = document.getElementById('splash');
 if (splash) {
@@ -251,12 +270,14 @@ if (splash) {
   // zero and she simply runs what remains; past the hold entirely, both go
   // to zero and the splash is already leaving.
   //
-  // LANE_IN_END_MS mirrors `splash-progress-in 460ms 820ms` in app.css, by
-  // hand — change one, change both. The two clocks differ by first paint
-  // (this one starts at navigation, the CSS one at first style), so she can
-  // set off a few tens of milliseconds into the entrance's ease-out tail;
-  // that is under one leg-cycle frame and reads as nothing.
-  const LANE_IN_END_MS = 820 + 460;
+  // The two clocks differ by first paint — this one starts at navigation, the
+  // CSS one at first style — so they can set off a few tens of milliseconds
+  // into the entrance's ease-out tail. That is a fraction of one cadence frame
+  // and reads as nothing.
+  //
+  // The cadence goes out as a variable for the same reason the duration does:
+  // it is derived from PACE, and a hardcoded number in the stylesheet would be
+  // one edit away from disagreeing with the crossing it has to match.
   const elapsed = performance.now();
   const remaining = Math.max(SPLASH_HOLD_MS - elapsed, 0);
   const runDelay = Math.min(Math.max(LANE_IN_END_MS - elapsed, 0), remaining);
@@ -265,6 +286,10 @@ if (splash) {
   splash.style.setProperty(
     '--splash-run',
     `${Math.round(remaining - runDelay + SPLASH_FADE_MS)}ms`
+  );
+  splash.style.setProperty(
+    '--splash-cadence',
+    `${Math.round(WALK_CADENCE_BASE_MS * WALK_PACE)}ms`
   );
   splash.classList.add('splash--running');
 
