@@ -1236,8 +1236,26 @@ a.visually-hidden:focus {
    Activity detail
    ========================================================================= */
 
+/* The column, like every other screen. Edge-to-edge and column-width are the
+   same thing on a phone, which is why this went unnoticed: `--page-max` is
+   34rem and no phone is that wide, so this cap does nothing there and the
+   image still bleeds to both edges.
+
+   On a laptop they are not the same thing. The image is `width: 100%` at 4/3,
+   so its height is the window's width times 0.75 — at 1280 that is a 960px
+   photograph in an 800px viewport. Opening any activity showed a wall of
+   illustration with the title, the levels and the steps all below the fold,
+   and the back button floating in the corner of the window rather than over
+   the picture it belongs to.
+
+   Capping the width rather than the height on purpose: `object-fit: cover` in
+   a box that wide crops a letterbox slice out of the middle of a 4/3 painting,
+   and these are illustrations of a person and a dog — the slice cuts their
+   heads off. Holding the column keeps the same crop the phone gets. */
 .detail-hero {
   position: relative;
+  max-width: var(--page-max);
+  margin-inline: auto;
 }
 
 .detail-hero img {
@@ -1506,11 +1524,24 @@ details.disclosure .disclosure-body {
   background: var(--background);
 }
 
+/* Held to the column, the way `.player-foot` already holds its button. The
+   footer does it to its children because it has a surface and a border that
+   should still span the window; this one is painted in the page background, so
+   there is nothing to span and the whole row can move.
+
+   Without it the session bar was the width of the window while the session
+   itself was 34rem: on a 1280px laptop the close button sat at x=16 and the
+   step badge at x=1264, about 1100px apart, with the progress track stretched
+   into a 1102px hairline between them — three controls at the far edges of the
+   screen belonging to a column in the middle of it. */
 .player-top {
   view-transition-name: player-top;
   display: flex;
   align-items: center;
   gap: var(--s-3);
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
   padding: calc(var(--s-3) + env(safe-area-inset-top)) var(--s-4) var(--s-3);
   background: var(--background);
 }

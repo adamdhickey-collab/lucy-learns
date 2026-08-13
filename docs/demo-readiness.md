@@ -80,12 +80,39 @@ standalone chrome only exist once it is on the home screen. A first-run hint —
 "Add to Home Screen for the full thing" — is the difference between people
 seeing the app you built and people seeing a website.
 
-### 7. Check it on a laptop
+### 7. Check it on a laptop — done, and it did not behave
 
-The layout is phone-first and there is a `--page-max` content column, so it
-probably behaves. But "probably" is not "checked", and a meaningful share of
-people will click a link on a desktop first. Worth ten minutes before sending,
-and I have not done it.
+Checked at 1280×800 and 1440×900, every route, then re-checked at 375×812 to be
+sure the fixes were inert on a phone. "Probably behaves" was half right: eight
+routes, no horizontal overflow on any of them, and the column centres correctly.
+Two things were broken, both the same mistake.
+
+Full-bleed and column-width are the same thing on a phone, because `--page-max`
+is 34rem and no phone is that wide. So anything sized to the *window* rather
+than to the column looked correct for the entire life of the project, and only
+came apart on a wide screen:
+
+- **The activity detail screen opened on a wall of illustration.** The hero is
+  `width: 100%` at 4/3, so its height is the window width × 0.75 — a 960px
+  photograph in an 800px viewport. The title, the levels and the steps were all
+  below the fold, and the back button sat in the corner of the *window* rather
+  than over the picture. Now capped to the column: 544 × 408, the same crop a
+  phone gets. Capped on width rather than height deliberately — `object-fit:
+  cover` in a 1280-wide box slices a letterbox strip out of the middle of a 4/3
+  painting, which on these illustrations cuts the heads off.
+- **The session bar was as wide as the window.** Close button at x=16, step
+  badge at x=1264, about 1100px apart, with the progress track stretched into a
+  1102px hairline between them — three controls at the far edges of a screen
+  whose content was a 34rem column in the middle. Now held to the column, the
+  way `.player-foot` already held its button.
+
+Still true and left alone, because it is a judgement call rather than a defect:
+on a 1280px laptop the app is a 544px column with ~58% of the screen empty
+either side, and the tab bar and the player footer paint their surfaces the full
+width of the window with their contents centred. It reads as a phone app being
+shown on a laptop, which is what it is. Widening the column would mean designing
+a second layout; docking the bars to the column would mean deciding what the
+empty field is for. Neither is a ten-minute change, and neither blocks a demo.
 
 ---
 
