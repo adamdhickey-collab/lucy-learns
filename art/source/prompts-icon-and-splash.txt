@@ -1,0 +1,192 @@
+APP ICON + SPLASH — from the squirrel/attention illustration
+
+Two images, two separate ChatGPT conversations, one reference picture
+attached to each.
+
+  A  SPLASH ART   ->  art/source/splash-source.png   (3:4 portrait)
+  B  APP ICON     ->  icons/source.png               (1:1 square)
+
+*** START A NEW CONVERSATION FOR EACH ONE. ***
+Leaving the splash in context is how the icon comes back with grass and a
+squirrel in it.
+
+Attach the same reference image both times: the illustration of the
+handler crouched in front of Lucy with a squirrel on the grass behind.
+
+
+-----------------------------------------------------------------------
+WHY EACH ONE HAS THE CONSTRAINTS IT HAS
+-----------------------------------------------------------------------
+
+SPLASH — the app paints a solid cream field (#f6e6d0) behind this art and
+the art sits in a fixed 3:4 box in the middle of it. Two consequences:
+
+  * The picture's own edges have to BE that cream. The reference has a
+    green field running edge to edge across the bottom half; if that
+    survives, the bottom of the art meets cream field in a visible seam
+    and the whole thing reads as a photograph pasted onto paper.
+
+  * It gets stretched to 3:4 on install. Portrait 2:3 is what the
+    generator will give you, so the prompt asks for empty cream top and
+    bottom that can be trimmed away without touching the figures.
+
+ICON — three sizes get cut from this, down to 180px, and Android crops a
+fourth to whatever shape the launcher wants, keeping only the middle 80%.
+So: one subject, big, centred, nothing important near the edges. This is
+why it is a crop of the reference rather than the whole scene — the full
+composition at 180px is a dark smudge and a green smudge.
+
+
+=======================================================================
+PROMPT A — SPLASH  (paste everything between the lines)
+=======================================================================
+
+Using the attached illustration as the exact reference for character
+design, palette and rendering style, redraw this scene as a PORTRAIT
+composition.
+
+STYLE — match the attached image exactly. Contemporary dog-training
+instruction manual illustration. Simplified vector-like forms, crisp
+edges, restrained detail. Mostly flat colour with subtle dimensional
+shading. Muted green, teal, blue and charcoal palette. Warm,
+approachable, premium, adult. Same linework weight and same rendering as
+the reference.
+
+SUBJECTS — keep both figures exactly as drawn in the reference:
+
+Lucy — medium-large black Labrador / German Wirehaired Pointer mix,
+glossy black coat, slight scruff at the muzzle, white blaze on the
+chest, white toes on all four paws, soft floppy ears. She wears a flat
+purple collar with a small round blue tag and NO harness. No white on
+the face. Standing, alert, looking up at her handler.
+
+Handler — the same woman: thirties, dark hair in a ponytail,
+olive-green hoodie, dark navy jeans, grey sneakers, mustard-yellow treat
+pouch at her right hip. Crouched at Lucy's level, in profile, one hand
+low and open.
+
+COMPOSITION — vertical portrait, the two figures stacked into a tall
+frame: the crouching handler and Lucy facing each other, close together,
+filling the middle of the image. Keep the eye contact between them — it
+is the subject of the picture.
+
+BACKGROUND — plain, flat, warm cream (#f6e6d0) filling the entire frame
+edge to edge. NO grass field, NO horizon line, NO sky band, NO wall, no
+scenery of any kind. Under the two figures put one soft muted-green
+elliptical ground shape, like a rug of colour, floating clear of every
+edge of the image with cream all around it. Add a soft contact shadow
+where the feet and paws meet it.
+
+DROP the squirrel entirely.
+
+FRAMING — leave a generous band of empty cream above the handler's head
+and below the ground shape, at least 12% of the image height at each
+end, so the image can be cropped to 3:4 without cutting into the
+figures. Nothing important in the top or bottom eighth.
+
+Portrait orientation, 1024 x 1536. No text, no lettering, no logos, no
+watermarks, no borders, no UI, no photorealism, no painterly texture, no
+childish cartoon treatment.
+
+=======================================================================
+END PROMPT A
+=======================================================================
+
+
+=======================================================================
+PROMPT B — APP ICON  (new conversation, same reference attached)
+=======================================================================
+
+Using the attached illustration as the exact reference for character
+design, palette and rendering style, draw a tight SQUARE close-up crop
+of the dog's head and shoulders.
+
+STYLE — match the attached image exactly. Contemporary dog-training
+instruction manual illustration. Simplified vector-like forms, crisp
+edges, restrained detail. Mostly flat colour with subtle dimensional
+shading. Same linework weight and same rendering as the reference. More
+visible detail than the reference has at this scale is welcome — the
+scruff at the muzzle, the ear, the texture of the coat — but keep the
+forms simplified, not photographic.
+
+SUBJECT — Lucy alone. Medium-large black Labrador / German Wirehaired
+Pointer mix, glossy black coat, slight scruff at the muzzle, soft floppy
+ears, no white on the face. Head and upper shoulders only, cropped just
+below the chest so the white chest blaze is visible at the bottom of the
+frame. She wears a flat purple collar with a small round blue tag; the
+collar and the tag must both be clearly visible and are the only
+saturated colour in the image. NO harness. NO leash.
+
+POSE — head in three-quarter view turning towards the viewer, ears
+relaxed, mouth closed, calm and attentive. Warm and friendly, alert but
+not tense. Never anthropomorphised, no human expression.
+
+COMPOSITION — the head fills the frame generously and is centred, with
+even cream margin on all four sides. Nothing at all in the outer tenth
+of the image: the corners get cut off by the phone and the whole outer
+edge gets cut off by some Android launchers.
+
+BACKGROUND — plain, flat, warm cream (#f6e6d0) filling the entire
+square. No scenery, no ground, no shadow behind her, no vignette, no
+frame, no circle, no rounded corners, no border.
+
+Square, 1024 x 1024. No text, no lettering, no logos, no watermarks, no
+UI, no photorealism, no painterly texture, no childish cartoon
+treatment.
+
+=======================================================================
+END PROMPT B
+=======================================================================
+
+
+VARIANT FOR B, if the head alone reads as too plain — add this sentence
+to the COMPOSITION paragraph:
+
+  Include the handler's open palm entering the frame low on the right,
+  fingers relaxed and empty, cropped by the edge of the frame, so the
+  picture reads as attention being offered rather than a portrait.
+
+Worth trying, but check it at real size before choosing it. At 180px a
+second shape next to her head can turn into a grey blob.
+
+
+-----------------------------------------------------------------------
+WHEN THEY COME BACK
+-----------------------------------------------------------------------
+
+Download both, then tell me they are on the Desktop and I will install
+them. Or do it directly:
+
+  Splash — save as art/source/splash-source.png, then run
+  node scripts/make-splash.mjs
+  It rebuilds all eleven iOS launch images and prints the art size it
+  found. If it does not say the art is 3:4, it needs cropping first.
+
+  Icon — save anywhere, then run
+  node scripts/make-icons.mjs ~/Desktop/whatever-it-is-called.png
+  It writes icons/source.png plus the four sizes, including the maskable
+  one with the 80% safe zone.
+
+Neither script touches the other's files, so they can go in separately
+and in either order.
+
+
+-----------------------------------------------------------------------
+CHECK BEFORE ACCEPTING
+-----------------------------------------------------------------------
+
+Both:
+  1. Purple collar, round blue tag, no harness. This is the single
+     detail the whole illustration set keeps getting wrong.
+  2. No white anywhere on her face.
+  3. Cream at every edge, no seam, no scenery reaching the border.
+
+Splash only:
+  4. Empty cream top and bottom, enough to crop to 3:4.
+  5. The two of them are looking at each other.
+
+Icon only:
+  6. Squint at it, or shrink it to a thumbnail. If the collar disappears
+     or the head becomes a black oval, it is too far away — ask for a
+     tighter crop.
+  7. Nothing you care about in the outer tenth.
