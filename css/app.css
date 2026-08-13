@@ -2811,11 +2811,10 @@ details.disclosure .disclosure-body {
    Two animations on one element, doing two different jobs.
 
    `splash-run-cycle` is the legs: an eight-frame walk cycle stepped through
-   on --splash-cadence. That value comes from app.js rather than living here,
-   because it is derived from the same PACE constant as the crossing and the
-   two have to agree — cadence and ground speed out of step is what makes a
-   walk cycle skate. At PACE 1 it is 850ms, the two-step cadence of a brisk
-   walk, matched to the ~1.5 body-heights per second the crossing gives them.
+   on --splash-cadence, which app.js sets alongside the crossing so the two
+   halves of the walk are decided together. They are deliberately not locked
+   to each other — see WALK_CADENCE_MS there for why the pair glide slightly
+   rather than paying 12s of splash for honest footfalls.
 
    `splash-run-across` is the progress: it carries her from the left of the
    lane to the right over --splash-run, which app.js sets to the hold that is
