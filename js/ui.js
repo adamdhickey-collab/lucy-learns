@@ -519,6 +519,89 @@ export function confirmSheet({
 }
 
 /**
+ * Pick the dog's portrait from a fixed set.
+ *
+ * A radiogroup again, for the same reason the person list is one: exactly one
+ * is chosen and the sheet shows which. Here it matters more, because the
+ * choice is carried entirely by a picture — without `aria-checked` and a real
+ * accessible name per option, a screen reader gets ten identical "image"
+ * buttons and no way to tell which is current.
+ *
+ * @param {object}   opts
+ * @param {Array}    opts.options   [{ id, label, src }]
+ * @param {string}   [opts.currentSrc]
+ * @param {Function} opts.onPick    (option) => void
+ */
+export function avatarSheet({ options, currentSrc, onPick }) {
+  const backdrop = document.createElement('div');
+  backdrop.className = 'sheet-backdrop';
+
+  const tile = (o) => `
+    <li>
+      <button
+        class="avatar-choice ${o.src === currentSrc ? 'avatar-choice--active' : ''}"
+        type="button"
+        role="radio"
+        aria-checked="${o.src === currentSrc}"
+        aria-label="${esc(o.label)}"
+        data-pick="${esc(o.id)}"
+      >
+        ${/* Decorative: the button is named by its aria-label, so alt text
+              here would have a screen reader say the breed twice. */ ''}
+        ${/* Not lazy. The whole set is precached and weighs less than one
+              illustration, and every tile is on screen the moment the sheet
+              opens — lazy here buys nothing and costs a grid that fills in
+              under the reader. */ ''}
+        <img src="${esc(o.src)}" alt="" width="400" height="400" />
+        <span>${esc(o.short || o.label)}</span>
+      </button>
+    </li>`;
+
+  backdrop.innerHTML = `
+    <div class="sheet sheet--dialog" role="dialog" aria-modal="true" aria-labelledby="avatar-sheet-title">
+      <h2 id="avatar-sheet-title">Pick a picture</h2>
+      <p class="section-note">
+        The illustrations in the sessions all show the same dog. This one is
+        yours — pick whichever comes closest.
+      </p>
+      <ul class="avatar-grid" role="radiogroup" aria-labelledby="avatar-sheet-title">
+        ${options.map(tile).join('')}
+      </ul>
+      <div class="btn-row" style="margin-top: var(--s-4)">
+        <button class="btn btn--quiet btn--block" type="button" data-close>Cancel</button>
+      </div>
+    </div>`;
+
+  let release = () => {};
+  const close = () => {
+    release();
+    backdrop.remove();
+  };
+
+  backdrop.addEventListener('click', (e) => {
+    if (e.target === backdrop) close();
+  });
+  backdrop.querySelector('[data-close]').addEventListener('click', close);
+
+  backdrop.querySelectorAll('[data-pick]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const picked = options.find((o) => o.id === btn.dataset.pick);
+      close();
+      if (picked && picked.src !== currentSrc) onPick(picked);
+    });
+  });
+
+  document.body.appendChild(backdrop);
+  release = trapModal(backdrop, {
+    onEscape: close,
+    initialFocus:
+      backdrop.querySelector('[data-pick][aria-checked="true"]') ||
+      backdrop.querySelector('[data-pick]'),
+  });
+  return close;
+}
+
+/**
  * Who is practising: pick somebody, or add somebody.
  *
  * Built here rather than in a view because two screens open it — the avatar on

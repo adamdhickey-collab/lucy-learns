@@ -1,4 +1,4 @@
-import { PROGRAMS, TRAINER } from '../content.js';
+import { PROGRAMS, TRAINER, DOG_AVATARS } from '../content.js';
 import { downloadCsv } from './report.js';
 import {
   getState,
@@ -8,6 +8,7 @@ import {
   clearDemoData,
   clearAll,
   getDog,
+  setDog,
   getPerson,
   getPeople,
   startFresh,
@@ -23,6 +24,8 @@ import {
   focusHeading,
   toast,
   confirmSheet,
+  avatarSheet,
+  refreshApp,
   initialsOf,
   firstNameOf,
 } from '../ui.js';
@@ -50,12 +53,20 @@ function render() {
 
       <div class="card">
         <div class="profile">
-          ${/* The alt names the dog in state rather than hardcoding "Lucy",
-                but still describes the picture that is actually there — the
-                illustration is one specific dog and does not change with the
-                name. Saying so is more use to a screen reader than pretending
-                otherwise. */ ''}
-          <img src="${dog.photo}" alt="${dog.name}, a black Lab and German Wirehaired Pointer mix." />
+          ${/* The picture is the control now. It is the only thing on this
+                screen that is *about* their dog rather than about the
+                training, and it was the one thing they could not change.
+
+                The alt no longer describes a black Lab: it used to, correctly,
+                because there was exactly one portrait and it was Lucy's. With
+                ten to choose from the description has to come from the choice,
+                so the button is named for what it does and the picture is
+                decorative — the dog's name and breed are already read out
+                beside it. */ ''}
+          <button class="profile-photo" type="button" data-avatar aria-label="Change ${dog.name}’s picture">
+            <img src="${dog.photo}" alt="" />
+            <span class="profile-photo-hint">${icon('plus')}</span>
+          </button>
           <div>
             <h2>${dog.name}</h2>
             ${dog.breed ? html`<p>${dog.breed}</p>` : ''}
@@ -245,6 +256,28 @@ function mount(root) {
     root.querySelectorAll(selector).forEach((el) => el.addEventListener(event, handler));
 
   on('[data-person-switch]', 'click', openPersonSwitcher);
+
+  on('[data-avatar]', 'click', () => {
+    const current = getDog().photo;
+    // Lucy's install stores her own painted portrait, which is not one of the
+    // ten and never will be. Without this the picker would open with nothing
+    // selected and no way back to what was there — the first pick would be a
+    // one-way door out of a picture the household may well prefer.
+    const inSet = DOG_AVATARS.some((o) => o.src === current);
+    const options = inSet
+      ? DOG_AVATARS
+      : [{ id: 'current', label: 'Current picture', src: current }, ...DOG_AVATARS];
+
+    avatarSheet({
+      options,
+      currentSrc: current,
+      onPick: (option) => {
+        setDog({ photo: option.src });
+        refreshApp();
+        toast(`${getDog().name}’s picture updated`);
+      },
+    });
+  });
 
   on('[data-cue]', 'change', (e) => {
     const value = e.currentTarget.value.trim();

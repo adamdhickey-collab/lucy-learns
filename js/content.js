@@ -420,6 +420,65 @@ export const IMAGES = withThumb({
 });
 
 // ---------------------------------------------------------------------------
+// Dog avatars
+// ---------------------------------------------------------------------------
+
+/**
+ * The portraits a household can put on their own dog.
+ *
+ * Every illustration in this app is one specific black Labrador mix, which is
+ * the app's oldest unfixable problem: somebody who sets up "Rufus, golden
+ * retriever" meets Lucy in thirty scenes. The scenes cannot be regenerated per
+ * breed. The one picture that is *about* their dog rather than about a
+ * technique can be, and this is that picture.
+ *
+ * Ten, chosen for coverage of shape rather than registration numbers — the
+ * question being answered is "which looks like my dog", not "which breed is
+ * mine". The reasoning is in art/source/prompts-dog-avatars.txt.
+ *
+ * PNG, not JPEG, and not for the usual reason. These are flat vector-style
+ * illustrations with crisp edges on a flat field, which is the exact case JPEG
+ * handles worst: it rings around every hard edge and mottles the plain
+ * background. At 400² the PNGs are also smaller than the JPEGs would be.
+ *
+ * Two names each, and the pairing is a rule rather than a convenience.
+ *
+ * `label` is the accessible name — a screen reader should hear "Staffordshire
+ * or pit type", not "image". `short` is what is printed under the tile, at
+ * three across on a 375px screen, where the full names wrapped to two lines
+ * and made the grid tall enough to push the last row and the Cancel button
+ * below the fold.
+ *
+ * **Every `short` is a substring of its `label`.** That is not tidiness: a
+ * voice-control user says what they can see, so an accessible name that does
+ * not contain the visible text leaves them saying "click Pit type" at a
+ * control the browser knows as something else. It is why this is "Pit type"
+ * and not "Staffy", and "Bulldog" rather than "Frenchie".
+ */
+export const DOG_AVATARS = [
+  { id: 'lab-black', label: 'Black Labrador', short: 'Black Lab', src: 'img/avatars/dog-01.png' },
+  { id: 'golden', label: 'Golden Retriever', short: 'Golden', src: 'img/avatars/dog-02.png' },
+  { id: 'shepherd', label: 'German Shepherd', short: 'Shepherd', src: 'img/avatars/dog-03.png' },
+  { id: 'frenchie', label: 'French Bulldog', short: 'Bulldog', src: 'img/avatars/dog-04.png' },
+  { id: 'poodle', label: 'Poodle or doodle', short: 'Poodle', src: 'img/avatars/dog-05.png' },
+  { id: 'dachshund', label: 'Dachshund', short: 'Dachshund', src: 'img/avatars/dog-06.png' },
+  { id: 'beagle', label: 'Beagle', short: 'Beagle', src: 'img/avatars/dog-07.png' },
+  { id: 'collie', label: 'Border Collie', short: 'Collie', src: 'img/avatars/dog-08.png' },
+  {
+    id: 'staffy',
+    label: 'Staffordshire or pit type',
+    short: 'Pit type',
+    src: 'img/avatars/dog-09.png',
+  },
+  {
+    id: 'shihtzu',
+    label: 'Shih Tzu or small fluffy',
+    short: 'Small fluffy',
+    src: 'img/avatars/dog-10.png',
+  },
+];
+
+// ---------------------------------------------------------------------------
 // Goals (how the Activities library is grouped)
 // ---------------------------------------------------------------------------
 

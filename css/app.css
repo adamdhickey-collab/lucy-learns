@@ -2408,6 +2408,110 @@ details.disclosure .disclosure-body {
   padding: var(--s-4);
 }
 
+/* The portrait is a button. It has to keep the circle exactly — the image
+   inside is already sized and rounded by `.profile img`, so this contributes
+   nothing but the hit area and the affordance. */
+.profile-photo {
+  position: relative;
+  flex: none;
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  line-height: 0;
+  cursor: pointer;
+}
+
+/* A picture with no affordance is a picture. This is the smallest mark that
+   says "this is yours to change" without a label crowding the card, and it
+   sits on the circle's lower right where it cannot cover the dog's face. */
+.profile-photo-hint {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 2px solid var(--surface);
+  color: var(--text-on-dark);
+}
+
+.profile-photo-hint svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.avatar-grid {
+  list-style: none;
+  margin: var(--s-4) 0 0;
+  padding: 0;
+  display: grid;
+  /* Three across on a phone at 34rem and narrower, which puts all ten in
+     four rows — short enough that the sheet does not need its own scroll on
+     an 812px screen with the keyboard away. */
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s-3);
+}
+
+.avatar-choice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-2);
+  width: 100%;
+  padding: var(--s-2);
+  border: 1.5px solid transparent;
+  border-radius: var(--r-lg);
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: var(--step--2);
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+}
+
+/* `height: auto` is load-bearing, not tidiness. The tiles carry width/height
+   attributes so the grid reserves the right space before the images arrive,
+   and a presentational `height="400"` beats `aspect-ratio` for the used
+   height — every tile came out 400px tall, which pushed eight of eleven below
+   the fold, and `loading="lazy"` then quite correctly refused to fetch them.
+   A sizing bug that presents as a loading bug. */
+.avatar-choice img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--surface-sunken);
+}
+
+.avatar-choice--active {
+  border-color: var(--primary);
+  background: var(--primary-wash);
+  color: var(--primary-dark);
+  font-weight: 600;
+}
+
+@media (hover: hover) {
+  .avatar-choice:hover {
+    border-color: var(--border);
+  }
+
+  .avatar-choice--active:hover {
+    border-color: var(--primary);
+  }
+}
+
 .profile img {
   width: 76px;
   height: 76px;

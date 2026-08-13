@@ -39,8 +39,22 @@ const SHELL = [
   './js/views/moment.js',
   './js/views/welcome.js',
   './js/views/report.js',
+  './js/person.js',
   './img/lucy-portrait.jpg',
   './img/splash-mark.jpg',
+  // The ten dog portraits. All of them, not just the chosen one: the picker
+  // shows the full grid, and a household that opens it offline to change their
+  // mind should not meet nine broken tiles. 80 KB for the set.
+  './img/avatars/dog-01.png',
+  './img/avatars/dog-02.png',
+  './img/avatars/dog-03.png',
+  './img/avatars/dog-04.png',
+  './img/avatars/dog-05.png',
+  './img/avatars/dog-06.png',
+  './img/avatars/dog-07.png',
+  './img/avatars/dog-08.png',
+  './img/avatars/dog-09.png',
+  './img/avatars/dog-10.png',
   './img/thumb-door-cover.jpg',
   './img/thumb-door-place-03-send.jpg',
   './img/thumb-door-place-cover.jpg',

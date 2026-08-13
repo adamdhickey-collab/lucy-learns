@@ -6,7 +6,26 @@ app icon was cropped: one subject, big, centred, nothing that matters
 near the edge.
 
   OUT ->  art/source/avatars/dog-01.png  …  dog-10.png   (1:1, 2048²)
-  IN  ->  img/avatars/dog-01.jpg          …  dog-10.jpg   (400²)
+  IN  ->  img/avatars/dog-01.png          …  dog-10.png   (400²)
+
+*** THE PICKER IS ALREADY BUILT AND ALREADY POINTING AT THOSE PATHS. ***
+
+img/avatars/ currently holds ten PLACEHOLDERS — a flat cream field with a
+coloured disc where the head goes, written by
+
+    node scripts/make-avatar-placeholders.mjs
+
+They are the right geometry and the wrong picture, on purpose: they let
+the grid, the circular mask and the whole flow be built and tested
+before the art exists. Drop the real ten on top of them at the same
+filenames and nothing in the app needs editing — not the manifest in
+js/content.js, not the service worker precache, not a household's
+already-stored choice.
+
+PNG, not JPEG, and not out of habit. These are flat vector-style
+illustrations with crisp edges on a plain field, which is precisely what
+JPEG is worst at: it rings around every hard edge and mottles the flat
+background. At 400² the PNGs also come out smaller.
 
 
 -----------------------------------------------------------------------
@@ -252,14 +271,27 @@ closed. Adult dog. Keep the flowing coat clear of all four corners.
 AFTER GENERATION
 =======================================================================
 
-Save each as art/source/avatars/dog-NN.png, then:
+Save each as art/source/avatars/dog-NN.png, then, from the repo root:
 
-  mkdir -p "img/avatars" && cd "/Users/ahickey/dev/claude-local/Lucy Learns" && for f in art/source/avatars/dog-*.png; do sips -Z 400 -s format jpeg -s formatOptions 80 "$f" --out "img/avatars/$(basename "$f" .png).jpg"; done
+  for f in art/source/avatars/dog-*.png; do sips -Z 400 -s format png "$f" --out "img/avatars/$(basename "$f")"; done
 
-400² because the existing brand mark `lucy-portrait` is 400² and this is
-used no larger. Ten at ~40 KB is ~400 KB, which the service worker
-precaches with everything else — worth checking against the current
-payload before adding a second set at a larger size.
+That overwrites the placeholders in place. 400² because the existing
+brand mark `lucy-portrait` is 400² and nothing shows these larger; the
+placeholders are ~4.5 KB each and the real art will be bigger, so check
+the total against the precache before shipping — every one of the ten is
+precached, since a household opening the picker offline should not meet
+nine broken tiles.
 
-Then check all ten together, circle-masked, at 40px. That is the only
-review that counts.
+Then two checks, in this order:
+
+  1. All ten together, circle-masked, at the size the picker draws them
+     — 83px on a 375px screen. A head half a size too big is obvious
+     here and invisible at full size.
+  2. One of them on the profile card at 76px, which is the only place
+     the chosen picture is actually used.
+
+The app reads them from the manifest in js/content.js. If you generate
+fewer than ten, or reorder them, that list is the one thing to edit —
+`label` is the accessible name and `short` is the caption, and every
+`short` has to remain a substring of its `label` (the reason is in the
+comment above the list).

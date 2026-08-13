@@ -64,6 +64,15 @@ the moment somebody has just typed their own dog's name is the moment the
 mismatch is about to start. Deliberately not an apology — the pictures are
 demonstrating handling, and handling does not depend on the coat.
 
+**And the one picture that can be theirs, now is.** The portrait on the profile
+is a picker of ten dog avatars, chosen for coverage of shape rather than
+registration numbers. The instructional scenes are still Lucy and always will
+be; this is the only image in the app that is about *their* dog rather than
+about a technique, so it is the only one worth making changeable. A fresh
+install now also defaults to a generic black Labrador rather than Lucy's own
+painted portrait, which was the sharpest form of this problem: a stranger being
+shown a specific other dog as the picture of theirs.
+
 ### 5. What a stranger lands in — **example data, and it says why**
 
 Was two options presented as equals, in the order empty-then-example. Now the

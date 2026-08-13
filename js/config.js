@@ -7,7 +7,23 @@ export const DOG = {
   id: 'lucy',
   name: 'Lucy',
   breed: 'Lab / German Wirehaired Pointer mix',
-  photo: 'img/lucy-portrait.jpg',
+  /**
+   * One of the ten pickable portraits, not Lucy's own.
+   *
+   * This is the default a *fresh install* begins with, and a fresh install is
+   * a stranger — handing them Lucy's specific painted portrait as the picture
+   * of their dog is the "every picture is one specific dog" problem at its
+   * most pointed, on the one screen that is supposed to be about their dog.
+   * `dog-01` is the black Labrador, which is both the most common dog this
+   * will meet and Lucy's own build.
+   *
+   * Lucy's install is untouched by this: her `photo` was written into stored
+   * state at setup and config only supplies defaults to installs that have
+   * none. `img/lucy-portrait.jpg` is still shipped and still precached for
+   * exactly that reason, and the picker offers it back to anyone whose stored
+   * photo is not in the ten.
+   */
+  photo: 'img/avatars/dog-01.png',
   about: 'Friendly and affectionate. Gets over-aroused around arrivals and unfamiliar people.',
 };
 

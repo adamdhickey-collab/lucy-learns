@@ -246,13 +246,29 @@ recorded on every session all along.
 | 2 | Two setup screens in the existing welcome | Small | Done |
 | 3 | Breed field with datalist | Small | Done |
 | 4 | Avatar sheet: switch and add | Small–medium | Done |
-| 5 | Profile screen edits name, breed, initials | Small | Open |
+| 5 | Profile screen edits name, breed, initials | Small | Part done |
 
 Steps 1–3 delivered "the app is not Fabiola's any more", which was the part
 blocking the demo. Step 4 is the switching.
 
-Step 5 is what is left, and it is smaller than it was: the switcher covers
-adding and removing people, so what remains is **editing** — renaming a person
-or the dog, and changing the breed, after setup. Today the only way to correct
-a typo in either is to reset the whole app. `setPersonName` and `setDog` are
-already there and already used by the welcome; step 5 is a screen for them.
+Step 5 is part done. The **picture** is editable: the portrait on the profile
+card is a button, and it opens a grid of ten dog avatars (the reasoning for the
+ten is in `art/source/prompts-dog-avatars.txt`). That was the piece worth doing
+first, because it is the only part of this that touches the app's oldest
+unfixable problem — every illustration is one specific black Labrador mix, and
+the scenes cannot be regenerated per breed, but the one picture that is *about*
+their dog rather than about a technique can be.
+
+The default for a fresh install moved with it, from Lucy's own painted portrait
+to the black Labrador from the set. Handing a stranger Lucy's specific face as
+the picture of *their* dog was the problem at its sharpest, on the one screen
+meant to be theirs. Lucy's install is untouched — config only supplies defaults
+to installs with no stored value — and the picker offers her portrait back as a
+"Current picture" tile to anyone whose stored photo is not one of the ten, so
+the first pick is not a one-way door.
+
+What is still open is **text**: renaming a person or the dog, and changing the
+breed, after setup. Today the only way to fix a typo in any of them is to reset
+the whole app. `setPersonName` and `setDog` already exist and are already used
+by the welcome and by the picker, so this is a screen for them rather than new
+plumbing.
