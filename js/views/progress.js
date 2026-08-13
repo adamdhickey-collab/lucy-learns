@@ -248,6 +248,26 @@ function render() {
         : html`
             <div class="insight insight--${insight.tone}">${icon('spark')}<p>${insight.text}</p></div>
 
+            ${/* Second on the screen, directly under the headline.
+                  It was last — a quiet link below the whole recent-activity
+                  list, measured at line 88 of 89. Three readers given "find
+                  the summary you would hand your trainer" found it none out
+                  of three, and every one of them flagged themselves as
+                  guessing. A thing used once a fortnight can be small, but it
+                  cannot be at the bottom of the longest screen in the app.
+
+                  Named for the artefact rather than the occasion. "Prepare
+                  for your next lesson" describes when you would want it,
+                  which is no help to someone scanning for the thing itself;
+                  "Summary for your trainer" is what they were sent to find. */ ''}
+            <button class="quick-row" type="button" data-route="#/report">
+              <span>
+                <strong>Summary for your trainer</strong>
+                <small>Everything from the last two weeks, ready to hand over.</small>
+              </span>
+              ${icon('book')}
+            </button>
+
             <section class="section">
               <div class="metric-grid">
                 ${metric(
@@ -325,9 +345,6 @@ function render() {
               </div>
             </section>
 
-            <section class="section">
-              <a class="btn btn--quiet btn--block" href="#/report">Prepare for your next lesson</a>
-            </section>
           `}
 
       <section class="section">

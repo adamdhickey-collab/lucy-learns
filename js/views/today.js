@@ -179,6 +179,25 @@ function render() {
         ${icon('plus')}
       </button>
 
+      ${/* The report's second door, and the first one on the screen anybody
+            actually opens the app to. It used to live only at the foot of
+            Progress, which meant the answer to "my lesson is tomorrow, what
+            do I bring" was two screens and a long scroll away — readers sent
+            to find it went to Start session and Record a moment instead.
+
+            Only once something has been logged. Before that the report is a
+            page explaining it has nothing to show, and offering it on the
+            first run would be the app advertising its own emptiness. */ ''}
+      ${state.sessions.length
+        ? html`<button class="quick-row" type="button" data-route="#/report">
+            <span>
+              <strong>Summary for your trainer</strong>
+              <small>Everything from the last two weeks, ready to hand over.</small>
+            </span>
+            ${icon('book')}
+          </button>`
+        : ''}
+
     </div>
   `;
 }
