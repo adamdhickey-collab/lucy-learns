@@ -52,26 +52,32 @@ export const ICONS = {
     '<path d="M8 7.2A6.6 6.6 0 0 1 12 6c1.5 0 2.9.4 4 1.2v5.4a4.5 4.5 0 0 1-1.9 3.7l-1 .7a2 2 0 0 1-2.2 0l-1-.7A4.5 4.5 0 0 1 8 12.6z"/>' +
     '<path d="M10.3 11h.01M13.7 11h.01"/>' +
     '</svg>',
-  // Profile — a paw. The tab it marks used to be the dog's own name beside a
-  // dog's head; the name could not survive a long one, and the head is the
-  // app's mascot everywhere else.
+  // Profile — a whole dog, side on.
   //
-  // An ID tag was tried first and failed the only test that matters: shown the
-  // icon cold, nobody could say what it was. A ring and a disc is a tag if you
-  // already know it is a tag and a balloon otherwise. A paw needs no such
-  // help.
+  // Third attempt at this tab's mark. An ID tag failed cold-reading, and a paw
+  // read as a paw but not as "the dog's page". This is the dog.
   //
-  // Four toes, not five, and generous gaps between them. The star icon's
-  // comment further up records a paw being rejected at 15px because the toes
-  // closed into a blob; this is 24px, and the toes are spaced for that size
-  // rather than scaled down from a bigger drawing.
+  // Solid, and composed of overlapping primitives rather than one traced
+  // outline. Both parts of that are deliberate. At 24px an outlined dog is
+  // four legs, two ears and a tail rendered in 1.75px stroke, which closes up
+  // into a scribble — the same failure the star icon's comment records for an
+  // outlined paw at 15px. A filled silhouette has no interior lines to lose.
+  // And because the shapes are filled in one colour, overlapping them unions
+  // them visually, so an ellipse, a circle and four rounded rectangles make a
+  // dog without anybody having to write a single continuous path around it.
+  //
+  // `icon--solid` is the existing opt-out that lets the tab bar's stroke rules
+  // step aside; the star uses it for the same reason.
   profile:
-    '<svg viewBox="0 0 24 24">' +
-    '<ellipse cx="7.2" cy="10.4" rx="2" ry="2.4"/>' +
-    '<ellipse cx="16.8" cy="10.4" rx="2" ry="2.4"/>' +
-    '<ellipse cx="10.9" cy="6.6" rx="1.9" ry="2.3"/>' +
-    '<ellipse cx="15.6" cy="6.2" rx="1.7" ry="2.1"/>' +
-    '<path d="M12 20.8c-2.7 0-4.8-1.6-4.8-3.8 0-2.2 2.1-4.4 4.8-4.4s4.8 2.2 4.8 4.4c0 2.2-2.1 3.8-4.8 3.8z"/>' +
+    '<svg viewBox="0 0 24 24" class="icon--solid">' +
+    '<ellipse cx="11" cy="13" rx="6" ry="3.4"/>' +
+    '<rect x="13.9" y="9.2" width="3.6" height="4.6" rx="1.4"/>' +
+    '<circle cx="18" cy="9.5" r="3.15"/>' +
+    '<rect x="19.4" y="9.4" width="3.4" height="2.7" rx="1.35"/>' +
+    '<path d="M16.35 6.6 15.6 3.7c-.1-.4.3-.7.7-.5l2.5 1.5z"/>' +
+    '<rect x="14.4" y="14.6" width="2.3" height="5.6" rx="1.15"/>' +
+    '<rect x="6.4" y="14.6" width="2.3" height="5.6" rx="1.15"/>' +
+    '<path d="M5.3 11.7c-1.8-.5-2.9-2.1-2.6-3.7.1-.6.9-.7 1.1-.1.4 1.1 1.3 1.9 2.4 2.1z"/>' +
     '</svg>',
   back: '<svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>',
   close: '<svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>',
