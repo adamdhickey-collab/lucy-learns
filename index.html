@@ -128,7 +128,12 @@
            with the same negative delay, so it always ends under her feet. -->
       <div class="splash-progress">
         <span class="splash-trail"></span>
-        <span class="splash-runner"></span>
+        <!-- The clock rides inside the runner rather than beside it, so it
+             inherits the traversal instead of running a second copy of the
+             animation that could drift a subpixel out of step. aria-hidden
+             because a screen reader reciting milliseconds would be a torment,
+             and it says nothing the progress bar does not already say. -->
+        <span class="splash-runner"><span class="splash-clock" aria-hidden="true"></span></span>
       </div>
       <div class="splash-meta">
         <p id="splash-version" class="splash-version"></p>

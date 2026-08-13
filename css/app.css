@@ -1797,10 +1797,128 @@ details.disclosure .disclosure-body {
   font-weight: 600;
 }
 
+/* The count kicks when it changes.
+   ---------------------------------------------------------------------------
+   This is the most-tapped control in the app — a household runs it five to ten
+   times a session — and it was the one place where a tap produced a number
+   silently swapping for another number. The kick is the difference between
+   logging and playing.
+
+   Two different kicks, because the two answers are not the same news. A good
+   rep overshoots and settles; a miss drops and recovers. The number itself
+   never changes colour: colour is how this app says a behaviour needs
+   watching, and spending it on a scorekeeper would cheapen the word.
+
+   Re-triggering is why these are classes toggled off and on rather than a
+   transition. The same animation on the same element will not replay unless
+   the class actually leaves the element first, and at three taps a second the
+   old kick has to be cancelled mid-flight, not queued. */
+.tally-count b {
+  transform-origin: 50% 60%;
+}
+
+.tally-count b.kick-good {
+  animation: tally-kick-good 420ms cubic-bezier(0.22, 1.4, 0.36, 1);
+}
+
+.tally-count b.kick-miss {
+  animation: tally-kick-miss 360ms cubic-bezier(0.33, 0, 0.2, 1);
+}
+
+@keyframes tally-kick-good {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.18) translateY(-3px);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes tally-kick-miss {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.93) translateY(2px);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* The bar takes the same news a beat later, so the eye reads number then
+   progress rather than both at once. */
 .tally-meter {
   height: 10px;
   margin: var(--s-4) auto 0;
   max-width: 16rem;
+  /* Containing block for the sweep below; .meter already clips it. */
+  position: relative;
+}
+
+/* A light sweep travelling the length of the bar when a rep lands well — the
+   arcade tell that something was banked. Behind the fill, never over the
+   text, and gone in half a second. */
+.tally-meter.spark::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--success) 55%, transparent) 45%,
+    transparent 90%
+  );
+  animation: tally-sweep 520ms ease-out;
+}
+
+@keyframes tally-sweep {
+  from {
+    transform: translateX(-100%);
+    opacity: 0.9;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Target met is a small event, so it arrives rather than appearing. */
+.tally-met:not([hidden]) {
+  animation: tally-met-in 420ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
+}
+
+@keyframes tally-met-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The kick is decoration on top of a number that already changed, so reduced
+   motion drops all of it. Nothing here carries information: the count, the
+   bar and the live region say everything, which is the test for whether an
+   effect is safe to remove outright rather than shorten. */
+@media (prefers-reduced-motion: reduce) {
+  .tally-count b.kick-good,
+  .tally-count b.kick-miss,
+  .tally-meter.spark::after,
+  .tally-met:not([hidden]) {
+    animation: none;
+  }
+
+  .tally-meter.spark::after {
+    content: none;
+  }
 }
 
 .tally-meter > span {
@@ -2882,6 +3000,43 @@ details.disclosure .disclosure-body {
     splash-run-across var(--splash-run) var(--splash-run-delay) linear both;
 }
 
+/* A lap timer clipped to the walker's heels: the milliseconds left before the
+   app opens, counting to zero exactly as they reach the end of the lane.
+
+   6.5px is far under anything readable at a glance, and that is the point —
+   it is texture, not information. Everything it could tell you is already
+   said by the distance left in front of the dog. It is set in tabular figures
+   because proportional digits at 60fps make the whole string twitch as the
+   glyph widths change, which turns a quiet detail into a flicker.
+
+   It fades in with their departure rather than sitting at zero-motion during
+   the wait: a clock ticking beside two figures standing still reads as a
+   stall. */
+.splash-clock {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-top: 4px;
+  transform: translateX(-50%);
+  font-size: 6.5px;
+  line-height: 1;
+  letter-spacing: 0.09em;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--primary-dark) 50%, transparent);
+  animation: splash-clock-in 420ms var(--splash-run-delay) ease-out both;
+}
+
+@keyframes splash-clock-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes splash-run-cycle {
   to {
     background-position-x: -320px;
@@ -3019,6 +3174,7 @@ details.disclosure .disclosure-body {
   .splash-tagline::after,
   .splash-trail,
   .splash-runner,
+  .splash-clock,
   /* The gated run rules are two classes deep, so the bare classes above
      would lose to them — the kill has to name the gated selectors too. */
   .splash--running .splash-trail,

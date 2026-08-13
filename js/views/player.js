@@ -900,7 +900,33 @@ function wire(root) {
   // The tally ---------------------------------------------------------------
   // Updated in place, never re-rendered: a full refresh would steal focus
   // from the button on every rep, and the meter's fill could not tween.
-  const updateTally = (announcement) => {
+  // Replay a one-shot animation on an element that may still be mid-flight
+  // from the last tap.
+  //
+  // Two things this has to get right, both found by tapping fast rather than
+  // by reading it:
+  //
+  // Removing the class is not enough on its own — the class list is only read
+  // at the next style recalculation, so setting it straight back leaves the
+  // browser thinking nothing changed and the animation never restarts.
+  // Touching offsetWidth forces that recalculation in between.
+  //
+  // And the whole group has to come off, not just the one going back on. A
+  // miss tapped during a good kick otherwise carries both classes at once —
+  // two animations arguing over one transform — and because the timer is
+  // shared, the miss's timer then cleans up only itself and leaves the good
+  // class stranded on the element for the rest of the session.
+  const KICKS = ['kick-good', 'kick-miss'];
+  const replay = (el, className, ms, group = [className]) => {
+    if (!el) return;
+    group.forEach((c) => el.classList.remove(c));
+    void el.offsetWidth;
+    el.classList.add(className);
+    clearTimeout(el._replayTimer);
+    el._replayTimer = setTimeout(() => group.forEach((c) => el.classList.remove(c)), ms);
+  };
+
+  const updateTally = (announcement, outcome) => {
     syncTotals();
     const count = session.reps;
     const good = session.successes;
@@ -920,12 +946,24 @@ function wire(root) {
     track.setAttribute('aria-valuenow', Math.min(count, target));
     track.querySelector('span').style.transform =
       `scaleX(${Math.min(count / target, 1).toFixed(3)})`;
+
+    // The kick is feedback for an answer, so it only fires when there was one.
+    // An undo passes no outcome and the number simply changes back, which is
+    // the right weight for a correction — celebrating a deletion would be
+    // telling the household that taking something back is an achievement.
+    if (outcome === 'good' || outcome === 'miss') {
+      replay(q('[data-tally-n]'), `kick-${outcome}`, 500, KICKS);
+      if (outcome === 'good') replay(q('.tally-meter'), 'spark', 600);
+    }
   };
 
   on('[data-rep]', 'click', (e) => {
     const good = e.currentTarget.dataset.rep === '1';
     session.repLog.push(good);
-    updateTally(`${session.repLog.length} of ${level.reps}. ${good ? 'Went well.' : 'Not that one.'}`);
+    updateTally(
+      `${session.repLog.length} of ${level.reps}. ${good ? 'Went well.' : 'Not that one.'}`,
+      good ? 'good' : 'miss'
+    );
   });
 
   on('[data-rep-undo]', 'click', () => {

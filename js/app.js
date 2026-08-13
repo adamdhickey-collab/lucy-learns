@@ -293,6 +293,29 @@ if (splash) {
   splash.style.setProperty('--splash-cadence', `${WALK_CADENCE_MS}ms`);
   splash.classList.add('splash--running');
 
+  // The lap timer at the walker's heels. It counts the crossing down rather
+  // than the hold, so it reaches 0.000 on the same frame they reach the end of
+  // the lane — one clock for one event, instead of two numbers about the same
+  // wait disagreeing by the length of a fade.
+  //
+  // Left empty under reduced motion. The element is decorative and the CSS
+  // already stops it fading in, but a number changing sixty times a second is
+  // motion whatever its opacity is doing, and this is the request that setting
+  // exists to answer.
+  const clock = splash.querySelector('.splash-clock');
+  if (clock && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const lands = performance.now() + runDelay + (remaining - runDelay + SPLASH_FADE_MS);
+    const tick = () => {
+      // isConnected, not a stored flag: dismiss() removes the whole splash, and
+      // asking the node whether it is still in the document is the one check
+      // that cannot fall out of step with that.
+      if (!clock.isConnected) return;
+      clock.textContent = (Math.max(0, lands - performance.now()) / 1000).toFixed(3);
+      requestAnimationFrame(tick);
+    };
+    tick();
+  }
+
   if (!location.search.includes('splash-hold')) {
     let dismissed = false;
     const dismiss = () => {
