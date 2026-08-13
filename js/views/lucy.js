@@ -75,10 +75,32 @@ function render() {
               Every activity, cue, and progression rule in this app comes from their
               program. When something is not working, they are the next step.
             </p>
-            <div class="btn-row" style="margin-top: var(--s-4)">
-              <a class="btn btn--quiet" href="tel:${TRAINER.phone}">Call</a>
-              <a class="btn btn--quiet" href="${TRAINER.url}" target="_blank" rel="noopener">Website</a>
-            </div>
+            ${/* Buttons only when there is something behind them. A disabled
+                  Call button is worse than no Call button — it is a control
+                  that looks live, and this app already decided that argument
+                  once, for the planned activity cards.
+
+                  So when the contact details are absent the row is replaced by
+                  a sentence rather than greyed out. It says what would be here
+                  and why it is not, which is the honest thing to show someone
+                  trying a demo, and it keeps the trainer named — the app is a
+                  companion to their instruction whether or not you can reach
+                  them from this screen. */ ''}
+            ${TRAINER.phone || TRAINER.url
+              ? html`<div class="btn-row" style="margin-top: var(--s-4)">
+                  ${TRAINER.phone
+                    ? html`<a class="btn btn--quiet" href="tel:${TRAINER.phone}">Call</a>`
+                    : ''}
+                  ${TRAINER.url
+                    ? html`<a class="btn btn--quiet" href="${TRAINER.url}" target="_blank" rel="noopener">
+                        Website
+                      </a>`
+                    : ''}
+                </div>`
+              : html`<p class="section-note" style="margin-top: var(--s-4)">
+                  In a real setup their phone number and website sit here. This
+                  version is a demonstration, so there is nothing to call.
+                </p>`}
           </div>
         </div>
         <div class="card" style="margin-top: var(--s-3)">

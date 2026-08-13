@@ -375,10 +375,18 @@ function fallbackSheet(activity) {
         <ul class="notes-list notes-list--calm">
           ${join(activity.fallbackSteps.map((s) => html`<li>${s}</li>`))}
         </ul>
+        ${/* The advice survives losing the phone link; only the second half of
+              the sentence goes. This is the one place in the app that offers
+              the trainer's number mid-session — shown while somebody is having
+              a hard time, which is when they are likeliest to take it, and the
+              single strongest reason a live number could not stay in a build
+              that gets handed around. */ ''}
         <p class="sheet-trainer">
           Still stuck after making it easier? That is exactly what your trainer is
-          for. Bring it to your next lesson, or
-          <a href="tel:${TRAINER.phone}">call ${TRAINER.name}</a>.
+          for.${TRAINER.phone
+            ? html` Bring it to your next lesson, or
+                <a href="tel:${TRAINER.phone}">call ${TRAINER.name}</a>.`
+            : html` Bring it to your next lesson with ${TRAINER.name}.`}
         </p>
         <div class="btn-row" style="margin-top: var(--s-5)">
           <button class="btn btn--quiet" type="button" data-sheet-close>Keep going</button>
