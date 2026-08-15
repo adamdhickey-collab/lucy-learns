@@ -5,7 +5,14 @@
 // with the other dialogs and knows nothing about storage; this is the piece
 // that joins the two, which keeps ui.js free of a store import.
 
-import { getPeople, getPerson, addPerson, setActivePerson, removePerson } from './store.js';
+import {
+  getPeople,
+  getPerson,
+  addPerson,
+  setActivePerson,
+  removePerson,
+  renamePerson,
+} from './store.js';
 import { personSheet, refreshApp, toast, firstNameOf } from './ui.js';
 
 /**
@@ -41,6 +48,16 @@ export function openPersonSwitcher() {
     onAdd: (name) => {
       addPerson(name);
       announce(name);
+    },
+
+    // Any row, not only the active one. The typo worth fixing is usually in
+    // somebody else's name — put in by whoever set the app up — and making
+    // people switch to a person to correct their spelling would move the
+    // attribution of the next session as a side effect of proofreading.
+    onRename: (id, name) => {
+      if (!renamePerson(id, name)) return;
+      refreshApp();
+      toast(`Now ${firstNameOf(name)}`);
     },
 
     // Withheld entirely when there is one person, so the sheet does not offer

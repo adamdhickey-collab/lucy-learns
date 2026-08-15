@@ -419,6 +419,32 @@ export const IMAGES = withThumb({
   },
 });
 
+/**
+ * Suggestions, not a taxonomy. The field accepts anything typed into it.
+ *
+ * A single-select of two hundred breeds is the usual answer here and it is the
+ * wrong one: a third to a half of dogs in US homes are mixed, and rescues
+ * routinely arrive with a guess on the paperwork and nothing behind it. Those
+ * owners have to either pick something false or give up on the field.
+ *
+ * A datalist suggests without constraining — "lab" offers Labrador Retriever,
+ * and "some kind of terrier" is accepted exactly as typed. It can afford to be
+ * this relaxed because the answer is never computed with: breed is printed on
+ * the profile and in one CSV header and touches no threshold, no
+ * recommendation and no metric anywhere in the app.
+ */
+export const BREEDS = [
+  'Mixed breed', 'Not sure', 'Australian Shepherd', 'Beagle', 'Bernese Mountain Dog',
+  'Border Collie', 'Boxer', 'Bulldog', 'Cavalier King Charles Spaniel', 'Chihuahua',
+  'Cocker Spaniel', 'Corgi', 'Dachshund', 'Dalmatian', 'Doberman', 'French Bulldog',
+  'German Shepherd', 'German Shorthaired Pointer', 'Golden Retriever', 'Great Dane',
+  'Greyhound', 'Havanese', 'Husky', 'Jack Russell Terrier', 'Labradoodle',
+  'Labrador Retriever', 'Maltese', 'Mastiff', 'Newfoundland', 'Pit Bull Terrier',
+  'Pomeranian', 'Poodle', 'Pug', 'Rottweiler', 'Schnauzer', 'Shar Pei', 'Shiba Inu',
+  'Shih Tzu', 'Staffordshire Bull Terrier', 'Vizsla', 'Weimaraner', 'Whippet',
+  'Yorkshire Terrier',
+];
+
 // ---------------------------------------------------------------------------
 // Dog avatars
 // ---------------------------------------------------------------------------

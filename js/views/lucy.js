@@ -1,4 +1,4 @@
-import { PROGRAMS, TRAINER, DOG_AVATARS } from '../content.js';
+import { PROGRAMS, TRAINER, DOG_AVATARS, BREEDS } from '../content.js';
 import { downloadCsv } from './report.js';
 import {
   getState,
@@ -25,6 +25,7 @@ import {
   toast,
   confirmSheet,
   avatarSheet,
+  dogSheet,
   refreshApp,
   initialsOf,
   firstNameOf,
@@ -72,6 +73,14 @@ function render() {
             ${dog.breed ? html`<p>${dog.breed}</p>` : ''}
             ${dog.about ? html`<p>${dog.about}</p>` : ''}
           </div>
+          ${/* A named button rather than the whole text block made tappable.
+                The block holds a paragraph of free text, and wrapping a
+                paragraph in a button gives a screen reader one long unreadable
+                control name and gives everyone else a huge invisible target
+                next to a second one. This says what it does. */ ''}
+          <button class="profile-edit" type="button" data-edit-dog aria-label="Edit name and breed">
+            ${icon('pencil')}
+          </button>
         </div>
       </div>
 
@@ -256,6 +265,25 @@ function mount(root) {
     root.querySelectorAll(selector).forEach((el) => el.addEventListener(event, handler));
 
   on('[data-person-switch]', 'click', openPersonSwitcher);
+
+  on('[data-edit-dog]', 'click', () => {
+    const before = getDog();
+    dogSheet({
+      name: before.name,
+      breed: before.breed,
+      breeds: BREEDS,
+      onSave: ({ name, breed }) => {
+        const renamed = name !== before.name;
+        setDog({ name, breed });
+        refreshApp();
+        // Named specifically when the name changed, because renaming the dog
+        // also rewrites the attention cue — "Lucy!" becomes "Rufus!" — and
+        // that happens on a screen the household is not looking at. Better to
+        // say so than to have them find it mid-session.
+        toast(renamed ? `Now ${getDog().name}, including the attention cue` : 'Breed updated');
+      },
+    });
+  });
 
   on('[data-avatar]', 'click', () => {
     const current = getDog().photo;

@@ -246,7 +246,7 @@ recorded on every session all along.
 | 2 | Two setup screens in the existing welcome | Small | Done |
 | 3 | Breed field with datalist | Small | Done |
 | 4 | Avatar sheet: switch and add | Small–medium | Done |
-| 5 | Profile screen edits name, breed, initials | Small | Part done |
+| 5 | Profile screen edits name, breed, initials | Small | Done |
 
 Steps 1–3 delivered "the app is not Fabiola's any more", which was the part
 blocking the demo. Step 4 is the switching.
@@ -267,8 +267,26 @@ to installs with no stored value — and the picker offers her portrait back as 
 "Current picture" tile to anyone whose stored photo is not one of the ten, so
 the first pick is not a one-way door.
 
-What is still open is **text**: renaming a person or the dog, and changing the
-breed, after setup. Today the only way to fix a typo in any of them is to reset
-the whole app. `setPersonName` and `setDog` already exist and are already used
-by the welcome and by the picker, so this is a screen for them rather than new
-plumbing.
+The **text** is editable too now, which closes the step. A pencil on the profile
+card opens the dog's name and breed in one sheet — they were asked together at
+setup and are printed together on one card, so splitting them into two controls
+would have been an invention. A pencil on every row of the person switcher
+renames that person.
+
+Two things worth keeping in mind about it:
+
+- **Renaming the dog rewrites the attention cue**, because the cue *is* the
+  dog's name being called. `setDog` has done this since the cue became a token;
+  what is new is that a household can now trigger it, so the confirmation says
+  so out loud rather than letting them discover it mid-session. A cue the
+  household has written themselves is left alone.
+- **Any person can be renamed, not just the active one.** The typo worth fixing
+  is usually in somebody else's name, entered by whoever set the app up, and an
+  active-person-only rename would have meant switching to that person to correct
+  their spelling — moving the attribution of the next session as a side effect
+  of proofreading. `renamePerson(id, name)` takes an id for exactly that reason.
+
+That is the whole of the identity plan built. What remains genuinely unbuilt is
+what §7 said to leave out: per-person history, accounts, permissions, and sync
+between devices. All four still want a backend, and the app is still
+localStorage on one browser.

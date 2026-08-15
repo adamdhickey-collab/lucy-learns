@@ -274,6 +274,26 @@ export function setPersonName(name) {
 }
 
 /**
+ * Rename anybody, not only whoever is holding the phone.
+ *
+ * The active-person-only version was the obvious one and the wrong one: the
+ * typo people actually want to fix is usually in somebody *else's* name, put
+ * in by whoever set the app up. Restricting it to the active person would have
+ * meant switching to the misspelt person to correct them — which changes who
+ * the next session is logged under, so fixing a spelling would quietly move
+ * attribution. An id costs nothing and avoids that entirely.
+ */
+export function renamePerson(id, name) {
+  const person = state.people.find((p) => p.id === id);
+  if (!person) return false;
+  const trimmed = name.trim();
+  if (!trimmed) return false;
+  person.name = trimmed;
+  persist();
+  return true;
+}
+
+/**
  * Add somebody and hand the app to them.
  *
  * Switching on add is the whole point of the interaction: nobody adds a person

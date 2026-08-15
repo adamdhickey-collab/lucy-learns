@@ -145,6 +145,13 @@ export const ICONS = {
   // draw-on animation handles either way — it dashes `svg path, svg polyline`.
   check: '<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>',
 
+  // `pencil`. Edit, wherever a thing the household typed can be retyped.
+  pencil:
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>' +
+    '<path d="m15 5 4 4"/>' +
+    '</svg>',
+
   // `trash-2`.
   trash:
     '<svg viewBox="0 0 24 24">' +
@@ -519,6 +526,103 @@ export function confirmSheet({
 }
 
 /**
+ * Fix the dog's name or breed after setup.
+ *
+ * Both in one sheet rather than two rows that each open something: they were
+ * asked together on one setup screen, they are printed together on one card,
+ * and somebody correcting a typed-in-a-hurry name usually wants a look at the
+ * breed while they are there.
+ *
+ * A form element, not a pair of buttons, so the phone keyboard offers "next"
+ * between the fields and "done" on the last, and so Enter submits from either.
+ *
+ * @param {object}   opts
+ * @param {string}   opts.name
+ * @param {string}   opts.breed
+ * @param {string[]} opts.breeds   datalist suggestions
+ * @param {Function} opts.onSave   ({ name, breed }) => void — only when changed
+ */
+export function dogSheet({ name, breed, breeds = [], onSave }) {
+  const backdrop = document.createElement('div');
+  backdrop.className = 'sheet-backdrop';
+
+  backdrop.innerHTML = `
+    <div class="sheet sheet--dialog" role="dialog" aria-modal="true" aria-labelledby="dog-sheet-title">
+      <h2 id="dog-sheet-title">Name and breed</h2>
+      <form data-form>
+        <div class="field">
+          <label for="dog-sheet-name">Their name</label>
+          <input id="dog-sheet-name" type="text" data-name value="${esc(name)}"
+                 maxlength="24" autocapitalize="words" autocomplete="off"
+                 enterkeyhint="next" required />
+        </div>
+
+        <div class="field" style="margin-top: var(--s-4)">
+          <label for="dog-sheet-breed">Breed <span class="setup-optional">optional</span></label>
+          <input id="dog-sheet-breed" type="text" data-breed value="${esc(breed || '')}"
+                 list="dog-sheet-breeds" placeholder="Mixed breed, Labrador, not sure…"
+                 maxlength="48" autocapitalize="words" autocomplete="off"
+                 enterkeyhint="done" />
+          <datalist id="dog-sheet-breeds">
+            ${breeds.map((b) => `<option value="${esc(b)}"></option>`).join('')}
+          </datalist>
+          ${/* The same reassurance the setup screen gives, for the same
+                reason: the field looks like it wants a pedigree and does not.
+                Somebody re-opening this to fix a name should not be talked
+                into a breed they are not sure of. */ ''}
+          <p class="section-note">
+            However you would describe them. “Mixed” and “not sure” are perfectly
+            good answers.
+          </p>
+        </div>
+
+        <div class="btn-row" style="margin-top: var(--s-5)">
+          <button class="btn btn--quiet" type="button" data-cancel>Cancel</button>
+          <button class="btn" type="submit" data-save>Save</button>
+        </div>
+      </form>
+    </div>`;
+
+  let release = () => {};
+  const close = () => {
+    release();
+    backdrop.remove();
+  };
+
+  const nameInput = backdrop.querySelector('[data-name]');
+  const breedInput = backdrop.querySelector('[data-breed]');
+  const saveBtn = backdrop.querySelector('[data-save]');
+
+  // A dog with no name breaks the greeting, the report title and the attention
+  // cue at once, so the only invalid state this form has is disabled rather
+  // than explained after the fact.
+  const sync = () => {
+    saveBtn.disabled = !nameInput.value.trim();
+  };
+  nameInput.addEventListener('input', sync);
+  sync();
+
+  backdrop.addEventListener('click', (e) => {
+    if (e.target === backdrop) close();
+  });
+  backdrop.querySelector('[data-cancel]').addEventListener('click', close);
+
+  backdrop.querySelector('[data-form]').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const next = { name: nameInput.value.trim(), breed: breedInput.value.trim() };
+    if (!next.name) return;
+    close();
+    // Silence on no change: saving identical values would still fire a toast
+    // and a re-render, which reads as though something happened.
+    if (next.name !== name || next.breed !== (breed || '')) onSave(next);
+  });
+
+  document.body.appendChild(backdrop);
+  release = trapModal(backdrop, { onEscape: close, initialFocus: nameInput });
+  return close;
+}
+
+/**
  * Pick the dog's portrait from a fixed set.
  *
  * A radiogroup again, for the same reason the person list is one: exactly one
@@ -622,7 +726,7 @@ export function avatarSheet({ options, currentSrc, onPick }) {
  * @param {Function} [opts.onRemove]    (id) => void, omitted when only one person
  * @param {Function} [opts.onClose]
  */
-export function personSheet({ people, activeId, onSelect, onAdd, onRemove, onClose }) {
+export function personSheet({ people, activeId, onSelect, onAdd, onRename, onRemove, onClose }) {
   const backdrop = document.createElement('div');
   backdrop.className = 'sheet-backdrop';
 
@@ -640,10 +744,25 @@ export function personSheet({ people, activeId, onSelect, onAdd, onRemove, onClo
         ${p.id === activeId ? `<span class="person-row-mark">${ICONS.check}</span>` : ''}
       </button>
       ${
+        onRename
+          ? `<button class="person-row-edit" type="button" data-rename="${esc(p.id)}"
+               aria-label="Rename ${esc(p.name)}">${ICONS.pencil}</button>`
+          : ''
+      }
+      ${
         onRemove && p.id !== activeId
           ? `<button class="person-row-remove" type="button" data-remove="${esc(p.id)}"
                aria-label="Remove ${esc(p.name)}">${ICONS.close}</button>`
-          : ''
+          : /* The active row has no remove — there must always be somebody to
+               log the next session against — but it still has to hold the
+               column open. Without this the row (flex: 1) takes the vacant
+               space and drags its pencil out of line with every pencil above
+               it, which reads as a rendering fault rather than an absence.
+               aria-hidden so it is a gap on screen and nothing at all to a
+               screen reader. */
+            onRemove
+            ? '<span class="person-row-spacer" aria-hidden="true"></span>'
+            : ''
       }
     </li>`;
 
@@ -665,9 +784,16 @@ export function personSheet({ people, activeId, onSelect, onAdd, onRemove, onClo
 
       ${/* One field, revealed in place rather than on a second screen. Adding
             a person is one question and a screen change would make it feel
-            like more. */ ''}
+            like more.
+
+            Renaming reuses this same field rather than opening a sheet on top
+            of a sheet. It is the same question — what is this person called —
+            and stacking two modals means two things to trap focus in, two
+            things to escape from, and a backdrop over a backdrop. The label,
+            the placeholder, the button and the prefill change; the form does
+            not. */ ''}
       <form class="person-add-form" data-add-form hidden>
-        <label class="visually-hidden" for="person-add-name">Their name</label>
+        <label class="visually-hidden" for="person-add-name" data-form-label>Their name</label>
         <input id="person-add-name" type="text" data-add-name placeholder="Their name"
                maxlength="32" autocapitalize="words" autocomplete="off" enterkeyhint="done" />
         <button class="btn" type="submit" data-add-save disabled>Add</button>
@@ -713,11 +839,43 @@ export function personSheet({ people, activeId, onSelect, onAdd, onRemove, onClo
   const nameInput = backdrop.querySelector('[data-add-name]');
   const saveBtn = backdrop.querySelector('[data-add-save]');
   const addOpen = backdrop.querySelector('[data-add-open]');
+  const formLabel = backdrop.querySelector('[data-form-label]');
 
-  addOpen.addEventListener('click', () => {
+  // null = adding somebody new; an id = renaming that person.
+  let renamingId = null;
+
+  const openForm = ({ id = null, value = '', label, placeholder, action }) => {
+    renamingId = id;
+    formLabel.textContent = label;
+    nameInput.placeholder = placeholder;
+    nameInput.value = value;
+    saveBtn.textContent = action;
+    saveBtn.disabled = !value.trim();
     addOpen.hidden = true;
     form.hidden = false;
     nameInput.focus();
+    // Renaming starts with the existing name in the box, and the point is
+    // almost always to change part of it. Selecting it means the first
+    // keystroke replaces rather than appends to a name that is already wrong.
+    if (id) nameInput.select();
+  };
+
+  addOpen.addEventListener('click', () =>
+    openForm({ label: 'Their name', placeholder: 'Their name', action: 'Add' })
+  );
+
+  backdrop.querySelectorAll('[data-rename]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const person = people.find((p) => p.id === btn.dataset.rename);
+      if (!person) return;
+      openForm({
+        id: person.id,
+        value: person.name,
+        label: 'Their name',
+        placeholder: 'Their name',
+        action: 'Save',
+      });
+    });
   });
 
   // A blank or whitespace name would render an empty avatar and greet nobody.
@@ -729,7 +887,13 @@ export function personSheet({ people, activeId, onSelect, onAdd, onRemove, onClo
     e.preventDefault();
     const name = nameInput.value.trim();
     if (!name) return;
-    onAdd(name);
+    if (renamingId) {
+      const person = people.find((p) => p.id === renamingId);
+      // Same name back is not a rename. Close without announcing one.
+      if (person && person.name !== name) onRename(renamingId, name);
+    } else {
+      onAdd(name);
+    }
     close();
   });
 

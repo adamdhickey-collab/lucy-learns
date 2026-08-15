@@ -2408,6 +2408,62 @@ details.disclosure .disclosure-body {
   padding: var(--s-4);
 }
 
+/* Pushed to the far end of the row, away from the portrait, so the card has
+   two controls that cannot be confused for each other: the picture changes the
+   picture, and this changes the words. `align-self: start` keeps it level with
+   the name rather than floating in the middle of a card whose height is set by
+   however long the "about" paragraph runs. */
+.profile-edit {
+  flex: none;
+  align-self: start;
+  margin-left: auto;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.profile-edit svg,
+.person-row-edit svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Same control, in the person list. Sized to the row rather than to the app's
+   48px tap floor for the same reason the install hint's dismiss is: it sits
+   beside a primary action — the row itself, which switches person — and a
+   full-size target here would be a full-size mis-tap. */
+.person-row-edit {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .profile-edit:hover,
+  .person-row-edit:hover {
+    background: var(--surface-sunken);
+    color: var(--text-primary);
+  }
+}
+
 /* The portrait is a button. It has to keep the circle exactly — the image
    inside is already sized and rounded by `.profile img`, so this contributes
    nothing but the hit area and the affordance. */
@@ -2680,6 +2736,13 @@ details.disclosure .disclosure-body {
 /* Deliberately quiet, and deliberately not inside the row it removes: nesting
    a button in a button is invalid, and a destructive control sharing a hit
    area with "switch to this person" is a mis-tap waiting to happen. */
+/* Holds the remove column open on the active row, which has no remove button.
+   Same width as one, so the pencils above and below stay in a line. */
+.person-row-spacer {
+  flex: none;
+  width: var(--tap);
+}
+
 .person-row-remove {
   flex: none;
   width: var(--tap);
