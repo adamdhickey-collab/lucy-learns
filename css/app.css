@@ -1688,6 +1688,49 @@ details.disclosure .disclosure-body {
   object-fit: cover;
 }
 
+/* The tap-to-advance hint, shown once ever. Inside the picture because that
+   is what it is about, at the bottom edge where the artwork is floor rather
+   than face. Its own tint rather than a scrim over the whole image: the
+   illustration is the most valuable thing on the screen and a one-time hint
+   does not get to dim it. */
+.step-figure {
+  position: relative;
+}
+
+.advance-hint {
+  position: absolute;
+  left: 50%;
+  bottom: var(--s-3);
+  transform: translateX(-50%);
+  max-width: calc(100% - var(--s-5));
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--text-primary) 88%, transparent);
+  color: var(--text-on-dark);
+  font-size: var(--step--1);
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: advance-hint-in 400ms var(--ease-soft) both;
+}
+
+@keyframes advance-hint-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 6px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .advance-hint {
+    animation: none;
+  }
+}
+
 /* Right and wrong, side by side.
    ------------------------------------------------------------------------
    One step uses this: the calm greeting, where the failure worth naming is
@@ -1873,14 +1916,27 @@ details.disclosure .disclosure-body {
   font-weight: 650;
 }
 
-/* --tap, not a squeezed 40px: this is the control that corrects a miscount,
-   reached for with a leash in the other hand. `auto` keeps it against the
-   right edge on the wrapped line too — space-between only right-aligns it
-   while both parts share a row, and at target the text grows enough to push
-   it down, where it was landing back under the count. */
+.rep-strip-count {
+  flex: 1 1 8rem;
+}
+
+/* Both corrections sit here at text weight. As full-width buttons they read
+   as primary actions and stacked up into four visible ways to stop; a rep
+   that went wrong and a rep logged wrong are both corrections to the count,
+   and the count is what this row is. */
+.rep-strip-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--s-1);
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+/* --tap, not a squeezed 40px: these are reached for with a leash in the
+   other hand. */
 .rep-strip .btn {
   min-height: var(--tap);
-  margin-left: auto;
+  padding-inline: var(--s-2);
 }
 
 /* Meeting target is the peak of the session, so it gets the two beats the

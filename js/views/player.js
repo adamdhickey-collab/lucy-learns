@@ -27,7 +27,9 @@ import {
 import {
   addSession,
   getDog,
+  hintSeen,
   isStorageOk,
+  markHintSeen,
   resolveCue,
   setLevel,
   updateSession,
@@ -224,6 +226,8 @@ function stepScreen(activity, level) {
   const target = level.reps;
   const rep = count + 1;
   const met = count >= target;
+  const showAdvanceHint =
+    !isLast && count === 1 && session.stepIndex === 0 && !hintSeen('tap-to-advance');
 
   return html`
     ${topBar(
@@ -261,6 +265,16 @@ function stepScreen(activity, level) {
           : img
             ? html`<figure class="step-figure" ${isLast ? '' : 'data-advance'}>
                 <img src="${img.src}" alt="${img.alt}" />
+                ${/* Said once, on the first step of the second rep: by then
+                      they have walked the pictures once and know what the
+                      cycle is, so "tap the picture" is a shortcut rather than
+                      one more instruction to absorb. Tapping it dismisses the
+                      hint by using the thing it points at. */ ''}
+                ${showAdvanceHint
+                  ? html`<figcaption class="advance-hint">
+                      Tap the picture to move on
+                    </figcaption>`
+                  : ''}
               </figure>`
             : ''}
 
@@ -314,27 +328,47 @@ function stepScreen(activity, level) {
               </button>
             </div>`
           : ''}
-        ${/* A rep that falls apart at step two is still a rep, and the honest
-              record is a miss. Before this, the only way to log one was to
-              walk the rest of the pictures pretending the rep was still
-              running, so the count quietly drifted toward optimism. The panic
-              sheet is a different situation — that one ends the session. */ ''}
-        ${!isLast
-          ? html`<button class="btn btn--quiet btn--block" type="button" data-rep-abort>
-              Not that one — start over
-            </button>`
-          : ''}
-        ${count > 0
-          ? html`<p class="rep-strip ${session.celebrate ? 'rep-strip--celebrate' : ''}">
-              <span
-                ><b>${count}</b> counted · <b>${good}</b> went well${met
-                  ? html` · <em>target met — finish on a win</em>`
-                  : ''}</span
-              >
-              <button class="btn btn--ghost" type="button" data-rep-undo>
-                Undo last rep
-              </button>
-            </p>`
+        ${/* One row for everything to do with the count, rather than a stack
+              of ways to stop.
+
+              A rep that falls apart at step two is still a rep, and the honest
+              record is a miss — without a way to say so, the only option was
+              to walk the rest of the pictures pretending the rep was still
+              running, and the count drifted toward optimism. But that is a
+              correction, not a second primary action: as a full-width button
+              it made four bail-outs visible at once on the calmest screen in
+              the app and pushed "too excited" past the fold. Corrections live
+              in this strip, at text weight, next to the other one.
+
+              The strip therefore appears whenever either half has something to
+              offer: mid-pass (log this one as a miss) or after a rep (undo
+              it). */ ''}
+        ${count > 0 || !isLast
+          ? html`<div class="rep-strip ${session.celebrate ? 'rep-strip--celebrate' : ''}">
+              <p class="rep-strip-count">
+                ${count > 0
+                  ? html`<b>${count}</b> counted · <b>${good}</b> went well${met
+                      ? html` · <em>target met — finish on a win</em>`
+                      : ''}`
+                  : html`Rep ${rep} in progress`}
+              </p>
+              ${/* Both, when both apply. Undo has to survive mid-pass: the
+                    likeliest moment to want it is the tap straight after a
+                    fat-fingered answer, which lands on step one of the next
+                    rep. */ ''}
+              <div class="rep-strip-actions">
+                ${!isLast
+                  ? html`<button class="btn btn--ghost" type="button" data-rep-abort>
+                      Count as a miss
+                    </button>`
+                  : ''}
+                ${count > 0
+                  ? html`<button class="btn btn--ghost" type="button" data-rep-undo>
+                      Undo last rep
+                    </button>`
+                  : ''}
+              </div>
+            </div>`
           : ''}
 
         <div class="panic-slot">
@@ -921,7 +955,11 @@ function wire(root) {
   // illustration carries the same action so a practiced household can walk a
   // rep without the thumb leaving the picture — Next stays for discovery and
   // for the keyboard.
+  // The hint is spent by moving on, however they moved on. Tying it only to
+  // the tap would leave it re-appearing at rep two of every future session
+  // for anyone who prefers the button — a hint that keeps asking is a nag.
   const advance = () => {
+    if (root.querySelector('.advance-hint')) markHintSeen('tap-to-advance');
     if (session.stepIndex < steps.length - 1) {
       session.stepIndex += 1;
       refresh('forward');
