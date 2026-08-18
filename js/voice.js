@@ -34,6 +34,30 @@ export const canSpeak = () => Boolean(synth);
  * Scored rather than matched by name, because the naming is not consistent
  * across platforms or versions and a list of known-good identifiers would rot.
  */
+/**
+ * Apple ships a set of joke voices — a robot, a set of bells, one that sings.
+ * They are real voices by every flag the API exposes, so nothing but their
+ * names distinguishes them, and a list opening with "Bad News" and "Bahh"
+ * reads as a bug rather than a choice. The names have been stable across a
+ * decade of releases, which is what makes a list like this worth keeping.
+ *
+ * Declared up here because the automatic pick runs when this module loads and
+ * consults it.
+ */
+const NOVELTY = new Set(
+  [
+    'Albert', 'Bad News', 'Bahh', 'Bells', 'Boing', 'Bubbles', 'Cellos',
+    'Deranged', 'Good News', 'Hysterical', 'Jester', 'Junior', 'Kathy',
+    'Organ', 'Pipe Organ', 'Princess', 'Ralph', 'Superstar', 'Trinoids',
+    'Whisper', 'Wobble', 'Zarvox', 'Bruce', 'Fred',
+  ].map((n) => n.toLowerCase())
+);
+
+const isNovelty = (voice) => NOVELTY.has(String(voice.name || '').trim().toLowerCase());
+
+/** How many to offer. Enough to have a real choice, few enough to scan. */
+const VOICE_LIMIT = 12;
+
 const VOICE_HINTS = [
   [/siri/i, 100], // iOS, by some distance the best thing available
   [/premium|enhanced|neural|natural|wavenet|studio/i, 60],
@@ -44,6 +68,11 @@ function scoreVoice(voice, lang) {
   const name = `${voice.name} ${voice.voiceURI}`;
   // Compact is what the app is trying to get away from.
   if (/compact|eloquence/i.test(name)) return -1;
+  // And a joke voice is never the answer. This was only filtering the picker,
+  // not the automatic choice, so an iPhone whose list happens to put Albert
+  // before Samantha had its training steps read by a comedy robot — the
+  // "really bad voice" that started all this.
+  if (isNovelty(voice)) return -1;
 
   let score = 0;
   VOICE_HINTS.forEach(([pattern, points]) => {
@@ -96,26 +125,6 @@ function pickVoice() {
 }
 
 /**
- * Apple ships a set of joke voices — a robot, a set of bells, one that sings.
- * They are real voices by every flag the API exposes, so nothing but their
- * names distinguishes them, and a list of forty-one that opens with "Bad
- * News" and "Bahh" reads as a bug rather than a choice. The names have been
- * stable across a decade of releases, which is what makes a list like this
- * worth keeping.
- */
-const NOVELTY = new Set(
-  [
-    'Albert', 'Bad News', 'Bahh', 'Bells', 'Boing', 'Bubbles', 'Cellos',
-    'Deranged', 'Good News', 'Hysterical', 'Jester', 'Junior', 'Kathy',
-    'Organ', 'Pipe Organ', 'Princess', 'Ralph', 'Superstar', 'Trinoids',
-    'Whisper', 'Wobble', 'Zarvox', 'Bruce', 'Fred',
-  ].map((n) => n.toLowerCase())
-);
-
-/** How many to offer. Enough to have a real choice, few enough to scan. */
-const VOICE_LIMIT = 12;
-
-/**
  * The voices worth offering, best first.
  *
  * Filtered to the reading language, because the rest would read English
@@ -141,7 +150,7 @@ export function listVoices() {
       // a list already filtered to English is the same word three times.
       base: voice.name.replace(/\s*\((?:English|Language)[^)]*(?:\([^)]*\))?\)\s*$/i, '').trim(),
     }))
-    .filter((v) => v.score >= 0 && !NOVELTY.has(v.voice.name.trim().toLowerCase()))
+    .filter((v) => v.score >= 0)
     .sort((a, b) => b.score - a.score);
 
   // One entry per name and locale, best first.
@@ -188,10 +197,40 @@ export function setPreferredVoice(uri) {
   return pickVoice();
 }
 
+/**
+ * Told when the voice list first has anything in it.
+ *
+ * `getVoices()` answers empty on the first call almost everywhere, and on iOS
+ * it can stay empty until something has actually been spoken. A screen that
+ * renders a voice picker from that first empty answer renders no picker at
+ * all and never reconsiders — which is precisely why the dropdown was
+ * missing on the phone while the app was perfectly able to name the voice it
+ * was using a moment later.
+ */
+const voicesReady = new Set();
+export function onVoicesReady(fn) {
+  if (synth && (synth.getVoices() || []).length) {
+    fn();
+    return () => {};
+  }
+  voicesReady.add(fn);
+  return () => voicesReady.delete(fn);
+}
+
+function announceVoices() {
+  if (!synth || !(synth.getVoices() || []).length) return;
+  const waiting = [...voicesReady];
+  voicesReady.clear();
+  waiting.forEach((fn) => fn());
+}
+
 if (synth) {
   pickVoice();
   // Fires once the list is populated, and again if the user installs a voice.
-  synth.addEventListener?.('voiceschanged', pickVoice);
+  synth.addEventListener?.('voiceschanged', () => {
+    pickVoice();
+    announceVoices();
+  });
 }
 
 /**
@@ -330,6 +369,11 @@ export function speak(text) {
       // run looks like, because the first utterance is always this path.
       synth.speak(utterance);
     }
+
+    // Speaking is what wakes the voice list on iOS, and `voiceschanged` is
+    // not guaranteed to follow. Anyone waiting to draw a picker finds out
+    // here instead.
+    announceVoices();
   } catch {
     /* A voice that fails is not a reason to stop a training session. */
   }

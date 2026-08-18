@@ -45,6 +45,7 @@ import {
   currentVoiceURI,
   listVoices,
   onSpeechChange,
+  onVoicesReady,
   setPreferredVoice,
   speak,
   speechStatus,
@@ -491,7 +492,10 @@ function handsFreeGroup() {
                     )}
                   </select>
                 </label>`
-              : ''}
+              : html`<p class="section-note voice-warn" data-voices-pending>
+                  Loading this device’s voices. Tap Test voice if the list does not
+                  appear.
+                </p>`}
             <p class="section-note voice-speech-status">
               <span data-speech-status
                 >${currentVoiceName()
@@ -1545,6 +1549,15 @@ function wire(root) {
   // what they sound like, and picking one is the moment you want to hear it.
   // Spoken from the change event so it is still the interaction, which is
   // what iOS requires, and updated in place so nothing re-renders under it.
+  // The list is usually empty at the first render and fills in later, so the
+  // screen that asked for it has to be told. Redrawn in place, which keeps
+  // the scroll position where the reader left it.
+  if (root.querySelector('[data-voices-pending]')) {
+    onVoicesReady(() => {
+      if (session && session.phase === 'ready' && getVoice().speak) refresh();
+    });
+  }
+
   on('[data-voice-select]', 'change', (e) => {
     setPreferredVoice(e.currentTarget.value);
     const out = root.querySelector('[data-speech-status]');
@@ -1570,6 +1583,10 @@ function wire(root) {
         // Queued and never started is the iOS silence: no sound, no error.
         say('No sound. Check the side switch is not on silent, and the volume.');
       }
+      // Speaking is what populates the voice list on iOS. If that just
+      // happened and the picker is still missing, draw it now — this tap is
+      // the likeliest moment the list ever becomes available.
+      if (!root.querySelector('[data-voice-select]') && listVoices().length) refresh();
     }, 1400);
   });
 
