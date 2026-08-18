@@ -51,14 +51,14 @@ looking like one set.
 > anthropomorphised, no human expressions.
 >
 > **The handler** is a woman in her thirties with dark brown hair in a
-> ponytail, an olive-green hoodie, dark navy jeans, and grey sneakers. Her face
+> ponytail, an olive-green hoodie, dark navy jeans, and gray sneakers. Her face
 > is usually turned away or in profile. Calm, unhurried body language.
 >
-> **The guest** is a man in his thirties in a grey-blue checked shirt and
+> **The guest** is a man in his thirties in a gray-blue checked shirt and
 > brown boots. Relaxed, hands at his sides, never leaning toward the dog.
 >
-> Recurring props: a **flat grey rectangular dog bed**, a black leash, a
-> mustard-yellow treat pouch, a dark grey panelled front door with a small
+> Recurring props: a **flat gray rectangular dog bed**, a black leash, a
+> mustard-yellow treat pouch, a dark gray panelled front door with a small
 > window, a woven doormat, a potted plant, a framed landscape on the wall.
 
 ---
@@ -95,17 +95,17 @@ These are the eleven that stop the same picture repeating. Highest value first.
 ### A1 · One step away from the bed
 - **Source** `art/source/Calm Door Greetings/13.png` → **App** `img/dg-13.jpg` → **Key** `dg-13`
 - **Replaces** `dg-07` on Stay While the Door Opens, level 1
-- **Prompt** — Lucy lies settled on a flat grey dog bed on a wooden floor in a
+- **Prompt** — Lucy lies settled on a flat gray dog bed on a wooden floor in a
   home entryway. The handler stands very close, only one short step away from
-  the bed, her body turned slightly toward a dark grey front door in the
+  the bed, her body turned slightly toward a dark gray front door in the
   background. The door is closed and still far off. Lucy is calm and watching
-  her. Emphasise how small the distance is.
+  her. Emphasize how small the distance is.
 - **Alt** — "Lucy lies on her bed while a handler takes a single step away from her toward the closed front door."
 
 ### A2 · Halfway to the door
 - **Source** `art/source/Calm Door Greetings/14.png` → `img/dg-14.jpg` → `dg-14`
 - **Replaces** `dg-07` on level 2
-- **Prompt** — Same entryway. Lucy holds a down-stay on her grey bed in the
+- **Prompt** — Same entryway. Lucy holds a down-stay on her gray bed in the
   foreground. The handler has walked roughly halfway across the room toward the
   closed front door and is pausing mid-stride, glancing back over her shoulder
   at Lucy. Clear open floor between them.
@@ -114,8 +114,8 @@ These are the eleven that stop the same picture repeating. Highest value first.
 ### A3 · Hand on the handle
 - **Source** `art/source/Calm Door Greetings/15.png` → `img/dg-15.jpg` → `dg-15`
 - **Replaces** `dg-07` on level 3
-- **Prompt** — Same entryway. Lucy holds a down-stay on her grey bed in the
-  foreground, some distance away. The handler has reached the closed dark grey
+- **Prompt** — Same entryway. Lucy holds a down-stay on her gray bed in the
+  foreground, some distance away. The handler has reached the closed dark gray
   front door and rests one hand on the lever handle without turning it. She is
   looking back toward Lucy.
 - **Alt** — "A handler rests a hand on the front door handle while Lucy holds her bed across the room."
@@ -126,7 +126,7 @@ These are the eleven that stop the same picture repeating. Highest value first.
 - **Prompt** — Same entryway. The front door is open just a few inches, a
   narrow bright vertical slice of daylight showing at the gap. Nobody is
   outside. The handler holds the edge of the door, looking back at Lucy, who is
-  lying calmly on her grey bed in the foreground.
+  lying calmly on her gray bed in the foreground.
 - **Alt** — "The front door is open a few inches onto daylight while Lucy stays lying on her bed."
 
 ### A5 · Paying for the sound
@@ -154,7 +154,7 @@ These are the eleven that stop the same picture repeating. Highest value first.
 - **Source** `art/source/Calm Door Greetings/19.png` → `img/dg-19.jpg` → `dg-19`
 - **Fills** Stay While the Door Opens step 5 and Doorbell Means Place step 6 —
   neither currently has an image
-- **Prompt** — Lucy is just getting up off her flat grey dog bed, front paws
+- **Prompt** — Lucy is just getting up off her flat gray dog bed, front paws
   stepping forward, ears lifted, released from a stay. The handler stands a
   couple of steps away with an open, welcoming posture and a small smile. Warm
   and light in mood, clearly the end of something rather than the middle.
@@ -167,7 +167,7 @@ These are the eleven that stop the same picture repeating. Highest value first.
 - **Prompt** — Interior view beside the closed front door. The handler stands
   right next to Lucy, close enough to touch her, and knocks on the inside of
   the door frame with her knuckles while standing on the end of the slack
-  leash. Lucy is directly at her side, looking up at her. Emphasise how close
+  leash. Lucy is directly at her side, looking up at her. Emphasize how close
   together they are.
 - **Alt** — "A handler knocks on the door frame while standing right beside Lucy with the leash under her foot."
 
@@ -176,7 +176,7 @@ These are the eleven that stop the same picture repeating. Highest value first.
 - **Replaces** `dg-09` on Controlled Real Greeting, level 2
 - **Prompt** — The front door is open. A guest has stepped just inside onto the
   doormat and stands still with his hands at his sides, not looking at the dog.
-  Lucy holds a down-stay on her grey bed several feet away, watching. The
+  Lucy holds a down-stay on her gray bed several feet away, watching. The
   handler stands between them, calm.
 - **Alt** — "A guest stands just inside the open front door without approaching while Lucy stays on her bed."
 
@@ -184,7 +184,7 @@ These are the eleven that stop the same picture repeating. Highest value first.
 - **Source** `art/source/Calm Door Greetings/22.png` → `img/dg-22.jpg` → `dg-22`
 - **Replaces** `dg-09` on Controlled Real Greeting, level 3
 - **Prompt** — A guest sits in an armchair in a warm living room, turned away
-  from Lucy, relaxed, looking at nothing in particular. Lucy lies on her grey
+  from Lucy, relaxed, looking at nothing in particular. Lucy lies on her gray
   bed a few feet away, settled and calm, not approaching. The handler is
   nearby. The room is quiet and ordinary.
 - **Alt** — "A guest sits in an armchair ignoring Lucy while she settles on her bed a few feet away."
@@ -196,7 +196,7 @@ These are the eleven that stop the same picture repeating. Highest value first.
 - **Prompt** — The handler stands in the open front doorway mid-conversation,
   one hand resting on the door frame, weight relaxed, talking to someone
   unseen just off frame outside. Warm daylight spills in. Lucy holds a
-  down-stay on her grey bed well back in the room, watching but settled.
+  down-stay on her gray bed well back in the room, watching but settled.
 - **Alt** — "A handler holds a relaxed conversation in the open doorway while Lucy stays settled on her bed."
 
 ### A12 · The other three "too excited" images
@@ -211,7 +211,7 @@ These are the eleven that stop the same picture repeating. Highest value first.
     hand resting calmly on her shoulder, feeding a treat. The door is shut and
     quiet. Distance is the point of the image.
   - **dg-25 (for Stay While the Door Opens and Doorbell Means Place)** — Lucy
-    lies on her grey bed being fed a treat in place by a handler kneeling right
+    lies on her gray bed being fed a treat in place by a handler kneeling right
     beside the bed. The door is closed in the background, forgotten. Rewarding
     the position, not the door.
   - **dg-26 (for Controlled Real Greeting)** — A guest steps back out through
@@ -241,10 +241,10 @@ those programs are written.
 
 ### B2 · Settle on a Mat
 - **Source** `art/source/Next Programs/sr-01.png` → `img/sr-01.jpg` → `sr-01`
-- **Prompt** — Lucy lies fully relaxed on her side on a flat grey mat in the
+- **Prompt** — Lucy lies fully relaxed on her side on a flat gray mat in the
   corner of a warm, lived-in living room, eyes soft and half closed, hips
   rolled over. In the background the household carries on ordinarily: someone
-  reading in an armchair, a mug on a side table. Lucy is not the centre of
+  reading in an armchair, a mug on a side table. Lucy is not the center of
   anyone's attention.
 - **Alt** — "Lucy lies fully relaxed on her mat while the household carries on around her."
 

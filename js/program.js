@@ -90,7 +90,7 @@ export function activityProgress(activity) {
  *
  * Nothing is hard-locked. A trainer can tell a household to jump to the real
  * greeting next week, and an app that refuses is an app they stop trusting.
- * Later stages are labelled rather than disabled — the sequence is advice with
+ * Later stages are labeled rather than disabled — the sequence is advice with
  * a strong opinion, not a gate.
  */
 export function programProgress(programId) {
@@ -125,7 +125,7 @@ export function programProgress(programId) {
   // This used to be "finish what is open before opening more", which is a
   // reasonable rule and made the app feel like one long corridor: the first
   // activity holds the focus for all five of its levels, so the second is
-  // fifteen sessions away and the fourth is barely a rumour. A household
+  // fifteen sessions away and the fourth is barely a rumor. A household
   // cannot care about an arc they never see.
   //
   // So the focus rotates. Among the activities that are actually unlocked and

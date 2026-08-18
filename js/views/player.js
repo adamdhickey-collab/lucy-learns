@@ -764,7 +764,7 @@ function levelMovedNotice(activity, level, session) {
 }
 
 // ---------------------------------------------------------------------------
-// Render + behaviour
+// Render + behavior
 // ---------------------------------------------------------------------------
 
 function render({ slug }) {
@@ -1061,7 +1061,7 @@ function wire(root) {
     const id = e.currentTarget.dataset.behavior;
     toggleSet(session.behaviors, id);
     e.currentTarget.setAttribute('aria-pressed', String(session.behaviors.has(id)));
-    // Recovery question appears once a watched behaviour is logged.
+    // Recovery question appears once a watched behavior is logged.
     if (['barked', 'jumped', 'nipped', 'pulled'].includes(id)) refresh();
   });
 
@@ -1198,7 +1198,7 @@ function wire(root) {
   if (session.phase === 'step') preloadUpcoming(activity, level);
 
   // Desktop accelerator: arrow keys walk the steps. Routed through the real
-  // buttons so edge behaviour and transitions stay identical to tapping.
+  // buttons so edge behavior and transitions stay identical to tapping.
   detachKeys();
   if (session.phase === 'step' && !session.sheetOpen) {
     keyHandler = (e) => {

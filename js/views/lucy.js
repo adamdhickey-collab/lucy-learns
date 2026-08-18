@@ -151,7 +151,7 @@ function render() {
                   once, for the planned activity cards.
 
                   So when the contact details are absent the row is replaced by
-                  a sentence rather than greyed out. It says what would be here
+                  a sentence rather than grayed out. It says what would be here
                   and why it is not, which is the honest thing to show someone
                   trying a demo, and it keeps the trainer named — the app is a
                   companion to their instruction whether or not you can reach

@@ -83,7 +83,7 @@ export function masteryFor(activityId, levelNumber) {
 
   // Reliable is deliberately hard: it needs repetition across days and contexts.
   //
-  // This used to also require two different handlers, because a behaviour that
+  // This used to also require two different handlers, because a behavior that
   // only holds for one person has not generalised. With a single handler that
   // clause could never be satisfied and Reliable would be unreachable, so the
   // spread moved onto the axis that is still available: three separate days
@@ -340,7 +340,7 @@ export function headlineInsight() {
   if (!week.count && !prior.count) {
     return say(`Log a few sessions and ${getDog().name}’s trends will show up here.`);
   }
-  // A watch behaviour getting worse outranks everything, including good news.
+  // A watch behavior getting worse outranks everything, including good news.
   //
   // Every branch in this function used to be a positive framing — jumping
   // *down*, no nipping, goal met, calm rate — with one exception for a success

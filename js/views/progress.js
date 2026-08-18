@@ -256,7 +256,7 @@ function render() {
                   guessing. A thing used once a fortnight can be small, but it
                   cannot be at the bottom of the longest screen in the app.
 
-                  Named for the artefact rather than the occasion. "Prepare
+                  Named for the artifact rather than the occasion. "Prepare
                   for your next lesson" describes when you would want it,
                   which is no help to someone scanning for the thing itself;
                   "Summary for your trainer" is what they were sent to find. */ ''}

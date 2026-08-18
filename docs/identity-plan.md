@@ -111,11 +111,11 @@ not.
 
 ### Then the existing choice screen, unchanged.
 
-**Field behaviour**, all boring on purpose: `autocapitalize="words"`,
+**Field behavior**, all boring on purpose: `autocapitalize="words"`,
 `autocomplete="off"` on the dog's name (browsers will offer the human's saved
 names otherwise), `enterkeyhint="next"`, no validation beyond non-empty, no
 character limits that trigger before something is genuinely too long for the
-greeting to hold. Required-ness is signalled by marking the optional field
+greeting to hold. Required-ness is signaled by marking the optional field
 "optional" rather than starring the required ones.
 
 ---

@@ -253,7 +253,7 @@ if (splash) {
   const dateSlot = splash.querySelector('#splash-date');
   if (dateSlot) {
     const { year, month, day } = APP_UPDATED;
-    // Labelled, because a bare date under a version number is ambiguous —
+    // Labeled, because a bare date under a version number is ambiguous —
     // it could as easily be today's date or an expiry as the build date.
     const stamp = new Date(year, month - 1, day).toLocaleDateString(undefined, {
       weekday: 'short',
@@ -400,7 +400,7 @@ if (installHint) {
    * an event and a one-tap dialog, iOS Safari has a Home Screen but no API for
    * it, and anything else gets told where to look. The iOS wording names the
    * two taps literally — a vague "add this to your home screen" is worse than
-   * saying nothing on a phone where the control is an unlabelled icon.
+   * saying nothing on a phone where the control is an unlabeled icon.
    *
    * Separated from `maybeShow` because it can be called twice: see the
    * `beforeinstallprompt` handler.

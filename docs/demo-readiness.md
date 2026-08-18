@@ -114,7 +114,7 @@ synthetic event; the actual OS dialogs need a real device.
 
 Checked at 1280×800 and 1440×900, every route, then re-checked at 375×812 to be
 sure the fixes were inert on a phone. "Probably behaves" was half right: eight
-routes, no horizontal overflow on any of them, and the column centres correctly.
+routes, no horizontal overflow on any of them, and the column centers correctly.
 Two things were broken, both the same mistake.
 
 Full-bleed and column-width are the same thing on a phone, because `--page-max`
@@ -139,7 +139,7 @@ came apart on a wide screen:
 Still true and left alone, because it is a judgement call rather than a defect:
 on a 1280px laptop the app is a 544px column with ~58% of the screen empty
 either side, and the tab bar and the player footer paint their surfaces the full
-width of the window with their contents centred. It reads as a phone app being
+width of the window with their contents centered. It reads as a phone app being
 shown on a laptop, which is what it is. Widening the column would mean designing
 a second layout; docking the bars to the column would mean deciding what the
 empty field is for. Neither is a ten-minute change, and neither blocks a demo.
@@ -165,7 +165,7 @@ thing on the report; two said they would open the lesson with it. It is the
 final section in the smallest type. Moving it up is a layout decision and the
 strongest single signal that run produced.
 
-### 10. The calm rate is labelled, not weighted
+### 10. The calm rate is labeled, not weighted
 
 "83% — 57% last week, on harder levels" now tells the truth about the confound
 instead of hiding it, which was the right first fix. It still invites the

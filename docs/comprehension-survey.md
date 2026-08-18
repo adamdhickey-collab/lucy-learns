@@ -270,7 +270,7 @@ for one.
 
 The four activity covers sit in a column on the program map at 56px. One of
 them passed every crop test on its own and was still the same thumbnail as its
-neighbour, which no amount of testing a picture in isolation would have caught.
+neighbor, which no amount of testing a picture in isolation would have caught.
 
 Show all four **at 56px, together, in this order**, then ask the question once
 per cover.
@@ -528,7 +528,7 @@ The survey is the first chance to find out whether accepting them was right.
   smudge at 1× on a small screen. The step copy says "two" regardless. If
   participants say "a treat" rather than "two treats", the picture is carrying
   less than the brief claimed.
-- **`door-place-03-send` — the bed.** Ships as a thin mat where its neighbours
+- **`door-place-03-send` — the bed.** Ships as a thin mat where its neighbors
   are a deep mattress, and it sits next to one of them in the same activity. If
   anyone describes it as a mat, a towel, or a rug rather than a bed, that is the
   drift showing.

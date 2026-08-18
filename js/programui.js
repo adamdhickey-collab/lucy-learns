@@ -14,7 +14,7 @@ import { html, join, raw, icon, esc } from './ui.js';
 /**
  * One pip per level. Shape first, then color: a cleared level is a filled
  * square, the live one is an outlined square with a dot, the rest are empty.
- * Readable in greyscale and by anyone who cannot separate teal from grey.
+ * Readable in grayscale and by anyone who cannot separate teal from gray.
  */
 export function levelPips(stage) {
   // The half-filled pip is the level they are on, not the next uncleared one:
@@ -36,7 +36,7 @@ export function levelPips(stage) {
  * Count, bar, and the one sentence about what is left.
  *
  * `heading` exists because on the program screen this block *is* the page
- * title, and a screen with no h1 is a screen a screen reader cannot summarise.
+ * title, and a screen with no h1 is a screen a screen reader cannot summarize.
  */
 export function programHeader(prog, { eyebrow = 'Your program', heading = 'h2' } = {}) {
   const percent = Math.round(prog.ratio * 100);
@@ -314,7 +314,7 @@ function programTrack(prog, currentActivityIndex) {
 }
 
 /**
- * Where the caret under the card should sit: the centre of the active segment,
+ * Where the caret under the card should sit: the center of the active segment,
  * as a fraction of the whole track. Computed from level counts rather than
  * measured, which is a pixel or two out once the gaps are counted and invisible
  * under a 14px caret.
@@ -322,7 +322,7 @@ function programTrack(prog, currentActivityIndex) {
 function caretPosition(prog, currentActivityIndex) {
   const index = prog.stages.findIndex((s) => s.index === currentActivityIndex);
   if (index < 0) return null;
-  // Every stop is now one equal column, the outcome included, so the centre of
+  // Every stop is now one equal column, the outcome included, so the center of
   // the nth is a matter of counting rather than of summing level totals.
   const columns = prog.stages.length + 1;
   return ((index + 0.5) / columns) * 100;

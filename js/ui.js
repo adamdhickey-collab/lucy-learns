@@ -41,7 +41,7 @@ export const join = (parts) => raw(parts.map(renderValue).join(''));
 /**
  * Every mark in the app, and all of them from Lucide.
  *
- * https://lucide.dev — copyright the Lucide contributors, ISC licence, credited
+ * https://lucide.dev — copyright the Lucide contributors, ISC license, credited
  * in the README. The Lucide name each entry is drawn from is named in its
  * comment, so a mark can be re-fetched or swapped without guessing.
  *

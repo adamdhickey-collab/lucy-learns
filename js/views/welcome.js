@@ -233,7 +233,7 @@ function render() {
                       minutes, empty hides most of the app. Progress has no
                       chart, the report has nothing to report, mastery is
                       "Not started" four times over, the streak is zero and
-                      the program map is an unstarted row of grey. They would
+                      the program map is an unstarted row of gray. They would
                       be evaluating the shell.
 
                       So the recommendation is stated rather than implied, and

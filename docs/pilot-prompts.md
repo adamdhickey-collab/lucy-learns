@@ -62,7 +62,7 @@ change — that is what makes five images look like one set.
    not recurred since the reference became routine.
 3. **Scene 4 must follow Scene 3 in the same conversation**, with the approved
    Scene 3 attached. It is the same room, camera, cast and distance — only
-   Lucy's behaviour and the guest's reaction change. Round 1 generated it
+   Lucy's behavior and the guest's reaction change. Round 1 generated it
    loosely and came back with a visibly different dog.
 
 **About the aspect ratio.** Round 1 returned three different shapes from the same
@@ -97,7 +97,7 @@ pays her, the food has to be in the frame and separate from the fingers.
 
 > Contemporary dog-training instruction manual illustration. Simplified,
 > vector-like forms with crisp clean edges and restrained detail. Mostly flat
-> colour with subtle dimensional shading — soft minimal gradients only where
+> color with subtle dimensional shading — soft minimal gradients only where
 > they describe form. Warm cream background. Muted palette: sage and forest
 > green, teal, dusty blue, charcoal, warm neutral oak. Coral or red appears only
 > to flag a warning and never otherwise. Even, directionless light with no cast
@@ -112,7 +112,7 @@ pays her, the food has to be in the frame and separate from the fingers.
 > No text, letters, numbers, labels, captions, watermarks, logos or interface
 > elements anywhere in the image. No checkmarks, crosses, X marks, arrows,
 > circles or any instructional symbol. No photorealism. No painterly or
-> watercolour texture, no visible brush strokes, no grain. No childish or cutesy
+> watercolor texture, no visible brush strokes, no grain. No childish or cutesy
 > cartoon styling, no oversized eyes, no anthropomorphism. No decorative
 > flourishes, no patterned wallpaper, no clutter, no extra furniture, plants,
 > pictures or props beyond those named. No borders, no frames, no split panels —
@@ -124,7 +124,7 @@ pays her, the food has to be in the frame and separate from the fingers.
 > Pointer mix: glossy black coat, a **slightly scruffy muzzle and eyebrows**,
 > soft floppy ears, a white blaze on her chest, white toes on all four paws, and
 > no white anywhere on her face. The scruff on her muzzle is what makes her
-> recognisable — she is never smooth-faced.
+> recognizable — she is never smooth-faced.
 >
 > She wears **a flat purple collar with a small round blue tag hanging from the
 > ring, and no harness — never a harness, in any image, ever.** The tag is
@@ -167,16 +167,16 @@ pays her, the food has to be in the frame and separate from the fingers.
 > unworried.**
 >
 > **The handler** is a woman in her thirties with dark brown hair in a ponytail,
-> an olive-green hoodie, dark navy jeans, grey sneakers, and a mustard-yellow
+> an olive-green hoodie, dark navy jeans, gray sneakers, and a mustard-yellow
 > treat pouch clipped at her right hip. Her face is in profile or turned away.
 > Calm, unhurried, upright.
 >
 > **The guest** is a man in his thirties with short brown hair, **clean-shaven,
-> no beard and no stubble**, a blue-grey checked shirt, tan trousers and brown
+> no beard and no stubble**, a blue-gray checked shirt, tan trousers and brown
 > boots. Relaxed, hands at his sides, never leaning over the dog. The same man,
 > with the same face, in every image.
 >
-> **Props, only where a scene names them:** **her bed — a rectangular grey
+> **Props, only where a scene names them:** **her bed — a rectangular gray
 > mattress-style dog bed, deep and clearly cushioned, roughly a hand's depth,
 > with a piped edge and soft quilting on the top surface. It is a mattress, not
 > a thin mat, and it is the same bed in every image** — a black leash, a charcoal
@@ -251,7 +251,7 @@ activity cover, so it takes both the wide band and the square crop.*
 > behind Lucy holding the leash in a loose loop at hip height; the line runs back
 > to the ring on Lucy's collar, passing beside her rather than over her.
 >
-> **Composition: group all three subjects tightly together, centred, so that a
+> **Composition: group all three subjects tightly together, centered, so that a
 > square crop taken from the middle of the frame still contains Lucy's head, the
 > guest's hand on her chest, and the handler's hand on the leash.** Keep them
 > within the central horizontal band of the picture, with clear space above and
@@ -297,13 +297,13 @@ different dog — smooth-faced, wrong head shape.*
 > previous image's framing exactly.**
 
 ## Scene 5 — Guest at the door, Lucy holding her bed
-*Replaces `dg-01`. The programme cover and the first illustration anyone sees.
+*Replaces `dg-01`. The program cover and the first illustration anyone sees.
 Round 1 gave the guest a beard and had Lucy watching him instead of the
 handler — the same fault the image it replaces has.*
 
 > Interior entry hall, wide three-quarter view, three subjects at three depths.
 >
-> Lucy sits square on a flat grey rectangular dog bed several feet inside the
+> Lucy sits square on a flat gray rectangular dog bed several feet inside the
 > room, **her head turned toward the handler on her left, looking at her and not
 > at the man in the doorway.** Ears neutral, calm. A small round blue tag hangs
 > from her purple collar.
@@ -359,7 +359,7 @@ rather than re-pasting them, or the model will redraw the whole scene.
 > Labrador face, and she should have the slightly scruffy, wiry muzzle and
 > eyebrows she has in the second attached image. Same head shape, same wiry
 > texture around the mouth and brows. She is a Labrador and German Wirehaired
-> Pointer mix, and the scruff is what makes her recognisable.
+> Pointer mix, and the scruff is what makes her recognizable.
 >
 > While you are there, warm the floor down slightly: the oak is more saturated
 > and orange here than in the other images in the set. Match the paler honey oak
@@ -421,7 +421,7 @@ regeneration wearing a disguise.
 Attach an approved image as the style reference — `door-sound-01-setup.png` is
 the cleanest.*
 
-> Interior entry hall, three-quarter view. Lucy lies on her flat grey bed a few
+> Interior entry hall, three-quarter view. Lucy lies on her flat gray bed a few
 > feet inside the room, **front legs extended, head up and eyes locked on the
 > handler** — holding a position, not resting. A small round blue tag hangs from
 > her purple collar.
@@ -453,7 +453,7 @@ the cleanest.*
 stand-in. This is the step whose instruction is "Leash Lucy and settle her on her
 bed" — the image it replaces has neither a handler nor a leash in it.*
 
-> Interior entry hall, three-quarter view. Lucy is settling onto her flat grey
+> Interior entry hall, three-quarter view. Lucy is settling onto her flat gray
 > bed, well back from a **closed** charcoal front door. **No guest, and nothing
 > visible outside.** A small round blue tag hangs from her purple collar.
 >
@@ -670,7 +670,7 @@ the whole library — match it.*
 door, away from the handler — it shows the step failing.*
 
 > Interior entry hall opening onto a hallway, three-quarter view. Lucy sits on
-> her flat grey bed near the closed front door and **turns her head back over her
+> her flat gray bed near the closed front door and **turns her head back over her
 > shoulder, toward the handler and away from the door.** That turn is the whole
 > subject. The black leash is clipped to her collar and **trails loose along the
 > floor behind her** — nobody is holding it, because the handler is a room away.
@@ -679,7 +679,7 @@ door, away from the handler — it shows the step failing.*
 > side-on — with one hand raised in a small beckon, calm and unhurried.
 >
 > **Keep Lucy large enough to read.** The current version is so wide that she is
-> a small dark shape; she should still be a clear, recognisable dog with her head
+> a small dark shape; she should still be a clear, recognizable dog with her head
 > turn legible on a phone.
 >
 > Background: the closed door, her bed, one wall plane, the hall opening.
@@ -707,7 +707,7 @@ floorboards.*
 > back from the pressure, not a repetition.
 >
 > **Composition, and this matters more than anything else in the brief: put the
-> two of them together in the centre of the frame, inside the middle horizontal
+> two of them together in the center of the frame, inside the middle horizontal
 > band, with clear space above and below.** A square crop taken from the middle
 > must contain Lucy's head, the hand on her shoulder and the treat. Do not push
 > them to one side and leave the rest of the room empty.
@@ -752,7 +752,7 @@ Two things worth carrying forward to batch 2:
 Six to draw, one to install, and one question the batch plan did not ask.
 
 Three of this activity's pictures are already new and live — `door-greet-01-settle`
-(step 1), `door-sound-02-bell` (step 2, from batch 1's neighbours) and the
+(step 1), `door-sound-02-bell` (step 2, from batch 1's neighbors) and the
 `door-greet-08-petting` / `door-greet-08-jumping` pair at step 8. A fourth,
 `door-greet-07-approach`, has been approved since round 3 and never wired up; it
 replaces `dg-10` at step 7 and needs no new art, only installing. Do that in the
@@ -802,7 +802,7 @@ guest's face, which four of these scenes need.
 See the batch 1 note above for what skipping that cost.
 
 **Her bed is now pinned in Block B, for the same reason.** It used to read "a
-flat grey rectangular dog bed", and "flat" was doing damage: scenes 17–20 came
+flat gray rectangular dog bed", and "flat" was doing damage: scenes 17–20 came
 back with a deep quilted mattress, `door-place-03-send` came back twice with a
 thin mat, and batch 1's `door-sound-03-name-distant` is a thin mat too. Steps 3
 and 4 of this activity are adjacent, so the bed changed shape mid-session. Block
@@ -818,7 +818,7 @@ standing on the bed, facing off it, walking toward the pointing hand — a viewe
 reads "come off the bed", which is the opposite instruction. It also has no door
 anywhere in frame, though every step that uses it is about the door.*
 
-> Interior entry hall, side view. Lucy is **mid-stride onto her flat grey bed,
+> Interior entry hall, side view. Lucy is **mid-stride onto her flat gray bed,
 > her front feet landing on it and her hind feet still on the floorboards**, head
 > and body aimed at the bed, tail level. She is arriving, not leaving — **every
 > line of her points at the bed and away from the handler.**
@@ -840,7 +840,7 @@ anywhere in frame, though every step that uses it is about the door.*
 > handler's head and clear floor below the bed.** Everything that matters —
 > the handler's face, the pointing hand, Lucy, and the bed she is stepping onto
 > — must fit inside a wide letterbox band across the middle *and* inside a
-> centred square. **Do not let the handler's head run up to the top edge of the
+> centered square. **Do not let the handler's head run up to the top edge of the
 > frame**; a wide crop will slice her face.
 >
 > The single thing this image must make obvious: she is arriving on the bed,
@@ -854,7 +854,7 @@ anywhere in the current picture, on a step whose whole point is that Lucy is
 held on the bed while the door opens. `dg-09` used to carry three actions; §7.4
 took two of them away, so this now has one job and should show only it.*
 
-> Interior entry hall, three-quarter view. Lucy sits on her flat grey bed,
+> Interior entry hall, three-quarter view. Lucy sits on her flat gray bed,
 > **clearly back from the door**, head up and attention on the open doorway but
 > **her body completely still — feet planted, not rising, not leaning forward.**
 >
@@ -881,7 +881,7 @@ trainer's guidance specifically avoids. §5 also flags the door as "wide open, n
 barely open" — that one is an **alt-text error, not a drawing error**: step 4
 opens the door, so at step 5 the door is open and should stay open.*
 
-> Interior entry hall, three-quarter view. Lucy sits on her flat grey bed taking
+> Interior entry hall, three-quarter view. Lucy sits on her flat gray bed taking
 > a treat, **her feet unmoved on the bed** — she is being paid for staying
 > exactly where she is.
 >
@@ -906,7 +906,7 @@ opens the door, so at step 5 the door is open and should stay open.*
 **The fix:** the guest in the current one is the second of the two different men
 the library drifted into, and there is no leash although the level runs on one.*
 
-> Interior entry hall, three-quarter view. Lucy lies on her flat grey bed, head
+> Interior entry hall, three-quarter view. Lucy lies on her flat gray bed, head
 > up, watching the guest, **feet unmoved** — settled, not about to rise.
 >
 > The guest has **just crossed the threshold and stopped**: standing just inside
@@ -940,7 +940,7 @@ will most test whether the new style can stay uncluttered". Strip it. If the new
 version needs everything the old one had, it is wrong.*
 
 > Interior room adjoining the entry hall, three-quarter view. Lucy lies on her
-> flat grey bed a few feet from both people, head up but **relaxed and oriented
+> flat gray bed a few feet from both people, head up but **relaxed and oriented
 > at nothing — she is not watching the guest.** The leash is clipped to her
 > collar and lies slack on the floor.
 >
@@ -1003,7 +1003,7 @@ hold". That is the whole problem this scene exists to solve.*
 >
 > **Composition, and this matters more than anything else in the brief: this is
 > an activity cover, so it is letterboxed to a wide band across the middle and
-> centre-cropped to a small square. Group all three tightly in the centre of the
+> center-cropped to a small square. Group all three tightly in the center of the
 > frame, inside the middle horizontal band, with clear space above and below. Do
 > not spread them across the width.** A square crop taken from the middle must
 > contain **Lucy's head, the guest's hand on her chest, and the guest's face.**
@@ -1043,7 +1043,7 @@ mattress Block B now pins:
 - **`door-sound-03-name-distant`** (batch 1, shipped at 1.52.0). It is the only
   bed in dg-1, so nothing sits beside it to contradict it — low priority.
 - **`door-place-03-send`** (batch 2, shipped at 1.53.0 — round 10's). This one
-  *does* have neighbours: dg-4 steps 3 and 4 are adjacent and step 4 has the
+  *does* have neighbors: dg-4 steps 3 and 4 are adjacent and step 4 has the
   mattress. Installed knowingly rather than spend a third generation on it.
 
 Neither is worth a round on its own. Fold them into the next batch that touches
@@ -1145,7 +1145,7 @@ the floor "a nice touch that survives to the new style", so keep it.*
 >
 > **The treat itself must be unmistakable: a small brown treat held between
 > fingertip and thumb, clearly separate from the fingers and clearly visible
-> against the grey bed.** Do not draw a closed fist or a cupped empty hand at her
+> against the gray bed.** Do not draw a closed fist or a cupped empty hand at her
 > muzzle — this is the picture of the payment arriving, and if the food is not in
 > frame the image says nothing at all.
 >
@@ -1159,7 +1159,7 @@ the floor "a nice touch that survives to the new style", so keep it.*
 > cover. Group Lucy, the bed and the kneeling handler together in the middle of
 > the frame, and leave a clear margin of empty wall above the handler's head and
 > clear floor below the bed.** A wide letterbox band across the middle must hold
-> the handler's face, the treat hand and Lucy's head; a centred square must hold
+> the handler's face, the treat hand and Lucy's head; a centered square must hold
 > all three of those too. **Do not let the handler's head run up to the top edge
 > of the frame** — a wide crop will slice her face.
 >
@@ -1308,7 +1308,7 @@ rail just as much as to steps in a session.*
 > Lucy lies settled on her bed, **well back from the closed front door**, front
 > legs extended, body relaxed and **her head turned away from the door to look
 > up at the handler.** She has arrived and she is staying — this is the finished
-> behaviour, not the moment of arriving.
+> behavior, not the moment of arriving.
 >
 > The handler **crouches beside the bed at her level, down on her heels, back
 > straight**, one hand resting lightly and calmly on the edge of the bed. **She
@@ -1329,11 +1329,11 @@ rail just as much as to steps in a session.*
 >
 > **Composition, and this matters more than anything else in the brief: this is
 > an activity cover, so it is letterboxed to a wide band across the middle and
-> centre-cropped to a small square. The handler is crouched, so the whole group
+> center-cropped to a small square. The handler is crouched, so the whole group
 > is low and compact — put Lucy, the bed and the crouching handler together in
-> the centre of the frame, with a clear margin of empty wall above the handler's
+> the center of the frame, with a clear margin of empty wall above the handler's
 > head and clear floor below the bed.** A wide band across the middle must hold
-> the handler's face, Lucy's head and the door; a centred square must hold Lucy,
+> the handler's face, Lucy's head and the door; a centered square must hold Lucy,
 > the bed and the handler. **Nobody in this image is standing**, and **the dog is
 > on the right while the person is on the left** — that arrangement is what keeps
 > this thumbnail from being mistaken for another activity's.
@@ -1634,7 +1634,7 @@ The last four, and the only pictures left in the app that are not redrawn:
 `cg-01`, `sr-01`, `wp-01`, `fd-01`, the covers for the programs that are named
 but not written. No activity depends on them.
 
-| Replaces | Programme | Save as |
+| Replaces | Program | Save as |
 | --- | --- | --- |
 | `cg-01` | Four Paws on the Floor | `plan-fourpaws` |
 | `sr-01` | Settle on a Mat | `plan-mat` |
@@ -1659,10 +1659,10 @@ So the rule for this batch inverts. **Draw the thumbnail, not the illustration.*
 - **One shape, filling the frame.** Whatever the scene is, it has to survive
   being 84 pixels wide. Two figures at full height, a room around them, and a
   distance between them are all invisible at that size. Get close.
-- **Centred, because the card takes a square.** The 4:3 master is centre-cropped
+- **Centered, because the card takes a square.** The 4:3 master is center-cropped
   to a square, so the outer sixth of each side is thrown away before a household
   sees it. Nothing that matters goes there.
-- **Background is a colour, not a room.** One flat wall or one flat ground plane
+- **Background is a color, not a room.** One flat wall or one flat ground plane
   and nothing else. §5 records `sr-01` as "the busiest background in the whole
   library — armchair, side table, mug, plant pot, bookcase, two framed pictures,
   trailing vine, patterned rug"; every one of those is a smudge at 84px and
@@ -1671,7 +1671,7 @@ So the rule for this batch inverts. **Draw the thumbnail, not the illustration.*
   the only thing to check.
 
 Attach `door-greet-cover.png` — closest for cast and palette, and a cover
-already composed tight and centred, which is the habit these four need.
+already composed tight and centered, which is the habit these four need.
 
 ### Scene 33 — Four paws on the floor
 *Replaces `cg-01`. §5 records no defect in what it shows, only that "the
@@ -1704,7 +1704,7 @@ Strip it to almost nothing.*
 > **Close in on Lucy on her mat — this is drawn for a small square, so she fills
 > the frame.**
 >
-> Lucy lies **flat on her side on a grey mat, head down on the floor, eyes closed
+> Lucy lies **flat on her side on a gray mat, head down on the floor, eyes closed
 > or half closed**, legs loose, fully released. This is deep rest and not a
 > down-stay: nothing about her is holding a position.
 >
@@ -1776,7 +1776,7 @@ image." Lucy has **no white on her face**, ever.*
 > and her toes, and nowhere else.
 >
 > **Her muzzle is scruffy and wiry** — a visibly bearded jaw and chin and tufted
-> eyebrows, grey and black against the coat. **She is a Labrador and German
+> eyebrows, gray and black against the coat. **She is a Labrador and German
 > Wirehaired Pointer mix and must not be drawn as a smooth-coated Labrador.**
 > The first attempt drew her smooth-faced.
 >
@@ -1845,7 +1845,7 @@ own and never against the others until the pilot, so four separately-correct
 images turned out to be one composition drawn four times.
 
 **A cover has two jobs and they pull apart: survive the crops, and not look like
-its neighbours.** The second one can only be checked as a set.
+its neighbors.** The second one can only be checked as a set.
 
 So these two briefs are about *archetype* before anything else. After them the
 four should be distinguishable by silhouette alone, which is all 56px carries:
@@ -1886,13 +1886,13 @@ dg-3's covers are. Two viewers guessed it.*
 > The handler's **face is in the frame** — turned down toward Lucy, calm and
 > pleased, close enough that the two heads are almost touching. One hand rests
 > lightly on Lucy's shoulder. **Do not crop her face away**: two heads together
-> is the shape this picture is recognised by.
+> is the shape this picture is recognized by.
 >
 > Background: one flat wall plane. Nothing else at all — no door, no doormat, no
 > floor.
 >
 > **Composition: two heads, close together, filling the middle of the frame.**
-> A wide band across the middle must contain both heads. A centred square must
+> A wide band across the middle must contain both heads. A centered square must
 > contain both heads. Reduced to a thumbnail this should read as one large dark
 > mass and one face, side by side, and nothing else.
 >
@@ -1931,7 +1931,7 @@ itself, so the door should be what a household sees.*
 > chest** so she does not need her full height. She is turned toward the opening,
 > not toward the camera.
 >
-> Lucy lies on her flat grey mattress bed **well back, small in the frame, at the
+> Lucy lies on her flat gray mattress bed **well back, small in the frame, at the
 > opposite side from the door**, head up and watching, feet unmoved. She is a
 > long way from the door and that distance is part of the subject. The black
 > leash trails slack from her collar across the floor.
@@ -1940,7 +1940,7 @@ itself, so the door should be what a household sees.*
 > wall plane. Nothing else.
 >
 > **Composition: the bright doorway on one side, the dog small on her bed on the
-> other, clear floor between them.** A wide band across the middle and a centred
+> other, clear floor between them.** A wide band across the middle and a centered
 > square must both contain the bright opening and the dog. Reduced to a thumbnail
 > this should read as a bright vertical slab beside a small dark shape — a
 > silhouette no other cover in this set has.
@@ -1970,9 +1970,9 @@ it has to be is **less**.*
 > bed are most of what you see: this is a portrait of a dog in her place, not a
 > room with a dog in it.
 >
-> Her bed is the grey mattress-style bed, deep and quilted, and its **pale
+> Her bed is the gray mattress-style bed, deep and quilted, and its **pale
 > rectangle should read clearly underneath her** — the shape of the bed against
-> the floor is half of what makes this picture recognisable at a small size.
+> the floor is half of what makes this picture recognizable at a small size.
 >
 > **There is no door in this image. There is no person in this image.** No
 > doorway, no doormat, no hand, no legs, no figure at the edge of frame, nothing
@@ -1984,8 +1984,8 @@ it has to be is **less**.*
 >
 > Background: one flat wall plane and the floor. Nothing else at all.
 >
-> **Composition: her and the bed, centred, filling the frame.** A wide band
-> across the middle must contain her head and the bed. A centred square must
+> **Composition: her and the bed, centered, filling the frame.** A wide band
+> across the middle must contain her head and the bed. A centered square must
 > contain her and the bed. Reduced to a thumbnail this should read as **one dark
 > mass on a pale rectangle** — a shape no other cover in this set has, now that
 > the others are a close two-shot, a bright doorway and two upright figures.
@@ -2001,7 +2001,7 @@ in [comprehension-pilot.md](comprehension-pilot.md). Scene 39 is the last one.
 
 Install it and **re-run Block C as a set before believing any of it worked.**
 Twice now a cover has passed every check made on it alone and failed the moment
-it was put beside its neighbours. The four are meant to be four shapes:
+it was put beside its neighbors. The four are meant to be four shapes:
 
 | Activity | Shape at 56px |
 | --- | --- |
@@ -2131,10 +2131,10 @@ briefs below make the coat the subject rather than an attribute — the same fix
 that stopped the leash disappearing.
 
 **What is worth knowing before spending a sitting on this.** These four render
-at 84px and nowhere else, greyed to 55% saturation and 72% opacity on the
+at 84px and nowhere else, grayed to 55% saturation and 72% opacity on the
 locked "soon" card. At that size the coat is invisible; nobody using the app
 today can see this defect. It is worth fixing because these are the covers for
-programmes not yet written, and the day one of them is built the picture is
+programs not yet written, and the day one of them is built the picture is
 suddenly full size — and because Lucy looking like a different dog in three
 pictures is the one inconsistency the whole restyle was meant to prevent. It
 is not worth fixing because it is currently visible, and it should not jump
@@ -2145,15 +2145,15 @@ any queue in front of work that is.
 Attach `art/pilot/approved/plan-name.png`. Everything about composition,
 crop and background stays exactly as it is in the image being replaced —
 these compositions passed, and the 84px rules from batch 5 still hold
-(one shape filling the frame, centred for the square crop, background is a
-colour and not a room).
+(one shape filling the frame, centered for the square crop, background is a
+color and not a room).
 
 Every prompt below opens with this, and it is the whole batch:
 
 > **The one thing to change: her coat.** She is a Labrador and German
 > Wirehaired Pointer mix, **not a smooth-coated Labrador**, and the attached
 > image is what she is supposed to look like. She has a **visibly bearded jaw
-> and chin** and **shaggy, tufted eyebrows**, grizzled grey against the black.
+> and chin** and **shaggy, tufted eyebrows**, grizzled gray against the black.
 > Her coat is **wiry and slightly broken along the back and flanks**, not
 > sleek and not glossy. **She is never smooth-faced.**
 >
@@ -2200,7 +2200,7 @@ picture from the panel that still needs one.*
 >
 > [the shared coat paragraph above]
 >
-> Lucy lies **flat on her side on a grey mat, head down on the floor, eyes
+> Lucy lies **flat on her side on a gray mat, head down on the floor, eyes
 > closed**, legs loose, fully released — deep rest, not a down-stay. **Even
 > asleep and in profile the beard on her jaw and the tufts over her eyes are
 > visible**; that is what makes her her.
@@ -2326,7 +2326,7 @@ doing — "a hand signal, a wave, or reaching for a light switch".*
 > activity and the same pair getting the eyeline exactly right at close range;
 > this scene is that eye contact, at the length of a hallway.
 >
-> Lucy sits on her grey bed in the foreground near the front door. **Her whole
+> Lucy sits on her gray bed in the foreground near the front door. **Her whole
 > head is turned down the hallway and her eyes are locked on the handler's
 > face.** Draw a straight, unobstructed sightline between them: if you cannot
 > trace a line from her pupils to the handler's face, the image is wrong. Her
@@ -2387,7 +2387,7 @@ and turned away from the handler — nothing in it says* sent.
 > stays behind and to the side; she is not luring and there is no food in the
 > pointing hand.
 >
-> **The bed is the deep grey mattress**, as in the attached image — piped edge,
+> **The bed is the deep gray mattress**, as in the attached image — piped edge,
 > quilted top, a hand's depth. Not a thin mat.
 >
 > **Her coat is the wirehaired mix, not a smooth Labrador** — bearded jaw,
@@ -2468,7 +2468,7 @@ outsider has ever read correctly, not because the drawing is incompetent.*
 > distance between them runs left to right across the picture, not away from
 > the viewer.
 >
-> **Lucy sits on the right**, on her deep grey quilted bed, **her whole flank
+> **Lucy sits on the right**, on her deep gray quilted bed, **her whole flank
 > to the camera** — a clean side view. **Her muzzle and her eye are in clear
 > profile and both point left, straight at the handler.** Her head is straight
 > forward on her body, not twisted over her shoulder. Her ears are forward. Do
@@ -2545,14 +2545,14 @@ eyes, then decapitated at the shoulders with the bed below the band, with a
 correct-but-unrelated fix in between. Every cover that passed first time —
 `door-sound-cover`, `door-greet-cover`, `door-stay-04-pay`, and Scene 27 —
 has a **crouching or kneeling** human, which is what makes the group compact
-enough to sit in the middle band and inside a centred square at once.
+enough to sit in the middle band and inside a centered square at once.
 
 So: if a scene needs someone standing, it is a step image. If it has to be a
 cover, put the person down at the dog's level. Where an activity's natural cover
 wants a standing figure, draw the activity a separate cover instead of forcing
 one image to do both — dg-4 and dg-3 both ended up here.
 
-**The Today band is not centred.** `object-position: center 42%`
+**The Today band is not centered.** `object-position: center 42%`
 ([app.css](../css/app.css)) shifts it up, so what a household actually sees is
 **y 190–824** of a 1086px master, not the y 226–860 that `sips -c 634 1448`
 produces. Thirty-six pixels, and it is the difference between a clean crop below

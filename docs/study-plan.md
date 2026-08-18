@@ -8,7 +8,7 @@ platform (Maze), using the `?study` URLs below.
 
 **The comprehension survey** asks whether the 37 illustrations say what their
 briefs claim. It is written out in full in
-[comprehension-survey.md](comprehension-survey.md) and summarised at the end of
+[comprehension-survey.md](comprehension-survey.md) and summarized at the end of
 this document.
 
 Do not merge them. The usability missions need a participant moving through the
@@ -237,7 +237,7 @@ or *find* a summary. Two said so explicitly.
 
 So this is not yet evidence that the report is unfindable. It is evidence that
 **the mission wording is ambiguous**, which would have burned a real panel. The
-Maze block has been reworded to name the artefact without naming the button.
+Maze block has been reworded to name the artifact without naming the button.
 Worth noting that two of three named Progress as their *second* guess.
 
 The quantified version of the original worry stands regardless: *"Prepare for
@@ -271,7 +271,7 @@ surface it — participants answer the question asked. It is exactly what carefu
 readers are good at finding, and it is the strongest argument for running this
 kind of pass at all.
 
-**Not acted on yet.** Weighting the comparison, or labelling which levels each
+**Not acted on yet.** Weighting the comparison, or labeling which levels each
 week covered, is a product decision rather than a copy fix.
 
 ---
@@ -295,7 +295,7 @@ background. **My text capture stripped the visual state before they saw it.**
 Worth recording because it is the second time this project's *method* has
 manufactured a finding — the first was filenames leaking answers into the image
 survey. A text rendering is not a screen, and any finding about emphasis,
-colour or active state has to be checked against the real DOM before it counts.
+color or active state has to be checked against the real DOM before it counts.
 
 ### Verified, and worth fixing
 
@@ -413,7 +413,7 @@ sessions of scored practice for every reader, because it is the only
 unrehearsed event on the page.
 
 They also converged on the same two opening questions, unprompted: *what does
-"went well" mean to you*, and *tell me about the neighbour*. Both point at the
+"went well" mean to you*, and *tell me about the neighbor*. Both point at the
 same gap. The report is rich in grades and thin on the two things a trainer
 actually works from: the criterion, and what happened when it was real.
 
@@ -431,7 +431,7 @@ more.
 Unmoderated testing measures whether someone can find a button under
 instruction. It cannot tell you whether a household opens this app on a Tuesday
 with nothing prompting them, whether the sessions are the right length for a
-real dog, or whether any of it changes Lucy's behaviour at the door. Those are
+real dog, or whether any of it changes Lucy's behavior at the door. Those are
 questions for the household using it and for the trainer — and they are the
 questions that actually decide whether the app worked.
 

@@ -270,7 +270,7 @@ failed for `door-stay-05-release`, drawn from the other side.
 `door-stay-05-release` passes its departure clause 4/4 — she is clearly coming
 off the bed, which is what the first re-run bought. But **all four could not read
 the open hands as an invitation**: *"inviting or blocking"*, *"inviting it in,
-offering something, or signalling to stop"*, *"holding something, inviting the
+offering something, or signaling to stop"*, *"holding something, inviting the
 dog to come, or gesturing it back"*.
 
 The first re-run saw this in one viewer of three and recorded it as *"worth
@@ -287,7 +287,7 @@ apart on direction of travel"* — cross, halfway and onestep.
 
 Every one passes its own claim in isolation. The set does not separate. That is
 Block C's lesson arriving in Block A: **each was tested against its own key and
-never against its neighbours.**
+never against its neighbors.**
 
 ## The three keys, rewritten
 
@@ -446,7 +446,7 @@ help if you argue your way past it the first time it binds.
 # Block B — the confusable pairs, first run
 
 Never run until now, which was an odd gap: every serious defect this project has
-found came from images that were fine alone and wrong beside a neighbour.
+found came from images that were fine alone and wrong beside a neighbor.
 
 Three viewers, four pairs each. Filenames stripped, **pair order different for
 every viewer, and left/right swapped independently** so the correct answer
@@ -501,7 +501,7 @@ gesture is not ambiguous *in the app*, where it is one rung of a ladder.
 `door-place-03-send` was the pair's whole problem in §5, and all three separated
 it on exactly the axis the redraw was written for: pointing finger with the dog
 **on** the bed against open palm with the dog **leaving** it. Confirmed twice
-now — solo in batch 9, and against its neighbour here.
+now — solo in batch 9, and against its neighbor here.
 
 ## Two things to watch, neither worth acting on yet
 
@@ -590,7 +590,7 @@ came back in the same words. That was the defect and it is gone.
 **The residual errors are not visual.** One viewer read both pictures correctly
 and still mapped them to the wrong names; another said why:
 
-> *"The difference between those two activities is behavioural/narrative, not
+> *"The difference between those two activities is behavioral/narrative, not
 > visual, so the thumbnail can't carry it."*
 
 That is right, and it is the ceiling. *Doorbell Predicts Rewards*, *Doorbell
@@ -600,7 +600,7 @@ door and a bed. No 56px picture encodes which protocol is which.
 **The matching task is also harder than the app.** On the program map every
 cover sits beside its activity name and its own icon. The picture never has to
 identify the activity alone — it only has to not be a duplicate of its
-neighbour, and it no longer is. Chasing 12/12 would mean optimising against a
+neighbor, and it no longer is. Chasing 12/12 would mean optimizing against a
 test stricter than the product.
 
 Stop here. If a fifth activity is added it needs a fifth *shape*, and this set

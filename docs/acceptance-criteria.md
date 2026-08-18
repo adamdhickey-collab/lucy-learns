@@ -234,7 +234,7 @@ worse than one that fails honestly.
 
 - **AC-6.2** has never been checked on real hardware. Everything to date is a
   desktop browser at a phone viewport, which cannot settle iOS home-screen
-  behaviour, Wake Lock, or true offline install.
+  behavior, Wake Lock, or true offline install.
 - **AC-2.2** has never been timed with an actual dog.
 - **AC-4.3** has never been opened in Excel.
 - The four remaining activities beyond Doorbell Predicts Rewards have had their

@@ -134,7 +134,7 @@ than an empty page; `app.js` fades it out and removes it. `splash/` holds the
 iOS `apple-touch-startup-image` files, which the OS shows while a Home Screen
 launch boots.
 
-Both put the mark at 60% of viewport width, centred at 45% of height, on
+Both put the mark at 60% of viewport width, centered at 45% of height, on
 `--background`. The geometry lives in `css/app.css` and in
 `scripts/make-splash.mjs` and has to be changed in both.
 
@@ -183,7 +183,7 @@ reused heavily: `dg-07` alone stands in for twelve.
 ### Icons
 
 Every mark in `ICONS` in `js/ui.js` comes from [Lucide](https://lucide.dev),
-copyright the Lucide contributors, used under the ISC licence. Each entry names
+copyright the Lucide contributors, used under the ISC license. Each entry names
 the Lucide icon it is drawn from in a comment above it, so a mark can be
 re-fetched or swapped without guessing.
 
@@ -223,7 +223,7 @@ report automatically.
 
 `#/report` (linked from Progress as "Prepare for your next lesson") is the
 follow-up-appointment artifact: sessions and success over a chosen window,
-per-skill standing, watch behaviours worth discussing, and every note the
+per-skill standing, watch behaviors worth discussing, and every note the
 household kept — addressed to the trainer by name. It shares as plain text
 via the native share sheet (clipboard fallback), downloads as CSV, and prints
 cleanly (chrome and controls are stripped in print styles).

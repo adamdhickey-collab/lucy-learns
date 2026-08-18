@@ -281,7 +281,7 @@ function render() {
                 <div class="card-body">
                   <p>
                     ${behaviorLine.length
-                      ? `Sessions with watch behaviours: ${behaviorLine.join(', ')}.`
+                      ? `Sessions with watch behaviors: ${behaviorLine.join(', ')}.`
                       : 'No jumping, nipping, or barking logged in practice.'}
                     ${incidents.length
                       ? ` ${incidents.length} unplanned real-life moment${
@@ -363,7 +363,7 @@ function mount(root, params, options = {}) {
           await navigator.share({ title: `${getDog().name} — training report`, text });
           return;
         } catch {
-          /* cancelled, or unsupported payload — fall through to the clipboard */
+          /* canceled, or unsupported payload — fall through to the clipboard */
         }
       }
       try {

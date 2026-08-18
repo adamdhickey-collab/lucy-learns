@@ -61,8 +61,8 @@ into seven different shapes, including two squares:
 Consequences for the new art:
 
 - **Covers must work twice.** An activity cover is letterboxed to 16:7 on Today
-  and centre-cropped to a 56px square on the map. Lucy and the handler have to
-  sit inside a horizontal band across the middle *and* inside a centred square.
+  and center-cropped to a 56px square on the map. Lucy and the handler have to
+  sit inside a horizontal band across the middle *and* inside a centered square.
   Today's covers mostly fail one or the other: `dg-24` puts Lucy hard left with
   half the frame empty hallway, so the 56px square lands on floorboards.
 - **Step images are 4:3 only** and can use the full frame.
@@ -77,9 +77,9 @@ Consequences for the new art:
 
 | Family | Files | Character |
 | --- | --- | --- |
-| **A — Inked semi-realistic** | dg-01, 08, 09, 10, 11, 12 | Crisp linework, cool cream walls, Lucy in a **purple harness she does not own**, guest in brown plaid, handler in grey sneakers |
+| **A — Inked semi-realistic** | dg-01, 08, 09, 10, 11, 12 | Crisp linework, cool cream walls, Lucy in a **purple harness she does not own**, guest in brown plaid, handler in gray sneakers |
 | **B — Graphic close-up** | dg-02, 03, 04, 06 | Heavier outline, flatter fill, bodies cropped by the frame, saturated skin tones (dg-03 is markedly orange) |
-| **C — Matte painterly** | dg-05, 07, 13–26, cg-01, sr-01, wp-01, fd-01 | Soft matte rendering, yellower walls, framed landscape paintings, Lucy in a **collar only — the correct equipment**, handler in grey-navy slip-ons |
+| **C — Matte painterly** | dg-05, 07, 13–26, cg-01, sr-01, wp-01, fd-01 | Soft matte rendering, yellower walls, framed landscape paintings, Lucy in a **collar only — the correct equipment**, handler in gray-navy slip-ons |
 | **D — Cartoon sticker** | lucy-portrait, splash-mark | Outlined cartoon badge with a baked-in green checkmark |
 
 Family C is the largest and `dg-07` is the closest thing in the library to the
@@ -133,7 +133,7 @@ harness she does not wear.
 This is more than a prop swap. A line anchored at the neck leaves from a
 different point, at a different angle, and drapes differently from one anchored
 between the shoulder blades, so the six wrong ones are a redraw from the
-attachment outward rather than a recolour. It also changes what the picture
+attachment outward rather than a recolor. It also changes what the picture
 teaches: `dg-10` is the "walk her over on a loose leash" image, and it currently
 demonstrates equipment the household does not own.
 
@@ -142,11 +142,11 @@ the library and should be the benchmark for the rest.
 
 ### 3.4 The humans drift too
 
-- **Handler footwear**: grey sneakers (families A/B) vs grey-navy slip-ons (C).
+- **Handler footwear**: gray sneakers (families A/B) vs gray-navy slip-ons (C).
 - **Treat pouch**: hand-held yellow pouch (dg-02), belt-clipped pouch (dg-17,
   25, 26), absent everywhere else.
 - **The guest is two different men.** Dark-haired in brown/blue plaid with brown
-  boots (dg-01, 09, 10, 12); lighter-haired in blue-grey check with tan trousers
+  boots (dg-01, 09, 10, 12); lighter-haired in blue-gray check with tan trousers
   (dg-21, 22, 26).
 - **`dg-08` renders the guest as a translucent blue ghost** to mean "imaginary
   visitor". It reads as an apparition, and it is a symbol baked into the
@@ -166,7 +166,7 @@ the library and should be the benchmark for the rest.
 handler walking *away* with no treat in hand is the single worst instruction
 mismatch in the set, and it is on screen more than any other picture in the app.
 
-### 3.6 There is no incorrect-behaviour image anywhere
+### 3.6 There is no incorrect-behavior image anywhere
 
 All 30 illustrations show either a correct action, a setup, a reward, or a
 result. Nothing shows Lucy getting it wrong — no jumping, no barking at the
@@ -237,7 +237,7 @@ picture shows.
 ### dg-01 — Guest at the open door, Lucy holding her bed
 - **File** `dg-01.jpg` · JPEG · 1100×825 (4:3) · 210 KB · thumb 18 KB
 - **Appears** Program hero `#/program/calm-door-greetings` (21:9); Welcome panel 1 (5:4). 2 refs
-- **Activity** Calm Door Greetings — the programme as a whole
+- **Activity** Calm Door Greetings — the program as a whole
 - **Must communicate** The finished state: a guest is in the doorway and nothing has gone wrong
 - **Lucy** Sitting square on her bed several feet inside the entry, weight settled, ears neutral, attention on the handler rather than the guest
 - **Human** Handler standing side-on beside the bed, leash held low in the near hand with visible slack; guest standing still in the doorway, hands at sides, not leaning in
@@ -303,7 +303,7 @@ picture shows.
 - **File** `dg-06.jpg` · JPEG · 1100×825 (4:3) · 185 KB · thumb 16 KB
 - **Appears** Activity cover, dg-3 Doorbell Means Place → Today hero (16:7), library card (84px), detail hero (4:3), map rail (56px), Get ready (4:3). Player step figure — dg-2 step 1 (L1–L8), dg-3 step 3 (all levels), dg-4 step 3 (all levels). **22 refs**
 - **Activity** dg-2 Stay While the Door Opens, dg-3 Doorbell Means Place, dg-4 Controlled Real Greeting
-- **Must communicate** Lucy travelling **to** the bed on cue, and arriving
+- **Must communicate** Lucy traveling **to** the bed on cue, and arriving
 - **Lucy** Mid-stride **onto** the bed, front feet landing on it, head and body aimed at the bed, tail level
 - **Human** Kneeling or standing side-on **behind** Lucy's line of travel, one arm extended pointing at the bed, the pointing hand clearly downstream of the dog
 - **Type** Correct action
@@ -629,7 +629,7 @@ picture shows.
 - **Appears** Lucy tab profile header, 76 px circle, `object-position: 30% 40%`. Set in `js/config.js` as `DOG.photo`
 - **Activity** None — identity
 - **Must communicate** This is Lucy
-- **Lucy** Head and shoulders, relaxed, recognisably the same dog as the instruction set
+- **Lucy** Head and shoulders, relaxed, recognizably the same dog as the instruction set
 - **Human** None
 - **Type** Brand
 - **Alt now** *(rendered from `DOG` config; not in the `IMAGES` map)*
@@ -660,7 +660,7 @@ also cover all seven crops and both squares.
 **Shared brief for all five — Warm Instructional Vector**
 
 > Contemporary dog-training instruction manual illustration. Simplified
-> vector-like forms, crisp edges, restrained detail. Mostly flat colour with
+> vector-like forms, crisp edges, restrained detail. Mostly flat color with
 > subtle dimensional shading. Warm cream background. Muted green, teal, blue and
 > charcoal palette; coral or red only for warnings. Warm, approachable, premium,
 > adult. Consistent side or three-quarter viewing angle. One clearly
@@ -680,13 +680,13 @@ also cover all seven crops and both squares.
 > anthropomorphised.
 >
 > **Handler** — woman in her thirties, dark hair in a ponytail, olive-green
-> hoodie, dark navy jeans, grey sneakers, mustard-yellow treat pouch clipped at
+> hoodie, dark navy jeans, gray sneakers, mustard-yellow treat pouch clipped at
 > the right hip in every image. Face in profile or turned away.
 >
-> **Guest** — man in his thirties, blue-grey checked shirt, tan trousers, brown
+> **Guest** — man in his thirties, blue-gray checked shirt, tan trousers, brown
 > boots. One guest, one appearance, across the whole set.
 >
-> **Props** — flat grey rectangular dog bed, black leash, dark charcoal panelled
+> **Props** — flat gray rectangular dog bed, black leash, dark charcoal panelled
 > front door with a small window, woven doormat. Nothing else unless the
 > individual brief names it.
 
@@ -736,14 +736,14 @@ cover, so it takes both squares.
 > slightly away. The handler stands just behind Lucy holding the leash in a
 > loose loop at hip height; the line runs back to the ring on her collar, passing
 > beside Lucy rather than over her. **All three subjects grouped tightly enough that a
-> centred square crop contains Lucy's head, the guest's hand and the handler's
+> centered square crop contains Lucy's head, the guest's hand and the handler's
 > leash hand.** Background: door edge and floor only.
 
 **Tests** — three figures inside a square-safe cluster, greeting body language,
 the 16:7 and 56px cover crops. **Crops** 4:3, 16:7, 21:9-adjacent, 84px, 56px.
 
 ### 6.4 Correct versus incorrect → **one new image**, paired with 6.3
-The library contains no incorrect-behaviour image at all, so this one has to be
+The library contains no incorrect-behavior image at all, so this one has to be
 made rather than restyled. Pairing it with 6.3 means the pilot renders the same
 scene twice and proves the style can hold a character across a pair.
 
@@ -754,7 +754,7 @@ scene twice and proves the style can hold a character across a pair.
 > from her, face turned aside. Everything else in the frame is identical to the
 > correct version.
 >
-> **Coral accent only**: the taut leash line carries the single warning colour.
+> **Coral accent only**: the taut leash line carries the single warning color.
 > No X, no cross, no red circle, no border, no text.
 
 **Tests** — whether an error can be read as an error without any symbol, and
@@ -768,10 +768,10 @@ Worth settling on the strength of the pilot rather than in advance.
 `door-greet-08-jumping`.
 
 ### 6.5 A more complicated multi-person scene → replaces `dg-01`
-The programme cover and welcome panel 1: the most-seen illustration in the app,
+The program cover and welcome panel 1: the most-seen illustration in the app,
 and the one carrying the widest crop range.
 
-> Interior entry hall, wide three-quarter view. Lucy sits square on her grey bed
+> Interior entry hall, wide three-quarter view. Lucy sits square on her gray bed
 > several feet inside the room, **watching the handler rather than the guest**,
 > ears neutral. The handler stands side-on near the bed with the leash slack in
 > the low near hand, the line running to the ring on her collar. The guest stands in the open doorway with daylight behind
@@ -846,7 +846,7 @@ door / doormat / baseboard vocabulary repeats without drifting.
 any of the five. The constraint held without a fight.
 
 **A warning reads without a symbol.** Scene 4 was the risky one: whether an
-error could be shown as an error using nothing but colour and posture. The taut
+error could be shown as an error using nothing but color and posture. The taut
 coral leash is the only red in the frame and it works. That answers the open
 question in §3.6 — the pair does not need a ✓/✗ treatment, and the two-up
 component can carry plain HTML labels or none at all.
@@ -1042,7 +1042,7 @@ the dog.**
 
 **Round 4 — Scene 6, rejected.** The stay cue came back with the handler's flat
 palm pressed against the front door panel and her eyes on the door rather than
-on Lucy. It reads as holding the door shut, not as signalling a dog. Worse, it
+on Lucy. It reads as holding the door shut, not as signaling a dog. Worse, it
 put her *at* the door, which is step 3's job — this image exists specifically to
 separate step 2 from step 3, so the one thing it could not do was conflate them.
 
@@ -1082,7 +1082,7 @@ Three calls in this project were wrong at fit-to-screen and right at 3×. The
 muzzle in §7.3 was called smooth when it was scruffy. The floor in §7.2 was
 called too orange when it was the least saturated in the set. The approach image
 in §7.2 was called illegible when it reads fine. **Zoom before judging a
-character detail, and measure before judging a colour** — both are cheap, and
+character detail, and measure before judging a color** — both are cheap, and
 both have overturned a verdict here.
 
 
@@ -1123,7 +1123,7 @@ The structured walk is the half that already failed once.
 Panel 2 took `dg-20` rather than either replacement: it sits one swipe after
 panel 1, so a new-style illustration there would put the style change on the
 welcome, where a household has nothing to read it against. `dg-20` is painted
-like its neighbour, is still a true picture of a session step, and happens to
+like its neighbor, is still a true picture of a session step, and happens to
 show the leash under a foot while the copy beside it talks about running a
 session one-handed.
 

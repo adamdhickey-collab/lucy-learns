@@ -7,7 +7,7 @@ reference first.
 
 The working art — every generation, every rejected round, the original painted
 illustrations — lives in [`../art/`](../art/). That split is the whole
-organising idea: **`img/` is 6 MB of output, `art/` is 400 MB of process.**
+organizing idea: **`img/` is 6 MB of output, `art/` is 400 MB of process.**
 They used to be the same folder, which made a directory listing useless.
 
 ## Naming
@@ -28,7 +28,7 @@ Keys are prefixed by the activity they belong to, so a listing groups itself:
 | `door-stay-*` | dg-2 Stay While the Door Opens |
 | `door-place-*` | dg-3 Doorbell Means Place |
 | `door-greet-*` | dg-4 Controlled Real Greeting |
-| `plan-*` | the four planned programs, shown greyed on cards |
+| `plan-*` | the four planned programs, shown grayed on cards |
 
 Within an activity the number is its step in the ladder, so `door-stay-03-*`
 are all level-3 images and sort together.
@@ -64,7 +64,7 @@ generator. It is a head crop of the icon:
 
 The numbers are measured, not guessed. In the 1254² icon her head spans
 x 228–1048 and y 71–620, with the collar narrowing at y≈610. An 880 square at
-x 198 centres her face horizontally and keeps both ear tips; y 0 takes all 71
+x 198 centers her face horizontally and keeps both ear tips; y 0 takes all 71
 available pixels of headroom, which is the most there is. Anything tighter
 clips an ear — a 740 crop was tried and did. Re-measure if the icon changes.
 

@@ -47,7 +47,7 @@ export const IMAGES = withThumb({
   // step used before the split, so the app kept rendering while the artwork was
   // made. Both now have their own picture, drawn in the Warm Instructional
   // Vector style the rest of the library is moving to. They are the first two
-  // in the app, so they will not match their neighbours until the restyle
+  // in the app, so they will not match their neighbors until the restyle
   // catches up; a correct picture in the coming style beats a wrong one in the
   // old.
   'door-stay-02-cue': {
@@ -99,7 +99,7 @@ export const IMAGES = withThumb({
   //
   // Every other picture in the app shows something going right. This pair is
   // the exception, and the audit's §3.6 found the library had no incorrect
-  // behaviour anywhere in it — no jumping, no barking, no bolting past the
+  // behavior anywhere in it — no jumping, no barking, no bolting past the
   // handler.
   //
   // The two are the same room, camera, cast and distance, so the only thing
@@ -143,7 +143,7 @@ export const IMAGES = withThumb({
   //   large enough in frame to read on a phone, which the old one was not.
   //
   //   `dg-24` put Lucy hard left with two-thirds empty hallway, so the 56px
-  //   square landed on floorboards. `door-sound-cover` centres the pair in the
+  //   square landed on floorboards. `door-sound-cover` centers the pair in the
   //   middle band; the square now holds her head, the hand on her shoulder and
   //   the treat.
   //
@@ -217,7 +217,7 @@ export const IMAGES = withThumb({
   // image; it is not for a cover, now that batch 1 has shown a cover drawn to an
   // explicit composition constraint passes all three crops first time. Here the
   // guest's head, the hand on Lucy's chest and her four-paws-down sit inside the
-  // band, and the centred square holds all three figures whole.
+  // band, and the centered square holds all three figures whole.
   //
   // dg-4's fallback moved off `dg-26` entirely. That key was doing an ending and
   // a de-escalation at once, which are different messages. The "Lucy is too
@@ -376,14 +376,14 @@ export const IMAGES = withThumb({
     alt: 'A handler leans on the open front door talking to an empty porch while Lucy stays settled on her bed across the room.',
   },
 
-  // --- batch 5: the four planned programmes, and the end of the restyle -----
+  // --- batch 5: the four planned programs, and the end of the restyle -----
   //
   // The last four painted pictures in the app, and the batch where the rule
   // that governed the other four stopped applying. These render at 84px and
   // nowhere else — one reference each, the locked "soon" card in the library —
   // so the briefs said to draw the thumbnail rather than the illustration:
   // close in, one flat plane behind, everything that matters inside the
-  // centred square the card takes. §5 recorded `sr-01` as the busiest
+  // centered square the card takes. §5 recorded `sr-01` as the busiest
   // background in the library and "mush at 84px"; its replacement is a wall, a
   // floor, a mat, a sleeping dog and the lower legs of somebody nearby.
   //
@@ -396,7 +396,7 @@ export const IMAGES = withThumb({
   // Known drift, accepted deliberately: all four are closer to a smooth-coated
   // Labrador than the wirehaired mix (worst on the first three; the `plan-name`
   // re-run got the scruff back). Invisible at the only size these render. If a
-  // planned programme is ever written and its cover is promoted to full-size
+  // planned program is ever written and its cover is promoted to full-size
   // surfaces, redraw these first.
   //
   // Keyed to the icons the cards already carry (see ICONS plan-*) rather than

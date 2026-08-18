@@ -450,7 +450,7 @@ a.visually-hidden:focus {
 
 /* The whole tab lights up, not a pill around its icon.
    ------------------------------------------------------------------------
-   Colour alone was not carrying this. Inactive is #5c6a70 and current was
+   Color alone was not carrying this. Inactive is #5c6a70 and current was
    #125d63 — different hues, but almost the same *lightness*, so at 24px the
    only real cue was a half-pixel of extra stroke weight and the row read as
    four identical tabs. Value contrast is what the eye finds first; hue is what
@@ -1075,10 +1075,10 @@ a.visually-hidden:focus {
 }
 
 /* The headline is not always good news, so the mark beside it must not always
-   be gold. `headlineInsight()` now leads with a watch behaviour that got worse
-   — nipping that appeared, jumping that went up — and a reward-coloured
+   be gold. `headlineInsight()` now leads with a watch behavior that got worse
+   — nipping that appeared, jumping that went up — and a reward-colored
    sunburst next to "Jumping showed up in 2 sessions" is the same flattery the
-   branch order was fixed to stop, done with colour instead of a sentence.
+   branch order was fixed to stop, done with color instead of a sentence.
    The sentence carries the meaning either way; this only stops the decoration
    arguing with it. */
 .insight--watch svg {
@@ -1730,8 +1730,8 @@ details.disclosure .disclosure-body {
 }
 
 /* Short enough to hold one line at 163px, which is the whole design brief for
-   this label. Both use a tinted band rather than colour alone, so the pair
-   still reads as two verdicts in greyscale and to anyone who cannot separate
+   this label. Both use a tinted band rather than color alone, so the pair
+   still reads as two verdicts in grayscale and to anyone who cannot separate
    the green from the coral. */
 .step-pair-item figcaption {
   padding: 6px var(--s-2);
@@ -1868,13 +1868,13 @@ details.disclosure .disclosure-body {
 
    Two different kicks, because the two answers are not the same news. A good
    rep overshoots and settles; a miss drops and recovers. The number itself
-   never changes colour: colour is how this app says a behaviour needs
+   never changes color: color is how this app says a behavior needs
    watching, and spending it on a scorekeeper would cheapen the word.
 
    Re-triggering is why these are classes toggled off and on rather than a
    transition. The same animation on the same element will not replay unless
    the class actually leaves the element first, and at three taps a second the
-   old kick has to be cancelled mid-flight, not queued. */
+   old kick has to be canceled mid-flight, not queued. */
 .tally-count b {
   transform-origin: 50% 60%;
 }
@@ -1921,7 +1921,7 @@ details.disclosure .disclosure-body {
   position: relative;
 }
 
-/* A light sweep travelling the length of the bar when a rep lands well — the
+/* A light sweep traveling the length of the bar when a rep lands well — the
    arcade tell that something was banked. Behind the fill, never over the
    text, and gone in half a second. */
 .tally-meter.spark::after {
@@ -2578,7 +2578,7 @@ details.disclosure .disclosure-body {
      box, so there is nothing left to crop; the framing was done in the file
      (see img/README.md) rather than here, because a circle clips the corners
      and object-position cannot know that. The `object-position: 30% 40%` that
-     used to sit here was aimed at the off-centre artwork this replaced; left
+     used to sit here was aimed at the off-center artwork this replaced; left
      in place it would have looked deliberate while meaning nothing. */
   object-fit: cover;
   flex: none;
@@ -2842,7 +2842,7 @@ details.disclosure .disclosure-body {
 
 /* Sits above the tab bar and inside the content column, so on a laptop it does
    not float off in the empty field beside the app. `--page-max` minus the
-   gutters the screens already use, then centred the same way they are.
+   gutters the screens already use, then centered the same way they are.
 
    Not a modal and not a toast: it does not steal focus, it does not time out,
    and the app underneath stays entirely usable with it up. The only two things
@@ -2864,8 +2864,8 @@ details.disclosure .disclosure-body {
   border-radius: var(--r-lg);
   box-shadow: var(--shadow-lift);
   /* Its own keyframe rather than the shared `rise`, because this element is
-     centred with `translateX(-50%)` and `rise` animates `transform` — it would
-     replace the centring with `translateY(8px)` for the length of the
+     centered with `translateX(-50%)` and `rise` animates `transform` — it would
+     replace the centering with `translateY(8px)` for the length of the
      animation and snap the card back into place at the end. */
   animation: install-hint-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -2907,7 +2907,7 @@ details.disclosure .disclosure-body {
   flex: none;
 }
 
-/* On the dark surface the quiet button's own colours disappear. */
+/* On the dark surface the quiet button's own colors disappear. */
 .install-hint-go {
   background: var(--text-on-dark);
   color: var(--text-primary);
@@ -3042,7 +3042,7 @@ details.disclosure .disclosure-body {
    The last thing the OS shows and the first thing the app shows, holding the
    same mark in the same place on the same background. Geometry is duplicated
    in scripts/make-splash.mjs, which bakes it into the iOS launch images: 88%
-   of viewport width, centred at 50% height. Change one, change both.
+   of viewport width, centered at 50% height. Change one, change both.
    ========================================================================= */
 
 .splash {
@@ -3051,7 +3051,7 @@ details.disclosure .disclosure-body {
   z-index: 100;
   /* The artwork's own cream, not the app's paper. The splash art is now a
      portrait illustration that runs the full width of the screen rather than a
-     badge sitting on the app's field, so the field has to be the colour the
+     badge sitting on the app's field, so the field has to be the color the
      illustration already has at its edges — otherwise the art reads as a
      lighter rectangle on paper. Keep in step with FIELD in
      scripts/make-splash.mjs. The fade to the app is where paper arrives. */
@@ -3065,9 +3065,9 @@ details.disclosure .disclosure-body {
      50vh keeps the 3:4 art inside half the height, and 460px stops it filling
      a large screen.
 
-     It was 100vw and centred at 45%, which put the top of the art at y=115 on
+     It was 100vw and centered at 45%, which put the top of the art at y=115 on
      a 375×812 phone and left the wordmark nowhere to go — the artwork's own
-     cream painted straight over it. Backing off to 88% and centring properly
+     cream painted straight over it. Backing off to 88% and centering properly
      opens a real band above the art for the title and still leaves room for
      the meta below. */
   --badge: min(88vw, 50vh, 460px);
@@ -3146,7 +3146,7 @@ details.disclosure .disclosure-body {
      leaves free. The badge's own top edge was the old boundary, but the JPG
      carries blank cream for its first 26% — measured from the file, the first
      painted row is at 26.0% of its height — so a band stopping at the badge
-     edge centred the wordmark against empty field and read too high. The band
+     edge centered the wordmark against empty field and read too high. The band
      now borrows 20% of the badge's height from that margin, keeping a 6%
      cushion above the painted edge. The 0.2 is a constant of this artwork,
      like the geometry make-splash.mjs bakes: replace splash-mark.jpg and it
@@ -3157,14 +3157,14 @@ details.disclosure .disclosure-body {
   flex-direction: column;
   align-items: center;
   /* The band starts at y=0, which on a notched phone is under the notch.
-     Centre in what remains, not in the glass. */
+     Center in what remains, not in the glass. */
   padding-top: env(safe-area-inset-top, 0px);
   text-align: center;
 }
 
-/* Dead-centring the wordmark in the band put it visually high: the band ends
+/* Dead-centering the wordmark in the band put it visually high: the band ends
    at the art's *baked* top edge, but the drawing itself starts lower — the
-   badge carries its own transparent margin — so a centred title had more
+   badge carries its own transparent margin — so a centered title had more
    empty field below it than above. These spacers sink the cluster to 60% of
    the band instead of 50%. Proportional rather than a fixed nudge on purpose:
    on a short screen the band shrinks toward nothing and a fixed offset would
@@ -3180,7 +3180,7 @@ details.disclosure .disclosure-body {
   flex: 1;
 }
 
-/* Stacked and set big rather than one centred line at heading size: two short
+/* Stacked and set big rather than one centered line at heading size: two short
    words side by side at a readable size is a header, and this is a title card.
    The size is capped by height as well as width because the band it lives in
    is a height: the art's top edge is at worst 16.7vh from the top (the 50vh
@@ -3219,7 +3219,7 @@ details.disclosure .disclosure-body {
 /* Every rule here uses the child combinator, and it is not decoration. Each
    word is now two nested spans, so a bare `.splash-title span:first-child`
    matches the outer span of "Lucy" *and* the inner span of both words — the
-   inner one is the first child of its own parent. Weight and colour would
+   inner one is the first child of its own parent. Weight and color would
    leak onto the wrong element. `>` is what keeps the two levels apart. */
 .splash-title > span {
   display: block;
@@ -3252,7 +3252,7 @@ details.disclosure .disclosure-body {
      clipped there, and tightening it would only shorten a mask that has no
      reason to be short.
 
-     Horizontally the mask is a full-width block with centred text, so the
+     Horizontally the mask is a full-width block with centered text, so the
      padding does not push the glyphs anywhere — it is the negative margin
      that widens the clip box, and the two move the edge together at roughly
      1em of padding to 1em of edge. Measured by sweeping the value: 0.14em
@@ -3282,7 +3282,7 @@ details.disclosure .disclosure-body {
 /* One size, one ink, and now one weight.
    ---------------------------------------------------------------------------
    This lockup has lost a distinction at every pass and been better for each.
-   "Lucy" was smaller, then it was a warmer colour, then it was lighter at 460
+   "Lucy" was smaller, then it was a warmer color, then it was lighter at 460
    against 640 — each time on the theory that the two words needed separating
    or they would read as one wall. Reading as one thing is the point: it is a
    name, not a sentence with a subject and a verb. Both words are now 640.
@@ -3403,7 +3403,7 @@ details.disclosure .disclosure-body {
   left: 0;
   right: 0;
   /* Directly under the badge rather than pinned to the bottom of the screen,
-     so the mark and the build it is showing read as one centred stack
+     so the mark and the build it is showing read as one centered stack
      instead of two things at two heights. */
   top: calc(var(--badge-y) + var(--badge-h) / 2 + var(--s-5));
   margin: 0;
@@ -3457,7 +3457,7 @@ details.disclosure .disclosure-body {
    things all working against legibility at once on a warm field — and it is a
    date, the one kind of string that is hardest to read in caps because the
    month abbreviation loses its shape. Sentence case, normal tracking, and the
-   hierarchy carried by size and colour alone. */
+   hierarchy carried by size and color alone. */
 .splash-date {
   margin: var(--s-1) 0 0;
   font-family: var(--font-body);
@@ -3953,7 +3953,7 @@ details.disclosure .disclosure-body {
   position: relative;
   flex: 0 0 auto;
   /* Wide enough for the longest label under the node ("PLACE", "GREET") at
-     the size below. The node itself stays 34px and centred. */
+     the size below. The node itself stays 34px and centered. */
   width: 46px;
   align-self: stretch;
   display: flex;
@@ -4066,7 +4066,7 @@ details.disclosure .disclosure-body {
 }
 
 /* Not in the app yet. The station is muted but the text stays at full
-   contrast — the last time a stage state was signalled by fading its copy it
+   contrast — the last time a stage state was signaled by fading its copy it
    measured 2.96:1, and this one applies to three of the four. */
 .stage--soon .stage-node {
   background: var(--surface-sunken);
@@ -4130,7 +4130,7 @@ details.disclosure .disclosure-body {
   line-height: 1.45;
 }
 
-/* A later stage is signalled by the dashed node and its "Comes later" label,
+/* A later stage is signaled by the dashed node and its "Comes later" label,
    not by fading the text. The fade this replaces measured 2.96:1 — well under
    AA — and on a fresh install it applied to three of the four activities, so
    most of the map was unreadable in the lit entryway this app is used in. */
@@ -4191,7 +4191,7 @@ details.disclosure .disclosure-body {
 /* Cleared is teal everywhere, including inside a finished stage. Green was
    doing double duty here — it means "this whole stage is done", which is what
    the node and the state label already say, and having a cleared level change
-   colour depending on its neighbours made one idea look like two. */
+   color depending on its neighbors made one idea look like two. */
 .pips-row i.on {
   background: var(--primary);
   border-color: var(--primary);
@@ -4391,7 +4391,7 @@ details.disclosure .disclosure-body {
    bordered circle is a button, a filled one is a token.
 
    So the circles stay and the strokes go. Each mark sits on a soft disc of the
-   page colour, which reads as a seat rather than a target, and where the
+   page color, which reads as a seat rather than a target, and where the
    household is now is carried by fill instead of by an outline.
 
    Applied at both scales. Scoping this to the compact strip left the welcome
@@ -4411,17 +4411,17 @@ details.disclosure .disclosure-body {
 
 /* Finished is the one stop in this row that is *filled* rather than washed —
    see the rule further down that sets its background. So it is also the one
-   stop whose glyph must not be the state colour, and there is deliberately no
+   stop whose glyph must not be the state color, and there is deliberately no
    `color` here.
 
    There used to be one, `color: var(--success)`, left over from before the
    fill existed. It out-specified the white set alongside the fill (three
    classes to two) and painted a #427459 check on a #427459 disc — the mark was
    rendered, correctly, and invisible. It read as a stop with no icon at all
-   while its neighbours all had one.
+   while its neighbors all had one.
 
-   The lesson is the specificity, not the colour: state rules for this row live
-   in two blocks, and the `.route-line`-scoped one silently wins. Set a colour
+   The lesson is the specificity, not the color: state rules for this row live
+   in two blocks, and the `.route-line`-scoped one silently wins. Set a color
    here only alongside a background here. */
 
 /* The finish keeps its gold, as a wash rather than a border. */
@@ -4480,7 +4480,7 @@ details.disclosure .disclosure-body {
    This card used to wash blue on hover, which broke in two ways. The caret is
    a separate rotated square painted `--surface`, so it stayed white while the
    card went blue and the speech bubble's tail visibly detached from it. And
-   the row of marks inside sits on discs of the page colour, which stop
+   the row of marks inside sits on discs of the page color, which stop
    reading as seats once the surface behind them changes hue.
 
    Both of those are the tint's fault rather than the caret's, so the tint
@@ -4835,8 +4835,8 @@ details.disclosure .disclosure-body {
     transition: none;
   }
 
-  /* The lift keeps its colour and shadow change — those are state, not
-     motion — but the arrow stops travelling. */
+  /* The lift keeps its color and shadow change — those are state, not
+     motion — but the arrow stops traveling. */
   .program-strip:hover > svg {
     transform: none;
   }
@@ -4876,7 +4876,7 @@ details.disclosure .disclosure-body {
   padding: var(--s-5) 0 var(--s-6);
 }
 
-/* The road is drawn at the vertical centre of the stations, so the node size
+/* The road is drawn at the vertical center of the stations, so the node size
    lives here rather than being halved by hand in two places. */
 .route-line {
   --route-node: 36px;
@@ -5007,7 +5007,7 @@ details.disclosure .disclosure-body {
   color: var(--text-secondary);
   text-align: center;
   line-height: 1.3;
-  /* The column centres its children, which sizes them to their content and
+  /* The column centers its children, which sizes them to their content and
      lets a long label sail past the station's width instead of wrapping.
      "Calm hello" reached within 2px of the screen edge that way. */
   max-width: 100%;
@@ -5411,7 +5411,7 @@ svg.icon--solid {
 /* --- handler avatar -------------------------------------------------------
    Initials, not a silhouette. Nothing in the app uploads a photo, so a generic
    person icon would be a placeholder for something that never arrives, and
-   initials read as deliberate where a grey head reads as unfinished. */
+   initials read as deliberate where a gray head reads as unfinished. */
 
 .avatar {
   flex: 0 0 auto;
@@ -5427,12 +5427,12 @@ svg.icon--solid {
   letter-spacing: 0.02em;
   text-decoration: none;
   /* It is a <button> on Today now, so the UA's border, padding and font have
-     to be cleared or the circle renders as a grey rounded rectangle with the
+     to be cleared or the circle renders as a gray rounded rectangle with the
      initials in the system face. */
   border: 0;
   font-family: inherit;
   cursor: pointer;
-  /* Optical centring: uppercase initials have no descenders, so they sit low
+  /* Optical centering: uppercase initials have no descenders, so they sit low
      in the box by a hair without this. */
   padding: 1px 0 0;
 }
@@ -5460,11 +5460,11 @@ svg.icon--solid {
    The blocks above cover the pieces added alongside their own features. This
    sweeps up everything older that was never guarded: the done screen's whole
    entrance choreography, the sheet and toast slides, and the transforms that
-   move things rather than recolour them.
+   move things rather than recolor them.
 
-   Colour and background transitions stay. Reduced motion asks for less
+   Color and background transitions stay. Reduced motion asks for less
    movement, not for state changes to stop being legible — a button that
-   changes colour instantly on press still reads as pressed, whereas a button
+   changes color instantly on press still reads as pressed, whereas a button
    with no feedback at all reads as broken. */
 
 @media (prefers-reduced-motion: reduce) {
@@ -5687,7 +5687,7 @@ svg.icon--solid {
 
 .cleared-burst {
   position: absolute;
-  /* Centred on the seal: the banner's top padding plus half the seal. */
+  /* Centered on the seal: the banner's top padding plus half the seal. */
   top: calc(var(--s-5) + 22px);
   left: 50%;
   width: 0;
@@ -5798,7 +5798,7 @@ svg.icon--solid {
   margin-bottom: var(--s-1);
   /* The strip's own label style, copied deliberately: same size, tracking,
      weight and ink as .route-label above. The point of putting the mark on
-     the card is that it is recognisably the same token as the one in the
+     the card is that it is recognizably the same token as the one in the
      row — setting it in a different style would make it a third way of
      naming the activity rather than a repeat of the second. */
   font-size: 0.625rem;
@@ -5813,7 +5813,7 @@ svg.icon--solid {
    hero where the mark is the only graphic on the line. Here it sits beside a
    thumbnail inside a bordered card, and a third enclosed shape in that stack
    is one too many. Dropping the fixed 22px box with it lets the glyph sit
-   right against its label instead of centred in a circle's worth of air. */
+   right against its label instead of centered in a circle's worth of air. */
 .activity-card .body > p.activity-card-mark {
   gap: var(--s-1);
 }
