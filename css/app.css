@@ -2175,14 +2175,16 @@ details.disclosure .disclosure-body {
   margin-bottom: var(--s-2);
 }
 
+/* Stacked, not side by side. Sharing a row with its label left the select
+   about 300px wide on a phone, which is where voice names go to be truncated
+   — and the names are the entire content of this control. */
 .voice-picker-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--s-3);
+  display: block;
 }
 
 .voice-picker-row .label {
+  display: block;
+  margin-bottom: var(--s-2);
   font-weight: 600;
   font-size: var(--step--1);
   color: var(--text-secondary);
@@ -2192,16 +2194,21 @@ details.disclosure .disclosure-body {
    anything hand-built for a list this long, and it is reachable by keyboard
    and screen reader without any work. */
 .voice-picker-row select {
-  flex: 1 1 auto;
-  min-width: 0;
-  min-height: var(--tap);
-  padding: 0 var(--s-3);
+  width: 100%;
+  min-height: 52px;
+  padding: 0 var(--s-4);
+  /* Room for the platform's own chevron, which is drawn inside the box. */
+  padding-inline-end: var(--s-6);
   border: 1.5px solid var(--border-strong);
   border-radius: var(--r-md);
   background: var(--surface);
   color: var(--text-primary);
   font: inherit;
-  font-size: var(--step--1);
+  /* 16px is a threshold, not a preference: iOS zooms the whole page in when a
+     form control smaller than this takes focus, and then leaves the layout
+     zoomed. Every other note in this block is --step--1; this one cannot be. */
+  font-size: 1rem;
+  line-height: 1.2;
 }
 
 .voice-speech-status {
