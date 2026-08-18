@@ -42,6 +42,7 @@ const SHELL = [
   './js/views/moment.js',
   './js/views/welcome.js',
   './js/views/report.js',
+  './js/views/diagnostics.js',
   './js/person.js',
   './img/lucy-portrait.jpg',
   './img/splash-mark.jpg',

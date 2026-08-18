@@ -250,8 +250,11 @@ function render() {
         </div>
       </div>
 
+      ${/* Under the version, where the answer to "what version are you on?"
+            already lives, and quiet enough not to look like a feature. */ ''}
       <p class="section-note" style="margin-top: var(--s-6); text-align: center">
-        Lucy Learns ${APP_VERSION} · training program by ${TRAINER.name}
+        Lucy Learns ${APP_VERSION} · training program by ${TRAINER.name}<br />
+        <a href="#/diagnostics">Diagnostics</a>
       </p>
     </div>
   `;

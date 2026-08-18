@@ -2234,6 +2234,48 @@ details.disclosure .disclosure-body {
   color: var(--caution-text);
 }
 
+/* --- diagnostics -----------------------------------------------------------
+   Plainer than the rest of the app on purpose. This screen is read once, by
+   somebody trying to work out why something is broken, and every value on it
+   has to be legible and copyable rather than handsome. Long strings — a user
+   agent, a voice name — wrap instead of truncating, because a truncated fact
+   is not a fact. */
+
+.diag-table {
+  border-top: 1px solid var(--border);
+}
+
+.diag-row {
+  display: flex;
+  gap: var(--s-3);
+  align-items: baseline;
+  padding: var(--s-2) 0;
+  border-bottom: 1px solid var(--border);
+  font-size: var(--step--1);
+}
+
+.diag-key {
+  flex: 0 0 40%;
+  color: var(--text-secondary);
+  word-break: break-word;
+}
+
+.diag-value {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--text-primary);
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.diag-no {
+  color: var(--caution-text);
+}
+
+.diag-error {
+  color: var(--danger, var(--caution-text));
+}
+
 /* --- fallback sheet ------------------------------------------------------- */
 
 .sheet-backdrop {

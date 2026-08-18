@@ -12,6 +12,7 @@ import player, { cancelSession } from './views/player.js';
 import welcome from './views/welcome.js';
 import report from './views/report.js';
 import program from './views/program.js';
+import diagnostics from './views/diagnostics.js';
 
 // Before anything reads state. `?study` rebuilds the baseline so every research
 // participant enters the same app; see js/study.js for why each of the three
@@ -56,6 +57,7 @@ const routes = [
   { pattern: /^#\/report$/, view: report },
   { pattern: /^#\/profile$/, view: lucy },
   { pattern: /^#\/moment$/, view: moment },
+  { pattern: /^#\/diagnostics$/, view: diagnostics },
 ];
 
 // The fourth tab is "Profile", not the dog's name.
