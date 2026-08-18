@@ -42,6 +42,10 @@ import {
   canSpeak,
   cueCollisions,
   currentVoiceName,
+  currentVoiceURI,
+  listVoices,
+  onSpeechChange,
+  setPreferredVoice,
   speak,
   speechStatus,
   startListening,
@@ -292,6 +296,39 @@ function stopListening() {
 }
 
 /**
+ * Listening and speaking cannot both hold the audio session, so they take
+ * turns.
+ *
+ * This is why commands stopped working the moment the steps found their
+ * voice: every spoken instruction seized the session and knocked the
+ * recognizer over, the recognizer came back immediately and empty, and three
+ * of those in a row is exactly the signature this code reads as a platform
+ * refusing to listen. The feature was diagnosing itself as broken while
+ * working correctly.
+ *
+ * So the microphone stands down while the phone talks and comes back when it
+ * stops. Where a restart needs a tap — iOS — it will not come back on its
+ * own, and the chip says so rather than pretending.
+ */
+onSpeechChange((status) => {
+  const speaking = status.state === 'queued' || status.state === 'speaking';
+  if (speaking) {
+    if (listenStop) {
+      stopListening();
+      paintVoiceChip();
+    }
+    return;
+  }
+  // Finished, so the session is free. Started from what should be true now
+  // rather than from what was interrupted: with both halves on, the first
+  // spoken step arrives before the microphone has ever run, so a resume that
+  // only undoes a pause would leave it never started at all.
+  if (!session || session.phase !== 'step' || session.sheetOpen) return;
+  if (!getVoice().listen || !canListen() || listenStop) return;
+  startListeningNow();
+});
+
+/**
  * Let go of the microphone the moment this app stops being the thing on
  * screen.
  *
@@ -393,6 +430,8 @@ function handsFreeGroup() {
   const voice = getVoice();
   const collisions = cueCollisions();
   const usable = availableCommands();
+  const voices = voice.speak ? listVoices() : [];
+  const activeVoiceUri = currentVoiceURI();
 
   return html`
     <div class="result-group voice-group">
@@ -430,14 +469,38 @@ function handsFreeGroup() {
             make, and if this works while the steps do not, that narrows the
             problem to one thing. */ ''}
       ${voice.speak && canSpeak()
-        ? html`<p class="section-note voice-note voice-speech-status">
-            <span data-speech-status
-              >${currentVoiceName()
-                ? `Using ${currentVoiceName()}.`
-                : 'Using this device’s default voice.'}</span
-            >
-            <button class="btn btn--ghost" type="button" data-voice-test>Test voice</button>
-          </p>`
+        ? html`<div class="voice-note voice-picker">
+            ${/* Chosen here rather than in the phone's settings. Which
+                  voices a browser exposes, and what the path to them is
+                  called, differs by platform, by version and by which
+                  browser is being used — and none of that is worth making
+                  somebody navigate when the app already holds the list. */ ''}
+            ${voices.length
+              ? html`<label class="voice-picker-row">
+                  <span class="label">Voice</span>
+                  <select data-voice-select>
+                    ${join(
+                      voices.map(
+                        (v) => html`<option
+                          value="${v.uri}"
+                          ${v.uri === activeVoiceUri ? 'selected' : ''}
+                        >
+                          ${v.name}
+                        </option>`
+                      )
+                    )}
+                  </select>
+                </label>`
+              : ''}
+            <p class="section-note voice-speech-status">
+              <span data-speech-status
+                >${currentVoiceName()
+                  ? `Using ${currentVoiceName()}.`
+                  : 'Using this device’s default voice.'}</span
+              >
+              <button class="btn btn--ghost" type="button" data-voice-test>Test voice</button>
+            </p>
+          </div>`
         : ''}
 
       ${voice.listen && usable.length
@@ -1347,21 +1410,25 @@ function syncVoice(root, level, steps) {
   else if (!voice.speak) spokenKey = '';
 
   // Listening ---------------------------------------------------------------
-  const shouldListen = voice.listen && canListen() && onStepScreen;
-  if (shouldListen && !listenStop) {
-    listenStop = startListening({
-      onCommand: (id) => runVoiceCommand(id),
-      onState: (patch) => {
-        listenState = { ...listenState, ...patch };
-        paintVoiceChip();
-      },
-    });
-    if (!listenStop) {
-      listenState = { ...listenState, listening: false, error: 'ended' };
-    }
-  } else if (!shouldListen && listenStop) {
-    stopListening();
-  }
+  // Not while the phone is mid-sentence: the speech that is about to start
+  // would knock the recognizer over the moment it did.
+  const speaking = ['queued', 'speaking'].includes(speechStatus().state);
+  const shouldListen = voice.listen && canListen() && onStepScreen && !speaking;
+  if (shouldListen && !listenStop) startListeningNow();
+  else if (!shouldListen && listenStop && !speaking) stopListening();
+  paintVoiceChip();
+}
+
+function startListeningNow() {
+  if (listenStop) return;
+  listenStop = startListening({
+    onCommand: (id) => runVoiceCommand(id),
+    onState: (patch) => {
+      listenState = { ...listenState, ...patch };
+      paintVoiceChip();
+    },
+  });
+  if (!listenStop) listenState = { ...listenState, listening: false, error: 'ended' };
   paintVoiceChip();
 }
 
@@ -1474,6 +1541,17 @@ function wire(root) {
   // Reports what actually happened rather than assuming it worked. The
   // status is updated in place so the tap is not spent on a re-render, which
   // on iOS is also the thing that would end the gesture.
+  // Auditioned on the spot: a list of voice names tells you nothing about
+  // what they sound like, and picking one is the moment you want to hear it.
+  // Spoken from the change event so it is still the interaction, which is
+  // what iOS requires, and updated in place so nothing re-renders under it.
+  on('[data-voice-select]', 'change', (e) => {
+    setPreferredVoice(e.currentTarget.value);
+    const out = root.querySelector('[data-speech-status]');
+    if (out) out.textContent = `Using ${currentVoiceName() || 'default voice'}.`;
+    speak(`This is ${getDog().name}'s practice voice.`);
+  });
+
   on('[data-voice-test]', 'click', () => {
     speak(`This is ${getDog().name}'s practice voice.`);
     const out = root.querySelector('[data-speech-status]');

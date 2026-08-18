@@ -63,7 +63,7 @@ const emptyState = () => ({
    * and a microphone permission. Tying them together would mean somebody who
    * only wanted the steps read aloud had to grant a microphone to get it.
    */
-  voice: { speak: false, listen: false },
+  voice: { speak: false, listen: false, voiceURI: '' },
   notes: '',
 });
 
@@ -363,7 +363,12 @@ export function completeOnboarding() {
 }
 
 /** Hands-free preferences. Defaulted here so installs saved before it exist. */
-export const getVoice = () => ({ speak: false, listen: false, ...(state.voice || {}) });
+export const getVoice = () => ({
+  speak: false,
+  listen: false,
+  voiceURI: '',
+  ...(state.voice || {}),
+});
 
 export function setVoice(patch) {
   state.voice = { ...getVoice(), ...patch };

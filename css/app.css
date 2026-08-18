@@ -2175,6 +2175,35 @@ details.disclosure .disclosure-body {
   margin-bottom: var(--s-2);
 }
 
+.voice-picker-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.voice-picker-row .label {
+  font-weight: 600;
+  font-size: var(--step--1);
+  color: var(--text-secondary);
+}
+
+/* A native select on purpose: iOS gives it a proper wheel, which beats
+   anything hand-built for a list this long, and it is reachable by keyboard
+   and screen reader without any work. */
+.voice-picker-row select {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: var(--tap);
+  padding: 0 var(--s-3);
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: var(--step--1);
+}
+
 .voice-speech-status {
   display: flex;
   align-items: center;

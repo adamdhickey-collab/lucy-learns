@@ -11,7 +11,7 @@
 // The reason any of this exists: practice happens with a leash in one hand
 // and a treat pouch in the other. Tapping is the thing there is no hand for.
 
-import { getState } from './store.js';
+import { getState, getVoice, setVoice } from './store.js';
 
 // ---------------------------------------------------------------------------
 // Speaking
@@ -70,6 +70,21 @@ function pickVoice() {
   if (!synth) return null;
   const voices = synth.getVoices();
   if (!voices || !voices.length) return null;
+
+  // A chosen voice outranks a scored one. Guessing well is worth doing, but
+  // the guess is made against names and flags that vary by platform and
+  // version, and a household that has heard all of them knows better than the
+  // scoring does. Falls through if the saved voice is gone — an engine swap,
+  // or a phone the install moved to.
+  const preferred = getVoice().voiceURI;
+  if (preferred) {
+    const match = voices.find((v) => v.voiceURI === preferred);
+    if (match) {
+      chosenVoice = match;
+      return chosenVoice;
+    }
+  }
+
   const lang = navigator.language || 'en-US';
   let best = null;
   voices.forEach((voice) => {
@@ -78,6 +93,32 @@ function pickVoice() {
   });
   chosenVoice = best ? best.voice : null;
   return chosenVoice;
+}
+
+/**
+ * Every voice worth offering, best first.
+ *
+ * Filtered to the reading language, because the rest would read English
+ * instructions with the wrong phonology, and sorted by the same score used to
+ * guess so the likeliest good ones are at the top of the list rather than
+ * wherever the engine happened to put them.
+ */
+export function listVoices() {
+  if (!synth) return [];
+  const voices = synth.getVoices() || [];
+  const lang = navigator.language || 'en-US';
+  return voices
+    .map((voice) => ({ voice, score: scoreVoice(voice, lang) }))
+    .filter((v) => v.score >= 0)
+    .sort((a, b) => b.score - a.score)
+    .map((v) => ({ uri: v.voice.voiceURI, name: v.voice.name, lang: v.voice.lang }));
+}
+
+/** Choose a voice by hand. Empty string hands the decision back to scoring. */
+export function setPreferredVoice(uri) {
+  setVoice({ voiceURI: uri || '' });
+  chosenVoice = null;
+  return pickVoice();
 }
 
 if (synth) {
@@ -112,6 +153,12 @@ function resolveVoice() {
 export const currentVoiceName = () => {
   const voice = resolveVoice();
   return voice ? voice.name : null;
+};
+
+/** Same, as an id, so a picker can show which entry is the live one. */
+export const currentVoiceURI = () => {
+  const voice = resolveVoice();
+  return voice ? voice.voiceURI : '';
 };
 
 /**
