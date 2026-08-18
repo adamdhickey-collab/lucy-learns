@@ -64,8 +64,24 @@ const VOICE_HINTS = [
   [/google/i, 25], // Android's better set
 ];
 
+/**
+ * Nothing in here trusts a voice to be well formed.
+ *
+ * `getVoices()` is a list handed over by the platform, and platforms vary: a
+ * voice with no `lang`, or no `name`, is rare but real, and calling `.split`
+ * on it throws — inside a render, which takes down the whole screen and
+ * shows an error page instead of a training session. An optional feature for
+ * reading steps aloud does not get to do that, so every field is coerced
+ * before it is used.
+ */
 function scoreVoice(voice, lang) {
-  const name = `${voice.name} ${voice.voiceURI}`;
+  if (!voice) return -1;
+  const name = `${voice.name || ''} ${voice.voiceURI || ''}`;
+  const voiceLang = String(voice.lang || '');
+  const wanted = String(lang || 'en-US');
+  // A voice that will not say what language it speaks cannot be ranked
+  // against one that does.
+  if (!voiceLang) return -1;
   // Compact is what the app is trying to get away from.
   if (/compact|eloquence/i.test(name)) return -1;
   // And a joke voice is never the answer. This was only filtering the picker,
@@ -79,8 +95,8 @@ function scoreVoice(voice, lang) {
     if (pattern.test(name)) score += points;
   });
   // An exact locale beats the bare language, which beats nothing.
-  if (voice.lang === lang) score += 20;
-  else if (voice.lang.split('-')[0] === lang.split('-')[0]) score += 10;
+  if (voiceLang === wanted) score += 20;
+  else if (voiceLang.split('-')[0] === wanted.split('-')[0]) score += 10;
   else return -1;
   // On-device voices do not stall on a bad connection at the door.
   if (voice.localService) score += 5;
@@ -96,6 +112,15 @@ let chosenVoice = null;
  * decision made too early.
  */
 function pickVoice() {
+  try {
+    return choosePreferredOrBest();
+  } catch {
+    chosenVoice = null;
+    return null;
+  }
+}
+
+function choosePreferredOrBest() {
   if (!synth) return null;
   const voices = synth.getVoices();
   if (!voices || !voices.length) return null;
@@ -107,7 +132,7 @@ function pickVoice() {
   // or a phone the install moved to.
   const preferred = getVoice().voiceURI;
   if (preferred) {
-    const match = voices.find((v) => v.voiceURI === preferred);
+    const match = voices.find((v) => v && v.voiceURI === preferred);
     if (match) {
       chosenVoice = match;
       return chosenVoice;
@@ -116,7 +141,7 @@ function pickVoice() {
 
   const lang = navigator.language || 'en-US';
   let best = null;
-  voices.forEach((voice) => {
+  voices.filter(Boolean).forEach((voice) => {
     const score = scoreVoice(voice, lang);
     if (score >= 0 && (!best || score > best.score)) best = { voice, score };
   });
@@ -138,19 +163,33 @@ function pickVoice() {
  * silently reads as though something else were chosen.
  */
 export function listVoices() {
+  try {
+    return buildVoiceList();
+  } catch {
+    // A picker that cannot be built is a missing dropdown. A picker that
+    // throws is an error page over a training session.
+    return [];
+  }
+}
+
+function buildVoiceList() {
   if (!synth) return [];
   const voices = synth.getVoices() || [];
   const lang = navigator.language || 'en-US';
 
   const ranked = voices
+    // A hole in the list should cost that entry, not every entry after it.
+    .filter(Boolean)
     .map((voice) => ({
       voice,
       score: scoreVoice(voice, lang),
       // Apple names several voices "Eddy (English (United States))", which in
       // a list already filtered to English is the same word three times.
-      base: voice.name.replace(/\s*\((?:English|Language)[^)]*(?:\([^)]*\))?\)\s*$/i, '').trim(),
+      base: String(voice.name || '')
+        .replace(/\s*\((?:English|Language)[^)]*(?:\([^)]*\))?\)\s*$/i, '')
+        .trim(),
     }))
-    .filter((v) => v.score >= 0)
+    .filter((v) => v.score >= 0 && v.base)
     .sort((a, b) => b.score - a.score);
 
   // One entry per name and locale, best first.
@@ -163,7 +202,7 @@ export function listVoices() {
   // could have told apart anyway.
   const byName = new Map();
   ranked.forEach((v) => {
-    const key = `${v.base.toLowerCase()}|${v.voice.lang}`;
+    const key = `${v.base.toLowerCase()}|${String(v.voice.lang || '')}`;
     if (!byName.has(key)) byName.set(key, v);
   });
   const unique = [...byName.values()];
@@ -180,14 +219,17 @@ export function listVoices() {
   const counts = new Map();
   shortlist.forEach((v) => counts.set(v.base, (counts.get(v.base) || 0) + 1));
 
-  return shortlist.map((v) => ({
-    uri: v.voice.voiceURI,
-    lang: v.voice.lang,
-    name:
-      counts.get(v.base) > 1 && v.voice.lang.includes('-')
-        ? `${v.base} (${v.voice.lang.split('-')[1].toUpperCase()})`
-        : v.base,
-  }));
+  return shortlist.map((v) => {
+    const vLang = String(v.voice.lang || '');
+    return {
+      uri: v.voice.voiceURI || '',
+      lang: vLang,
+      name:
+        counts.get(v.base) > 1 && vLang.includes('-')
+          ? `${v.base} (${vLang.split('-')[1].toUpperCase()})`
+          : v.base,
+    };
+  });
 }
 
 /** Choose a voice by hand. Empty string hands the decision back to scoring. */
@@ -248,11 +290,17 @@ if (synth) {
  * good choice for a moment of silence.
  */
 function resolveVoice() {
-  if (!synth) return null;
-  const voices = synth.getVoices();
-  if (!voices || !voices.length) return chosenVoice;
-  if (chosenVoice && voices.some((v) => v.voiceURI === chosenVoice.voiceURI)) return chosenVoice;
-  return pickVoice();
+  try {
+    if (!synth) return null;
+    const voices = synth.getVoices();
+    if (!voices || !voices.length) return chosenVoice;
+    if (chosenVoice && voices.some((v) => v && v.voiceURI === chosenVoice.voiceURI)) {
+      return chosenVoice;
+    }
+    return pickVoice();
+  } catch {
+    return null;
+  }
 }
 
 /** The voice being used, so a screen can say which one rather than guess. */
