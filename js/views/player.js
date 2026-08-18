@@ -427,6 +427,19 @@ function topBar(label, value, max, valueText = label) {
  * the room should not have to take both.
  */
 function handsFreeGroup() {
+  // Belt as well as braces. Everything inside is defensive already, but this
+  // whole block is an optional convenience sitting on the screen that starts
+  // a session — and the cost of it throwing is not a missing switch, it is a
+  // household that cannot practice at all. Anything unexpected in here costs
+  // the feature, never the session.
+  try {
+    return handsFreeGroupInner();
+  } catch {
+    return '';
+  }
+}
+
+function handsFreeGroupInner() {
   if (!canSpeak() && !canListen()) return '';
   const voice = getVoice();
   const collisions = cueCollisions();

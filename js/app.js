@@ -1,7 +1,7 @@
 import { isStorageOk, isOnboarded, onStorageChange } from './store.js';
 import { APP_VERSION, APP_UPDATED } from './version.js';
 import { studyMode, applyStudyMode, STUDY_SPLASH_HOLD_MS } from './study.js';
-import { ICONS, announceScreen, markNavigated, withTransition } from './ui.js';
+import { ICONS, announceScreen, esc, markNavigated, withTransition } from './ui.js';
 import today from './views/today.js';
 import activities from './views/activities.js';
 import detail from './views/detail.js';
@@ -118,12 +118,34 @@ function renderRoute(options = {}) {
   } catch (error) {
     // A render crash without this is a permanent white screen. Keep the shell
     // alive and offer the two ways out.
+    // What actually broke, on the screen.
+    //
+    // This used to go only to console.error, which is the one place nobody
+    // can reach on the device where these happen: a phone in a hallway, in a
+    // browser with no inspector. Every crash then costs a round trip of
+    // guessing. The message and the first line of the stack are enough to
+    // name the failure, and they are not secret — the source is right there
+    // in the same folder.
+    const detail = [
+      error && error.message ? String(error.message) : String(error),
+      error && error.stack ? String(error.stack).split('\n')[1] || '' : '',
+    ]
+      .join(' ')
+      .trim()
+      .slice(0, 300);
+
     app.innerHTML = `
       <div class="screen">
-        <div class="card" style="margin-top: 30vh">
+        <div class="card" style="margin-top: 20vh">
           <div class="empty">
             <h3>Something went wrong</h3>
             <p>Your logged sessions are safe. Reloading usually clears this.</p>
+            <details class="disclosure" style="margin-top: var(--s-4); text-align: left">
+              <summary>What happened</summary>
+              <div class="disclosure-body">
+                <code style="word-break: break-word">${esc(detail)}</code>
+              </div>
+            </details>
             <div class="btn-row" style="margin-top: var(--s-4)">
               <button class="btn btn--quiet" type="button" onclick="location.hash='#/today';location.reload()">
                 Go to Today
