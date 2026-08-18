@@ -2011,6 +2011,39 @@ details.disclosure .disclosure-body {
   border-radius: var(--r-lg);
 }
 
+/* The running count during the rep cycle: one quiet line under the step, not
+   a second scoreboard. The top bar already carries progress toward target;
+   this is the glanceable total plus the one correction control. */
+.rep-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+  margin-top: var(--s-4);
+  padding: var(--s-2) var(--s-3);
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+  font-size: var(--step--1);
+}
+
+.rep-strip b {
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.rep-strip em {
+  font-style: normal;
+  color: var(--success);
+  font-weight: 650;
+}
+
+.rep-strip .btn {
+  min-height: 40px;
+  padding-block: var(--s-1);
+}
+
 /* --- fallback sheet ------------------------------------------------------- */
 
 .sheet-backdrop {
