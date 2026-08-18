@@ -41,7 +41,9 @@ import {
   canListen,
   canSpeak,
   cueCollisions,
+  currentVoiceName,
   speak,
+  speechStatus,
   startListening,
   stopSpeaking,
 } from '../voice.js';
@@ -251,6 +253,38 @@ let listenState = { listening: false, heard: '', matched: false, error: null };
 /** The step last read aloud, so a re-render does not say it again. */
 let spokenKey = '';
 
+/**
+ * Read the step the session is on now.
+ *
+ * Called from the click handlers rather than from the render, so the speech
+ * starts inside the tap that caused it. That is the whole difference between
+ * working and silent on iOS, where speech may only begin during a user
+ * gesture and a view-transition callback is already too late to count.
+ *
+ * Keyed by rep and step so the same instruction is never read twice for one
+ * position — a chip toggle or an undo re-renders the screen without moving
+ * it, and the fallback in syncVoice would otherwise say it again.
+ */
+function speakStep(steps) {
+  if (!getVoice().speak || !canSpeak() || !session || session.phase !== 'step') return;
+  const key = `${session.repLog.length}:${session.stepIndex}`;
+  if (key === spokenKey) return;
+  spokenKey = key;
+
+  const step = steps[session.stepIndex];
+  if (!step) return;
+  const isLast = session.stepIndex === steps.length - 1;
+  const rep = session.repLog.length + 1;
+  const lead = session.stepIndex === 0 ? `Rep ${rep}. ` : '';
+  // The instruction, never the cue. The cue is a word the dog has been
+  // trained on and the handler is meant to say it — a phone saying it out
+  // loud cues the dog itself, from the wrong place at a moment nobody chose.
+  // Same reason the rep question is read but its criteria are not: those are
+  // for the handler's eyes, mid-judgment.
+  const tail = isLast ? ` That was rep ${rep}. How did it go?` : '';
+  speak(`${lead}${step.instruction}${tail}`);
+}
+
 function stopListening() {
   if (listenStop) listenStop();
   listenStop = null;
@@ -388,6 +422,23 @@ function handsFreeGroup() {
             </button>`
           : ''}
       </div>
+
+      ${/* A speaker that says nothing looks exactly like a speaker that is
+            off, so this says which voice is in use and offers to prove it.
+            The tap is also the point: iOS starts speech during a gesture or
+            not at all, so a button is the most reliable sound the app can
+            make, and if this works while the steps do not, that narrows the
+            problem to one thing. */ ''}
+      ${voice.speak && canSpeak()
+        ? html`<p class="section-note voice-note voice-speech-status">
+            <span data-speech-status
+              >${currentVoiceName()
+                ? `Using ${currentVoiceName()}.`
+                : 'Using this device’s default voice.'}</span
+            >
+            <button class="btn btn--ghost" type="button" data-voice-test>Test voice</button>
+          </p>`
+        : ''}
 
       ${voice.listen && usable.length
         ? html`<p class="section-note voice-vocab">
@@ -1283,28 +1334,17 @@ function syncVoice(root, level, steps) {
   const onStepScreen = session.phase === 'step' && !session.sheetOpen;
 
   // Speaking ----------------------------------------------------------------
-  // Keyed by where we are, so a re-render caused by a chip toggle or an undo
-  // does not read the same instruction out a second time. The rep is in the
-  // key because wrapping to step one of the next rep is a genuinely new
-  // moment even though the words are identical.
-  if (voice.speak && canSpeak() && onStepScreen) {
-    const key = `${session.repLog.length}:${session.stepIndex}`;
-    if (key !== spokenKey) {
-      spokenKey = key;
-      const step = steps[session.stepIndex];
-      const isLast = session.stepIndex === steps.length - 1;
-      const lead = session.stepIndex === 0 ? `Rep ${session.repLog.length + 1}. ` : '';
-      // The instruction, never the cue. The cue is a word the dog has been
-      // trained on and the handler is meant to say it — a phone saying it
-      // out loud cues the dog itself, from the wrong place at the wrong
-      // moment. Same reason the rep question is read but its criteria are
-      // not: they are for the handler's eyes, mid-judgment.
-      const tail = isLast ? ` That was rep ${session.repLog.length + 1}. How did it go?` : '';
-      speak(`${lead}${step.instruction}${tail}`);
-    }
-  } else if (!voice.speak) {
-    spokenKey = '';
-  }
+  // A fallback only. Every ordinary step change speaks from its own click
+  // handler instead — see speakStep — because this runs at the end of a
+  // render, and renders that move between steps happen inside a view
+  // transition, one turn of the event loop after the tap that caused them.
+  // iOS Safari will only start speech during a gesture, and a callback that
+  // late no longer counts as one, which is why the steps were silent while
+  // the switch's own confirmation spoke perfectly well. What is left here
+  // covers arriving on a step without having tapped in the player at all,
+  // such as Today's jump-back-in.
+  if (voice.speak && canSpeak() && onStepScreen) speakStep(steps);
+  else if (!voice.speak) spokenKey = '';
 
   // Listening ---------------------------------------------------------------
   const shouldListen = voice.listen && canListen() && onStepScreen;
@@ -1431,6 +1471,30 @@ function wire(root) {
     refresh();
   });
 
+  // Reports what actually happened rather than assuming it worked. The
+  // status is updated in place so the tap is not spent on a re-render, which
+  // on iOS is also the thing that would end the gesture.
+  on('[data-voice-test]', 'click', () => {
+    speak(`This is ${getDog().name}'s practice voice.`);
+    const out = root.querySelector('[data-speech-status]');
+    if (!out) return;
+    const say = (msg) => {
+      out.textContent = msg;
+    };
+    say('Speaking…');
+    setTimeout(() => {
+      const { state, error } = speechStatus();
+      if (state === 'speaking' || state === 'done') {
+        say(`Working — ${currentVoiceName() || 'default voice'}.`);
+      } else if (state === 'error') {
+        say(`This device refused to speak (${error}).`);
+      } else {
+        // Queued and never started is the iOS silence: no sound, no error.
+        say('No sound. Check the side switch is not on silent, and the volume.');
+      }
+    }, 1400);
+  });
+
   on('[data-voice-listen]', 'click', () => {
     const next = !getVoice().listen;
     setVoice({ listen: next });
@@ -1454,6 +1518,9 @@ function wire(root) {
     session.stepIndex = 0;
     session.startedAt = Date.now();
     keepAwake();
+    // Before the refresh, deliberately: this is still the tap, and the
+    // refresh is where the gesture ends as far as iOS is concerned.
+    speakStep(steps);
     refresh('forward');
   });
 
@@ -1469,6 +1536,7 @@ function wire(root) {
     if (root.querySelector('.advance-hint')) markHintSeen('tap-to-advance');
     if (session.stepIndex < steps.length - 1) {
       session.stepIndex += 1;
+      speakStep(steps);
       refresh('forward');
     }
   };
@@ -1478,6 +1546,7 @@ function wire(root) {
   on('[data-prev]', 'click', () => {
     if (session.stepIndex > 0) {
       session.stepIndex -= 1;
+      speakStep(steps);
       refresh('back');
     }
   });
@@ -1502,6 +1571,7 @@ function wire(root) {
     // — so a per-rep toast was a third telling of the same thing. Crossing
     // the target is different: it is the moment the session became enough.
     if (session.celebrate) toast('Target met. Finish on a win, or keep going.');
+    speakStep(steps);
     refresh('forward');
   };
 
@@ -1517,6 +1587,7 @@ function wire(root) {
     syncTotals();
     session.celebrate = false;
     session.stepIndex = steps.length - 1;
+    speakStep(steps);
     refresh('back');
   });
 

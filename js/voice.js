@@ -126,8 +126,34 @@ export const currentVoiceName = () => {
  * wrong place, in the wrong voice, at a moment nobody chose. Cues are for the
  * handler to say; this reads the instruction around them.
  */
+/**
+ * What became of the last thing we tried to say.
+ *
+ * Speech failing on iOS is silent in both senses: no sound, and no error
+ * either — the utterance is simply never started. That leaves a screen that
+ * looks identical whether the feature is working or dead, which is
+ * undebuggable on a phone that is not on this desk. So the lifecycle is
+ * recorded and a screen can show it.
+ */
+let lastSpeech = { text: '', state: 'idle', error: null };
+let currentUtterance = null;
+const speechListeners = new Set();
+
+export const speechStatus = () => ({ ...lastSpeech });
+export function onSpeechChange(fn) {
+  speechListeners.add(fn);
+  return () => speechListeners.delete(fn);
+}
+function setSpeech(patch) {
+  lastSpeech = { ...lastSpeech, ...patch };
+  speechListeners.forEach((fn) => fn(speechStatus()));
+}
+
 export function speak(text) {
-  if (!synth || !text) return;
+  if (!synth || !text) {
+    setSpeech({ text: String(text || ''), state: 'unsupported', error: null });
+    return;
+  }
   try {
     const utterance = new SpeechSynthesisUtterance(String(text));
     // Guarded on its own, because choosing a voice is an improvement and
@@ -152,6 +178,22 @@ export function speak(text) {
     utterance.pitch = 1;
     // Some engines start muted if volume is left unset after a cancel.
     utterance.volume = 1;
+
+    setSpeech({ text: String(text), state: 'queued', error: null });
+    // Only the newest utterance may write the status. Replacing one fires
+    // `interrupted` on the old after the new is already queued, and letting
+    // that land marks a perfectly good utterance as failed — in the one place
+    // whose whole job is to be believed about whether speech is working.
+    currentUtterance = utterance;
+    const mine = (fn) => (e) => {
+      if (utterance !== currentUtterance) return;
+      fn(e);
+    };
+    utterance.onstart = mine(() => setSpeech({ state: 'speaking' }));
+    utterance.onend = mine(() => setSpeech({ state: 'done' }));
+    utterance.onerror = mine((e) =>
+      setSpeech({ state: 'error', error: (e && e.error) || 'unknown' })
+    );
 
     const wasSpeaking = synth.speaking || synth.pending;
     if (wasSpeaking) {

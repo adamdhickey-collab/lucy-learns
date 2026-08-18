@@ -2175,6 +2175,19 @@ details.disclosure .disclosure-body {
   margin-bottom: var(--s-2);
 }
 
+.voice-speech-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+
+.voice-speech-status .btn {
+  min-height: var(--tap);
+  padding-inline: var(--s-3);
+}
+
 .voice-vocab em {
   font-style: normal;
   font-weight: 650;
