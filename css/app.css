@@ -1688,6 +1688,30 @@ details.disclosure .disclosure-body {
   object-fit: cover;
 }
 
+/* Short viewports — a 640px-tall Android is the common one — give the
+   illustration less height so the step's controls are not pushed off the
+   screen. `contain` rather than a shorter `cover`: cropping a quarter off a
+   4:3 illustration takes the dog's head with it, and these pictures are
+   composed, not stock. The figure's own tint fills the sides. */
+@media (max-height: 720px) {
+  .step-figure img {
+    aspect-ratio: 16 / 9;
+    object-fit: contain;
+    background: var(--surface-sunken);
+  }
+
+  /* The rhythm and the display size are both tuned for a tall screen. On a
+     short one they are what pushes the rep answer off the bottom, and an
+     answer you have to scroll to is an answer that gets guessed. */
+  .player-inner > * + * {
+    margin-top: var(--s-4);
+  }
+
+  .player-inner > .step-instruction {
+    font-size: var(--step-2);
+  }
+}
+
 /* The tap-to-advance hint, shown once ever. Inside the picture because that
    is what it is about, at the bottom edge where the artwork is floor rather
    than face. Its own tint rather than a scrim over the whole image: the
@@ -1877,15 +1901,53 @@ details.disclosure .disclosure-body {
   gap: var(--s-2);
 }
 
-.tally-good {
-  min-height: 88px;
-  font-size: var(--step-2);
-  border-radius: var(--r-lg);
+/* The success criteria, shown against the answer they define. Reference
+   weight: it is the yardstick for the tap below it, never a competitor for
+   it, so it takes the sunken tint the count strip uses rather than the raised
+   surface a card would. Compact because it appears on every rep — the full
+   section spacing on the activity page is for a page being read, not a line
+   being checked with a dog waiting. */
+.rep-criteria {
+  padding: var(--s-2) var(--s-3);
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+  color: var(--text-primary);
+  font-size: var(--step--1);
+  line-height: 1.45;
 }
 
+.rep-criteria-label {
+  display: block;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* The two answers sit side by side, not stacked.
+   ---------------------------------------------------------------------------
+   Stacked they were 88px and 56px with a gap between, and on the judgment
+   screen — the tallest in the app — that put "Not that one" below the fold
+   while "That went well" stayed in reach. A scorekeeper whose optimistic
+   answer is one tap and whose honest answer is a scroll collects optimism,
+   and the entire reason reps are counted as they happen is that the numbers
+   are meant to be observations.
+
+   So reach is equal now and the hierarchy moves into fill and color, which
+   still say "most reps go well" without making the other answer dearer to
+   give. Equal size is also simply truer: both are the same kind of statement
+   about what just happened. */
+.tally-answers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-2);
+}
+
+.tally-good,
 .tally-miss {
-  min-height: 56px;
+  min-height: 76px;
   border-radius: var(--r-lg);
+  text-wrap: balance;
 }
 
 /* The running count during the rep cycle: one quiet line under the step, not

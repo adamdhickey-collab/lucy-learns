@@ -313,19 +313,63 @@ function stepScreen(activity, level) {
         ${isLast
           ? html`<div
               class="tally-actions"
-              style="margin-top: var(--s-5)"
+              style="margin-top: var(--s-3)"
               role="group"
               aria-labelledby="rep-question"
             >
               <p class="step-count" id="rep-question" style="margin-bottom: var(--s-2)">
                 That was rep ${rep}. How did it go?
               </p>
-              <button class="btn btn--lg tally-good" type="button" data-rep="1">
-                That went well
-              </button>
-              <button class="btn btn--quiet tally-miss" type="button" data-rep="0">
-                Not that one
-              </button>
+              ${/* The yardstick, at the moment of judgment.
+                    ---------------------------------------------------------
+                    By rep four the walkthrough is muscle memory, and the risk
+                    of that is not the setup pictures — habituating on "stand
+                    near the door" is competence, and worth having. The risk
+                    is this tap. "That went well" answered from reflex instead
+                    of from observation quietly inflates the log, and the log
+                    is what mastery, level changes and every recommendation
+                    are computed from. An app whose whole argument is
+                    observations-not-defaults cannot let its one observation
+                    decay into a default.
+
+                    The level already states what a good rep is; it was just
+                    kept on the activity page, which is a screen you read
+                    before practice and never during it. So the definition was
+                    being recalled from memory at the one moment it needed to
+                    be read. This is a checklist at the decision point: no
+                    extra taps, no friction, and — the property that matters
+                    here — a device that keeps working under repetition rather
+                    than wearing out from it. */ ''}
+              ${/* One flowing line rather than a bulleted list. The list cost
+                    106px on the one screen that cannot afford them: it pushed
+                    "Not that one" past the fold while "That went well" stayed
+                    in reach, which is a thumb-shaped bias toward the
+                    optimistic answer — the exact distortion this block exists
+                    to prevent. Both answers have to be equally cheap to give
+                    or the yardstick is worse than none. */ ''}
+              ${level.successCriteria && level.successCriteria.length
+                ? html`<p class="rep-criteria">
+                    <span class="rep-criteria-label">Went well means</span>
+                    ${join(
+                      level.successCriteria.map(
+                        (c, i) => html`${i ? html`<span aria-hidden="true"> · </span>` : ''}${c}`
+                      )
+                    )}
+                  </p>`
+                : ''}
+              <div class="tally-answers">
+                ${/* "Went well", not "That went well": it is the exact phrase
+                      the yardstick above it defines, and at half width the
+                      longer version wrapped to two lines beside a
+                      single-line "Not that one", which made two deliberately
+                      equal buttons look unequal again. */ ''}
+                <button class="btn btn--lg tally-good" type="button" data-rep="1">
+                  Went well
+                </button>
+                <button class="btn btn--quiet tally-miss" type="button" data-rep="0">
+                  Not that one
+                </button>
+              </div>
             </div>`
           : ''}
         ${/* One row for everything to do with the count, rather than a stack
