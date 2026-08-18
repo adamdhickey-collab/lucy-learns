@@ -74,11 +74,20 @@ const VOICE_HINTS = [
  * reading steps aloud does not get to do that, so every field is coerced
  * before it is used.
  */
+/**
+ * Locales are not written the same way everywhere. `en_US` with an underscore
+ * turns up on Android engines and in some WebKit builds, and comparing it
+ * against `en-US` character by character says they are different languages —
+ * which quietly rejected every voice on the device and left a picker with
+ * nothing in it while speech carried on working on the engine's default.
+ */
+const normLang = (value) => String(value || '').replace(/_/g, '-').toLowerCase();
+
 function scoreVoice(voice, lang) {
   if (!voice) return -1;
   const name = `${voice.name || ''} ${voice.voiceURI || ''}`;
-  const voiceLang = String(voice.lang || '');
-  const wanted = String(lang || 'en-US');
+  const voiceLang = normLang(voice.lang);
+  const wanted = normLang(lang) || 'en-us';
   // A voice that will not say what language it speaks cannot be ranked
   // against one that does.
   if (!voiceLang) return -1;
@@ -200,9 +209,22 @@ function buildVoiceList() {
   // the same words six times is not a choice, it is a puzzle. Keeping the
   // best-scoring of each collapses them without hiding anything a person
   // could have told apart anyway.
+  // If every voice on the device failed the filters, offer them anyway.
+  //
+  // The filters exist to put a good short list in front of somebody, and a
+  // list of none is not a shorter list, it is a missing control — with no way
+  // for the person holding the phone to tell whether the feature is broken or
+  // the app simply forgot it. Whatever unexpected shape this platform reports
+  // its voices in, the names still read fine in a dropdown.
+  const usable = ranked.length
+    ? ranked
+    : voices
+        .filter((v) => v && String(v.name || '').trim() && !isNovelty(v))
+        .map((voice) => ({ voice, score: 0, base: String(voice.name).trim() }));
+
   const byName = new Map();
-  ranked.forEach((v) => {
-    const key = `${v.base.toLowerCase()}|${String(v.voice.lang || '')}`;
+  usable.forEach((v) => {
+    const key = `${v.base.toLowerCase()}|${normLang(v.voice.lang)}`;
     if (!byName.has(key)) byName.set(key, v);
   });
   const unique = [...byName.values()];
@@ -220,7 +242,7 @@ function buildVoiceList() {
   shortlist.forEach((v) => counts.set(v.base, (counts.get(v.base) || 0) + 1));
 
   return shortlist.map((v) => {
-    const vLang = String(v.voice.lang || '');
+    const vLang = normLang(v.voice.lang);
     return {
       uri: v.voice.voiceURI || '',
       lang: vLang,
