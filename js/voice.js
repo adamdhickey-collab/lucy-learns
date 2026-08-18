@@ -22,6 +22,74 @@ const synth = typeof speechSynthesis !== 'undefined' ? speechSynthesis : null;
 export const canSpeak = () => Boolean(synth);
 
 /**
+ * Pick the best voice on the device instead of taking what is handed over.
+ *
+ * Left alone, iOS reads with the default compact voice — the small robotic
+ * one that ships in the system image. The good voices are there, they are
+ * just not the default: Siri's, and the Enhanced and Premium downloads under
+ * Accessibility. Same story on Android with the Google network voices. So the
+ * single biggest improvement available to spoken steps costs nothing but
+ * choosing.
+ *
+ * Scored rather than matched by name, because the naming is not consistent
+ * across platforms or versions and a list of known-good identifiers would rot.
+ */
+const VOICE_HINTS = [
+  [/siri/i, 100], // iOS, by some distance the best thing available
+  [/premium|enhanced|neural|natural|wavenet|studio/i, 60],
+  [/google/i, 25], // Android's better set
+];
+
+function scoreVoice(voice, lang) {
+  const name = `${voice.name} ${voice.voiceURI}`;
+  // Compact is what the app is trying to get away from.
+  if (/compact|eloquence/i.test(name)) return -1;
+
+  let score = 0;
+  VOICE_HINTS.forEach(([pattern, points]) => {
+    if (pattern.test(name)) score += points;
+  });
+  // An exact locale beats the bare language, which beats nothing.
+  if (voice.lang === lang) score += 20;
+  else if (voice.lang.split('-')[0] === lang.split('-')[0]) score += 10;
+  else return -1;
+  // On-device voices do not stall on a bad connection at the door.
+  if (voice.localService) score += 5;
+  if (voice.default) score += 1;
+  return score;
+}
+
+let chosenVoice = null;
+
+/**
+ * `getVoices()` is empty on the first call in most browsers and fills in
+ * later, so this re-picks whenever the list changes rather than caching a
+ * decision made too early.
+ */
+function pickVoice() {
+  if (!synth) return null;
+  const voices = synth.getVoices();
+  if (!voices || !voices.length) return null;
+  const lang = navigator.language || 'en-US';
+  let best = null;
+  voices.forEach((voice) => {
+    const score = scoreVoice(voice, lang);
+    if (score >= 0 && (!best || score > best.score)) best = { voice, score };
+  });
+  chosenVoice = best ? best.voice : null;
+  return chosenVoice;
+}
+
+if (synth) {
+  pickVoice();
+  // Fires once the list is populated, and again if the user installs a voice.
+  synth.addEventListener?.('voiceschanged', pickVoice);
+}
+
+/** The voice being used, so a screen can say which one rather than guess. */
+export const currentVoiceName = () => (chosenVoice ? chosenVoice.name : null);
+
+/**
  * Say one short thing, dropping whatever was still being said.
  *
  * Cancel-then-speak rather than queue: these are step instructions, and a
@@ -36,13 +104,39 @@ export const canSpeak = () => Boolean(synth);
 export function speak(text) {
   if (!synth || !text) return;
   try {
-    synth.cancel();
     const utterance = new SpeechSynthesisUtterance(String(text));
-    utterance.rate = 1;
+    const voice = chosenVoice || pickVoice();
+    if (voice) {
+      utterance.voice = voice;
+      // Safari reads `lang` rather than the voice's own in some versions, and
+      // a mismatch here is what turns an English sentence into phonetic mush.
+      utterance.lang = voice.lang;
+    }
+    // A touch under natural pace. These are instructions being followed with
+    // a dog, not prose being listened to, and the hurried default reads the
+    // step out before the handler has looked up from the leash.
+    utterance.rate = 0.95;
     utterance.pitch = 1;
     // Some engines start muted if volume is left unset after a cancel.
     utterance.volume = 1;
-    synth.speak(utterance);
+
+    const wasSpeaking = synth.speaking || synth.pending;
+    synth.cancel();
+    if (wasSpeaking) {
+      // Safari on iOS drops an utterance queued in the same tick as a cancel:
+      // the cancel lands on the new one instead of the old. A turn of the
+      // event loop is the whole fix, and it only costs anything in the case
+      // where something was actually being said.
+      setTimeout(() => {
+        try {
+          synth.speak(utterance);
+        } catch {
+          /* gone */
+        }
+      }, 60);
+    } else {
+      synth.speak(utterance);
+    }
   } catch {
     /* A voice that fails is not a reason to stop a training session. */
   }
@@ -149,25 +243,119 @@ export function availableCommands() {
   return COMMANDS.filter((c) => !blocked.has(c.id));
 }
 
+/** Ordinary Levenshtein, two rows rather than a full matrix. */
+function editDistance(a, b) {
+  if (a === b) return 0;
+  if (!a.length) return b.length;
+  if (!b.length) return a.length;
+  let prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+  let row = new Array(b.length + 1);
+  for (let i = 1; i <= a.length; i++) {
+    row[0] = i;
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      row[j] = Math.min(row[j - 1] + 1, prev[j] + 1, prev[j - 1] + cost);
+    }
+    [prev, row] = [row, prev];
+  }
+  return prev[b.length];
+}
+
+/**
+ * How far `phrase` is from the nearest run of words inside `said`.
+ *
+ * Windowed by word count rather than compared whole, because recognizers
+ * wrap commands in sentences — "okay next step then" — and measuring the
+ * whole sentence against a two-word phrase scores every real command as a
+ * bad match. One word either side of the phrase's own length is enough
+ * slack for a dropped or invented article.
+ */
+function windowedDistance(said, phrase) {
+  const words = said.split(' ').filter(Boolean);
+  const size = phrase.split(' ').filter(Boolean).length;
+  let best = editDistance(said, phrase);
+  for (let n = Math.max(1, size - 1); n <= size + 1; n++) {
+    for (let i = 0; i + n <= words.length; i++) {
+      const d = editDistance(words.slice(i, i + n).join(' '), phrase);
+      if (d < best) best = d;
+    }
+  }
+  return best;
+}
+
+/**
+ * How wrong a phrase may be and still count.
+ *
+ * Proportional to length: three characters adrift in "not that one" is a
+ * recognizer stumbling, while three adrift in a four-letter word is a
+ * different word. A third is enough to absorb the failures these engines
+ * actually produce — "next up" for "next step", "when well" for "went well"
+ * — without reaching far enough to meet anything said to a dog.
+ */
+const tolerance = (phrase) => Math.floor(phrase.length / 3);
+
 /**
  * Match a heard phrase to a command.
  *
- * Longest phrase first, so "not that one" is never answered by a shorter
- * match hiding inside it, and `includes` rather than equality because
- * recognizers return whole sentences ("okay next step then").
+ * Exact containment first, so the common case never pays for the fuzzy pass
+ * and "not that one" is never answered by something shorter hiding inside it.
+ *
+ * Then the fuzzy pass, which exists because these recognizers are doing open
+ * dictation against a five-phrase vocabulary they know nothing about: they
+ * return "next up", "text step", "nest step". Refusing those trains people to
+ * shout at the phone.
+ *
+ * The cue guard is what makes loosening it safe. Every household cue is
+ * measured too, and if what was heard sits as close to a cue as it does to a
+ * command, nothing happens. The handler is instructed to say those cues out
+ * loud on every rep, so the microphone hears them constantly — and a
+ * scorekeeper that logs a rep because somebody released the dog is worse than
+ * one that occasionally misses a command.
  */
-function matchCommand(transcript, commands) {
+export function matchCommand(transcript, commands = availableCommands()) {
   const said = normalize(transcript);
   if (!said) return null;
+
   const candidates = [];
   commands.forEach((command) => {
     [command.phrase, ...command.alternates].forEach((phrase) =>
       candidates.push({ id: command.id, p: normalize(phrase) })
     );
   });
-  candidates.sort((a, b) => b.p.length - a.p.length);
-  const hit = candidates.find((c) => said === c.p || said.includes(c.p));
-  return hit ? hit.id : null;
+
+  // Exact: longest first so the most specific phrase wins.
+  const exact = [...candidates]
+    .sort((a, b) => b.p.length - a.p.length)
+    .find((c) => said === c.p || said.includes(c.p));
+  if (exact) return exact.id;
+
+  // Fuzzy: the closest candidate, if it is close enough to be meant.
+  let best = null;
+  candidates.forEach((c) => {
+    const d = windowedDistance(said, c.p);
+    if (d <= tolerance(c.p) && (!best || d < best.d)) best = { id: c.id, d };
+  });
+  if (!best) return null;
+
+  // A cue only gets a veto if it is itself a plausible reading of what was
+  // said. Measuring raw distance instead let three-letter cues veto
+  // everything — "sit" sits two or three edits from most short words, so
+  // "next up" was being thrown out by a cue nobody had spoken. Holding each
+  // cue to its own tolerance asks the question that matters: was this a cue?
+  const cueDistance = cuePhrases().reduce((min, cue) => {
+    const d = windowedDistance(said, cue);
+    return d <= tolerance(cue) && d < min ? d : min;
+  }, Infinity);
+  if (cueDistance <= best.d) return null;
+
+  return best.id;
+}
+
+/** The household's cues, normalized, for the guard above. */
+function cuePhrases() {
+  return (getState().commands || [])
+    .map((c) => normalize(resolveCueText(c.cue)))
+    .filter(Boolean);
 }
 
 /**
