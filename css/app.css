@@ -2074,6 +2074,101 @@ details.disclosure .disclosure-body {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* --- hands free ------------------------------------------------------------
+   The microphone's state, kept on screen the whole time it is on. A mic with
+   no visible state is a feature people cannot tell has stopped: they say
+   "next step" into a session that quit listening two reps ago and conclude
+   the app ignored them. So the chip shows what it is doing and the last
+   thing it actually heard, which doubles as the only way to discover that
+   this kitchen reliably turns "next step" into "next up". */
+
+.voice-chip {
+  width: 100%;
+  min-height: var(--tap);
+  margin-top: var(--s-4);
+  padding: var(--s-2) var(--s-3);
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+  border: 0;
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: var(--step--1);
+  text-align: left;
+  cursor: pointer;
+}
+
+.voice-dot {
+  width: 9px;
+  height: 9px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+
+.voice-chip.is-live .voice-dot {
+  background: var(--success);
+  animation: voice-pulse 1.6s ease-in-out infinite;
+}
+
+.voice-chip-label {
+  font-weight: 650;
+  color: var(--text-primary);
+}
+
+/* What was heard, quoted. Matched turns it green, which is the fastest way
+   to see whether a phrase this room mangles is landing or not. */
+.voice-heard {
+  margin-left: auto;
+  font-style: italic;
+  opacity: 0.9;
+}
+
+.voice-heard.is-matched {
+  color: var(--success);
+  font-style: normal;
+  font-weight: 600;
+}
+
+@keyframes voice-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+
+/* The dot is the one thing here carrying information no text repeats, so
+   reduced motion keeps the color and drops only the beat. */
+@media (prefers-reduced-motion: reduce) {
+  .voice-chip.is-live .voice-dot {
+    animation: none;
+  }
+}
+
+/* These follow a row of chips, which carries no bottom margin of its own. */
+.voice-vocab,
+.voice-warn {
+  margin-top: var(--s-3);
+}
+
+.voice-vocab em {
+  font-style: normal;
+  font-weight: 650;
+  color: var(--text-primary);
+}
+
+.voice-warn {
+  color: var(--caution-text);
+}
+
 /* --- fallback sheet ------------------------------------------------------- */
 
 .sheet-backdrop {

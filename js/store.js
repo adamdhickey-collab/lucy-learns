@@ -55,6 +55,15 @@ const emptyState = () => ({
   // hint so adding the next one needs no migration: an install saved before a
   // hint existed simply does not list it, and sees it once.
   hintsSeen: [],
+  /**
+   * Hands-free practice, off until asked for.
+   *
+   * Two flags rather than one, because the halves are not equally cheap.
+   * Speaking runs on the device and works offline; listening needs a network
+   * and a microphone permission. Tying them together would mean somebody who
+   * only wanted the steps read aloud had to grant a microphone to get it.
+   */
+  voice: { speak: false, listen: false },
   notes: '',
 });
 
@@ -350,6 +359,14 @@ export const isOnboarded = () => state.onboarded;
 
 export function completeOnboarding() {
   state.onboarded = true;
+  persist();
+}
+
+/** Hands-free preferences. Defaulted here so installs saved before it exist. */
+export const getVoice = () => ({ speak: false, listen: false, ...(state.voice || {}) });
+
+export function setVoice(patch) {
+  state.voice = { ...getVoice(), ...patch };
   persist();
 }
 

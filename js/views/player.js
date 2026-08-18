@@ -27,13 +27,24 @@ import {
 import {
   addSession,
   getDog,
+  getVoice,
   hintSeen,
   isStorageOk,
   markHintSeen,
   resolveCue,
   setLevel,
+  setVoice,
   updateSession,
 } from '../store.js';
+import {
+  availableCommands,
+  canListen,
+  canSpeak,
+  cueCollisions,
+  speak,
+  startListening,
+  stopSpeaking,
+} from '../voice.js';
 import { currentLevel, masteryFor, recommendation } from '../metrics.js';
 import { programProgress, programGain } from '../program.js';
 import { levelPips, masteryLadder } from '../programui.js';
@@ -225,9 +236,37 @@ function disarmExitGuard(consume = false) {
   if (consume) history.back();
 }
 
+// ---------------------------------------------------------------------------
+// Hands-free
+// ---------------------------------------------------------------------------
+//
+// Both halves live at module scope alongside the session rather than inside a
+// render: a microphone that restarted on every re-render would spend the
+// session being torn down and rebuilt, and the step cycle re-renders on every
+// tap.
+
+let listenStop = null;
+/** What the chip on screen is showing. Never inferred, always reported. */
+let listenState = { listening: false, heard: '', matched: false, error: null };
+/** The step last read aloud, so a re-render does not say it again. */
+let spokenKey = '';
+
+function stopListening() {
+  if (listenStop) listenStop();
+  listenStop = null;
+  listenState = { listening: false, heard: '', matched: false, error: null };
+}
+
+function endVoice() {
+  stopListening();
+  stopSpeaking();
+  spokenKey = '';
+}
+
 /** Leave a live session for the activity it belongs to, guard and all. */
 function leavePlayer() {
   disarmExitGuard();
+  endVoice();
   releaseAwake();
   const slug = session ? session.slug : null;
   session = null;
@@ -269,6 +308,91 @@ function topBar(label, value, max, valueText = label) {
   `;
 }
 
+/**
+ * The hands-free offer, made before practice rather than during it.
+ *
+ * Here because this is the screen where the leash is not yet in the hand.
+ * Asking for a microphone in the middle of a rep means a permission dialog
+ * over a dog mid-stay, and a prompt that arrives at the worst possible moment
+ * gets denied on reflex.
+ *
+ * Two switches, not one. Reading the steps aloud runs on the device and works
+ * with no signal; listening ships audio to a server and needs a microphone.
+ * Somebody who wants their hands free of the phone but not a microphone in
+ * the room should not have to take both.
+ */
+function handsFreeGroup() {
+  if (!canSpeak() && !canListen()) return '';
+  const voice = getVoice();
+  const collisions = cueCollisions();
+  const usable = availableCommands();
+
+  return html`
+    <div class="result-group">
+      <h2>Hands free</h2>
+      <p class="section-note" style="margin-top: 0">
+        For when the leash is in one hand and the treats are in the other.
+      </p>
+      <div class="chips" style="margin-top: var(--s-3)">
+        ${canSpeak()
+          ? html`<button
+              type="button"
+              class="chip"
+              data-voice-speak
+              aria-pressed="${String(voice.speak)}"
+            >
+              Read the steps aloud
+            </button>`
+          : ''}
+        ${canListen()
+          ? html`<button
+              type="button"
+              class="chip"
+              data-voice-listen
+              aria-pressed="${String(voice.listen)}"
+            >
+              Listen for commands
+            </button>`
+          : ''}
+      </div>
+
+      ${voice.listen && usable.length
+        ? html`<p class="section-note voice-vocab">
+            Say
+            ${join(
+              usable.map(
+                (c, i) => html`${i ? ', ' : ''}<em>“${c.phrase}”</em>`
+              )
+            )}.
+          </p>`
+        : ''}
+
+      ${/* Cues are editable, so this cannot be settled by choosing careful
+            wording once: a household can rename the release cue to "next
+            step" tonight. Saying which command went and why beats a
+            microphone that quietly stops answering to one of them. */ ''}
+      ${voice.listen && collisions.length
+        ? html`<p class="section-note voice-warn">
+            ${collisions.length === 1 ? 'One command is' : `${collisions.length} commands are`}
+            switched off because ${getDog().name}'s cues use the same words.
+            Change the cue on the ${getDog().name} tab to get
+            ${collisions.length === 1 ? 'it' : 'them'} back.
+          </p>`
+        : ''}
+      ${voice.listen && !canListen()
+        ? html`<p class="section-note voice-warn">
+            This browser cannot listen. The steps can still be read aloud.
+          </p>`
+        : ''}
+      ${voice.listen
+        ? html`<p class="section-note">
+            Listening needs a signal, unlike the rest of the app.
+          </p>`
+        : ''}
+    </div>
+  `;
+}
+
 function readyScreen(activity, level) {
   const cover = IMAGES[activity.coverImage];
 
@@ -300,6 +424,8 @@ function readyScreen(activity, level) {
           </div>
         </div>
 
+        ${handsFreeGroup()}
+
         ${/* No cue list here. Every cue in the level shown together under one
               "Say" heading read as a line to deliver before starting, when they
               belong to four separate moments — the bed, the stay, the door, the
@@ -318,6 +444,45 @@ function readyScreen(activity, level) {
       <button class="btn btn--lg btn--block" type="button" data-start>Start practice</button>
     </div>
   `;
+}
+
+/**
+ * What the microphone is doing, on screen, while it is doing it.
+ *
+ * A microphone with no visible state is a feature people cannot tell is
+ * broken — they say "next step" into a session that stopped listening two
+ * reps ago and conclude the app ignored them. So this shows the live state
+ * and the last thing actually heard, which is also the only way to find out
+ * that the recognizer reliably hears "next up" for "next step" in a
+ * particular kitchen.
+ *
+ * Tapping it stops listening, because the control to turn a microphone off
+ * belongs next to the evidence it is on.
+ */
+function voiceChip() {
+  if (!getVoice().listen || !canListen()) return '';
+  const { listening, heard, matched, error } = listenState;
+  const label =
+    error === 'blocked'
+      ? 'Microphone blocked'
+      : error === 'network'
+        ? 'No signal for listening'
+        : listening
+          ? 'Listening'
+          : 'Not listening';
+
+  return html`<button
+    type="button"
+    class="voice-chip ${listening && !error ? 'is-live' : ''}"
+    data-voice-off
+    aria-label="${label}. Tap to stop listening."
+  >
+    <span class="voice-dot" aria-hidden="true"></span>
+    <span class="voice-chip-label">${label}</span>
+    ${heard
+      ? html`<span class="voice-heard ${matched ? 'is-matched' : ''}">“${heard}”</span>`
+      : ''}
+  </button>`;
 }
 
 function stepScreen(activity, level) {
@@ -495,6 +660,7 @@ function stepScreen(activity, level) {
               The strip therefore appears whenever either half has something to
               offer: mid-pass (log this one as a miss) or after a rep (undo
               it). */ ''}
+        ${voiceChip()}
         ${count > 0 || !isLast
           ? html`<div class="rep-strip ${session.celebrate ? 'rep-strip--celebrate' : ''}">
               <p class="rep-strip-count">
@@ -1051,6 +1217,117 @@ function animateProgramBand(root) {
   });
 }
 
+/**
+ * Bring the microphone and the voice into line with the screen that just
+ * rendered. Called at the end of every wire, and idempotent on purpose: the
+ * step cycle re-renders on every tap, and a microphone rebuilt that often
+ * would spend the session restarting instead of listening.
+ */
+function syncVoice(root, level, steps) {
+  const voice = getVoice();
+  const onStepScreen = session.phase === 'step' && !session.sheetOpen;
+
+  // Speaking ----------------------------------------------------------------
+  // Keyed by where we are, so a re-render caused by a chip toggle or an undo
+  // does not read the same instruction out a second time. The rep is in the
+  // key because wrapping to step one of the next rep is a genuinely new
+  // moment even though the words are identical.
+  if (voice.speak && canSpeak() && onStepScreen) {
+    const key = `${session.repLog.length}:${session.stepIndex}`;
+    if (key !== spokenKey) {
+      spokenKey = key;
+      const step = steps[session.stepIndex];
+      const isLast = session.stepIndex === steps.length - 1;
+      const lead = session.stepIndex === 0 ? `Rep ${session.repLog.length + 1}. ` : '';
+      // The instruction, never the cue. The cue is a word the dog has been
+      // trained on and the handler is meant to say it — a phone saying it
+      // out loud cues the dog itself, from the wrong place at the wrong
+      // moment. Same reason the rep question is read but its criteria are
+      // not: they are for the handler's eyes, mid-judgment.
+      const tail = isLast ? ` That was rep ${session.repLog.length + 1}. How did it go?` : '';
+      speak(`${lead}${step.instruction}${tail}`);
+    }
+  } else if (!voice.speak) {
+    spokenKey = '';
+  }
+
+  // Listening ---------------------------------------------------------------
+  const shouldListen = voice.listen && canListen() && onStepScreen;
+  if (shouldListen && !listenStop) {
+    listenStop = startListening({
+      onCommand: (id) => runVoiceCommand(id),
+      onState: (patch) => {
+        listenState = { ...listenState, ...patch };
+        paintVoiceChip();
+      },
+    });
+    if (!listenStop) {
+      listenState = { ...listenState, listening: false, error: 'ended' };
+    }
+  } else if (!shouldListen && listenStop) {
+    stopListening();
+  }
+  paintVoiceChip();
+}
+
+/**
+ * Update the chip in place. A full refresh would be the obvious thing and is
+ * wrong here: recognition results arrive while a thumb may be on a button,
+ * and re-rendering the screen underneath a tap loses it.
+ */
+function paintVoiceChip() {
+  const chip = document.querySelector('.voice-chip');
+  if (!chip) return;
+  const { listening, heard, matched, error } = listenState;
+  const label =
+    error === 'blocked'
+      ? 'Microphone blocked'
+      : error === 'network'
+        ? 'No signal for listening'
+        : listening
+          ? 'Listening'
+          : 'Not listening';
+  chip.classList.toggle('is-live', Boolean(listening) && !error);
+  const labelEl = chip.querySelector('.voice-chip-label');
+  if (labelEl) labelEl.textContent = label;
+  let heardEl = chip.querySelector('.voice-heard');
+  if (heard) {
+    if (!heardEl) {
+      heardEl = document.createElement('span');
+      heardEl.className = 'voice-heard';
+      chip.appendChild(heardEl);
+    }
+    heardEl.textContent = `“${heard}”`;
+    heardEl.classList.toggle('is-matched', Boolean(matched));
+  } else if (heardEl) {
+    heardEl.remove();
+  }
+  chip.setAttribute('aria-label', `${label}. Tap to stop listening.`);
+}
+
+/**
+ * Run a heard command through the button it corresponds to.
+ *
+ * Clicking the real control rather than calling the handler directly is the
+ * whole trick: every guard already written — the last step having no Next,
+ * Finish only existing once something is counted, the disabled Back on step
+ * one — keeps holding, and a command for a button that is not on screen
+ * simply does nothing instead of driving the session into a state the taps
+ * could never reach.
+ */
+function runVoiceCommand(id) {
+  const selector = {
+    next: '[data-next]',
+    prev: '[data-prev]',
+    good: '[data-rep="1"]',
+    miss: '[data-rep="0"]',
+    finish: '[data-finish-practice]',
+  }[id];
+  if (!selector) return;
+  const button = document.querySelector(selector);
+  if (button && !button.disabled) button.click();
+}
+
 function wire(root) {
   const activity = activityBySlug(session.slug);
   const level = levelOf(activity, session.levelNumber);
@@ -1090,6 +1367,32 @@ function wire(root) {
       'aria-pressed',
       String(session.ready.has(e.currentTarget.dataset.ready))
     );
+  });
+
+  // Hands-free ---------------------------------------------------------------
+  on('[data-voice-speak]', 'click', () => {
+    const next = !getVoice().speak;
+    setVoice({ speak: next });
+    if (!next) stopSpeaking();
+    // Say something the moment it is switched on. A voice setting that stays
+    // silent until the next screen leaves somebody wondering whether the
+    // phone is muted, and the answer to that question should not be "start a
+    // session and find out".
+    else speak('Steps will be read aloud.');
+    refresh();
+  });
+
+  on('[data-voice-listen]', 'click', () => {
+    const next = !getVoice().listen;
+    setVoice({ listen: next });
+    if (!next) stopListening();
+    refresh();
+  });
+
+  on('[data-voice-off]', 'click', () => {
+    setVoice({ listen: false });
+    stopListening();
+    refresh();
   });
 
   on('[data-start]', 'click', () => {
@@ -1362,6 +1665,8 @@ function wire(root) {
 
   if (session.phase === 'step') preloadUpcoming(activity, level);
 
+  syncVoice(root, level, steps);
+
   // The target-met sweep runs on the progress bar itself. Consumed here: the
   // flag belongs to the render it was set for, and leaving it on would replay
   // the celebration on every later re-render of the same screen.
@@ -1433,6 +1738,9 @@ export function cancelSession() {
   // the ones that never touched the guard. Left armed, its popstate listener
   // would outlive the session and answer for a screen that is no longer here.
   disarmExitGuard();
+  // A microphone that outlives the screen that opened it is the worst bug
+  // this feature could have.
+  endVoice();
   releaseAwake();
   if (session && session.releaseTrap) session.releaseTrap({ restoreFocus: false });
   session = null;

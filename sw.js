@@ -29,6 +29,9 @@ const SHELL = [
   './js/metrics.js',
   './js/program.js',
   './js/programui.js',
+  // The player imports this at module load, so a miss here does not degrade
+  // hands-free — it takes the whole player down in a hallway with no signal.
+  './js/voice.js',
   './js/views/program.js',
   './js/views/today.js',
   './js/views/activities.js',
