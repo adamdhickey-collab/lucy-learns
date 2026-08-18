@@ -480,6 +480,11 @@ export function confirmSheet({
   extraLabel,
   onExtra,
   onConfirm,
+  // Fired when the sheet closes any way other than confirming — cancel,
+  // backdrop, Escape. A caller that holds on to the returned close function
+  // needs to know when the sheet let itself go, or it keeps a handle to a
+  // dialog that is no longer on screen.
+  onDismiss,
 }) {
   const backdrop = document.createElement('div');
   backdrop.className = 'sheet-backdrop';
@@ -501,9 +506,13 @@ export function confirmSheet({
     </div>`;
 
   let release = () => {};
+  let settled = false;
   const close = () => {
+    const wasOpen = !settled;
+    settled = true;
     release();
     backdrop.remove();
+    if (wasOpen && onDismiss) onDismiss();
   };
 
   backdrop.addEventListener('click', (e) => {
@@ -511,6 +520,9 @@ export function confirmSheet({
   });
   backdrop.querySelector('[data-cancel]').addEventListener('click', close);
   backdrop.querySelector('[data-confirm]').addEventListener('click', () => {
+    // Marked settled first so closing does not read as a dismissal: this is
+    // the one exit that is an answer rather than a retreat from the question.
+    settled = true;
     close();
     onConfirm();
   });

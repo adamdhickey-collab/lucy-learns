@@ -127,6 +127,114 @@ const syncTotals = () => {
 };
 
 // ---------------------------------------------------------------------------
+// The back-button guard
+// ---------------------------------------------------------------------------
+//
+// The phases where leaving costs something that was never written down.
+// Shared, so the close button and the back gesture can never disagree about
+// what counts as unsaved.
+const UNSAVED_PHASES = ['step', 'result'];
+
+const isUnsaved = () => Boolean(session) && UNSAVED_PHASES.includes(session.phase);
+
+/**
+ * Back out of a live session and the reps are gone — a whole walk through the
+ * pictures with a dog, unwritten.
+ *
+ * The close button has always asked first. Back did not, because with hash
+ * routing it simply changes the hash and the router tears the player down
+ * before anything can object. On an installed iPhone that path barely exists;
+ * on Android, back is the primary way people leave anything, so the same
+ * reflex that closes a dialog also silently threw away a session.
+ *
+ * The fix is a duplicate history entry pushed when practice starts. It carries
+ * the same hash as the real one, so landing back on it fires `popstate` but no
+ * `hashchange` — the router never runs, the screen never changes, and the
+ * press becomes an event we can answer instead of a navigation we have to
+ * undo. Answering it means pushing the duplicate again, so the guard survives
+ * as long as the session does.
+ */
+let guardArmed = false;
+let popHandler = null;
+let confirmClose = null;
+
+function armExitGuard() {
+  if (guardArmed) return;
+  guardArmed = true;
+  history.pushState(null, '', location.hash);
+
+  popHandler = () => {
+    if (!isUnsaved()) {
+      disarmExitGuard();
+      return;
+    }
+    // The press consumed the duplicate, so put it back before anything else:
+    // whatever the answer turns out to be, the player has to still be here
+    // while the question is on screen.
+    history.pushState(null, '', location.hash);
+
+    // Back closes what is on top first. An open fallback sheet is the top
+    // thing, and dismissing it is what the gesture means there — asking
+    // "leave practice?" over a sheet the handler opened by accident would be
+    // answering a question nobody asked.
+    if (session.sheetOpen) {
+      closeSheet();
+      return;
+    }
+    // One question at a time: a second press while the sheet is up would
+    // otherwise stack another copy of it behind the first.
+    if (confirmClose) return;
+
+    confirmClose = confirmSheet({
+      title: 'Leave practice?',
+      body: 'Nothing from this session is saved yet.',
+      confirmLabel: 'Leave',
+      cancelLabel: 'Keep going',
+      onConfirm: () => {
+        confirmClose = null;
+        leavePlayer();
+      },
+      onDismiss: () => {
+        confirmClose = null;
+      },
+    });
+  };
+
+  window.addEventListener('popstate', popHandler);
+}
+
+/**
+ * @param {boolean} consume  Also spend the duplicate entry. Pass true only
+ *   when the player is staying put — a session that just saved, say. The
+ *   duplicate is otherwise left behind and the next back press goes to it
+ *   instead of anywhere, which reads on Android as a button that did nothing.
+ *   Not safe while navigating away: the pop would be racing the hash change
+ *   that is already leaving, and there the leftover entry is harmless anyway.
+ */
+function disarmExitGuard(consume = false) {
+  if (!guardArmed) return;
+  guardArmed = false;
+  window.removeEventListener('popstate', popHandler);
+  popHandler = null;
+  if (confirmClose) {
+    confirmClose();
+    confirmClose = null;
+  }
+  // The listener is already gone, and the entry carries the player's own
+  // hash, so this pops quietly: no hashchange, no route, nothing on screen.
+  if (consume) history.back();
+}
+
+/** Leave a live session for the activity it belongs to, guard and all. */
+function leavePlayer() {
+  disarmExitGuard();
+  releaseAwake();
+  const slug = session ? session.slug : null;
+  session = null;
+  location.hash = slug ? `#/activity/${slug}` : '#/today';
+}
+
+// ---------------------------------------------------------------------------
 // Screens
 // ---------------------------------------------------------------------------
 
@@ -956,17 +1064,15 @@ function wire(root) {
     else set.add(value);
   };
 
-  const leave = () => {
-    releaseAwake();
-    const slug = session.slug;
-    session = null;
-    location.hash = `#/activity/${slug}`;
-  };
+  // The guard belongs to the session, not to a screen, so it is armed from
+  // whichever render first has something to lose and stays armed across every
+  // re-render until the session is saved or abandoned.
+  if (isUnsaved()) armExitGuard();
+  else disarmExitGuard(true);
 
   on('[data-exit]', 'click', () => {
-    const unsaved = ['step', 'result'].includes(session.phase);
-    if (!unsaved) {
-      leave();
+    if (!isUnsaved()) {
+      leavePlayer();
       return;
     }
     confirmSheet({
@@ -974,7 +1080,7 @@ function wire(root) {
       body: 'Nothing from this session is saved yet.',
       confirmLabel: 'Leave',
       cancelLabel: 'Keep going',
-      onConfirm: leave,
+      onConfirm: leavePlayer,
     });
   });
 
@@ -1323,6 +1429,10 @@ function mount(root) {
 
 export function cancelSession() {
   detachKeys();
+  // The router calls this on any navigation away from the player, including
+  // the ones that never touched the guard. Left armed, its popstate listener
+  // would outlive the session and answer for a screen that is no longer here.
+  disarmExitGuard();
   releaseAwake();
   if (session && session.releaseTrap) session.releaseTrap({ restoreFocus: false });
   session = null;
