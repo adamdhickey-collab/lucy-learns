@@ -2268,6 +2268,27 @@ details.disclosure .disclosure-body {
   word-break: break-word;
 }
 
+/* Monospaced and selectable: this block exists to be read closely or
+   dragged over with a finger, and proportional type makes a wall of
+   key-value lines harder to scan. It scrolls inside itself rather than
+   stretching the page. */
+.diag-text {
+  margin: 0;
+  max-height: 50vh;
+  overflow: auto;
+  padding: var(--s-3);
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+  color: var(--text-primary);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 .diag-no {
   color: var(--caution-text);
 }

@@ -152,10 +152,22 @@ function render() {
         </p>
       </div>
 
-      <div class="btn-row" style="margin-bottom: var(--s-5)">
+      <div class="btn-row" style="margin-bottom: var(--s-3)">
         <button class="btn btn--quiet" type="button" data-diag-speak>Test the voice</button>
         <button class="btn" type="button" data-diag-copy>Copy report</button>
       </div>
+
+      ${/* The report as text, on the screen, because "copied to your
+            clipboard" is a claim about something invisible. Copying is still
+            the quickest way to send it, but somebody who wants to read it,
+            select part of it, or photograph it should not have to paste it
+            somewhere else first to find out what it says. */ ''}
+      <details class="disclosure" style="margin-bottom: var(--s-5)">
+        <summary>Show the report as text</summary>
+        <div class="disclosure-body">
+          <pre class="diag-text" data-diag-text>${asText()}</pre>
+        </div>
+      </details>
 
       <section class="section">
         <h2>This device</h2>
@@ -238,19 +250,27 @@ function mount(root) {
 
   on('[data-diag-copy]', async () => {
     const text = asText();
+    // Open the text either way. If the copy worked this shows what went to
+    // the clipboard, and if it silently did not — which happens, clipboard
+    // access is refused in more places than it is granted — the text is on
+    // screen to be selected by hand rather than lost behind a toast that
+    // said it worked.
+    const reveal = root.querySelector('.disclosure');
+    if (reveal) reveal.open = true;
     try {
       await navigator.clipboard.writeText(text);
-      toast('Report copied');
+      toast('Report copied. It is also shown below.');
     } catch {
-      // Clipboard access needs permissions this may not have. Selecting the
-      // text is the fallback that always works, even if it is clumsier.
-      const box = document.createElement('textarea');
-      box.value = text;
-      box.setAttribute('readonly', '');
-      box.style.cssText = 'position:fixed;inset:auto 0 0 0;height:40vh;z-index:99;font-size:12px';
-      document.body.appendChild(box);
-      box.select();
-      toast('Copy the selected text');
+      const pre = root.querySelector('[data-diag-text]');
+      if (pre) {
+        const range = document.createRange();
+        range.selectNodeContents(pre);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        pre.scrollIntoView({ block: 'center' });
+      }
+      toast('Could not copy. The report is selected below.');
     }
   });
 
