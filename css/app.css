@@ -1662,7 +1662,6 @@ details.disclosure .disclosure-body {
 }
 
 /* A heading and the thing that immediately explains it. */
-.player-inner > .step-instruction + .rep-steps,
 .player-inner > .step-instruction + .section-note,
 .player-inner > .welcome-title + .welcome-body {
   margin-top: var(--s-3);
@@ -1677,14 +1676,6 @@ details.disclosure .disclosure-body {
   margin-top: var(--s-4);
 }
 
-/* The rep list and the counter are separate jobs, so this is the one seam on
-   the screen that opens wider than the base. It measured 40px before, which
-   was --s-4 and --s-5 stacking in a flex column rather than a chosen number;
-   this is the nearest step on the scale. */
-.player-inner > .rep-steps + .tally {
-  margin-top: var(--s-6);
-}
-
 /* Pinned to the bottom of the screen, whatever precedes it. This has to come
    after the rule above, which would otherwise replace the auto. */
 .player-inner > .panic-slot {
@@ -1695,6 +1686,49 @@ details.disclosure .disclosure-body {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
+}
+
+/* The tap-to-advance hint, shown once ever. Inside the picture because that
+   is what it is about, at the bottom edge where the artwork is floor rather
+   than face. Its own tint rather than a scrim over the whole image: the
+   illustration is the most valuable thing on the screen and a one-time hint
+   does not get to dim it. */
+.step-figure {
+  position: relative;
+}
+
+.advance-hint {
+  position: absolute;
+  left: 50%;
+  bottom: var(--s-3);
+  transform: translateX(-50%);
+  max-width: calc(100% - var(--s-5));
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--text-primary) 88%, transparent);
+  color: var(--text-on-dark);
+  font-size: var(--step--1);
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: advance-hint-in 400ms var(--ease-soft) both;
+}
+
+@keyframes advance-hint-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 6px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .advance-hint {
+    animation: none;
+  }
 }
 
 /* Right and wrong, side by side.
@@ -1838,93 +1872,99 @@ details.disclosure .disclosure-body {
 
 /* --- the rep tally --------------------------------------------------------- */
 
-.tally {
-  text-align: center;
+.tally-actions {
+  display: grid;
+  gap: var(--s-2);
 }
 
-.tally-count b {
-  display: block;
-  font-family: var(--font-display);
-  font-size: 4.5rem;
-  line-height: 1;
-  font-weight: 600;
-  font-variation-settings: 'SOFT' 30, 'WONK' 0, 'opsz' 72;
+.tally-good {
+  min-height: 88px;
+  font-size: var(--step-2);
+  border-radius: var(--r-lg);
+}
+
+.tally-miss {
+  min-height: 56px;
+  border-radius: var(--r-lg);
+}
+
+/* The running count during the rep cycle: one quiet line under the step, not
+   a second scoreboard. The top bar already carries progress toward target;
+   this is the glanceable total plus the one correction control. */
+.rep-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+  margin-top: var(--s-4);
+  padding: var(--s-2) var(--s-3);
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
+  font-size: var(--step--1);
+}
+
+.rep-strip b {
+  color: var(--text-primary);
   font-variant-numeric: tabular-nums;
 }
 
-.tally-count span {
-  display: block;
-  margin-top: var(--s-1);
-  color: var(--text-secondary);
-  font-weight: 600;
+.rep-strip em {
+  font-style: normal;
+  color: var(--success);
+  font-weight: 650;
 }
 
-/* The count kicks when it changes.
-   ---------------------------------------------------------------------------
-   This is the most-tapped control in the app — a household runs it five to ten
-   times a session — and it was the one place where a tap produced a number
-   silently swapping for another number. The kick is the difference between
-   logging and playing.
-
-   Two different kicks, because the two answers are not the same news. A good
-   rep overshoots and settles; a miss drops and recovers. The number itself
-   never changes color: color is how this app says a behavior needs
-   watching, and spending it on a scorekeeper would cheapen the word.
-
-   Re-triggering is why these are classes toggled off and on rather than a
-   transition. The same animation on the same element will not replay unless
-   the class actually leaves the element first, and at three taps a second the
-   old kick has to be canceled mid-flight, not queued. */
-.tally-count b {
-  transform-origin: 50% 60%;
+.rep-strip-count {
+  flex: 1 1 8rem;
 }
 
-.tally-count b.kick-good {
-  animation: tally-kick-good 420ms cubic-bezier(0.22, 1.4, 0.36, 1);
+/* Both corrections sit here at text weight. As full-width buttons they read
+   as primary actions and stacked up into four visible ways to stop; a rep
+   that went wrong and a rep logged wrong are both corrections to the count,
+   and the count is what this row is. */
+.rep-strip-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--s-1);
+  margin-left: auto;
+  flex-wrap: wrap;
 }
 
-.tally-count b.kick-miss {
-  animation: tally-kick-miss 360ms cubic-bezier(0.33, 0, 0.2, 1);
+/* --tap, not a squeezed 40px: these are reached for with a leash in the
+   other hand. */
+.rep-strip .btn {
+  min-height: var(--tap);
+  padding-inline: var(--s-2);
 }
 
-@keyframes tally-kick-good {
-  0% {
-    transform: scale(1);
-  }
-  35% {
-    transform: scale(1.18) translateY(-3px);
-  }
-  100% {
-    transform: scale(1);
-  }
+/* Meeting target is the peak of the session, so it gets the two beats the
+   old counting screen had: the message arrives rather than appearing, and a
+   light sweep travels the top progress bar — the arcade tell that the
+   session was banked. Both fire once, on the render where the target is
+   crossed (.spark is added by the player for one animation's length). */
+.rep-strip--celebrate em {
+  animation: tally-met-in 420ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
 }
 
-@keyframes tally-kick-miss {
-  0% {
-    transform: scale(1);
+@keyframes tally-met-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
   }
-  40% {
-    transform: scale(0.93) translateY(2px);
-  }
-  100% {
-    transform: scale(1);
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
-/* The bar takes the same news a beat later, so the eye reads number then
-   progress rather than both at once. */
-.tally-meter {
-  height: 10px;
-  margin: var(--s-4) auto 0;
-  max-width: 16rem;
-  /* Containing block for the sweep below; .meter already clips it. */
+.player-top .progress-track {
+  /* Containing block for the celebration sweep; overflow already clips it. */
   position: relative;
 }
 
-/* A light sweep traveling the length of the bar when a rep lands well — the
-   arcade tell that something was banked. Behind the fill, never over the
-   text, and gone in half a second. */
-.tally-meter.spark::after {
+.player-top .progress-track.spark::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -1950,65 +1990,26 @@ details.disclosure .disclosure-body {
   }
 }
 
-/* Target met is a small event, so it arrives rather than appearing. */
-.tally-met:not([hidden]) {
-  animation: tally-met-in 420ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
-}
-
-@keyframes tally-met-in {
-  from {
-    opacity: 0;
-    transform: translateY(6px) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* The kick is decoration on top of a number that already changed, so reduced
-   motion drops all of it. Nothing here carries information: the count, the
-   bar and the live region say everything, which is the test for whether an
-   effect is safe to remove outright rather than shorten. */
+/* The celebration is decoration on top of a strip that already changed, so
+   reduced motion drops all of it. Nothing here carries information: the
+   strip text and the toast say everything. */
 @media (prefers-reduced-motion: reduce) {
-  .tally-count b.kick-good,
-  .tally-count b.kick-miss,
-  .tally-meter.spark::after,
-  .tally-met:not([hidden]) {
+  .rep-strip--celebrate em,
+  .player-top .progress-track.spark::after {
     animation: none;
   }
 
-  .tally-meter.spark::after {
+  .player-top .progress-track.spark::after {
     content: none;
   }
 }
 
-.tally-meter > span {
-  width: 100%;
-  transform-origin: left center;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.tally-met {
-  margin-top: var(--s-3);
-  color: var(--success);
-  font-weight: 650;
-}
-
-.tally-actions {
-  display: grid;
-  gap: var(--s-2);
-}
-
-.tally-good {
-  min-height: 88px;
-  font-size: var(--step-2);
-  border-radius: var(--r-lg);
-}
-
-.tally-miss {
-  min-height: 56px;
-  border-radius: var(--r-lg);
+/* The illustration doubles as a tap-to-advance target mid-cycle. No focus
+   stop and no chrome: Next remains the accessible, discoverable path and the
+   picture is a convenience for the thumb that lives up there anyway. */
+[data-advance] {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* --- fallback sheet ------------------------------------------------------- */
@@ -5367,45 +5368,6 @@ svg.icon--solid {
   border-radius: var(--r-lg);
   color: var(--text-secondary);
   font-size: var(--step--1);
-}
-
-/* --- what one rep is, while you are counting them -------------------------
-   Quiet on purpose. The tally and the two answer buttons are the job here;
-   this is a reference you glance at, so it sits between the instruction and
-   the count without competing with either for the thumb. */
-
-.rep-steps {
-  /* The reset covers p and figure but not ol, so dropping this element's own
-     margin in favour of the container's rhythm handed it back the browser
-     default — a 1em bottom margin that showed up as a 45px seam where 32 was
-     intended. The container owns the spacing; this only has to stop
-     contributing its own. */
-  margin: 0;
-  padding: var(--s-3) var(--s-4) var(--s-3) calc(var(--s-4) + 1.1em);
-  border-radius: var(--r-md);
-  background: var(--surface-sunken);
-  color: var(--text-secondary);
-  font-size: var(--step--1);
-  line-height: 1.45;
-}
-
-.rep-steps li + li {
-  margin-top: 6px;
-}
-
-/* The practice screen's heading. The step screens give this class the full
-   display size because the instruction is the screen; here it is a label above
-   the real content and competes with the count for the eye. */
-.step-instruction--compact {
-  font-size: var(--step-1);
-  line-height: 1.25;
-}
-
-.rep-cue {
-  color: var(--primary-dark);
-  font-style: normal;
-  font-weight: 600;
-  white-space: nowrap;
 }
 
 /* --- handler avatar -------------------------------------------------------

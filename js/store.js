@@ -51,6 +51,10 @@ const emptyState = () => ({
   // Has the household been through the welcome? Nothing is seeded until they
   // choose, so the app can be handed to someone genuinely empty.
   onboarded: false,
+  // One-time hints already shown, by id. A set of ids rather than a flag per
+  // hint so adding the next one needs no migration: an install saved before a
+  // hint existed simply does not list it, and sees it once.
+  hintsSeen: [],
   notes: '',
 });
 
@@ -346,6 +350,17 @@ export const isOnboarded = () => state.onboarded;
 
 export function completeOnboarding() {
   state.onboarded = true;
+  persist();
+}
+
+/** Whether a one-time hint has already had its turn. */
+export const hintSeen = (id) => (state.hintsSeen || []).includes(id);
+
+/** Spend a one-time hint. Idempotent, so callers need not check first. */
+export function markHintSeen(id) {
+  if (!state.hintsSeen) state.hintsSeen = [];
+  if (state.hintsSeen.includes(id)) return;
+  state.hintsSeen.push(id);
   persist();
 }
 

@@ -2,8 +2,15 @@
 // session that gets counted as it happens rather than reconstructed from
 // memory afterward.
 //
-// Phases: ready → step (1..n) → practice (the live rep tally) → result
-// (arousal, one tap saves) → done (recommendation) ⇄ detail (optional edits).
+// Phases: ready → step (1..n, looping — each full pass through the steps is
+// one repetition, counted on the last step and wrapped back to the first) →
+// result (arousal, one tap saves) → done (recommendation) ⇄ detail (edits).
+//
+// EXPERIMENT (rep-cycle-flow branch): the old flow walked the steps once and
+// then parked on a static tally screen, with the count starting at zero after
+// you had already done the thing once. Here the walkthrough IS the rep: the
+// pictures stay up and cycle, the first pass counts as rep one, and the
+// outcome is asked at the moment the rep ends instead of on a separate screen.
 
 import {
   activityBySlug,
@@ -20,7 +27,9 @@ import {
 import {
   addSession,
   getDog,
+  hintSeen,
   isStorageOk,
+  markHintSeen,
   resolveCue,
   setLevel,
   updateSession,
@@ -66,6 +75,8 @@ function begin(activity, level) {
     repLog: [],
     reps: 0,
     successes: 0,
+    // Set for exactly one render: the one where the rep target is crossed.
+    celebrate: false,
     arousal: null,
     behaviors: new Set(),
     assistance: new Set(),
@@ -119,7 +130,16 @@ const syncTotals = () => {
 // Screens
 // ---------------------------------------------------------------------------
 
-function topBar(label, value, max) {
+/**
+ * `valueText` spells out the position for a screen reader. The bar creeps
+ * within a rep, but aria-valuenow has to be a whole rep to stay honest against
+ * aria-valuemax, so the finer detail — which step of which rep — goes here
+ * rather than being lost. It is interpolated as an attribute *value*, never
+ * as a whole attribute: html`` escapes interpolations, so a conditional
+ * `aria-valuetext="…"` built as a string arrives with its quotes escaped and
+ * the attribute truncates at the first space.
+ */
+function topBar(label, value, max, valueText = label) {
   return html`
     <div class="player-top">
       <button class="icon-btn" type="button" data-exit aria-label="Leave practice">
@@ -128,9 +148,10 @@ function topBar(label, value, max) {
       <div
         class="progress-track"
         role="progressbar"
-        aria-valuenow="${value}"
+        aria-valuenow="${Math.floor(value)}"
         aria-valuemin="0"
         aria-valuemax="${max}"
+        aria-valuetext="${valueText}"
         aria-label="${label}"
       >
         <span style="transform: scaleX(${max ? Math.min(value / max, 1).toFixed(3) : 0})"></span>
@@ -175,9 +196,13 @@ function readyScreen(activity, level) {
               "Say" heading read as a line to deliver before starting, when they
               belong to four separate moments — the bed, the stay, the door, the
               release. Each one appears on the step that needs it. */ ''}
+        ${/* Says the one thing the flow itself only reveals at the last
+              picture: walking the steps IS the rep. Without it the count
+              appearing at the end of the first pass reads as a surprise. */ ''}
         <p class="section-note" style="margin-top: var(--s-5)">
-          About ${activity.estimatedMinutes} minutes. Aim for ${level.reps} repetitions and
-          stop early if she is still doing well.
+          About ${activity.estimatedMinutes} minutes. Your first time through the steps
+          counts as rep one; aim for ${level.reps} and stop early if she is still doing
+          well.
         </p>
       </div>
     </div>
@@ -193,8 +218,24 @@ function stepScreen(activity, level) {
   const img = step.image ? IMAGES[step.image] : null;
   const isLast = session.stepIndex === steps.length - 1;
 
+  // The pass being walked right now is a rep in progress, so it gets a number
+  // from the start: the first time through is rep one, not a rehearsal for a
+  // count that begins at zero. Completed reps come from the log as always.
+  const count = session.repLog.length;
+  const good = session.repLog.filter(Boolean).length;
+  const target = level.reps;
+  const rep = count + 1;
+  const met = count >= target;
+  const showAdvanceHint =
+    !isLast && count === 1 && session.stepIndex === 0 && !hintSeen('tap-to-advance');
+
   return html`
-    ${topBar(`Step ${session.stepIndex + 1} of ${steps.length}`, session.stepIndex + 1, steps.length)}
+    ${topBar(
+      rep <= target ? `Rep ${rep} of ${target}` : `Rep ${rep}`,
+      count + session.stepIndex / steps.length,
+      target,
+      `Rep ${rep}${rep <= target ? ` of ${target}` : ''}, step ${session.stepIndex + 1} of ${steps.length}`
+    )}
     <div class="player-scroll">
       <div class="player-inner">
         ${/* One step in the app shows both outcomes. `avoid` on the step is
@@ -222,15 +263,25 @@ function stepScreen(activity, level) {
               </figure>
             </div>`
           : img
-            ? html`<figure class="step-figure">
+            ? html`<figure class="step-figure" ${isLast ? '' : 'data-advance'}>
                 <img src="${img.src}" alt="${img.alt}" />
+                ${/* Said once, on the first step of the second rep: by then
+                      they have walked the pictures once and know what the
+                      cycle is, so "tap the picture" is a shortcut rather than
+                      one more instruction to absorb. Tapping it dismisses the
+                      hint by using the thing it points at. */ ''}
+                ${showAdvanceHint
+                  ? html`<figcaption class="advance-hint">
+                      Tap the picture to move on
+                    </figcaption>`
+                  : ''}
               </figure>`
             : ''}
 
-        ${/* The top bar already says "Step 3 of 5" beside a bar showing the
-              same thing. Printing it again here put the identical string on
-              screen twice, and put a second counted series in front of someone
-              who has just been told about levels. */ ''}
+        ${/* The top bar carries the rep; this line carries the place within
+              it. Both series are real now — which rep, and where in it — so
+              each gets printed exactly once. */ ''}
+        <p class="step-count">Step ${session.stepIndex + 1} of ${steps.length}</p>
         <h1 class="step-instruction">${step.instruction}</h1>
 
         ${step.cue
@@ -252,6 +303,74 @@ function stepScreen(activity, level) {
             </details>`
           : ''}
 
+        ${/* The rep ends here, so the question is asked here — on the same
+              screen as the last picture, not on a separate static tally.
+              Either answer counts the rep and wraps back to step one.
+
+              Grouped and labelled by the question: the two buttons say what
+              they mean on their own, but somebody tabbing straight to them
+              would otherwise never hear which rep they are answering for. */ ''}
+        ${isLast
+          ? html`<div
+              class="tally-actions"
+              style="margin-top: var(--s-5)"
+              role="group"
+              aria-labelledby="rep-question"
+            >
+              <p class="step-count" id="rep-question" style="margin-bottom: var(--s-2)">
+                That was rep ${rep}. How did it go?
+              </p>
+              <button class="btn btn--lg tally-good" type="button" data-rep="1">
+                That went well
+              </button>
+              <button class="btn btn--quiet tally-miss" type="button" data-rep="0">
+                Not that one
+              </button>
+            </div>`
+          : ''}
+        ${/* One row for everything to do with the count, rather than a stack
+              of ways to stop.
+
+              A rep that falls apart at step two is still a rep, and the honest
+              record is a miss — without a way to say so, the only option was
+              to walk the rest of the pictures pretending the rep was still
+              running, and the count drifted toward optimism. But that is a
+              correction, not a second primary action: as a full-width button
+              it made four bail-outs visible at once on the calmest screen in
+              the app and pushed "too excited" past the fold. Corrections live
+              in this strip, at text weight, next to the other one.
+
+              The strip therefore appears whenever either half has something to
+              offer: mid-pass (log this one as a miss) or after a rep (undo
+              it). */ ''}
+        ${count > 0 || !isLast
+          ? html`<div class="rep-strip ${session.celebrate ? 'rep-strip--celebrate' : ''}">
+              <p class="rep-strip-count">
+                ${count > 0
+                  ? html`<b>${count}</b> counted · <b>${good}</b> went well${met
+                      ? html` · <em>target met — finish on a win</em>`
+                      : ''}`
+                  : html`Rep ${rep} in progress`}
+              </p>
+              ${/* Both, when both apply. Undo has to survive mid-pass: the
+                    likeliest moment to want it is the tap straight after a
+                    fat-fingered answer, which lands on step one of the next
+                    rep. */ ''}
+              <div class="rep-strip-actions">
+                ${!isLast
+                  ? html`<button class="btn btn--ghost" type="button" data-rep-abort>
+                      Count as a miss
+                    </button>`
+                  : ''}
+                ${count > 0
+                  ? html`<button class="btn btn--ghost" type="button" data-rep-undo>
+                      Undo last rep
+                    </button>`
+                  : ''}
+              </div>
+            </div>`
+          : ''}
+
         <div class="panic-slot">
           <button class="btn btn--caution panic" type="button" data-panic>
             ${getDog().name} is too excited
@@ -269,97 +388,29 @@ function stepScreen(activity, level) {
         >
           Back
         </button>
-        <button class="btn" type="button" data-next>
-          ${isLast ? 'Start counting' : 'Next'}
-        </button>
-      </div>
-    </div>
-  `;
-}
-
-/**
- * The live rep tally. This is the moment the app exists for: run a rep, tap
- * how it went, run another. Two thumb-sized answers, a count that fills
- * toward the level's target, and nothing to reconstruct from memory later.
- */
-function practiceScreen(activity, level) {
-  const count = session.repLog.length;
-  const good = session.repLog.filter(Boolean).length;
-  const target = level.reps;
-  const met = count >= target;
-
-  // What one repetition actually is, kept on screen while they are counting.
-  // The steps were a walkthrough you paged through once and then left behind,
-  // and by rep four, with a dog on the other end of a leash, the order goes.
-  // "Steps" in the footer still goes back for the full-screen pictures; this is
-  // the version you can glance at without losing your count.
-  const repSteps = stepsForLevel(activity, level).map(
-    (step) => html`<li>
-      ${step.instruction}${step.cue
-        ? html` <em class="rep-cue">“${resolveCue(step.cue)}”</em>`
-        : ''}
-    </li>`
-  );
-
-  return html`
-    ${topBar('Counting reps', count, target)}
-    <div class="player-scroll">
-      <div class="player-inner">
-        <p class="step-count">Level ${level.number} · ${level.title}</p>
-        ${/* Smaller than a step instruction. On the step screens that heading
-              is the whole screen; here the count is, and the list below says
-              what the heading used to. At full size it pushed "Lucy is too
-              excited" past the fold, which is the one control that can never
-              need a scroll. */ ''}
-        <h1 class="step-instruction step-instruction--compact">Run a rep, then tap how it went.</h1>
-
-        <ol class="rep-steps">${join(repSteps)}</ol>
-
-        <div class="tally">
-          <p class="tally-count">
-            <b data-tally-n>${count}</b>
-            <span data-tally-label>of ${target}${count > 0 ? ` · ${good} went well` : ''}</span>
-          </p>
-          <div class="meter meter--reward tally-meter" aria-hidden="true">
-            <span
-              data-tally-bar
-              style="transform: scaleX(${Math.min(count / target, 1).toFixed(3)})"
-            ></span>
-          </div>
-          <p class="tally-met" data-tally-met ${met ? '' : 'hidden'}>
-            Target met. Keep going, or finish on a win.
-          </p>
-          <p class="visually-hidden" role="status" data-tally-announce></p>
-        </div>
-
-        <div class="tally-actions">
-          <button class="btn btn--lg tally-good" type="button" data-rep="1">
-            That went well
-          </button>
-          <button class="btn btn--quiet tally-miss" type="button" data-rep="0">
-            Not that one
-          </button>
-          <button
-            class="btn btn--ghost btn--block"
-            type="button"
-            data-rep-undo
-            ${count > 0 ? '' : 'hidden'}
-          >
-            Undo last rep
-          </button>
-        </div>
-
-        <div class="panic-slot">
-          <button class="btn btn--caution panic" type="button" data-panic>
-            ${getDog().name} is too excited
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="player-foot">
-      <div class="btn-row">
-        <button class="btn btn--quiet" type="button" data-back-to-steps>Steps</button>
-        <button class="btn" type="button" data-finish-practice>Finish</button>
+        ${/* Finish appears as soon as there is anything to save, on every
+              step — stopping mid-pass after four good reps is a normal way
+              for a session to end, not an edge case. */ ''}
+        ${!isLast && count > 0
+          ? html`<button class="btn btn--quiet" type="button" data-finish-practice>
+              Finish
+            </button>`
+          : ''}
+        ${/* Nothing counted yet means nothing to finish, and on the first
+              pass a Finish button sitting beside the rep question reads as a
+              second way to answer it. It arrives once there is a session
+              worth saving. */ ''}
+        ${isLast
+          ? count > 0
+            ? html`<button
+                class="btn ${met ? '' : 'btn--quiet'}"
+                type="button"
+                data-finish-practice
+              >
+                Finish
+              </button>`
+            : ''
+          : html`<button class="btn" type="button" data-next>Next</button>`}
       </div>
     </div>
   `;
@@ -799,7 +850,6 @@ function render({ slug }) {
   let body;
   if (session.phase === 'ready') body = readyScreen(activity, level);
   else if (session.phase === 'step') body = stepScreen(activity, level);
-  else if (session.phase === 'practice') body = practiceScreen(activity, level);
   else if (session.phase === 'result') body = resultScreen(activity, level);
   else if (session.phase === 'detail') body = detailScreen(activity, level);
   else body = doneScreen(activity, level);
@@ -823,10 +873,11 @@ function refresh(direction) {
   else update();
 }
 
-/** Fetch the next step's illustration while this one is being read. */
+/** Fetch the next step's illustration while this one is being read. The steps
+ *  loop, so from the last step "next" is the first one again. */
 function preloadUpcoming(activity, level) {
   const steps = stepsForLevel(activity, level);
-  const next = steps[session.stepIndex + 1];
+  const next = steps[(session.stepIndex + 1) % steps.length];
   if (next && next.image) new Image().src = IMAGES[next.image].src;
   if (next && next.avoid && IMAGES[next.avoid]) new Image().src = IMAGES[next.avoid].src;
 }
@@ -869,7 +920,7 @@ function wire(root) {
   };
 
   on('[data-exit]', 'click', () => {
-    const unsaved = ['step', 'practice', 'result'].includes(session.phase);
+    const unsaved = ['step', 'result'].includes(session.phase);
     if (!unsaved) {
       leave();
       return;
@@ -899,14 +950,23 @@ function wire(root) {
     refresh('forward');
   });
 
-  on('[data-next]', 'click', () => {
+  // Next only exists before the last step; the last step ends with the rep
+  // question instead, and the wrap-around lives in that handler. The
+  // illustration carries the same action so a practiced household can walk a
+  // rep without the thumb leaving the picture — Next stays for discovery and
+  // for the keyboard.
+  // The hint is spent by moving on, however they moved on. Tying it only to
+  // the tap would leave it re-appearing at rep two of every future session
+  // for anyone who prefers the button — a hint that keeps asking is a nag.
+  const advance = () => {
+    if (root.querySelector('.advance-hint')) markHintSeen('tap-to-advance');
     if (session.stepIndex < steps.length - 1) {
       session.stepIndex += 1;
-    } else {
-      session.phase = 'practice';
+      refresh('forward');
     }
-    refresh('forward');
-  });
+  };
+  on('[data-next]', 'click', advance);
+  on('[data-advance]', 'click', advance);
 
   on('[data-prev]', 'click', () => {
     if (session.stepIndex > 0) {
@@ -916,91 +976,46 @@ function wire(root) {
   });
 
   // The tally ---------------------------------------------------------------
-  // Updated in place, never re-rendered: a full refresh would steal focus
-  // from the button on every rep, and the meter's fill could not tween.
-  // Replay a one-shot animation on an element that may still be mid-flight
-  // from the last tap.
+  // Answering the rep question ends the pass, so the whole screen turns over:
+  // the count moves in the top bar, the pictures wrap to step one, and the
+  // next rep starts. The re-render that the static tally had to avoid is
+  // exactly the feedback this flow wants.
   //
-  // Two things this has to get right, both found by tapping fast rather than
-  // by reading it:
-  //
-  // Removing the class is not enough on its own — the class list is only read
-  // at the next style recalculation, so setting it straight back leaves the
-  // browser thinking nothing changed and the animation never restarts.
-  // Touching offsetWidth forces that recalculation in between.
-  //
-  // And the whole group has to come off, not just the one going back on. A
-  // miss tapped during a good kick otherwise carries both classes at once —
-  // two animations arguing over one transform — and because the timer is
-  // shared, the miss's timer then cleans up only itself and leaves the good
-  // class stranded on the element for the rest of the session.
-  const KICKS = ['kick-good', 'kick-miss'];
-  const replay = (el, className, ms, group = [className]) => {
-    if (!el) return;
-    group.forEach((c) => el.classList.remove(c));
-    void el.offsetWidth;
-    el.classList.add(className);
-    clearTimeout(el._replayTimer);
-    el._replayTimer = setTimeout(() => group.forEach((c) => el.classList.remove(c)), ms);
-  };
-
-  const updateTally = (announcement, outcome) => {
-    syncTotals();
-    const count = session.reps;
-    const good = session.successes;
-    const target = level.reps;
-    const q = (sel) => root.querySelector(sel);
-
-    q('[data-tally-n]').textContent = count;
-    q('[data-tally-label]').textContent =
-      `of ${target}${count > 0 ? ` · ${good} went well` : ''}`;
-    q('[data-tally-bar]').style.transform =
-      `scaleX(${Math.min(count / target, 1).toFixed(3)})`;
-    q('[data-tally-met]').hidden = count < target;
-    q('[data-rep-undo]').hidden = count === 0;
-    q('[data-tally-announce]').textContent = announcement;
-
-    const track = q('.progress-track');
-    track.setAttribute('aria-valuenow', Math.min(count, target));
-    track.querySelector('span').style.transform =
-      `scaleX(${Math.min(count / target, 1).toFixed(3)})`;
-
-    // The kick is feedback for an answer, so it only fires when there was one.
-    // An undo passes no outcome and the number simply changes back, which is
-    // the right weight for a correction — celebrating a deletion would be
-    // telling the household that taking something back is an achievement.
-    if (outcome === 'good' || outcome === 'miss') {
-      replay(q('[data-tally-n]'), `kick-${outcome}`, 500, KICKS);
-      if (outcome === 'good') replay(q('.tally-meter'), 'spark', 600);
-    }
-  };
-
-  on('[data-rep]', 'click', (e) => {
-    const good = e.currentTarget.dataset.rep === '1';
+  // `celebrate` is set only on the render where the target is crossed, so the
+  // strip's arrival animation and the bar's sweep fire once rather than on
+  // every rep after it. The flag is consumed by the render it triggers.
+  const countRep = (good) => {
+    const wasMet = session.repLog.length >= level.reps;
     session.repLog.push(good);
-    updateTally(
-      `${session.repLog.length} of ${level.reps}. ${good ? 'Went well.' : 'Not that one.'}`,
-      good ? 'good' : 'miss'
-    );
-  });
+    syncTotals();
+    session.celebrate = !wasMet && session.repLog.length >= level.reps;
+    session.stepIndex = 0;
+    // Only the one that carries news the screen does not. Every rep already
+    // announces itself twice — the new step takes focus and the strip updates
+    // — so a per-rep toast was a third telling of the same thing. Crossing
+    // the target is different: it is the moment the session became enough.
+    if (session.celebrate) toast('Target met. Finish on a win, or keep going.');
+    refresh('forward');
+  };
 
+  on('[data-rep]', 'click', (e) => countRep(e.currentTarget.dataset.rep === '1'));
+
+  on('[data-rep-abort]', 'click', () => countRep(false));
+
+  // Undo puts the question back within reach instead of at the far end of
+  // another full pass. Correcting a fat-fingered answer was costing five taps
+  // of walking; it should cost one.
   on('[data-rep-undo]', 'click', () => {
     session.repLog.pop();
-    updateTally(`Removed. ${session.repLog.length} counted.`);
-    // If the undo button just vanished under the pointer, park focus safely.
-    if (session.repLog.length === 0) {
-      root.querySelector('.tally-good').focus({ preventScroll: true });
-    }
-  });
-
-  on('[data-back-to-steps]', 'click', () => {
-    session.phase = 'step';
+    syncTotals();
+    session.celebrate = false;
     session.stepIndex = steps.length - 1;
     refresh('back');
   });
 
   on('[data-back-practice]', 'click', () => {
-    session.phase = 'practice';
+    session.phase = 'step';
+    session.stepIndex = steps.length - 1;
     refresh('back');
   });
 
@@ -1197,20 +1212,36 @@ function wire(root) {
 
   if (session.phase === 'step') preloadUpcoming(activity, level);
 
+  // The target-met sweep runs on the progress bar itself. Consumed here: the
+  // flag belongs to the render it was set for, and leaving it on would replay
+  // the celebration on every later re-render of the same screen.
+  if (session.celebrate) {
+    const track = root.querySelector('.player-top .progress-track');
+    if (track) {
+      track.classList.add('spark');
+      setTimeout(() => track.classList.remove('spark'), 600);
+    }
+    session.celebrate = false;
+  }
+
   // Desktop accelerator: arrow keys walk the steps. Routed through the real
-  // buttons so edge behavior and transitions stay identical to tapping.
+  // buttons so edge behavior and transitions stay identical to tapping. On the
+  // last step Next is gone — the rep question is the only way on — so the
+  // accelerator lands on the answer rather than doing nothing.
   detachKeys();
   if (session.phase === 'step' && !session.sheetOpen) {
     keyHandler = (e) => {
       if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
       // e.target can be the document itself, which has no .matches.
       if (e.target instanceof Element && e.target.matches('input, textarea, select')) return;
+      const forward = e.key === 'ArrowRight';
       const button = document.querySelector(
-        e.key === 'ArrowRight' ? '[data-next]' : '[data-prev]'
+        forward ? '[data-next], .tally-good' : '[data-prev]'
       );
       if (button && !button.disabled) {
         e.preventDefault();
-        button.click();
+        if (forward && button.matches('.tally-good')) button.focus({ preventScroll: true });
+        else button.click();
       }
     };
     document.addEventListener('keydown', keyHandler);
