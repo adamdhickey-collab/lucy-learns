@@ -58,10 +58,25 @@ const isNovelty = (voice) => NOVELTY.has(String(voice.name || '').trim().toLower
 /** How many to offer. Enough to have a real choice, few enough to scan. */
 const VOICE_LIMIT = 12;
 
+/**
+ * Quality, as far as it can be read off a name and an id.
+ *
+ * iOS spells its tier into the voice id — com.apple.voice.super-compact.
+ * en-GB.Daniel is the smallest, roughest build of Daniel there is. Ranking
+ * these rather than refusing them is the entire trick: an earlier version
+ * disqualified anything matching "compact", which on an iPhone disqualifies
+ * every voice on the device, emptied the list, and fell through to offering
+ * Italian and Hebrew voices for reading English dog training instructions.
+ *
+ * A rough voice is still a voice. The bad tiers sort to the bottom instead
+ * of taking the list down with them.
+ */
 const VOICE_HINTS = [
   [/siri/i, 100], // iOS, by some distance the best thing available
   [/premium|enhanced|neural|natural|wavenet|studio/i, 60],
   [/google/i, 25], // Android's better set
+  [/super-compact/i, -30], // smallest and roughest
+  [/(?<!super-)compact/i, -12],
 ];
 
 /**
@@ -91,8 +106,10 @@ function scoreVoice(voice, lang) {
   // A voice that will not say what language it speaks cannot be ranked
   // against one that does.
   if (!voiceLang) return -1;
-  // Compact is what the app is trying to get away from.
-  if (/compact|eloquence/i.test(name)) return -1;
+  // Eloquence is a speech-synthesis relic that reads like a modem. Compact
+  // is merely poor, and is penalised in VOICE_HINTS rather than refused,
+  // because on iOS it is all there is.
+  if (/eloquence/i.test(name)) return -1;
   // And a joke voice is never the answer. This was only filtering the picker,
   // not the automatic choice, so an iPhone whose list happens to put Albert
   // before Samantha had its training steps read by a comedy robot — the
@@ -139,16 +156,31 @@ function choosePreferredOrBest() {
   // version, and a household that has heard all of them knows better than the
   // scoring does. Falls through if the saved voice is gone — an engine swap,
   // or a phone the install moved to.
+  const lang = navigator.language || 'en-US';
+
   const preferred = getVoice().voiceURI;
   if (preferred) {
     const match = voices.find((v) => v && v.voiceURI === preferred);
     if (match) {
-      chosenVoice = match;
+      // Honour the name, not the build. iOS ships several tiers of the same
+      // voice under one name — Daniel exists as compact and as super-compact
+      // — and the picker only ever showed one "Daniel", so that is what was
+      // chosen. Saving whichever id happened to be first then locked in the
+      // roughest build of a voice somebody picked for how it sounds. Where a
+      // better cut of the same voice is on the device, it wins.
+      const better = voices
+        .filter(
+          (v) =>
+            v &&
+            String(v.name || '') === String(match.name || '') &&
+            normLang(v.lang) === normLang(match.lang)
+        )
+        .sort((a, b) => scoreVoice(b, lang) - scoreVoice(a, lang))[0];
+      chosenVoice = better && scoreVoice(better, lang) > scoreVoice(match, lang) ? better : match;
       return chosenVoice;
     }
   }
 
-  const lang = navigator.language || 'en-US';
   let best = null;
   voices.filter(Boolean).forEach((voice) => {
     const score = scoreVoice(voice, lang);
@@ -216,11 +248,20 @@ function buildVoiceList() {
   // for the person holding the phone to tell whether the feature is broken or
   // the app simply forgot it. Whatever unexpected shape this platform reports
   // its voices in, the names still read fine in a dropdown.
+  const named = voices.filter((v) => v && String(v.name || '').trim() && !isNovelty(v));
+  const sameTongue = named.filter(
+    (v) => normLang(v.lang).split('-')[0] === normLang(lang).split('-')[0]
+  );
+  // Language first, always. The fallback exists so the picker is never empty,
+  // not so it can offer a Swedish voice to read English — which is what
+  // happened when it reached past the language filter for anything at all.
   const usable = ranked.length
     ? ranked
-    : voices
-        .filter((v) => v && String(v.name || '').trim() && !isNovelty(v))
-        .map((voice) => ({ voice, score: 0, base: String(voice.name).trim() }));
+    : (sameTongue.length ? sameTongue : named).map((voice) => ({
+        voice,
+        score: 0,
+        base: String(voice.name).trim(),
+      }));
 
   const byName = new Map();
   usable.forEach((v) => {

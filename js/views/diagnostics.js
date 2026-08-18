@@ -42,6 +42,10 @@ function rawVoices() {
       lang: String(v.lang || '(no lang)'),
       local: v.localService === true,
       dflt: v.default === true,
+      // The id carries the quality tier on iOS — super-compact, compact,
+      // enhanced, premium — which the name never shows and which turned out
+      // to be the whole story behind "the voice is a really bad one".
+      uri: String(v.voiceURI || ''),
     }));
   } catch (error) {
     return [{ name: `(getVoices threw: ${error && error.message})`, lang: '', local: false }];
@@ -131,7 +135,7 @@ function asText() {
     .slice(0, CAP)
     .forEach((v) =>
       lines.push(
-        `  ${v.name} | ${v.lang}${v.local ? ' | on-device' : ''}${v.dflt ? ' | default' : ''}`
+        `  ${v.name} | ${v.lang}${v.local ? ' | on-device' : ''} | ${v.uri || '(no id)'}`
       )
     );
   if (all.length > CAP) lines.push(`  …and ${all.length - CAP} more`);
