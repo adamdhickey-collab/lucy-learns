@@ -257,6 +257,39 @@ function stopListening() {
   listenState = { listening: false, heard: '', matched: false, error: null };
 }
 
+/**
+ * Let go of the microphone the moment this app stops being the thing on
+ * screen.
+ *
+ * Nothing here was releasing it on the way out: the teardown hung off
+ * navigating between screens, and switching apps or locking the phone is
+ * neither. So the recording indicator stayed lit over a session that had
+ * ended, on a device the app had been put away on — which is alarming in
+ * exactly the way it looks, and worse in a house where the phone is left
+ * lying about between reps.
+ *
+ * `pagehide` rather than `beforeunload`, which iOS does not reliably fire,
+ * and `visibilitychange` for the ordinary case of switching away. Registered
+ * once at module load: these outlive any one session by design, since the
+ * session is what needs cleaning up.
+ */
+if (typeof document !== 'undefined') {
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'hidden') return;
+    stopListening();
+    stopSpeaking();
+    // Coming back does not restart it: on iOS a microphone may only be
+    // started by a tap, and resuming silently is the trick this whole
+    // feature is not allowed to do. So the chip is repainted to say what is
+    // true — that it stopped, and that a tap starts it again.
+    paintVoiceChip();
+  });
+  window.addEventListener('pagehide', () => {
+    stopListening();
+    stopSpeaking();
+  });
+}
+
 function endVoice() {
   stopListening();
   stopSpeaking();
@@ -328,7 +361,7 @@ function handsFreeGroup() {
   const usable = availableCommands();
 
   return html`
-    <div class="result-group">
+    <div class="result-group voice-group">
       <h2>Hands free</h2>
       <p class="section-note" style="margin-top: 0">
         For when the leash is in one hand and the treats are in the other.
@@ -385,7 +418,7 @@ function handsFreeGroup() {
           </p>`
         : ''}
       ${voice.listen
-        ? html`<p class="section-note">
+        ? html`<p class="section-note voice-note">
             Listening needs a signal, unlike the rest of the app.
           </p>`
         : ''}
@@ -459,23 +492,34 @@ function readyScreen(activity, level) {
  * Tapping it stops listening, because the control to turn a microphone off
  * belongs next to the evidence it is on.
  */
+/**
+ * `gesture` is iOS Safari refusing to start a microphone that nobody asked
+ * for out loud. Every start there has to come from a tap, so an unattended
+ * restart is declined — which is why listening worked for exactly one command
+ * and then went quiet. The chip becomes the tap, since a control that says
+ * what is wrong and fixes it in the same place beats an explanation.
+ */
+function voiceChipLabel(listening, error) {
+  if (error === 'blocked') return 'Microphone blocked';
+  if (error === 'network') return 'No signal for listening';
+  if (error === 'gesture') return 'Tap to listen again';
+  return listening ? 'Listening' : 'Tap to listen again';
+}
+
 function voiceChip() {
   if (!getVoice().listen || !canListen()) return '';
   const { listening, heard, matched, error } = listenState;
-  const label =
-    error === 'blocked'
-      ? 'Microphone blocked'
-      : error === 'network'
-        ? 'No signal for listening'
-        : listening
-          ? 'Listening'
-          : 'Not listening';
+  const label = voiceChipLabel(listening, error);
+  const live = listening && !error;
 
+  // One hook, not one per state: the listener is bound to the element at wire
+  // time, so swapping the attribute later would leave yesterday's handler on
+  // it and a stopped microphone would still offer to stop.
   return html`<button
     type="button"
-    class="voice-chip ${listening && !error ? 'is-live' : ''}"
-    data-voice-off
-    aria-label="${label}. Tap to stop listening."
+    class="voice-chip ${live ? 'is-live' : ''}"
+    data-voice-toggle
+    aria-label="${label}.${live ? ' Tap to stop listening.' : ''}"
   >
     <span class="voice-dot" aria-hidden="true"></span>
     <span class="voice-chip-label">${label}</span>
@@ -1184,7 +1228,18 @@ function render({ slug }) {
 function refresh(direction) {
   const update = () => {
     const root = document.getElementById('app');
+    // An in-place update keeps its place. Re-rendering replaces the scrolling
+    // element, which starts a new one at the top, so toggling a chip halfway
+    // down the get-ready screen threw the reader back to the picture and left
+    // them to find their way down again. A move between steps still starts at
+    // the top, because that is a new screen rather than the same one changed.
+    const scroller = direction ? null : root.querySelector('.player-scroll');
+    const top = scroller ? scroller.scrollTop : 0;
     root.innerHTML = String(render({ slug: session.slug }));
+    if (top) {
+      const next = root.querySelector('.player-scroll');
+      if (next) next.scrollTop = top;
+    }
     wire(root);
   };
   if (direction) withTransition(update, direction);
@@ -1279,15 +1334,9 @@ function paintVoiceChip() {
   const chip = document.querySelector('.voice-chip');
   if (!chip) return;
   const { listening, heard, matched, error } = listenState;
-  const label =
-    error === 'blocked'
-      ? 'Microphone blocked'
-      : error === 'network'
-        ? 'No signal for listening'
-        : listening
-          ? 'Listening'
-          : 'Not listening';
-  chip.classList.toggle('is-live', Boolean(listening) && !error);
+  const label = voiceChipLabel(listening, error);
+  const live = Boolean(listening) && !error;
+  chip.classList.toggle('is-live', live);
   const labelEl = chip.querySelector('.voice-chip-label');
   if (labelEl) labelEl.textContent = label;
   let heardEl = chip.querySelector('.voice-heard');
@@ -1389,9 +1438,14 @@ function wire(root) {
     refresh();
   });
 
-  on('[data-voice-off]', 'click', () => {
-    setVoice({ listen: false });
+  // Stop when live, restart when not. The restart matters more than it looks:
+  // on iOS every microphone start has to come from a tap, and this tap is
+  // that gesture — syncVoice starts recognition synchronously inside the
+  // refresh below, still inside this click.
+  on('[data-voice-toggle]', 'click', () => {
+    const live = listenState.listening && !listenState.error;
     stopListening();
+    setVoice({ listen: !live });
     refresh();
   });
 

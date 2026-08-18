@@ -154,8 +154,8 @@ export function speak(text) {
     utterance.volume = 1;
 
     const wasSpeaking = synth.speaking || synth.pending;
-    synth.cancel();
     if (wasSpeaking) {
+      synth.cancel();
       // Safari on iOS drops an utterance queued in the same tick as a cancel:
       // the cancel lands on the new one instead of the old. A turn of the
       // event loop is the whole fix, and it only costs anything in the case
@@ -168,6 +168,10 @@ export function speak(text) {
         }
       }, 60);
     } else {
+      // No cancel on this path, deliberately. Calling cancel() before the
+      // engine has ever spoken leaves iOS Safari's synthesizer wedged, and
+      // every utterance after it is silent — which is exactly what a first
+      // run looks like, because the first utterance is always this path.
       synth.speak(utterance);
     }
   } catch {
@@ -407,6 +411,18 @@ export function startListening({ onCommand, onState = () => {} }) {
   let stopped = false;
   let recognition = null;
 
+  // Restarting is normal — recognizers stop themselves after a pause, and a
+  // practice session is mostly pauses. But on iOS Safari every start needs a
+  // user gesture, so a restart nobody tapped is refused, and the refusal
+  // looks like an ordinary end. Telling the two apart is a matter of timing:
+  // a real listen sits in a quiet room for seconds, while a refusal comes
+  // back immediately. Several immediate empty ends in a row means this
+  // platform will not listen unattended, and the honest thing is to say so
+  // rather than leave a chip claiming to listen to a microphone that is off.
+  let startedAt = 0;
+  let sawResult = false;
+  let refusals = 0;
+
   const report = (patch) => onState(patch);
 
   const build = () => {
@@ -418,10 +434,17 @@ export function startListening({ onCommand, onState = () => {} }) {
     // dictation, and extra candidates only widen the ways to be wrong.
     r.maxAlternatives = 1;
 
+    r.onstart = () => {
+      startedAt = Date.now();
+      sawResult = false;
+    };
+
     r.onresult = (event) => {
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const result = event.results[i];
         if (!result.isFinal) continue;
+        sawResult = true;
+        refusals = 0;
         const said = result[0].transcript;
         const id = matchCommand(said, commands);
         report({ heard: said.trim(), matched: Boolean(id) });
@@ -447,11 +470,20 @@ export function startListening({ onCommand, onState = () => {} }) {
         report({ listening: false });
         return;
       }
+      // Immediate and empty is a refusal, not a quiet room. Three in a row is
+      // a platform that will not restart without being asked by hand.
+      if (!sawResult && Date.now() - startedAt < 700) refusals += 1;
+      else refusals = 0;
+      if (refusals >= 3) {
+        stopped = true;
+        report({ listening: false, error: 'gesture' });
+        return;
+      }
       try {
         r.start();
       } catch {
         stopped = true;
-        report({ listening: false, error: 'ended' });
+        report({ listening: false, error: 'gesture' });
       }
     };
 
@@ -468,11 +500,28 @@ export function startListening({ onCommand, onState = () => {} }) {
 
   return () => {
     stopped = true;
+    // Both, in this order, and each on its own. `abort` is the one that drops
+    // the audio immediately, but iOS has been seen holding the recording
+    // indicator until `stop` has also been called, and if `abort` throws
+    // because the recognizer is mid-teardown then a shared try would skip
+    // `stop` entirely — leaving the orange dot lit over a session that ended.
     try {
       recognition.abort();
     } catch {
       /* already gone */
     }
+    try {
+      recognition.stop();
+    } catch {
+      /* already gone */
+    }
+    // Drop the handlers too. A recognizer kept alive by a pending callback
+    // can still fire `onend` after this and restart itself.
+    recognition.onresult = null;
+    recognition.onerror = null;
+    recognition.onend = null;
+    recognition.onstart = null;
+    recognition = null;
     report({ listening: false });
   };
 }

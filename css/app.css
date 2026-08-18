@@ -2153,10 +2153,26 @@ details.disclosure .disclosure-body {
   }
 }
 
-/* These follow a row of chips, which carries no bottom margin of its own. */
-.voice-vocab,
-.voice-warn {
-  margin-top: var(--s-3);
+/* These follow a row of chips, which carries no bottom margin of its own, so
+   the vocabulary list sat directly against the switch that reveals it and
+   read as part of the control rather than as a note about it. A chip is a
+   tap target with its own visual weight; text needs room to stop being an
+   extension of it.
+
+   Scoped under .voice-group deliberately: these carry .section-note too, and
+   a bare class ties with it on specificity, so whichever rule sits later in
+   the file wins — which is how this block ended up with a negative top
+   margin pulling the vocabulary into the switch above it. */
+.voice-group .voice-vocab,
+.voice-group .voice-warn,
+.voice-group .voice-note {
+  margin-top: var(--s-4);
+}
+
+/* And the last line of the group wants room before whatever the screen puts
+   next, for the same reason. */
+.voice-group > :last-child {
+  margin-bottom: var(--s-2);
 }
 
 .voice-vocab em {
