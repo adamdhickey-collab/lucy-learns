@@ -86,8 +86,33 @@ if (synth) {
   synth.addEventListener?.('voiceschanged', pickVoice);
 }
 
+/**
+ * The chosen voice, re-picked if it no longer exists.
+ *
+ * Android lets the text-to-speech engine be swapped in system settings, and
+ * an engine change empties and refills the list underneath us. Holding the
+ * old object across that hands the engine a voice it has never heard of,
+ * which does not throw — it just says nothing, which is the worst way for
+ * this to fail. Compared by `voiceURI` rather than identity because several
+ * browsers build fresh objects on every `getVoices()` call.
+ *
+ * An empty list is treated as the transient state it usually is: the first
+ * call before the engine has answered. Re-picking there would throw away a
+ * good choice for a moment of silence.
+ */
+function resolveVoice() {
+  if (!synth) return null;
+  const voices = synth.getVoices();
+  if (!voices || !voices.length) return chosenVoice;
+  if (chosenVoice && voices.some((v) => v.voiceURI === chosenVoice.voiceURI)) return chosenVoice;
+  return pickVoice();
+}
+
 /** The voice being used, so a screen can say which one rather than guess. */
-export const currentVoiceName = () => (chosenVoice ? chosenVoice.name : null);
+export const currentVoiceName = () => {
+  const voice = resolveVoice();
+  return voice ? voice.name : null;
+};
 
 /**
  * Say one short thing, dropping whatever was still being said.
@@ -105,12 +130,20 @@ export function speak(text) {
   if (!synth || !text) return;
   try {
     const utterance = new SpeechSynthesisUtterance(String(text));
-    const voice = chosenVoice || pickVoice();
-    if (voice) {
-      utterance.voice = voice;
-      // Safari reads `lang` rather than the voice's own in some versions, and
-      // a mismatch here is what turns an English sentence into phonetic mush.
-      utterance.lang = voice.lang;
+    // Guarded on its own, because choosing a voice is an improvement and
+    // saying the sentence is the job. A voice the engine rejects throws here,
+    // and swallowing that with the rest would trade a slightly worse voice
+    // for total silence — the one failure nobody would be able to diagnose.
+    try {
+      const voice = resolveVoice() || pickVoice();
+      if (voice) {
+        utterance.voice = voice;
+        // Safari reads `lang` rather than the voice's own in some versions,
+        // and a mismatch is what turns an English sentence into phonetic mush.
+        utterance.lang = voice.lang;
+      }
+    } catch {
+      chosenVoice = null; // fall back to the engine's default, and re-pick later
     }
     // A touch under natural pace. These are instructions being followed with
     // a dog, not prose being listened to, and the hurried default reads the
