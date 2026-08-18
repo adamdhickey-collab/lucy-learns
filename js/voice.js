@@ -96,22 +96,89 @@ function pickVoice() {
 }
 
 /**
- * Every voice worth offering, best first.
+ * Apple ships a set of joke voices — a robot, a set of bells, one that sings.
+ * They are real voices by every flag the API exposes, so nothing but their
+ * names distinguishes them, and a list of forty-one that opens with "Bad
+ * News" and "Bahh" reads as a bug rather than a choice. The names have been
+ * stable across a decade of releases, which is what makes a list like this
+ * worth keeping.
+ */
+const NOVELTY = new Set(
+  [
+    'Albert', 'Bad News', 'Bahh', 'Bells', 'Boing', 'Bubbles', 'Cellos',
+    'Deranged', 'Good News', 'Hysterical', 'Jester', 'Junior', 'Kathy',
+    'Organ', 'Pipe Organ', 'Princess', 'Ralph', 'Superstar', 'Trinoids',
+    'Whisper', 'Wobble', 'Zarvox', 'Bruce', 'Fred',
+  ].map((n) => n.toLowerCase())
+);
+
+/** How many to offer. Enough to have a real choice, few enough to scan. */
+const VOICE_LIMIT = 12;
+
+/**
+ * The voices worth offering, best first.
  *
  * Filtered to the reading language, because the rest would read English
- * instructions with the wrong phonology, and sorted by the same score used to
- * guess so the likeliest good ones are at the top of the list rather than
- * wherever the engine happened to put them.
+ * instructions with the wrong phonology, then to the ones meant for reading
+ * prose, then cut to a list somebody can actually look through. Sorted by the
+ * same score used to guess, so the likeliest good ones are at the top rather
+ * than wherever the engine happened to put them.
+ *
+ * The voice in use is always included, even when it would have been cut. A
+ * picker that cannot show the current selection is worse than a long one: it
+ * silently reads as though something else were chosen.
  */
 export function listVoices() {
   if (!synth) return [];
   const voices = synth.getVoices() || [];
   const lang = navigator.language || 'en-US';
-  return voices
-    .map((voice) => ({ voice, score: scoreVoice(voice, lang) }))
-    .filter((v) => v.score >= 0)
-    .sort((a, b) => b.score - a.score)
-    .map((v) => ({ uri: v.voice.voiceURI, name: v.voice.name, lang: v.voice.lang }));
+
+  const ranked = voices
+    .map((voice) => ({
+      voice,
+      score: scoreVoice(voice, lang),
+      // Apple names several voices "Eddy (English (United States))", which in
+      // a list already filtered to English is the same word three times.
+      base: voice.name.replace(/\s*\((?:English|Language)[^)]*(?:\([^)]*\))?\)\s*$/i, '').trim(),
+    }))
+    .filter((v) => v.score >= 0 && !NOVELTY.has(v.voice.name.trim().toLowerCase()))
+    .sort((a, b) => b.score - a.score);
+
+  // One entry per name and locale, best first.
+  //
+  // Android is the reason this exists rather than a plain cut: Google's
+  // engine exposes several voices sharing one name — half a dozen "English
+  // United States" differing only by an opaque id — and a dropdown listing
+  // the same words six times is not a choice, it is a puzzle. Keeping the
+  // best-scoring of each collapses them without hiding anything a person
+  // could have told apart anyway.
+  const byName = new Map();
+  ranked.forEach((v) => {
+    const key = `${v.base.toLowerCase()}|${v.voice.lang}`;
+    if (!byName.has(key)) byName.set(key, v);
+  });
+  const unique = [...byName.values()];
+
+  const shortlist = unique.slice(0, VOICE_LIMIT);
+  const activeUri = chosenVoice ? chosenVoice.voiceURI : '';
+  if (activeUri && !shortlist.some((v) => v.voice.voiceURI === activeUri)) {
+    const active = unique.find((v) => v.voice.voiceURI === activeUri);
+    if (active) shortlist.unshift(active);
+  }
+
+  // The region only earns a mention when two survivors would otherwise read
+  // identically — "Eddy" twice tells you nothing, "Eddy" and "Eddy (GB)" does.
+  const counts = new Map();
+  shortlist.forEach((v) => counts.set(v.base, (counts.get(v.base) || 0) + 1));
+
+  return shortlist.map((v) => ({
+    uri: v.voice.voiceURI,
+    lang: v.voice.lang,
+    name:
+      counts.get(v.base) > 1 && v.voice.lang.includes('-')
+        ? `${v.base} (${v.voice.lang.split('-')[1].toUpperCase()})`
+        : v.base,
+  }));
 }
 
 /** Choose a voice by hand. Empty string hands the decision back to scoring. */
