@@ -54,7 +54,7 @@ checks at the bottom yourself, and only then buy a panel.
 
 ## Welcome screen
 
-> **Practising with Lucy**
+> **Practicing with Lucy**
 >
 > This is a real app that a dog trainer gives to a household to use at home
 > between lessons. You will be doing six short tasks in it.
@@ -81,7 +81,7 @@ every load, but the *participant* does not, and these run coldest-first.
 
 **URL** `https://adamdhickey-collab.github.io/lucy-learns/?study=welcome`
 
-> Your dog trainer has just sent you this app to use with your dog, Lucy. Get yourself set up and ready to practise.
+> Your dog trainer has just sent you this app to use with your dog, Lucy. Get yourself set up and ready to practice.
 
 Pass: reaches Today. Count "Skip" separately — taking it means the first thing
 the app said did not earn thirty seconds.

@@ -81,7 +81,7 @@ explained itself and before it asks about demo data.
 
 ### Screen A — the person
 
-> **Who is practising?**
+> **Who is practicing?**
 > Your name
 > `[ Fabiola            ]`   ◯ FH
 > *This is the name the app greets you by and the initials on your avatar. You
@@ -191,7 +191,7 @@ setup.
 > names them "Someone else" rather than blanking the cell, which would read as
 > a logging failure rather than a deletion. The last person cannot be removed.
 
-**Scope: one household, one dog, several people who practise with it.** That is
+**Scope: one household, one dog, several people who practice with it.** That is
 the real product shape, and it is what the stored data already describes.
 
 - Tapping the avatar opens a sheet: the people on this device, a tick against

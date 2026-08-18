@@ -68,7 +68,7 @@ The missions below run coldest-first for that reason.
 ### M1 — First run
 
 > Your dog trainer has just sent you this app to use with your dog, Lucy. Get
-> yourself set up and ready to practise.
+> yourself set up and ready to practice.
 
 Start: `https://adamdhickey-collab.github.io/lucy-learns/?study=welcome`
 
@@ -339,7 +339,7 @@ have a quiet week behind it and months of work behind that. Verified across all
 three ranges on the demo data — 7 days gives *"up from 73% the previous 7
 days"*, 14 and 30 both report the empty window.
 
-**Every live activity has a row**, whether or not it was practised in the
+**Every live activity has a row**, whether or not it was practiced in the
 window. *Controlled Real Greeting* now shows *"No sessions in the last 14
 days"* against a **Not started** badge, and the list agrees with the "of 4"
 above it. This is the better fix than correcting the denominator: the trainers

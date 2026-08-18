@@ -95,7 +95,7 @@ function render() {
             "Just you so far" is what tells somebody the app has a notion of
             more than one, without a banner announcing a feature. */ ''}
       <section class="section">
-        <h2>Who practises with ${dog.name}</h2>
+        <h2>Who practices with ${dog.name}</h2>
         <div class="card">
           <button class="setting-row" type="button" data-person-switch>
             <span>

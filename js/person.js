@@ -1,4 +1,4 @@
-// Who is practising, and the one place that question gets answered.
+// Who is practicing, and the one place that question gets answered.
 //
 // Two screens open this — the avatar on Today and the row on the profile — so
 // it lives here rather than in either of them. The sheet itself is in ui.js
@@ -33,7 +33,7 @@ export function openPersonSwitcher() {
 
   const announce = (name) => {
     refreshApp();
-    toast(`Practising as ${firstNameOf(name)}`);
+    toast(`Practicing as ${firstNameOf(name)}`);
   };
 
   personSheet({

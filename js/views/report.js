@@ -82,7 +82,7 @@ function composeShareText(days) {
   LIVE_ACTIVITIES.forEach((activity) => {
     const mine = sessions.filter((s) => s.activityId === activity.id);
     // Listed even when untouched, for the same reason the screen lists it: an
-    // activity nobody practised for a fortnight is information, not an absence.
+    // activity nobody practiced for a fortnight is information, not an absence.
     if (!mine.length) {
       lines.push(`- ${activity.title}: no sessions in this window`);
       return;

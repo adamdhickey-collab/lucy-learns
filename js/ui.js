@@ -706,7 +706,7 @@ export function avatarSheet({ options, currentSrc, onPick }) {
 }
 
 /**
- * Who is practising: pick somebody, or add somebody.
+ * Who is practicing: pick somebody, or add somebody.
  *
  * Built here rather than in a view because two screens open it — the avatar on
  * Today and the row on the profile — and a sheet that lives in one view cannot
@@ -768,7 +768,7 @@ export function personSheet({ people, activeId, onSelect, onAdd, onRename, onRem
 
   backdrop.innerHTML = `
     <div class="sheet sheet--dialog" role="dialog" aria-modal="true" aria-labelledby="person-sheet-title">
-      <h2 id="person-sheet-title">Who is practising?</h2>
+      <h2 id="person-sheet-title">Who is practicing?</h2>
       <p class="section-note">
         This changes who the next session is logged under. Everything else — the
         training, the progress, the report — belongs to the household.

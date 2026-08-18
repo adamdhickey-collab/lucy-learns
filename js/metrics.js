@@ -269,7 +269,7 @@ export function weekSummary(offset = 0) {
     .map((s) => s.recoverySeconds)
     .filter((n) => typeof n === 'number');
 
-  // The average level practised, so the calm rate can say whether two weeks are
+  // The average level practiced, so the calm rate can say whether two weeks are
   // comparable. `calmRate` is a flat count of calm sessions over all sessions,
   // and nothing in it knows that level 1 is easier than level 5 — so a week
   // spent on early rungs scores higher than a week spent on late ones for the
@@ -345,7 +345,7 @@ export function headlineInsight() {
   // Every branch in this function used to be a positive framing — jumping
   // *down*, no nipping, goal met, calm rate — with one exception for a success
   // rate that dipped. There was a "jumping is down" branch and no "jumping is
-  // up" branch, so a week where she practised plenty and nipped for the first
+  // up" branch, so a week where she practiced plenty and nipped for the first
   // time in a month opened with "Goal met." A household reading that gets told
   // the thing that flatters them, on a screen they hand to their trainer.
   //

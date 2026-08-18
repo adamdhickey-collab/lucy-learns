@@ -100,7 +100,7 @@ function render() {
   if (step === PERSON_STEP) {
     return setupScreen({
       eyebrow: 'Setup',
-      title: 'Who is practising?',
+      title: 'Who is practicing?',
       canContinue: Boolean(draft.person.trim()),
       body: html`
         ${/* The avatar previews as they type. It is the only reason to ask for

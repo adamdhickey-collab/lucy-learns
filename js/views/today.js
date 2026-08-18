@@ -109,7 +109,7 @@ function render() {
           class="avatar"
           type="button"
           data-person-switch
-          aria-label="Practising as ${person.name}. Change who is practising."
+          aria-label="Practicing as ${person.name}. Change who is practicing."
         >
           <span aria-hidden="true">${initialsOf(person.name)}</span>
         </button>

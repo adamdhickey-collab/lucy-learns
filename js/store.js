@@ -255,7 +255,7 @@ export function setDog(patch) {
   persist();
 }
 
-/** Everyone who practises with this dog, in the order they were added. */
+/** Everyone who practices with this dog, in the order they were added. */
 export const getPeople = () => state.people;
 
 /**
@@ -297,7 +297,7 @@ export function renamePerson(id, name) {
  * Add somebody and hand the app to them.
  *
  * Switching on add is the whole point of the interaction: nobody adds a person
- * in the abstract, they add themselves because they are about to practise. An
+ * in the abstract, they add themselves because they are about to practice. An
  * add that left the previous person active would attribute the next session to
  * the wrong one, which is the single thing this feature exists to get right.
  */
@@ -314,7 +314,7 @@ export function addPerson(name) {
  *
  * Only the attribution of what is logged from here on changes. The dog, the
  * sessions, the program position and the report stay the household's — this is
- * one dog several people practise with, not several accounts.
+ * one dog several people practice with, not several accounts.
  */
 export function setActivePerson(id) {
   if (!state.people.some((p) => p.id === id)) return;
@@ -326,7 +326,7 @@ export function setActivePerson(id) {
  * Remove somebody, and never the last one.
  *
  * Their sessions stay, with their `completedByUserId` intact — deleting a
- * person is "they do not practise here any more", not "the practice did not
+ * person is "they do not practice here any more", not "the practice did not
  * happen", and the report would be wrong if the history moved. `memberName`
  * handles the dangling id by name, so the CSV keeps saying who did it.
  */
