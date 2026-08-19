@@ -3697,15 +3697,20 @@ details.disclosure .disclosure-body {
      badge sitting on the app's field, so the field has to be the color the
      illustration already has at its edges — otherwise the art reads as a
      lighter rectangle on paper. Keep in step with FIELD in
-     scripts/make-splash.mjs. The fade to the app is where paper arrives. */
-  --splash-field: #fadec3;
+     scripts/make-splash.mjs. The fade to the app is where paper arrives.
+
+     Measured, not eyeballed: the mean of a six-pixel ring around the source
+     PNG. Re-measure it whenever the art changes — this value drifted a little
+     with each new illustration, and a mismatch shows up as a faint rectangle
+     exactly where the two are supposed to be indistinguishable. */
+  --splash-field: #fad8ba;
   background: var(--splash-field);
   transition: opacity 420ms ease-in;
 
   /* One number drives the art and everything positioned off it. 88vw is the
      phone geometry the launch images bake in, so on a phone this resolves to
      exactly what the generator used. The caps only bite on a desktop window:
-     50vh keeps the 3:4 art inside half the height, and 460px stops it filling
+     50vh keeps the 2:3 art inside half the height, and 460px stops it filling
      a large screen.
 
      It was 100vw and centered at 45%, which put the top of the art at y=115 on
@@ -3715,10 +3720,19 @@ details.disclosure .disclosure-body {
      the meta below. */
   --badge: min(88vw, 50vh, 460px);
 
-  /* The art is 3:4, so its height is a derived number rather than a second
+  /* The art is 2:3, so its height is a derived number rather than a second
      free one. Everything stacked below the art measures off this, not off
-     --badge, which is only the width. */
-  --badge-h: calc(var(--badge) * 4 / 3);
+     --badge, which is only the width.
+
+     This said 4 / 3 for longer than it should have. The illustration was 3:4
+     when the number was written and became 2:3 the first time the trainer was
+     redrawn, but the ratio here did not follow — and because .splash-mark sets
+     width and height to 100% with no object-fit, `fill` stretched the art 12.5%
+     wider than it was drawn. The launch images never had the bug, since
+     make-splash.mjs derives height from the source, so the OS image and the
+     app's first paint disagreed by exactly that 12.5% across the handoff the
+     whole rest of this file is built to make seamless. */
+  --badge-h: calc(var(--badge) * 3 / 2);
 
   /* Where the art sits. Named because the meta is stacked underneath it and
      the two have to move together — and because
@@ -3787,13 +3801,14 @@ details.disclosure .disclosure-body {
   right: 0;
   /* The band is the space the *drawing* leaves free, not the space the badge
      leaves free. The badge's own top edge was the old boundary, but the JPG
-     carries blank cream for its first 26% — measured from the file, the first
-     painted row is at 26.0% of its height — so a band stopping at the badge
+     carries blank cream for its first quarter — measured from the file, the
+     first painted row is at 23.6% of its height — so a band stopping at the badge
      edge centered the wordmark against empty field and read too high. The band
-     now borrows 20% of the badge's height from that margin, keeping a 6%
-     cushion above the painted edge. The 0.2 is a constant of this artwork,
-     like the geometry make-splash.mjs bakes: replace splash-mark.jpg and it
-     must be re-measured. */
+     now borrows 20% of the badge's height from that margin, keeping a cushion
+     above the painted edge. The 0.2 is a constant of this artwork, like the
+     geometry make-splash.mjs bakes: replace splash-mark.jpg and it must be
+     re-measured. The nose-to-nose art starts within a quarter-point of where
+     the one before it did, so the constant stayed put through that swap. */
   height: calc(var(--badge-y) - var(--badge-h) / 2 + var(--badge-h) * 0.2);
   z-index: 1;
   display: flex;
