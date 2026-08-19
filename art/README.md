@@ -45,9 +45,17 @@ Two things follow, and both bite:
   git. The 1100px JPGs in `img/` are all there is. That is the exact loss this
   folder exists to prevent, and it has already happened.
 
-The check below did not catch it, because it asks whether a master *exists*
-rather than whether it is the same picture. Any repair should fix the check
-too, or the next batch lands in the same place.
+The old check did not catch it, because it asked whether a master *exists*
+rather than whether it is the same picture. There is a command for the real
+question now:
+
+    node scripts/pilot.mjs masters
+
+It compares every shipped image against its master and sorts them into match,
+check and differs, writing the pairs it is unsure about to
+`art/pilot/masters.html` so a verdict costs one look. It exits non-zero when
+anything differs or is missing, so it can gate a batch. Run it before deleting
+a round and before starting one.
 
 ## art/pilot/round-N/ — gitignored working rounds
 
@@ -61,16 +69,24 @@ Numbering was deliberately not reset: the per-batch post-mortems in
 renumbering would turn those into references to the wrong thing.
 
 Before deleting a round, check that every shipped image still has its master in
-`approved/`. The check that cleared the 2026-08-12 deletion:
+`approved/` — **and that the master is still the same picture.** Use:
+
+    node scripts/pilot.mjs masters
+
+The check that cleared the 2026-08-12 deletion asked only the first half:
 
     for f in img/*.jpg; do b=$(basename "$f" .jpg); case "$b" in thumb-*) continue;; esac
       [ -f "art/pilot/approved/$b.png" ] || echo "NO MASTER: $b"; done
 
-It reports `lucy-portrait` and `splash-mark`, and both are fine: the portrait
-predates the pilot process, and the splash mark's master is
-`art/source/splash-source.png`. Any other name in that output means the round
-holds the only high-resolution original of a shipped image, and deleting it is
-not recoverable — these are **not in git**.
+Every file was where it should be, so it passed, and it would pass today with
+three quarters of the folder holding superseded art. `lucy-portrait` and
+`splash-mark` are the two exemptions either way — the portrait predates the
+pilot process and the splash mark's master is `art/source/splash-source.png` —
+and `masters` knows about both rather than reporting them every run.
+
+Anything else reported means the round may hold the only high-resolution
+original of a shipped image, and deleting it is not recoverable — these are
+**not in git**.
 
 ## art/source/ — the original painted illustrations
 

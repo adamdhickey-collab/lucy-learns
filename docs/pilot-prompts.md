@@ -2658,10 +2658,12 @@ Comparing each master against its shipped JPG, **around three quarters of them
 are a different picture**: `door-place-cover`'s master is a dog alone on a bed,
 `door-greet-cover`'s is the old handler with a crouching guest in a plaid shirt.
 
-The README's own check does not catch this, because it tests that a master
-*exists* rather than that it is the same picture:
+The README's own check did not catch this, because it tested that a master
+*exists* rather than that it is the same picture. `node scripts/pilot.mjs
+masters` asks the real question, and writes the pairs it is unsure about to
+`art/pilot/masters.html`:
 
-    [ -f "art/pilot/approved/$b.png" ] || echo "NO MASTER: $b"
+    6 match · 6 to check · 25 differ · 0 missing
 
 Two consequences worth knowing before the next batch. Attaching an approved
 master now re-introduces the pre-restyle cast, which is why Scene 48 says to

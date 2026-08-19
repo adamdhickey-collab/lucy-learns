@@ -422,6 +422,190 @@ async function cmdVerify() {
   if (problems.length) process.exit(1);
 }
 
+// --- masters ---------------------------------------------------------------
+
+/**
+ * Is the approved master still the picture that ships?
+ *
+ * `art/pilot/approved/` is the style anchor: every generation goes out with an
+ * approved image attached, and that attachment is what holds the cast, the
+ * room and the palette steady across scenes drawn weeks apart. Which makes a
+ * master that has quietly stopped matching its shipped image worse than a
+ * missing one — a missing file fails loudly, a stale one silently pulls the
+ * next batch back toward an older cast.
+ *
+ * That is not hypothetical. The 19 August regeneration replaced most of the
+ * library and left this folder on the 12th, and the check in art/README.md did
+ * not notice because it asks whether a master *exists*:
+ *
+ *     [ -f "art/pilot/approved/$b.png" ] || echo "NO MASTER: $b"
+ *
+ * Existence was the wrong question. This asks whether it is the same picture.
+ */
+
+/**
+ * A 32-square thumbnail of an image as raw RGB.
+ *
+ * Via BMP because it is the one uncompressed format `sips` writes that can be
+ * read here without a decoder, and this script has no dependencies and should
+ * not grow one to answer a question this coarse. 32 is chosen so a row is 96
+ * bytes, a multiple of four, and the rows carry no padding — but the reader
+ * below honours the stride anyway rather than relying on that holding.
+ *
+ * Squashed to a square rather than fitted. Every image here is 4:3 and both
+ * sides get squashed identically, so it costs nothing and removes a case.
+ */
+const MASTER_THUMB = 32;
+
+function thumbPixels(file) {
+  const tmp = path.join(os.tmpdir(), `pilot-${process.pid}-${createHash('md5').update(file).digest('hex')}.bmp`);
+  try {
+    execFileSync(
+      'sips',
+      ['-z', String(MASTER_THUMB), String(MASTER_THUMB), '-s', 'format', 'bmp', file, '--out', tmp],
+      { stdio: 'ignore' }
+    );
+    const buf = fs.readFileSync(tmp);
+    const start = buf.readUInt32LE(10);
+    const w = buf.readInt32LE(18);
+    // A negative height means the rows are stored top-down. Both files are
+    // written by the same sips, so the orientation is the same either way and
+    // the comparison does not care — the magnitude is all that is needed.
+    const h = Math.abs(buf.readInt32LE(22));
+    const bytes = buf.readUInt16LE(28) / 8;
+    const stride = Math.ceil((w * bytes) / 4) * 4;
+    const out = Buffer.alloc(w * h * 3);
+    for (let y = 0; y < h; y++)
+      for (let x = 0; x < w; x++) {
+        const from = start + y * stride + x * bytes;
+        const to = (y * w + x) * 3;
+        out[to] = buf[from];
+        out[to + 1] = buf[from + 1];
+        out[to + 2] = buf[from + 2];
+      }
+    return out;
+  } finally {
+    fs.rmSync(tmp, { force: true });
+  }
+}
+
+/** Mean absolute difference per channel, 0 (identical) to 255 (inverted). */
+function meanDifference(a, b) {
+  let total = 0;
+  for (let i = 0; i < a.length; i++) total += Math.abs(a[i] - b[i]);
+  return total / a.length;
+}
+
+/**
+ * Where the bands sit, and why they are not a single threshold.
+ *
+ * The same picture re-rendered — downsampled 1448→1100 and JPEG'd at quality
+ * 72 — lands under 8. A different picture lands well above 18; the greeting
+ * cover's stale master scores 58. Between them is the case the number cannot
+ * settle on its own: `door-sound-cover` scores 18 for a master with the same
+ * composition and a different handler, which is a change that matters and does
+ * not look like one to an arithmetic mean of 3072 bytes.
+ *
+ * So the middle band is called `check` rather than guessed at, and the command
+ * writes the pairs out so checking costs one look.
+ */
+const MASTER_MATCH = 8;
+const MASTER_DIFFERS = 18;
+
+/**
+ * Shipped images with no master here, legitimately. Both are named in
+ * art/README.md: the portrait predates the pilot process, and the splash
+ * mark's master is art/source/splash-source.png.
+ */
+const NO_MASTER_EXPECTED = new Set(['lucy-portrait', 'splash-mark']);
+
+function cmdMasters() {
+  const approved = path.join(ROOT, 'art/pilot/approved');
+  if (!fs.existsSync(approved)) die('No art/pilot/approved — nothing to compare against.');
+
+  const shipped = fs
+    .readdirSync(path.join(ROOT, 'img'))
+    .filter((f) => f.endsWith('.jpg') && !f.startsWith('thumb-'))
+    .map((f) => f.replace(/\.jpg$/, ''))
+    .sort();
+
+  const rows = [];
+  for (const key of shipped) {
+    if (NO_MASTER_EXPECTED.has(key)) continue;
+    const master = path.join(approved, `${key}.png`);
+    if (!fs.existsSync(master)) {
+      rows.push({ key, verdict: 'missing', score: null });
+      continue;
+    }
+    const score = meanDifference(thumbPixels(master), thumbPixels(path.join(ROOT, `img/${key}.jpg`)));
+    const verdict = score < MASTER_MATCH ? 'match' : score < MASTER_DIFFERS ? 'check' : 'differs';
+    rows.push({ key, verdict, score, master });
+  }
+
+  // A master with nothing shipping under its name is not a problem — the run
+  // sheet is one — but it is worth saying out loud, because the other reason
+  // for it is a key that got renamed and left its master behind.
+  const orphans = fs
+    .readdirSync(approved)
+    .filter((f) => f.endsWith('.png'))
+    .map((f) => f.replace(/\.png$/, ''))
+    .filter((k) => !shipped.includes(k))
+    .sort();
+
+  const MARK = { match: '✓', check: '~', differs: '✗', missing: '✗' };
+  console.log(`\n  ${rows.length} shipped images with a master expected\n`);
+  for (const r of rows)
+    console.log(
+      `  ${MARK[r.verdict]} ${r.verdict.padEnd(8)} ${(r.score === null ? '—' : r.score.toFixed(1)).padStart(5)}  ${r.key}`
+    );
+
+  const count = (v) => rows.filter((r) => r.verdict === v).length;
+  console.log(
+    `\n  ${count('match')} match · ${count('check')} to check · ${count('differs')} differ · ${count('missing')} missing`
+  );
+  if (orphans.length) console.log(`  · masters with nothing shipping under that name: ${orphans.join(', ')}`);
+
+  const suspect = rows.filter((r) => r.verdict === 'check' || r.verdict === 'differs');
+  if (suspect.length) {
+    const out = path.join(ROOT, 'art/pilot/masters.html');
+    fs.writeFileSync(out, mastersSheet(suspect, out));
+    console.log(`  side by side → ${path.relative(ROOT, out)}`);
+    console.log(`  http://localhost:4232/${path.relative(ROOT, out)}`);
+  }
+  console.log('');
+
+  if (count('differs') || count('missing')) process.exit(1);
+}
+
+/** Master beside shipped, one row each, because the verdict wants looking at. */
+function mastersSheet(rows, out) {
+  const rel = (f) => path.relative(path.dirname(out), f);
+  const cards = rows
+    .map(
+      (r) => `<section><h2>${r.key} <em>${r.verdict} · ${r.score.toFixed(1)}</em></h2>
+<div class="pair">
+  <figure><img src="${rel(r.master)}" alt=""><figcaption>master — art/pilot/approved</figcaption></figure>
+  <figure><img src="${rel(path.join(ROOT, `img/${r.key}.jpg`))}" alt=""><figcaption>shipped — img</figcaption></figure>
+</div></section>`
+    )
+    .join('\n');
+
+  return `<!doctype html><meta charset="utf-8"><title>masters vs shipped</title>
+<style>
+  body{margin:0;padding:24px;background:#f4f1ea;font:14px/1.4 -apple-system,system-ui,sans-serif;color:#233239}
+  h1{font-size:16px;letter-spacing:.06em;text-transform:uppercase;color:#5a6b72;margin:0 0 20px}
+  section{margin:0 0 24px}
+  h2{font-size:14px;margin:0 0 8px;font-variant-numeric:tabular-nums}
+  h2 em{color:#6b7b82;font-style:normal;font-weight:400}
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  figure{margin:0;background:#fff;border:1px solid #dfe4e2;border-radius:12px;overflow:hidden}
+  img{display:block;width:100%;aspect-ratio:4/3;object-fit:contain;background:#eceae4}
+  figcaption{padding:8px 12px;font-size:12px;color:#6b7b82}
+</style>
+<h1>masters vs shipped — ${rows.length} to look at</h1>
+${cards}`;
+}
+
 // --- contact sheet ---------------------------------------------------------
 
 function cmdSheet(dir) {
@@ -464,6 +648,7 @@ const [cmd, ...rest] = process.argv.slice(2);
   add: () => cmdAdd(rest[0], rest[1]),
   check: () => cmdCheck(rest[0]),
   verify: () => cmdVerify(),
+  masters: () => cmdMasters(),
   sheet: () => cmdSheet(rest[0]),
 }[cmd] ||
   (() =>
@@ -473,5 +658,6 @@ const [cmd, ...rest] = process.argv.slice(2);
         '  add <name> [file]       name the newest ChatGPT download and file it\n' +
         '  check [dir]             ratios, duplicate detection, every crop from §2\n' +
         '  verify                  every image reference in the app resolves\n' +
+        '  masters                 is each approved master still the shipped picture\n' +
         '  sheet [dir]             contact sheet to review them side by side'
     )))();
