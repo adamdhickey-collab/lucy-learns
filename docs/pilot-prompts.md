@@ -2576,10 +2576,9 @@ centered square keeps the full height, so her four-paws-down survives where the
 thumbnail needs it.
 
 ### Scene 48 — The controlled greeting, cropped at the thigh
-*Attach `img/door-greet-cover.jpg` — **not** the file in
-`art/pilot/approved/`, which is the pre-restyle cast and predates both the
-current handler and the current guest (see "The masters have drifted" below).
-Redraws `door-greet-cover` in place; the key does not change.*
+*Attach `art/pilot/approved/door-greet-cover.jpg`, which is now the shipped
+art rather than the pre-restyle cast it used to be. Redraws
+`door-greet-cover` in place; the key does not change.*
 
 > **Come in closer than the picture you are matching.** Same room, same two
 > people, same dog, same open door — but the camera is nearer and lower, and
@@ -2644,32 +2643,32 @@ room to spare, and the thumbnail still reads as two people. If the crop is
 clean but the 56px thumb has stopped saying "two people", the redraw has traded
 one failure for the other and the answer is a closer camera, not a lower guest.
 
-### The masters have drifted, and it is not only this key
+### The masters had drifted, and it was not only this key
 
-`art/pilot/approved/` is meant to hold the master of every shipped illustration
-— the README calls them the thing to protect, because every new generation is
-made with an approved image attached and that attachment is what holds the cast
-and the palette steady.
+`art/pilot/approved/` holds the master of every shipped illustration — the
+thing to protect, because every new generation is made with an approved image
+attached and that attachment is what holds the cast and the palette steady.
 
-They are all dated 2026-08-12. The art was regenerated on 2026-08-19 across two
-commits — "Twenty scenes redrawn with the new trainer" and "The last seven, and
-the handler is one person again" — and `approved/` was not updated with it.
-Comparing each master against its shipped JPG, **around three quarters of them
-are a different picture**: `door-place-cover`'s master is a dog alone on a bed,
-`door-greet-cover`'s is the old handler with a crouching guest in a plaid shirt.
-
-The README's own check did not catch this, because it tested that a master
-*exists* rather than that it is the same picture. `node scripts/pilot.mjs
-masters` asks the real question, and writes the pairs it is unsure about to
-`art/pilot/masters.html`:
+Every file in it was dated 2026-08-12. The art was regenerated on 2026-08-19
+and the folder was not updated, so attaching a master would have dragged the
+cast backwards for most keys. `node scripts/pilot.mjs masters` found it:
 
     6 match · 6 to check · 25 differ · 0 missing
 
-Two consequences worth knowing before the next batch. Attaching an approved
-master now re-introduces the pre-restyle cast, which is why Scene 48 says to
-attach the shipped JPG instead. And the high-resolution originals of the
-current art are not in `approved/`, not in the surviving rounds (20–22 are all
-from 12 August), and not in git — the 1100px JPGs in `img/` are all there is.
+The 1448px originals of the regenerated art are gone — not in `approved/`, not
+in rounds 20–22 (all from 12 August), not in git. So the 25, plus
+`door-sound-cover` where the recast was confirmed by eye, now point at the
+shipped 1100px JPEG, copied byte for byte. Not upscaled: putting a real master
+through the ship pipeline and back lands at 36 dB, and sharpening it makes that
+34 dB. Interpolation invents nothing, and `check` works in ratios now, so
+nothing needed the old dimensions back.
+
+    32 match · 5 to check · 0 differ · 0 missing
+
+The five still in `check` keep their PNG masters until somebody looks at them,
+because a real 1448px original beats the shipped copy and swapping one would be
+a downgrade: `door-greet-08-jumping`, `door-sound-02-bell`,
+`door-sound-02-knock`, `door-sound-03-name`, `plan-name`.
 
 ---
 

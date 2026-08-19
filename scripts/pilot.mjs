@@ -275,23 +275,39 @@ function cmdAdd(name, file) {
 
 // --- checks ----------------------------------------------------------------
 
-// Straight out of §2 of the audit. Heights are computed from a 1448px width.
+// Straight out of §2 of the audit, written the way the app writes them.
 //
-// `offset` is the top edge of the crop, for the surfaces the app does not cut
-// down the middle. Only Today does, and it is the one that matters most: the
-// hero is `object-position: center 42%`, so a household sees y 190–824 of a
-// 1086px master and `sips -c` was showing y 226–860. Thirty-six pixels, and
-// this file was quietly the last place that did not know — the prose in
-// pilot-prompts.md has spelled the real band out for several batches while
-// `check` went on producing a centred approximation of it, which is a check
-// that agrees with you for the wrong reason. It is what let a cover ship with
-// both heads outside the band.
+// Ratios and a focal fraction, not pixels. They used to be pixel dimensions
+// measured off a 1448x1086 master, which quietly made 1448x1086 a requirement:
+// `sips` does not refuse a crop bigger than its source, it **pads** it. Hand it
+// an 1100px image and you get a 1448px file with a black bar down one side and
+// a band covering 77% of the height instead of 58% — a confident-looking wrong
+// answer, which is the worst kind for a check to produce. Ratios work at any
+// size, which matters now that the best copy of some art is 1100px wide.
+//
+// `focusY` is `object-position` semantics — the fraction of the *leftover*
+// height above the crop, exactly as CSS resolves it — so it can be read off
+// app.css rather than converted. Today's hero is `center 42%`, and 0.42 of the
+// 452px left over on a 1086px master is the y-offset of 190 that
+// pilot-prompts.md quotes. Anything without a `focusY` is centred, which is
+// what the app does with it.
 const CROPS = [
-  { name: 'today-16x7', h: 634, w: 1448, offset: 190, note: 'Today hero' },
-  { name: 'program-21x9', h: 621, w: 1448, note: 'program hero' },
-  { name: 'welcome-5x4', h: 1086, w: 1357, note: 'welcome panel' },
-  { name: 'square', h: 1086, w: 1086, note: 'library card / map rail' },
+  { name: 'today-16x7', aspect: 16 / 7, focusY: 0.42, note: 'Today hero' },
+  { name: 'program-21x9', aspect: 21 / 9, note: 'program hero' },
+  { name: 'welcome-5x4', aspect: 5 / 4, note: 'welcome panel' },
+  { name: 'square', aspect: 1, note: 'library card / map rail' },
 ];
+
+/** The largest rect of `aspect` that fits in w×h, placed the way the app places it. */
+function cropBox({ aspect, focusY = 0.5 }, w, h) {
+  let cw = w;
+  let ch = Math.round(w / aspect);
+  if (ch > h) {
+    ch = h;
+    cw = Math.round(h * aspect);
+  }
+  return { w: cw, h: ch, top: Math.round(focusY * (h - ch)), left: Math.round((w - cw) / 2) };
+}
 
 function cmdCheck(dir) {
   const target = dir ? path.resolve(dir) : currentRound();
@@ -317,29 +333,25 @@ function cmdCheck(dir) {
     );
     for (const c of CROPS) {
       const out = path.join(crops, `${f.replace(/\.\w+$/, '')}-${c.name}.png`);
-      // The offset is scaled off this file's own height rather than assumed to
-      // be 1086 — a generation that arrives larger would otherwise get a band
-      // measured for a smaller picture, which is the same class of error this
-      // offset exists to fix.
-      const top = c.offset ? Math.round((c.offset / 1086) * h) : null;
-      const args =
-        top === null
-          ? ['-c', String(c.h), String(c.w), full, '--out', out]
-          : [
-              full,
-              '--cropToHeightWidth',
-              String(c.h),
-              String(c.w),
-              '--cropOffset',
-              String(top),
-              '0',
-              '--out',
-              out,
-            ];
+      const box = cropBox(c, w, h);
       try {
-        execFileSync('sips', args, { stdio: 'ignore' });
+        execFileSync(
+          'sips',
+          [
+            full,
+            '--cropToHeightWidth',
+            String(box.h),
+            String(box.w),
+            '--cropOffset',
+            String(box.top),
+            String(box.left),
+            '--out',
+            out,
+          ],
+          { stdio: 'ignore' }
+        );
       } catch {
-        /* a crop larger than the source just gets skipped */
+        /* nothing to crop from */
       }
     }
   }
@@ -519,6 +531,23 @@ const MASTER_DIFFERS = 18;
  */
 const NO_MASTER_EXPECTED = new Set(['lucy-portrait', 'splash-mark']);
 
+/**
+ * The master for a key, whichever way it is stored.
+ *
+ * `.png` is what a generation arrives as and what most of these are. `.jpg`
+ * turns up where the PNG original no longer exists and the shipped file is the
+ * best surviving copy — promoting it is not a downgrade of anything, because
+ * the thing it would have downgraded is already gone. Resolving both here
+ * keeps that a storage detail rather than something every caller has to know.
+ */
+function masterFor(approved, key) {
+  for (const ext of ['.png', '.jpg']) {
+    const full = path.join(approved, key + ext);
+    if (fs.existsSync(full)) return full;
+  }
+  return null;
+}
+
 function cmdMasters() {
   const approved = path.join(ROOT, 'art/pilot/approved');
   if (!fs.existsSync(approved)) die('No art/pilot/approved — nothing to compare against.');
@@ -532,8 +561,8 @@ function cmdMasters() {
   const rows = [];
   for (const key of shipped) {
     if (NO_MASTER_EXPECTED.has(key)) continue;
-    const master = path.join(approved, `${key}.png`);
-    if (!fs.existsSync(master)) {
+    const master = masterFor(approved, key);
+    if (!master) {
       rows.push({ key, verdict: 'missing', score: null });
       continue;
     }
@@ -547,8 +576,8 @@ function cmdMasters() {
   // for it is a key that got renamed and left its master behind.
   const orphans = fs
     .readdirSync(approved)
-    .filter((f) => f.endsWith('.png'))
-    .map((f) => f.replace(/\.png$/, ''))
+    .filter(isImage)
+    .map((f) => f.replace(/\.\w+$/, ''))
     .filter((k) => !shipped.includes(k))
     .sort();
 

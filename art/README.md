@@ -22,27 +22,39 @@ JPGs are downsampled and re-compressed and are not a substitute.
 They are committed for exactly that reason. They spent most of this project's
 life on one laptop.
 
-### They are out of date, as of 2026-08-19
+### Twenty-six of them are 1100px JPEGs, and that is on purpose
 
-Every file in `approved/` is dated 12 August. The art was regenerated on the
-19th across two commits — "Twenty scenes redrawn with the new trainer" and "The
-last seven, and the handler is one person again" — and this folder was not
-updated with it. Compare each master against its shipped JPG and **roughly
-three quarters of them are a different picture**, not a larger one:
-`door-place-cover`'s master is a dog alone on a bed, `door-greet-cover`'s is
-the previous handler with a crouching guest in a plaid shirt.
+Every file here was dated 12 August. The art was regenerated on the 19th across
+two commits — "Twenty scenes redrawn with the new trainer" and "The last seven,
+and the handler is one person again" — and this folder was not updated with it,
+so three quarters of it held superseded pictures: `door-place-cover`'s master
+was a dog alone on a bed, `door-greet-cover`'s was the previous handler with a
+crouching guest in a plaid shirt.
 
-Two things follow, and both bite:
+The 1448px originals of the regenerated art do not exist. Not here, not in the
+surviving rounds — 20, 21 and 22 are all from 12 August — and not in git. So
+those keys have been repointed at the shipped 1100px JPEG, **copied byte for
+byte and not upscaled.**
 
-- **Attaching a master now re-introduces the pre-restyle cast.** The whole
-  point of the attachment is to hold the cast steady, and for most keys it
-  would currently drag it backwards. Attach the shipped `img/*.jpg` instead
-  until this is repaired — see Scene 48 in
-  [`../docs/pilot-prompts.md`](../docs/pilot-prompts.md), which says so in the
-  prompt itself.
-- **The current art has no high-resolution original anywhere.** Not here, not
-  in the surviving rounds — 20, 21 and 22 are all from 12 August — and not in
-  git. The 1100px JPGs in `img/` are all there is. That is the exact loss this
+Upscaling was measured before it was rejected. Running a real 1448px master
+through the ship pipeline and back — down to 1100, JPEG at quality 72, then
+Lanczos back up to 1448 — lands at about 36 dB against the original, and adding
+an unsharp mask makes it *worse* at 34 dB by sharpening the JPEG artifacts.
+Interpolation invents no detail; all it would buy is a file whose dimensions
+match the ones that were lost. `scripts/pilot.mjs` works in ratios rather than
+pixels now, so nothing downstream needs those dimensions back.
+
+What this costs, stated plainly: for those 26 keys the reference is a
+re-compressed copy at 76% of the original width, and the true originals are
+gone for good. What it buys is a folder that holds the art that actually
+ships, which is the only property that makes an attachment worth making. The
+working tree is also 44 MB lighter, since a JPEG of a picture is a quarter the
+size of a PNG of the same picture.
+
+Five keys are still unresolved — the `check` band, where the score cannot tell
+a re-render from a recast. They keep their PNG masters until somebody looks,
+because a genuine 1448px original is worth more than the shipped copy and
+replacing one would be a real downgrade. That is the exact loss this
   folder exists to prevent, and it has already happened.
 
 The old check did not catch it, because it asked whether a master *exists*
