@@ -707,6 +707,47 @@ function cuePhrases() {
 }
 
 /**
+ * Ask for the microphone now, and find out where we stand.
+ *
+ * Turning the switch on used to promise nothing and check nothing: the
+ * browser was asked for a microphone only once practice had started, and a
+ * refusal surfaced two screens later as a chip that said "Tap to listen
+ * again" — which is advice, and wrong, when the browser has already decided.
+ * Chrome on iOS blocks it by default, so this was the common case rather
+ * than the unlucky one.
+ *
+ * Asked at the moment the switch is tapped, which is the moment somebody has
+ * a free hand and is thinking about microphones. The stream is stopped the
+ * instant it arrives: this is a question, not a recording, and leaving even
+ * one track running would light the indicator over an app that is not
+ * listening yet.
+ */
+export async function probeMicrophone() {
+  if (!canListen()) return 'unsupported';
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    // No way to ask ahead of time. Not a refusal — recognition may still
+    // work, and saying "blocked" here would be inventing bad news.
+    return 'unknown';
+  }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    stream.getTracks().forEach((track) => {
+      try {
+        track.stop();
+      } catch {
+        /* already ended */
+      }
+    });
+    return 'granted';
+  } catch (error) {
+    const name = (error && error.name) || '';
+    if (name === 'NotAllowedError' || name === 'SecurityError') return 'blocked';
+    if (name === 'NotFoundError') return 'no-microphone';
+    return 'error';
+  }
+}
+
+/**
  * Start listening. Returns a stop function, or null if unavailable.
  *
  * `onCommand` gets a command id, `onState` gets progress worth showing —

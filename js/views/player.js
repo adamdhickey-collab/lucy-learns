@@ -46,6 +46,7 @@ import {
   listVoices,
   onSpeechChange,
   onVoicesReady,
+  probeMicrophone,
   setPreferredVoice,
   speak,
   speechStatus,
@@ -251,6 +252,14 @@ function disarmExitGuard(consume = false) {
 // render: a microphone that restarted on every re-render would spend the
 // session being torn down and rebuilt, and the step cycle re-renders on every
 // tap.
+
+/**
+ * What the browser said when last asked for the microphone: 'unknown',
+ * 'granted', 'blocked', 'no-microphone', 'unsupported' or 'error'. Kept so
+ * the get-ready screen can say so plainly instead of letting the answer
+ * surface two screens later as a chip offering advice that cannot work.
+ */
+let micState = 'unknown';
 
 let listenStop = null;
 /** What the chip on screen is showing. Never inferred, always reported. */
@@ -548,6 +557,29 @@ function handsFreeGroupInner() {
             This browser cannot listen. The steps can still be read aloud.
           </p>`
         : ''}
+      ${/* Said here, on the switch, and said as a fact rather than as a
+            suggestion to try again. A browser that has refused the
+            microphone will go on refusing it until somebody changes a
+            setting, and the chip's "tap to listen again" is advice that
+            cannot work — which is what happened when Chrome on iOS, where
+            this is the default, blocked it and the app said nothing at
+            all. */ ''}
+      ${voice.listen && micState === 'blocked'
+        ? html`<p class="section-note voice-warn">
+            <strong>The microphone is blocked.</strong> Allow it for this site
+            in your browser's settings — in Chrome, the ⋯ menu, then Settings,
+            then Microphone — and switch this on again. Reading the steps
+            aloud works either way.
+          </p>`
+        : ''}
+      ${voice.listen && micState === 'no-microphone'
+        ? html`<p class="section-note voice-warn">
+            No microphone was found on this device.
+          </p>`
+        : ''}
+      ${voice.listen && micState === 'granted'
+        ? html`<p class="section-note voice-note">Microphone ready.</p>`
+        : ''}
       ${voice.listen
         ? html`<p class="section-note voice-note">
             Listening needs a signal, unlike the rest of the app.
@@ -631,7 +663,9 @@ function readyScreen(activity, level) {
  * what is wrong and fixes it in the same place beats an explanation.
  */
 function voiceChipLabel(listening, error) {
-  if (error === 'blocked') return 'Microphone blocked';
+  // A known block outranks everything else the chip could say. Offering a tap
+  // that the browser has already decided against is worse than saying nothing.
+  if (error === 'blocked' || micState === 'blocked') return 'Microphone blocked';
   if (error === 'network') return 'No signal for listening';
   if (error === 'gesture') return 'Tap to listen again';
   return listening ? 'Listening' : 'Tap to listen again';
@@ -641,7 +675,10 @@ function voiceChip() {
   if (!getVoice().listen || !canListen()) return '';
   const { listening, heard, matched, error } = listenState;
   const label = voiceChipLabel(listening, error);
-  const live = listening && !error;
+  // A blocked microphone is not live whatever the recogniser last reported:
+  // the label and the offer it makes have to agree, or the chip says the
+  // thing is blocked while inviting a tap to stop it.
+  const live = listening && !error && micState !== 'blocked';
 
   // One hook, not one per state: the listener is bound to the element at wire
   // time, so swapping the attribute later would leave yesterday's handler on
@@ -1459,7 +1496,7 @@ function paintVoiceChip() {
   if (!chip) return;
   const { listening, heard, matched, error } = listenState;
   const label = voiceChipLabel(listening, error);
-  const live = Boolean(listening) && !error;
+  const live = Boolean(listening) && !error && micState !== 'blocked';
   chip.classList.toggle('is-live', live);
   const labelEl = chip.querySelector('.voice-chip-label');
   if (labelEl) labelEl.textContent = label;
@@ -1475,7 +1512,7 @@ function paintVoiceChip() {
   } else if (heardEl) {
     heardEl.remove();
   }
-  chip.setAttribute('aria-label', `${label}. Tap to stop listening.`);
+  chip.setAttribute('aria-label', `${label}.${live ? ' Tap to stop listening.' : ''}`);
 }
 
 /**
@@ -1606,8 +1643,20 @@ function wire(root) {
   on('[data-voice-listen]', 'click', () => {
     const next = !getVoice().listen;
     setVoice({ listen: next });
-    if (!next) stopListening();
+    if (!next) {
+      stopListening();
+      micState = 'unknown';
+      refresh();
+      return;
+    }
+    // Ask now rather than at the first rep. The permission sheet belongs on
+    // the screen where somebody still has both hands, not over a dog in a
+    // stay — and if the answer is no, this is where there is room to say so.
     refresh();
+    probeMicrophone().then((result) => {
+      micState = result;
+      if (session && session.phase === 'ready') refresh();
+    });
   });
 
   // Stop when live, restart when not. The restart matters more than it looks:
