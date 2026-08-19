@@ -2606,16 +2606,29 @@ art rather than the pre-restyle cast it used to be. Redraws
 > her, not leaning over her, not crouching. He wears his cap and glasses. His
 > head sits at the same height as the handler's.
 >
-> **Lucy sits between and slightly in front of them, close to the camera and
-> large in the frame** — nearer than either person, so she reads big. Sitting
-> square, four paws down, chest upright, head raised and turned up toward the
-> guest. Purple collar and round blue tag clear and unobstructed. The black
-> leash runs slack from her collar up to the handler's hand — visibly loose,
-> with a curve in it.
+> **Lucy sits between and slightly in front of them, much closer to the camera
+> and large in the frame — her seated height about half the height of the whole
+> picture**, and the largest single shape in it. The two people are a step
+> further back and correspondingly smaller: that is what puts their heads a
+> fifth of the way down without cutting either of them in half. Sitting square,
+> four paws down, chest upright, head raised and turned up toward the guest.
 >
-> The **open front door is behind the guest** with daylight in the opening, but
-> only the lower part of it is in frame; the top of the doorway is above the
-> picture. The doormat is at his feet, mostly cut off by the bottom edge.
+> **The leash is clipped to her collar.** To the metal ring at the front of her
+> purple collar, under her chin, running slack up to the handler's hand with a
+> visible curve in it — **not a loop hanging in her hand attached to nothing.**
+> The first attempt drew the dog loose, in a picture whose whole subject is a
+> controlled greeting. Purple collar and round blue tag clear and unobstructed.
+>
+> **Her muzzle is wiry and scruffy, with scruffy eyebrows** — she is a Labrador
+> and German Wirehaired Pointer mix and the scruff is the one feature that makes
+> her recognisable. The first attempt drew the clean face of a plain Labrador.
+>
+> The **charcoal panelled front door stands open behind the guest** with
+> daylight in the opening, but only the lower part of it is in frame; the top of
+> the doorway is above the picture. It is the panelled door from the reference —
+> **not a glass panel at the edge of the frame**, which is what the first
+> attempt put there. The doormat is at his feet, mostly cut off by the bottom
+> edge.
 >
 > Background: one wall plane, the lower half of the open door and its light, the
 > floor. Nothing else — no plant, no furniture, no picture on the wall.
@@ -2623,7 +2636,10 @@ art rather than the pre-restyle cast it used to be. Redraws
 > **Composition, and this is what the picture will be judged on: a wide
 > horizontal band across the middle of the frame — from just under a fifth of
 > the way down to just over three quarters of the way down — must contain both
-> faces, both pairs of hands, and Lucy's head, collar and chest.** Nothing that
+> faces, both pairs of hands, and Lucy's head, collar and chest.** The first
+> attempt put both heads two per cent of the way down and lost them entirely:
+> it cropped the legs as asked and then spent the space it saved on more
+> person, leaving no wall above anyone. The headroom is the instruction. Nothing that
 > matters may sit above that band or below it. A centered square must contain
 > both people and the whole dog. Reduced to a thumbnail this should read as
 > **two upright figures with a dark shape sitting between them** — the only
