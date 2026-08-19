@@ -2529,6 +2529,148 @@ it, stop drawing and rewrite the claim to what the picture can hold.
 
 ---
 
+## Batch 11 — the cover that stands up, and the band that will not have it
+
+One image. `door-greet-cover`, redrawn in place — dg-4's cover and nothing
+else, so the key does not change.
+
+**The fix:** the shipped cover has two adults standing at full height, and on
+Today it is two torsos and half a dog. No head is in the band. It is the exact
+failure §"The crop tests" predicts in the sentence **nobody stands in a cover**,
+and it is the one cover that had to break that rule on purpose.
+
+### Why it broke the rule, and why the rule cannot simply win
+
+Batch 6 pilot-tested the four covers at 56px and found three of them were the
+same object — a person low down beside a dark dog. Only the greeting cover was
+identified by all three viewers with no guessing, and the thing that saved it
+was structural: **it is the only cover with two people in it.** That is the
+archetype it was given to hold.
+
+So dg-4 is squeezed from both sides. Put the second person on the floor and it
+becomes the silhouette three other covers already have, at the size where that
+is all a household gets. Stand them both up and their heads leave the band.
+Batch 7 chose the archetype, which was the right call for the map rail and the
+wrong one for Today, and nobody re-ran the band on the result.
+
+**The escape is the camera, not the pose.** Both of them stay standing and stay
+upright, and the frame comes in until it cuts them at the thigh. A standing
+adult only overflows the band when the picture is trying to show all of them —
+crop the legs in the artwork and the head drops into the band on its own, with
+the archetype intact.
+
+### The numbers this one has to hit
+
+The band is not centered and this scene has no room to be sloppy about it. On a
+1086px master the household sees **y 190–824** — 17.5% to 76% of the height.
+
+| Must sit inside | Where |
+| --- | --- |
+| Both faces | 20–35% of frame height |
+| Lucy's head, collar and chest | 45–70% |
+| Both people's hands | under 72% |
+| Everything that carries meaning | between 20% and 74% of height, and between 15% and 85% of width |
+
+Below 76% is floor and the bottom of Lucy's legs, and it is allowed to be. The
+centered square keeps the full height, so her four-paws-down survives where the
+thumbnail needs it.
+
+### Scene 48 — The controlled greeting, cropped at the thigh
+*Attach `img/door-greet-cover.jpg` — **not** the file in
+`art/pilot/approved/`, which is the pre-restyle cast and predates both the
+current handler and the current guest (see "The masters have drifted" below).
+Redraws `door-greet-cover` in place; the key does not change.*
+
+> **Come in closer than the picture you are matching.** Same room, same two
+> people, same dog, same open door — but the camera is nearer and lower, and
+> **the bottom of the frame cuts both people across the thigh.** Do not show
+> anyone's feet and do not show the whole doorway. This is the single most
+> important instruction in this prompt: the picture it replaces shows both
+> adults head to toe, and that is why it failed.
+>
+> **The handler stands at the left**, turned inward toward the dog and the
+> guest, calm and unhurried, the slack leash held low in one hand. Her treat
+> pouch is at her hip. Her head is **near the top of the frame but not touching
+> it** — leave a clear margin of wall above her hair.
+>
+> **The guest stands a step away at the right**, upright, **hands at his sides**,
+> looking down at Lucy with a small friendly expression. He is not reaching for
+> her, not leaning over her, not crouching. He wears his cap and glasses. His
+> head sits at the same height as the handler's.
+>
+> **Lucy sits between and slightly in front of them, close to the camera and
+> large in the frame** — nearer than either person, so she reads big. Sitting
+> square, four paws down, chest upright, head raised and turned up toward the
+> guest. Purple collar and round blue tag clear and unobstructed. The black
+> leash runs slack from her collar up to the handler's hand — visibly loose,
+> with a curve in it.
+>
+> The **open front door is behind the guest** with daylight in the opening, but
+> only the lower part of it is in frame; the top of the doorway is above the
+> picture. The doormat is at his feet, mostly cut off by the bottom edge.
+>
+> Background: one wall plane, the lower half of the open door and its light, the
+> floor. Nothing else — no plant, no furniture, no picture on the wall.
+>
+> **Composition, and this is what the picture will be judged on: a wide
+> horizontal band across the middle of the frame — from just under a fifth of
+> the way down to just over three quarters of the way down — must contain both
+> faces, both pairs of hands, and Lucy's head, collar and chest.** Nothing that
+> matters may sit above that band or below it. A centered square must contain
+> both people and the whole dog. Reduced to a thumbnail this should read as
+> **two upright figures with a dark shape sitting between them** — the only
+> cover in the set with two people, which is the one thing that tells it apart
+> at 56px.
+>
+> The single thing this image must make obvious: a stranger is standing right
+> there and she is sitting still.
+>
+> Landscape 4:3, wider than tall.
+
+### Landing it
+
+```bash
+node scripts/pilot.mjs add door-greet-cover
+node scripts/pilot.mjs check
+```
+
+`check` now crops the Today band where the app actually crops it, so the
+`-today-16x7` file in `crops/` is what a household sees rather than a centered
+approximation. **Look at that file before approving.** The failure this batch
+exists to fix was visible in a crop nobody opened.
+
+Two things to confirm in it, in this order: both faces are in the band with
+room to spare, and the thumbnail still reads as two people. If the crop is
+clean but the 56px thumb has stopped saying "two people", the redraw has traded
+one failure for the other and the answer is a closer camera, not a lower guest.
+
+### The masters have drifted, and it is not only this key
+
+`art/pilot/approved/` is meant to hold the master of every shipped illustration
+— the README calls them the thing to protect, because every new generation is
+made with an approved image attached and that attachment is what holds the cast
+and the palette steady.
+
+They are all dated 2026-08-12. The art was regenerated on 2026-08-19 across two
+commits — "Twenty scenes redrawn with the new trainer" and "The last seven, and
+the handler is one person again" — and `approved/` was not updated with it.
+Comparing each master against its shipped JPG, **around three quarters of them
+are a different picture**: `door-place-cover`'s master is a dog alone on a bed,
+`door-greet-cover`'s is the old handler with a crouching guest in a plaid shirt.
+
+The README's own check does not catch this, because it tests that a master
+*exists* rather than that it is the same picture:
+
+    [ -f "art/pilot/approved/$b.png" ] || echo "NO MASTER: $b"
+
+Two consequences worth knowing before the next batch. Attaching an approved
+master now re-introduces the pre-restyle cast, which is why Scene 48 says to
+attach the shipped JPG instead. And the high-resolution originals of the
+current art are not in `approved/`, not in the surviving rounds (20–22 are all
+from 12 August), and not in git — the 1100px JPGs in `img/` are all there is.
+
+---
+
 ## The crop tests, and how to re-run them
 
 Round 2 cleared these. Re-run them on any replacement before approving it:

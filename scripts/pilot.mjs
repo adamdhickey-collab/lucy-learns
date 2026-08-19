@@ -77,6 +77,31 @@ function findHeading(lines, test) {
   return i === -1 ? null : i;
 }
 
+/**
+ * The "*Attach …*" note under a heading, if it has one.
+ *
+ * It sits between the heading and the blockquote, with a blank line either
+ * side, and it wraps — so find where it starts and run on until the line that
+ * closes the italics.
+ *
+ * Read for scenes as well as edits now. It used to be an edit-only field on
+ * the assumption that a scene always wants the same thing — "attach an
+ * approved image" — and that assumption expired: the approved masters are the
+ * pre-restyle cast for most keys, so a scene redrawing one of those has to say
+ * which file to attach, and the generic advice is actively wrong for it.
+ */
+function attachNote(lines, headingIndex) {
+  const window = lines.slice(headingIndex + 1, headingIndex + 8);
+  const start = window.findIndex((l) => /^\*.*attach/i.test(l));
+  if (start === -1) return null;
+  const end = window.findIndex((l, i) => i >= start && l.trimEnd().endsWith('*'));
+  return window
+    .slice(start, (end === -1 ? start : end) + 1)
+    .join(' ')
+    .replace(/\*/g, '')
+    .trim();
+}
+
 function buildPrompt(id) {
   const lines = fs.readFileSync(PROMPTS, 'utf8').split('\n');
   const key = String(id).toLowerCase();
@@ -89,25 +114,10 @@ function buildPrompt(id) {
   // how you get the whole scene redrawn instead.
   const editIndex = findHeading(lines, (l) => new RegExp(`^### ${key}\\b`, 'i').test(l));
   if (editIndex !== null) {
-    const body = blockquoteAfter(lines, editIndex);
-    // The "*Attach …*" note sits between the heading and the quote, with a
-    // blank line either side, and it wraps — so find where it starts and run
-    // on until the line that closes the italics.
-    const window = lines.slice(editIndex + 1, editIndex + 8);
-    const start = window.findIndex((l) => /^\*.*attach/i.test(l));
-    let attach = null;
-    if (start !== -1) {
-      const end = window.findIndex((l, i) => i >= start && l.trimEnd().endsWith('*'));
-      attach = window
-        .slice(start, (end === -1 ? start : end) + 1)
-        .join(' ')
-        .replace(/\*/g, '')
-        .trim();
-    }
     return {
       title: lines[editIndex].replace(/^#+\s*/, ''),
-      attach,
-      text: `${MATCH}\n\nKeep the attached image — this is an edit, not a redraw. The style and cast rules we have been using still apply; do not restate them.\n\n${body}`,
+      attach: attachNote(lines, editIndex),
+      text: `${MATCH}\n\nKeep the attached image — this is an edit, not a redraw. The style and cast rules we have been using still apply; do not restate them.\n\n${blockquoteAfter(lines, editIndex)}`,
     };
   }
 
@@ -119,7 +129,7 @@ function buildPrompt(id) {
   }
   return {
     title: lines[sceneIndex].replace(/^#+\s*/, ''),
-    attach: null,
+    attach: attachNote(lines, sceneIndex),
     text: `${MATCH}\n\n${blockA}\n\n${blockB}\n\n${blockquoteAfter(lines, sceneIndex)}`,
   };
 }
@@ -135,8 +145,8 @@ function cmdPrompt(id) {
   console.log(`\n── ${title} ──\n`);
   console.log(text);
   console.log(`\n── copied to the clipboard ──`);
-  console.log('   Attach an approved image — the prompt opens by telling it to match one.');
-  if (attach) console.log(`   Attach: ${attach.trim()}`);
+  if (attach) console.log(`   ${attach.trim()}`);
+  else console.log('   Attach an approved image — the prompt opens by telling it to match one.');
   console.log('');
 }
 
@@ -266,8 +276,18 @@ function cmdAdd(name, file) {
 // --- checks ----------------------------------------------------------------
 
 // Straight out of §2 of the audit. Heights are computed from a 1448px width.
+//
+// `offset` is the top edge of the crop, for the surfaces the app does not cut
+// down the middle. Only Today does, and it is the one that matters most: the
+// hero is `object-position: center 42%`, so a household sees y 190–824 of a
+// 1086px master and `sips -c` was showing y 226–860. Thirty-six pixels, and
+// this file was quietly the last place that did not know — the prose in
+// pilot-prompts.md has spelled the real band out for several batches while
+// `check` went on producing a centred approximation of it, which is a check
+// that agrees with you for the wrong reason. It is what let a cover ship with
+// both heads outside the band.
 const CROPS = [
-  { name: 'today-16x7', h: 634, w: 1448, note: 'Today hero' },
+  { name: 'today-16x7', h: 634, w: 1448, offset: 190, note: 'Today hero' },
   { name: 'program-21x9', h: 621, w: 1448, note: 'program hero' },
   { name: 'welcome-5x4', h: 1086, w: 1357, note: 'welcome panel' },
   { name: 'square', h: 1086, w: 1086, note: 'library card / map rail' },
@@ -297,10 +317,27 @@ function cmdCheck(dir) {
     );
     for (const c of CROPS) {
       const out = path.join(crops, `${f.replace(/\.\w+$/, '')}-${c.name}.png`);
+      // The offset is scaled off this file's own height rather than assumed to
+      // be 1086 — a generation that arrives larger would otherwise get a band
+      // measured for a smaller picture, which is the same class of error this
+      // offset exists to fix.
+      const top = c.offset ? Math.round((c.offset / 1086) * h) : null;
+      const args =
+        top === null
+          ? ['-c', String(c.h), String(c.w), full, '--out', out]
+          : [
+              full,
+              '--cropToHeightWidth',
+              String(c.h),
+              String(c.w),
+              '--cropOffset',
+              String(top),
+              '0',
+              '--out',
+              out,
+            ];
       try {
-        execFileSync('sips', ['-c', String(c.h), String(c.w), full, '--out', out], {
-          stdio: 'ignore',
-        });
+        execFileSync('sips', args, { stdio: 'ignore' });
       } catch {
         /* a crop larger than the source just gets skipped */
       }

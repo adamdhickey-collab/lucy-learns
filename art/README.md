@@ -22,6 +22,33 @@ JPGs are downsampled and re-compressed and are not a substitute.
 They are committed for exactly that reason. They spent most of this project's
 life on one laptop.
 
+### They are out of date, as of 2026-08-19
+
+Every file in `approved/` is dated 12 August. The art was regenerated on the
+19th across two commits — "Twenty scenes redrawn with the new trainer" and "The
+last seven, and the handler is one person again" — and this folder was not
+updated with it. Compare each master against its shipped JPG and **roughly
+three quarters of them are a different picture**, not a larger one:
+`door-place-cover`'s master is a dog alone on a bed, `door-greet-cover`'s is
+the previous handler with a crouching guest in a plaid shirt.
+
+Two things follow, and both bite:
+
+- **Attaching a master now re-introduces the pre-restyle cast.** The whole
+  point of the attachment is to hold the cast steady, and for most keys it
+  would currently drag it backwards. Attach the shipped `img/*.jpg` instead
+  until this is repaired — see Scene 48 in
+  [`../docs/pilot-prompts.md`](../docs/pilot-prompts.md), which says so in the
+  prompt itself.
+- **The current art has no high-resolution original anywhere.** Not here, not
+  in the surviving rounds — 20, 21 and 22 are all from 12 August — and not in
+  git. The 1100px JPGs in `img/` are all there is. That is the exact loss this
+  folder exists to prevent, and it has already happened.
+
+The check below did not catch it, because it asks whether a master *exists*
+rather than whether it is the same picture. Any repair should fix the check
+too, or the next batch lands in the same place.
+
 ## art/pilot/round-N/ — gitignored working rounds
 
 Every generation, kept or rejected, in the order it arrived. `pilot.mjs` files
