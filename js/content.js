@@ -174,7 +174,7 @@ export const IMAGES = withThumb({
   },
   'door-sound-04-treats': {
     src: 'img/door-sound-04-treats.jpg',
-    alt: 'A handler feeds Lucy two small treats from a flat open palm while Lucy takes them from her hand.',
+    alt: 'A flat open palm held out at Lucy’s head height, cropped close, with Lucy sitting and looking up at it.',
   },
   'door-sound-05-settle': {
     src: 'img/door-sound-05-settle.jpg',
@@ -182,7 +182,7 @@ export const IMAGES = withThumb({
   },
   'door-sound-cover': {
     src: 'img/door-sound-cover.jpg',
-    alt: 'A handler crouches beside Lucy well back from the closed front door, one hand resting on her shoulder and the other offering a treat.',
+    alt: 'A handler crouches beside Lucy well back from the closed front door, offering a treat from her fingers while Lucy sits and takes it.',
   },
 
   // --- batch 2: the whole of Controlled Real Greeting -----------------------
@@ -292,7 +292,7 @@ export const IMAGES = withThumb({
   },
   'door-stay-03-cross': {
     src: 'img/door-stay-03-cross.jpg',
-    alt: 'Lucy lies on her bed with her head up, watching her handler walk toward the closed front door.',
+    alt: 'Lucy holds her down on her bed in the foreground while her handler stands at the closed front door across the room.',
   },
   'door-stay-03-pretend': {
     src: 'img/door-stay-03-pretend.jpg',
@@ -357,7 +357,7 @@ export const IMAGES = withThumb({
   // stripe of daylight and says a shut door is a reject.
   'door-stay-03-onestep': {
     src: 'img/door-stay-03-onestep.jpg',
-    alt: 'A handler steps away from Lucy’s bed toward the closed front door while Lucy holds her down on the bed.',
+    alt: 'A handler stands one step from Lucy’s bed looking down at her, the closed front door still across the room, while Lucy holds her down.',
   },
   'door-stay-03-halfway': {
     src: 'img/door-stay-03-halfway.jpg',
