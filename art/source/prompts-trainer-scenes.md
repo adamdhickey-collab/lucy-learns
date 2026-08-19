@@ -1,6 +1,6 @@
 # Scene prompts — new trainer and new guest
 
-Eleven scenes still to redraw. The twelve images delivered on 19 August cover the
+Twelve scenes still to redraw. The twelve images delivered on 19 August cover the
 guest slots and are already app-ready at 1448×1086; these are the ones nothing in
 either delivery depicts correctly.
 
@@ -22,9 +22,9 @@ teaches the opposite of what the words beside it say.
 > outlines, no harsh shadows, no lens blur or bokeh. Landscape 4:3, 1448×1086.
 >
 > Interior entryway of an ordinary suburban home: warm cream-peach walls, white
-> baseboards, honey-toned wood floor, a charcoal-grey panelled front door with a
+> baseboards, honey-toned wood floor, a charcoal-gray paneled front door with a
 > four-pane window in its upper half, a coir doormat inside the threshold, a
-> rectangular grey dog bed with a soft rolled edge. Even, soft daylight from the
+> rectangular gray dog bed with a soft rolled edge. Even, soft daylight from the
 > door. Muted palette — olive green, dusty blue, warm cream, charcoal, honey wood.
 > Plenty of empty floor; the room is calm and uncluttered.
 
@@ -32,7 +32,7 @@ teaches the opposite of what the words beside it say.
 
 > **THE HANDLER** — a woman in her early forties of East Asian descent, dark brown
 > hair in a low ponytail with a few loose strands at the temple, a warm olive-green
-> pullover hoodie, dark navy jeans, grey trainers, and a mustard-yellow treat pouch
+> pullover hoodie, dark navy jeans, gray sneakers, and a mustard-yellow treat pouch
 > clipped at her right hip. Calm and unhurried. She never looms over the dog: she
 > crouches or kneels to the dog's level, or stands straight and relaxed.
 >
@@ -50,7 +50,7 @@ teaches the opposite of what the words beside it say.
 
 ---
 
-## The eleven scenes
+## The twelve scenes
 
 ### 1. door-sound-01-setup — getting set up
 > The handler stands relaxed beside Lucy a few feet back from the closed front
@@ -143,6 +143,21 @@ teaches the opposite of what the words beside it say.
 
 **Must be true:** she is genuinely asleep and flat out, and the person is not interacting with her.
 
+### 12. door-greet-cover — the pause before the greeting
+> The cover of the Controlled Real Greeting activity, and the one image that has to
+> say what the whole activity is for. **The beat immediately before contact, with
+> everyone still.** Lucy sits squarely at the handler's left side, all four paws
+> down, leash hanging in a slack curve, looking up at the guest. The guest stands
+> **one step away, hands relaxed at his sides — not reaching, not crouching, not
+> touching her** — smiling down at her. The handler stands straight and easy beside
+> Lucy, holding the slack leash. The open front door and daylight are behind the
+> guest. Medium distance: all three in one close triangle, centered, filling the
+> frame, with the room readable around them.
+
+**Must be true:** nobody is touching anybody, and the leash is slack. The greeting has not started yet — that held moment *is* the activity, and it is what makes this different from the greeting itself.
+
+**Also true, because this one is a cover:** it is drawn at 240×180 on the activities list and the program map, so keep the three figures grouped tightly and centered, with nothing that matters near a corner or edge. It should read at a glance as "a person, a dog, and a door".
+
 ---
 
 ## Notes for the generator
@@ -155,3 +170,8 @@ errors that change what the picture teaches.
 The twelve images from 19 August are already correct and app-ready; they cover the
 doorbell, the knock, the guest arriving and leaving, the greeting, the jump, and
 the seated visit.
+
+Scene 12 exists to break a tie: `door-greet-cover` and `door-greet-08-petting`
+currently share one picture, because the delivered greeting image fits both. It is
+a duplicate rather than a mistake, and the app works either way — but the cover
+carries the activity everywhere it is listed, so it is worth its own moment.
