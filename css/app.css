@@ -6221,8 +6221,17 @@ svg.icon--solid {
   transition: opacity 160ms ease;
 }
 
-.avatar--preview:empty {
-  opacity: 0.35;
+/* The placeholder mark is quieter than a set of initials, because it stands
+   for an answer not yet given rather than one already there. */
+.avatar--preview svg {
+  width: 45%;
+  height: 45%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.55;
 }
 
 /* --- tablets ---------------------------------------------------------------

@@ -130,6 +130,16 @@ export const ICONS = {
     '<circle cx="4" cy="20" r="2"/>' +
     '</svg>',
 
+  // The person a badge stands for, before there is a picture of them —
+  // Lucide's `user`. A placeholder, and knowingly temporary: the setup is
+  // getting a set of avatars to choose from, and this is what holds the space
+  // until one has been picked.
+  user:
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>' +
+    '<circle cx="12" cy="7" r="4"/>' +
+    '</svg>',
+
   // Voice commands, on the controls that answer to one — `mic`. Small and
   // quiet: it marks a button that can also be spoken, so it has to read as a
   // note about the control rather than as a second thing to press.

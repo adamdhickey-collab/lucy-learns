@@ -125,17 +125,15 @@ function render() {
               autocomplete="given-name"
               enterkeyhint="next"
             />
-            ${/* Empty until there is a name to make initials from. Shown
-                  before that it is a grey disc with nothing in it, which
-                  reads as something failing to load rather than as a preview
-                  waiting to happen. */ ''}
-            <span
-              class="avatar avatar--preview"
-              aria-hidden="true"
-              data-initials
-              ${draft.person.trim() ? '' : 'hidden'}
-            >
-              ${initialsOf(draft.person)}
+            ${/* Present from the first frame, holding the space a picture
+                  will take. It was hidden until a name existed, because an
+                  empty grey disc reads as something failing to load rather
+                  than as a preview waiting to happen — but a mark inside it
+                  says the same thing without the absence, and this badge is
+                  about to stop being initials and start being a portrait the
+                  household picks. */ ''}
+            <span class="avatar avatar--preview" aria-hidden="true" data-initials>
+              ${draft.person.trim() ? initialsOf(draft.person) : icon('user')}
             </span>
           </div>
           <p class="section-note">
@@ -373,8 +371,9 @@ function mount(root) {
       }
       const initials = root.querySelector('[data-initials]');
       if (initials && key === 'person') {
-        initials.textContent = initialsOf(draft.person);
-        initials.hidden = !draft.person.trim();
+        const typed = draft.person.trim();
+        if (typed) initials.textContent = initialsOf(draft.person);
+        else initials.innerHTML = String(icon('user'));
       }
     });
 
