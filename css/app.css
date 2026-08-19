@@ -2480,6 +2480,19 @@ details.disclosure .disclosure-body {
   height: 56px;
 }
 
+/* Today's avatar is a button wrapped round a portrait, and nothing else:
+   no fill, no border, no padding. Anything it painted would show as a ring
+   behind the circle the portrait already draws. */
+.person-switch {
+  flex: none;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  line-height: 0;
+  cursor: pointer;
+}
+
 /* --- the handler's portrait -------------------------------------------------
    The one place the app plays. Everything after setup is counting repetitions
    honestly and reporting what they add up to, so the joke lives here, before

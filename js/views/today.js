@@ -114,8 +114,14 @@ function render() {
               away, so the avatar was a shortcut to somewhere already on
               screen. What it is good for is the thing it actually depicts:
               who the app currently thinks is holding it. */ ''}
+        ${/* Not `.avatar` itself any more. That class draws the teal circle
+              the initials used to sit on, and once the portrait moved in it
+              was a second circle behind the first — visible as a ring of teal
+              around every face on this screen. The button is a bare target
+              now and the portrait inside it draws the only circle there
+              is. */ ''}
         <button
-          class="avatar"
+          class="person-switch"
           type="button"
           data-person-switch
           aria-label="Practicing as ${person.name}. Change who is practicing."
