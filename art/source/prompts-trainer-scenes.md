@@ -1,10 +1,12 @@
 # Scene prompts — new trainer and new guest
 
-Five scenes still to redraw. Everything else in the app is now the new cast. These
-five are the last of it, and they have one thing in common: each is a picture of
-restraint — nothing being asked, nobody being greeted, a conversation with an empty
-porch — which is exactly the kind of moment a generator likes to fill in with
-action it was not asked for. The **Must be true** lines matter most here.
+Seven scenes to draw: five that have never been drawn, and two redraws where the
+composition is already right and only the handler's likeness is wrong.
+
+The five new ones have something in common — each is a picture of restraint. Nothing
+being asked, nobody being greeted, a conversation with an empty porch. That is
+exactly the kind of moment a generator fills in with action it was not asked for, so
+the **Must be true** lines carry the weight.
 
 Paste **Block A** and **Block B** ahead of each scene prompt. They are what keeps
 forty illustrations looking like one set rather than forty separate pictures, so
@@ -32,11 +34,18 @@ teaches the opposite of what the words beside it say.
 
 ## Block B — the cast
 
-> **THE HANDLER** — a woman in her early forties of East Asian descent, dark brown
-> hair in a low ponytail with a few loose strands at the temple, a warm olive-green
-> pullover hoodie, dark navy jeans, gray sneakers, and a mustard-yellow treat pouch
-> clipped at her right hip. Calm and unhurried. She never looms over the dog: she
-> crouches or kneels to the dog's level, or stands straight and relaxed.
+> **THE HANDLER** — **attach `trainer-reference.jpg` and match her face to it.** The
+> sheet is three views of her — three-quarter, near-frontal, profile — taken from
+> art already in the app. Copy that likeness. Do not restyle her, do not re-age her,
+> do not reinterpret her features, and do not substitute a generic type: this is one
+> specific person drawn repeatedly, and a description in words is not enough to hold
+> her steady across forty pictures.
+>
+> Everything else about her: early forties, dark brown hair worn in a low ponytail
+> with a few loose strands at the temple, a warm olive-green pullover hoodie, dark
+> navy jeans, gray sneakers, and a mustard-yellow treat pouch clipped at her right
+> hip. Calm and unhurried. She never looms over the dog: she crouches or kneels to
+> the dog's level, or stands straight and relaxed.
 >
 > **THE GUEST** — a man in his late forties, clear-framed glasses, a **black
 > baseball cap**, a **medium-blue zip-up hoodie** over a white tee, dark navy
@@ -52,7 +61,7 @@ teaches the opposite of what the words beside it say.
 
 ---
 
-## The five scenes
+## The seven scenes
 
 ### 1. door-sound-01-setup — getting set up
 > The handler stands relaxed beside Lucy a few feet back from the closed front
@@ -96,14 +105,47 @@ teaches the opposite of what the words beside it say.
 
 **Must be true:** she is genuinely asleep and flat out, and the person is not interacting with her.
 
+### 6. door-greet-05-reward — paying her while a guest waits
+> **A redraw for likeness only. The composition below was drawn and was right — keep
+> it and fix her face against the reference sheet.**
+>
+> The handler **crouches** beside Lucy's bed and feeds her a treat from a flat palm.
+> Lucy stays lying on the bed. At the **open front door in the background stands the
+> guest** — black cap, blue hoodie — waiting patiently just outside the threshold,
+> not entering, not looking at the dog. Daylight behind him.
+
+**Must be true:** the guest waits outside and ignores Lucy; the reward happens while she holds the bed with him in view.
+
+### 7. door-greet-cover — the pause before the greeting
+> **A redraw for likeness only. The composition below was drawn and was right — keep
+> it and fix her face against the reference sheet.**
+>
+> The cover of the Controlled Real Greeting activity, and the one image that has to
+> say what the whole activity is for. **The beat immediately before contact, with
+> everyone still.** Lucy sits squarely at the handler's left side, all four paws
+> down, leash hanging in a slack curve, looking up at the guest. The guest stands
+> **one step away, hands relaxed at his sides — not reaching, not crouching, not
+> touching her** — smiling down at her. The handler stands straight and easy beside
+> Lucy, holding the slack leash. The open front door and daylight are behind the
+> guest. Medium distance: all three in one close triangle, centered, filling the
+> frame, with the room readable around them.
+
+**Must be true:** nobody is touching anybody, and the leash is slack. The greeting has not started yet — that held moment *is* the activity, and it is what makes this different from the greeting itself.
+
+**Also true, because this one is a cover:** it is drawn at 240×180 on the activities list and the program map, so keep the three figures grouped tightly and centered, with nothing that matters near a corner or edge. It should read at a glance as "a person, a dog, and a door".
+
 ---
 
 ## Notes for the generator
 
-Ask for one scene per image, at 1448×1086. If a scene comes back with the guest in
-a plaid shirt, with a taut leash where the prompt says slack, or with the handler
-bending over the dog from above, it is worth regenerating — those three are the
-errors that change what the picture teaches.
+Attach `trainer-reference.jpg` to every request, not just the two redraws. It is
+the only thing holding her face steady, and the one time these prompts described her
+in words instead, the words drifted the character somewhere she should not have gone.
+
+Ask for one scene per image, at 1448×1086. Four errors are worth regenerating over:
+her likeness wandering off the reference sheet, the guest in a plaid shirt, a taut
+leash where the prompt says slack, and the handler bending over the dog from above.
+The last three change what the picture teaches; the first breaks the person.
 
 Seven scenes have left this list as they were drawn: five came out of the
 gaze-directed set (a crossing to the door, a kneeling treat on the bed, a settled
