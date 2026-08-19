@@ -718,7 +718,15 @@ function commandButtonLabel(id) {
   const label = commandLabel(id);
   const voiceOn = getVoice().listen && canListen() && micState !== 'blocked';
   if (!voiceOn) return html`${label}`;
-  return html`<span class="btn-voice">${icon('mic')}<span>${label}</span></span>`;
+  // The mark is hidden from assistive tech, as every decorative icon in this
+  // app is. It is not withholding anything: the button's name is the command
+  // word for word, so a screen reader already reads out exactly what to say,
+  // and the get-ready screen announces the vocabulary before practice starts.
+  // Announcing "microphone" before each of five buttons would be noise.
+  return html`<span class="btn-voice"
+    ><span class="btn-voice-mark" aria-hidden="true">${icon('mic')}</span
+    ><span>${label}</span></span
+  >`;
 }
 
 function stepScreen(activity, level) {

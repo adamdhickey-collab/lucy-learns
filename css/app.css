@@ -1991,7 +1991,32 @@ details.disclosure .disclosure-body {
 .tally-miss {
   min-height: 76px;
   border-radius: var(--r-lg);
-  text-wrap: balance;
+}
+
+/* Why the answer labels no longer balance their line breaks.
+   ---------------------------------------------------------------------------
+   `text-wrap: balance` was here from when these buttons carried longer words.
+   With a mic set before the label it began breaking "Not that one" over two
+   lines while "Went well" stayed on one, which makes two buttons that are
+   deliberately identical look like they are not — and that difference in
+   weight is the entire reason they were made equal: the honest answer must
+   not read as the lesser one. Dropping balance is the fix; from 360px up both
+   phrases sit on one line on their own.
+
+   Forcing `nowrap` was the tempting next step and it was wrong. A grid track
+   cannot shrink below a line that refuses to break, so at 320px the pair grew
+   to 334px inside a 320px screen and ran off the edge — invisibly, because
+   the player's scroller clipped it. Below that width the label may wrap, the
+   buttons stay the same size as each other, and nothing leaves the screen. */
+.tally-answers > .btn {
+  min-width: 0;
+  /* Half the inline padding a full-width button takes. That padding exists to
+     keep a label off the edges of a button that spans the screen; in a 2-up
+     grid with the text centred anyway it only narrows the line. It was
+     costing 48px of a 168px button, which left "Not that one" two pixels
+     short of fitting and wrapping it to two lines beside a one-line "Went
+     well" — the two are meant to look identical. */
+  padding-inline: var(--s-3);
 }
 
 /* The running count during the rep cycle: one quiet line under the step, not
@@ -2290,11 +2315,25 @@ details.disclosure .disclosure-body {
   justify-content: center;
 }
 
+/* Deliberately not the 20px a button icon takes elsewhere. Those are a
+   control's own mark, set before its label and equal to it in weight; this is
+   a footnote about the label, so it matches the text's size and reads as part
+   of the phrase rather than as a second thing.
+
+   Lightened with stroke weight rather than opacity, which is the lever the
+   icon set already uses to vary emphasis by context — the tab bar runs 1.75
+   and thickens to 2.25 when current. Fading it instead would have cost
+   contrast on the filled answer button, where the mark is white on teal and
+   has none to spare. `flex` and the stroke colour come from `.btn svg`. */
+.btn-voice-mark {
+  display: inline-flex;
+  flex: none;
+}
+
 .btn-voice svg {
   width: 1em;
   height: 1em;
-  flex: none;
-  opacity: 0.75;
+  stroke-width: 1.75;
 }
 
 /* --- diagnostics -----------------------------------------------------------
