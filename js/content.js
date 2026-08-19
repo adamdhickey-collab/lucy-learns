@@ -473,16 +473,15 @@ export const IMAGES = withThumb({
  * ponytail who appears in thirty scenes — which is why she is the default. It
  * is the one choice that makes the pictures agree with the profile.
  *
- * The second keeps its full name, "Adam Pixel Whisperer", as delivered. I had
- * trimmed the first name off on the reasoning that a household typing their
- * own name into the field above should not meet a stranger's in the list
- * beside it — overruled, and rightly: these are characters rather than
- * suggestions, and a character with a first name is funnier than a job title.
- * Nobody reads "Duke of Drool" as an instruction either.
+ * The second is "Pixel Whisperer". It arrived as "Adam Pixel Whisperer" and
+ * went back and forth: trimmed here, restored on the grounds that a character
+ * with a first name is funnier than a job title, and trimmed again once the
+ * portrait behind it stopped being a likeness of anybody in particular. The
+ * name followed the picture, which is the right order for the two to move in.
  */
 export const PERSON_AVATARS = [
   { id: 'handler', name: 'The Handler', src: 'img/avatars/people/person-01.jpg' },
-  { id: 'pixel', name: 'Adam Pixel Whisperer', src: 'img/avatars/people/person-02.jpg' },
+  { id: 'pixel', name: 'Pixel Whisperer', src: 'img/avatars/people/person-02.jpg' },
   { id: 'professor', name: 'Professor Fetch', src: 'img/avatars/people/person-03.jpg' },
   { id: 'disco', name: 'Disco Dog Coach', src: 'img/avatars/people/person-04.jpg' },
   { id: 'zen', name: 'Zen Leash Master', src: 'img/avatars/people/person-05.jpg' },
