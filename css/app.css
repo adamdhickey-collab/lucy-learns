@@ -6574,64 +6574,30 @@ svg.icon--solid {
     --nav-h: calc(68px + env(safe-area-inset-bottom));
   }
 
-  /* The step picture is the app's best asset and the reason to be on a bigger
-     screen at all. It still has to leave room for the instruction underneath:
-     at 44rem a 4:3 frame is 528px tall, which on a laptop pushes the sentence
-     the picture is illustrating below the fold.
+  /* The step picture and Today's hero are deliberately absent from this block.
+     ---------------------------------------------------------------------------
+     Both used to be overridden here and both overrides are gone, because a
+     bigger screen should show the same picture as a phone rather than a
+     different one. Two attempts are worth recording so neither comes back by
+     accident:
 
-     The frame narrows to meet the height. It used to be the picture that gave
-     way — `max-height` plus `cover` — and that took the same bite out of every
-     illustration on the screen: 46vh of a 4:3 frame is nine percent off the
-     top and nine off the bottom, which on a laptop is the top of a head and a
-     pair of shoes. The phone, which never hits this rule, kept the whole
-     composition, so the big screen was the one showing less. The
-     short-viewport rule two thousand lines up refuses the same trade in the
-     same words. Capping the width keeps the picture whole and hangs it in a
-     smaller frame instead.
+     `max-height: 46vh` with `cover` on the step figure took nine percent off
+     the top of every illustration and nine off the bottom — the top of a head
+     and a pair of shoes — on the one screen with the most room for them.
+     Capping the width instead kept the whole composition but hung it in a
+     frame narrower than the text under it, which reads as a picture that has
+     come loose from its own column. The full-width 4:3 is what the phone
+     shows, and it is what this shows.
 
-     4/3 in the multiplier rather than each figure's own ratio: the welcome
-     figure is 5/4 and comes out a few vh taller under this cap, which is slack
-     the first-run screen has and a step in a session does not. */
-  .step-figure {
-    max-width: calc(46vh * 4 / 3);
-    margin-inline: auto;
-  }
+     The cost is the fold, and it is accepted rather than solved: at 44rem a
+     4:3 frame is 528px tall and the instruction under it sits low on a laptop.
+     A short scroll on a desktop is cheaper than a different crop per device. */
 
   /* A session on a tablet is usually propped up rather than held, so the
      controls sit where a hand reaches rather than spanning the whole width. */
   .player-foot .btn-row,
   .player-inner {
     margin-inline: auto;
-  }
-
-  /* Today's illustration stops being a letterbox.
-     -------------------------------------------------------------------------
-     16:7 is a phone budget. It exists because Today has to fit a greeting, the
-     program row and a whole activity card with its button above the tab bar on
-     an 812pt screen, and the picture is the only element there that can give up
-     height without losing information. None of that is true of an iPad held
-     upright, which was still being handed the phone's crop.
-
-     What the band costs is visible in the art brief, which derived the rule
-     "nobody stands in a cover" from it — a standing adult and a floor-level bed
-     do not both fit inside 16:7. `door-greet-cover` is the cover that had to
-     break the rule to stop the four looking like one another, and on Today it
-     was two people cropped at the shoulders and a dog cut off at the ribs.
-
-     16:10 shows five-sixths of the master instead of four-sevenths, which is
-     the whole of everyone in every cover down to the ankles. The focus moves up
-     with it: `42%` was picked to hold a thin band near the middle of the frame,
-     and against a taller window it starts letting the ceiling in and taking the
-     floor out. 15% sits the crop just under the top of the tallest head in the
-     set.
-
-     The cost is real and worth stating: on a laptop window shorter than about
-     1000px this puts "Start session" a short scroll below the fold. Faces win
-     that trade — the button is where the layout says it is and it is the only
-     teal thing on the screen, while a headless illustration is simply wrong. */
-  .hero img {
-    aspect-ratio: 16 / 10;
-    object-position: center 15%;
   }
 
   /* Sheets stop being full-bleed slabs on a screen this size. */
