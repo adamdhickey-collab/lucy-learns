@@ -2395,6 +2395,141 @@ details.disclosure .disclosure-body {
   margin-top: var(--s-3);
 }
 
+/* Fourteen faces, four across. At three the grid ran to five rows and pushed
+   its own confirm button off the bottom of the sheet; at four it is four rows
+   and the faces are still large enough to tell apart, which is the only job
+   the tile has. */
+/* Doubled class rather than trusting source order: `.avatar-grid` sets three
+   columns several hundred lines below this, and at equal specificity that
+   would win. */
+.avatar-grid.avatar-grid--people {
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--s-2);
+}
+
+/* The sheet scrolls; this does not go with it. */
+.sheet-actions {
+  position: sticky;
+  bottom: 0;
+  margin-top: var(--s-4);
+  padding-top: var(--s-3);
+  background: var(--surface);
+  box-shadow: 0 -12px 16px -12px rgba(35, 50, 57, 0.18);
+}
+
+/* A badge that holds a picture instead of two letters. The initials version
+   centres text; this one has to clip an image to the same circle at every
+   size the badge is used. */
+.avatar--photo {
+  padding: 0;
+  overflow: hidden;
+  background: var(--surface-sunken);
+}
+
+.avatar--photo img {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* --- the handler's portrait -------------------------------------------------
+   The one place the app plays. Everything after setup is counting repetitions
+   honestly and reporting what they add up to, so the joke lives here, before
+   any of that starts, and nowhere near a screen about how the dog is doing. */
+
+.avatar-pick {
+  flex: none;
+  width: 76px;
+  height: 76px;
+  position: relative;
+  padding: 0;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 50%;
+  background: var(--surface-sunken);
+  cursor: pointer;
+}
+
+.avatar-pick img {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Sits on the rim rather than over the face. */
+.avatar-pick-mark {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--text-on-dark);
+  box-shadow: 0 0 0 2px var(--background);
+}
+
+.avatar-pick-mark svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.setup-avatar-name strong {
+  color: var(--text-primary);
+}
+
+/* The name, given the room a name deserves.
+   ---------------------------------------------------------------------------
+   Set in the display face at heading size, because "Oracle of Obedience" is
+   the reason to open this sheet a second time and a caption under a tile
+   would have thrown it away. It is the only text on the screen that arrives
+   rather than appears. */
+.avatar-name-plate {
+  margin: var(--s-3) 0 0;
+  min-height: 2.2em;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--primary-dark);
+  font-variation-settings: 'SOFT' 40, 'WONK' 1, 'opsz' 24;
+}
+
+.avatar-name-plate.is-new {
+  animation: name-arrive 320ms var(--spring) both;
+}
+
+@keyframes name-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The name is information; the way it lands is not. */
+@media (prefers-reduced-motion: reduce) {
+  .avatar-name-plate.is-new {
+    animation: none;
+  }
+}
+
 /* --- fallback sheet ------------------------------------------------------- */
 
 .sheet-backdrop {

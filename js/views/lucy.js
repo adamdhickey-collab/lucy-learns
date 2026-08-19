@@ -1,4 +1,4 @@
-import { PROGRAMS, TRAINER, DOG_AVATARS } from '../content.js';
+import { PROGRAMS, TRAINER, DOG_AVATARS, PERSON_AVATARS, personAvatar } from '../content.js';
 import { downloadCsv } from './report.js';
 import {
   getState,
@@ -9,6 +9,7 @@ import {
   clearAll,
   getDog,
   setDog,
+  setPersonAvatar,
   getPerson,
   getPeople,
   startFresh,
@@ -25,9 +26,10 @@ import {
   toast,
   confirmSheet,
   avatarSheet,
+  personAvatarSheet,
   dogSheet,
   refreshApp,
-  initialsOf,
+  personPortrait,
   firstNameOf,
 } from '../ui.js';
 
@@ -108,8 +110,20 @@ function render() {
               </small>
             </span>
             <span class="value">
-              <span class="avatar avatar--sm" aria-hidden="true">${initialsOf(person.name)}</span>
+              ${personPortrait(person)}
             </span>
+          </button>
+          ${/* Its own row, because the row above switches people and this
+                changes the picture of the one already chosen — two different
+                answers to a tap, and nesting a button inside a button is not
+                an option anyway. The name is here rather than in the row
+                above, where it would compete with the person's own. */ ''}
+          <button class="setting-row" type="button" data-person-avatar>
+            <span>
+              Your avatar
+              <small>${personAvatar(person.avatar).name}</small>
+            </span>
+            <span class="value">${icon('pencil')}</span>
           </button>
         </div>
       </section>
@@ -283,6 +297,18 @@ function mount(root) {
         // that happens on a screen the household is not looking at. Better to
         // say so than to have them find it mid-session.
         toast(renamed ? `Now ${getDog().name}, including the attention cue` : 'Breed updated');
+      },
+    });
+  });
+
+  on('[data-person-avatar]', 'click', () => {
+    personAvatarSheet({
+      options: PERSON_AVATARS,
+      currentId: getPerson().avatar,
+      onChoose: (chosen) => {
+        setPersonAvatar(chosen.id);
+        toast(`You are ${chosen.name}`);
+        refreshApp();
       },
     });
   });

@@ -458,6 +458,46 @@ export const IMAGES = withThumb({
  * control matches on the accessible name: somebody saying "Golden" should
  * land on the golden retriever.
  */
+/**
+ * The handler's own portrait, and the name that comes with it.
+ *
+ * The names are the point, not a label on a picture. "Barkitect" and "Oracle
+ * of Obedience" are the reason this screen is worth opening twice, and a
+ * household that has been told their dog is failing at the front door can
+ * stand to be handed something light on the way in. They are also the one
+ * moment of play the app allows itself: everything after this is counting
+ * repetitions honestly, so the joke belongs here, before any of that starts,
+ * and nowhere near a screen that reports how the dog is doing.
+ *
+ * The first is the handler from the illustrations — the same green hoodie and
+ * ponytail who appears in thirty scenes — which is why she is the default. It
+ * is the one choice that makes the pictures agree with the profile.
+ *
+ * The second was delivered as "Adam Pixel Whisperer". The name is kept and
+ * the first name dropped: this app is handed to one household at a time and
+ * the person typing their own name into the field above should not meet
+ * somebody else's in the list beside it.
+ */
+export const PERSON_AVATARS = [
+  { id: 'handler', name: 'The Handler', src: 'img/avatars/people/person-01.jpg' },
+  { id: 'pixel', name: 'Pixel Whisperer', src: 'img/avatars/people/person-02.jpg' },
+  { id: 'professor', name: 'Professor Fetch', src: 'img/avatars/people/person-03.jpg' },
+  { id: 'disco', name: 'Disco Dog Coach', src: 'img/avatars/people/person-04.jpg' },
+  { id: 'zen', name: 'Zen Leash Master', src: 'img/avatars/people/person-05.jpg' },
+  { id: 'detective', name: 'Treat Detective', src: 'img/avatars/people/person-06.jpg' },
+  { id: 'barkitect', name: 'Barkitect', src: 'img/avatars/people/person-07.jpg' },
+  { id: 'rockstar', name: 'Agility Rockstar', src: 'img/avatars/people/person-08.jpg' },
+  { id: 'cowboy', name: 'Fetch Cowboy', src: 'img/avatars/people/person-09.jpg' },
+  { id: 'cosmonaut', name: 'Canine Cosmonaut', src: 'img/avatars/people/person-10.jpg' },
+  { id: 'sage', name: 'Woodland Sage', src: 'img/avatars/people/person-11.jpg' },
+  { id: 'aerobics', name: 'Retro Aerobics Ace', src: 'img/avatars/people/person-12.jpg' },
+  { id: 'oracle', name: 'Oracle of Obedience', src: 'img/avatars/people/person-13.jpg' },
+  { id: 'duke', name: 'Duke of Drool', src: 'img/avatars/people/person-14.jpg' },
+];
+
+export const personAvatar = (id) =>
+  PERSON_AVATARS.find((a) => a.id === id) || PERSON_AVATARS[0];
+
 export const DOG_AVATARS = [
   { id: 'lab-black', label: 'Black Labrador', short: 'Black Lab', src: 'img/avatars/dog-01.jpg' },
   { id: 'golden', label: 'Golden Retriever', short: 'Golden', src: 'img/avatars/dog-02.jpg' },

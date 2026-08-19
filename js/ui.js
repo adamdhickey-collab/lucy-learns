@@ -1,3 +1,4 @@
+import { personAvatar } from './content.js';
 // Small rendering helpers. No framework: template strings plus event delegation.
 
 /** Escape anything the household typed before it goes back into the DOM. */
@@ -651,6 +652,98 @@ export function dogSheet({ name, onSave }) {
  * @param {string}   [opts.currentSrc]
  * @param {Function} opts.onPick    (option) => void
  */
+/**
+ * Choose a portrait, and meet the name that comes with it.
+ *
+ * The dog picker closes on the tap, because there the picture is the whole
+ * answer and holding somebody there afterwards would be ceremony. Here the
+ * name is half of it — "Barkitect", "Oracle of Obedience" — and closing
+ * instantly would fire the punchline into an empty room. So a tap chooses,
+ * the name arrives above the grid, and a second tap confirms. One extra tap,
+ * once, on the only screen in this app that is allowed to be enjoyed rather
+ * than got through.
+ *
+ * The name is announced politely rather than assertively: `aria-live` on the
+ * plate means somebody moving through the grid hears each name as they land
+ * on it, which is the same experience by a different route.
+ */
+export function personAvatarSheet({ options, currentId, onChoose }) {
+  const backdrop = document.createElement('div');
+  backdrop.className = 'sheet-backdrop';
+  let selected = options.find((o) => o.id === currentId) || options[0];
+
+  const tile = (o) => `
+    <li>
+      <button
+        class="avatar-choice ${o.id === selected.id ? 'avatar-choice--active' : ''}"
+        type="button"
+        role="radio"
+        aria-checked="${o.id === selected.id}"
+        aria-label="${esc(o.name)}"
+        data-pick="${esc(o.id)}"
+      >
+        <img src="${esc(o.src)}" alt="" width="400" height="400" />
+      </button>
+    </li>`;
+
+  backdrop.innerHTML = `
+    <div class="sheet sheet--dialog" role="dialog" aria-modal="true" aria-labelledby="person-avatar-title">
+      <h2 id="person-avatar-title">Choose your avatar</h2>
+      <p class="avatar-name-plate" data-name aria-live="polite">${esc(selected.name)}</p>
+      <ul class="avatar-grid avatar-grid--people" role="radiogroup" aria-labelledby="person-avatar-title">
+        ${options.map(tile).join('')}
+      </ul>
+      ${/* Pinned to the foot of the sheet. Fourteen faces is five rows at
+            three across and four at four, and either way the row that
+            confirms the choice was below the fold — on the one screen where
+            somebody is enjoying themselves and not looking for a button. */ ''}
+      <div class="btn-row sheet-actions">
+        <button class="btn btn--quiet" type="button" data-close>Cancel</button>
+        <button class="btn" type="button" data-confirm>That is me</button>
+      </div>
+    </div>`;
+
+  let release = () => {};
+  const close = () => {
+    release();
+    backdrop.remove();
+  };
+
+  const plate = backdrop.querySelector('[data-name]');
+  backdrop.querySelectorAll('[data-pick]').forEach((button) => {
+    button.addEventListener('click', () => {
+      selected = options.find((o) => o.id === button.dataset.pick) || selected;
+      backdrop.querySelectorAll('[data-pick]').forEach((other) => {
+        const on = other === button;
+        other.classList.toggle('avatar-choice--active', on);
+        other.setAttribute('aria-checked', String(on));
+      });
+      plate.textContent = selected.name;
+      // Replayed rather than transitioned, so tapping along the row gives the
+      // name a fresh arrival each time instead of one long crossfade.
+      plate.classList.remove('is-new');
+      void plate.offsetWidth;
+      plate.classList.add('is-new');
+    });
+  });
+
+  backdrop.querySelector('[data-confirm]').addEventListener('click', () => {
+    close();
+    onChoose(selected);
+  });
+  backdrop.querySelector('[data-close]').addEventListener('click', close);
+  backdrop.addEventListener('click', (e) => {
+    if (e.target === backdrop) close();
+  });
+
+  document.body.appendChild(backdrop);
+  release = trapModal(backdrop, {
+    onEscape: close,
+    initialFocus: backdrop.querySelector('.avatar-choice--active') || backdrop.querySelector('[data-pick]'),
+  });
+  return close;
+}
+
 export function avatarSheet({ options, currentSrc, onPick }) {
   const backdrop = document.createElement('div');
   backdrop.className = 'sheet-backdrop';
@@ -753,7 +846,7 @@ export function personSheet({ people, activeId, onSelect, onAdd, onRename, onRem
         aria-checked="${p.id === activeId}"
         data-person="${esc(p.id)}"
       >
-        <span class="avatar avatar--sm" aria-hidden="true">${esc(initialsOf(p.name))}</span>
+        ${personPortrait(p)}
         <span class="person-row-name">${esc(p.name)}</span>
         ${p.id === activeId ? `<span class="person-row-mark">${ICONS.check}</span>` : ''}
       </button>
@@ -997,6 +1090,24 @@ export function focusHeading(root, _params, options = {}) {
 export function firstNameOf(name) {
   const first = String(name || '').trim().split(/\s+/)[0];
   return first || '';
+}
+
+/**
+ * A person's portrait, at whatever size the caller's class asks for.
+ *
+ * One helper rather than three copies, because these appear in three places
+ * that already drifted once: the Today header, the profile row and the person
+ * switcher each drew their own initials. Decorative in every one of them —
+ * the name is always beside it or in the control's own label, so alt text
+ * here would say it twice.
+ */
+export function personPortrait(person, className = 'avatar avatar--sm') {
+  const avatar = personAvatar(person && person.avatar);
+  return raw(
+    `<span class="${esc(className)} avatar--photo" aria-hidden="true">` +
+      `<img src="${esc(avatar.src)}" alt="" width="400" height="400" />` +
+      `</span>`
+  );
 }
 
 export function initialsOf(fullName) {

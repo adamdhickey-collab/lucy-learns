@@ -6,11 +6,25 @@
 // to that array alone: the dots, the "step N of M" label, the Skip target, and
 // the last-panel button copy all follow.
 
-import { IMAGES, PROGRAMS, TRAINER } from '../content.js';
-import { completeOnboarding, seedDemoSessions, setDog, setPersonName } from '../store.js';
+import { IMAGES, PROGRAMS, TRAINER, PERSON_AVATARS, personAvatar } from '../content.js';
+import {
+  completeOnboarding,
+  seedDemoSessions,
+  setDog,
+  setPersonAvatar,
+  setPersonName,
+} from '../store.js';
 import { programProgress } from '../program.js';
 import { routePreview } from '../programui.js';
-import { html, join, icon, raw, initialsOf, focusOnNavigate, withTransition } from '../ui.js';
+import {
+  html,
+  join,
+  icon,
+  raw,
+  focusOnNavigate,
+  personAvatarSheet,
+  withTransition,
+} from '../ui.js';
 
 let step = 0;
 
@@ -21,11 +35,11 @@ let step = 0;
  * abandoning the welcome half way leaves no trace — the same promise the demo
  * choice already made.
  */
-let draft = { person: '', dog: '' };
+let draft = { person: '', dog: '', avatar: 'handler' };
 
 export const restart = () => {
   step = 0;
-  draft = { person: '', dog: '' };
+  draft = { person: '', dog: '', avatar: 'handler' };
 };
 
 
@@ -125,20 +139,30 @@ function render() {
               autocomplete="given-name"
               enterkeyhint="next"
             />
-            ${/* Present from the first frame, holding the space a picture
-                  will take. It was hidden until a name existed, because an
-                  empty grey disc reads as something failing to load rather
-                  than as a preview waiting to happen — but a mark inside it
-                  says the same thing without the absence, and this badge is
-                  about to stop being initials and start being a portrait the
-                  household picks. */ ''}
-            <span class="avatar avatar--preview" aria-hidden="true" data-initials>
-              ${draft.person.trim() ? initialsOf(draft.person) : icon('user')}
-            </span>
+            ${/* A control, not a preview. Initials were a consequence of
+                  the name — nothing to decide, so nothing to touch — and a
+                  portrait is a choice, which means it has to look like one
+                  from the first frame rather than appear once a field is
+                  filled. */ ''}
+            <button
+              class="avatar-pick"
+              type="button"
+              data-pick-avatar
+              aria-label="Choose your avatar. ${personAvatar(draft.avatar).name} selected."
+            >
+              <img src="${personAvatar(draft.avatar).src}" alt="" width="400" height="400" />
+              <span class="avatar-pick-mark" aria-hidden="true">${icon('pencil')}</span>
+            </button>
           </div>
-          <p class="section-note">
-            The app greets you by your first name and puts your initials on the
-            avatar. Both are easy to change later.
+          ${/* The name of the picture, under the picture, where it reads
+                as a caption rather than as a second thing to fill in. */ ''}
+          ${/* No article in front of the name. "The Barkitect" is right and
+                "the Professor Fetch" is not, so any article the app supplies
+                is wrong for some of the fourteen — each name carries its own
+                or does without. */ ''}
+          <p class="section-note setup-avatar-name">
+            You are <strong data-avatar-name>${personAvatar(draft.avatar).name}</strong>.
+            Tap the picture to change it.
           </p>
         </div>
       `,
@@ -326,11 +350,12 @@ function finish(withDemo) {
     // line on the profile than a description somebody else's app wrote about
     // a dog it has never met. The profile renders it only when present.
     setDog({ name: dog, about: '' });
+    setPersonAvatar(draft.avatar);
   }
   if (withDemo) seedDemoSessions({ force: true });
   completeOnboarding();
   step = 0;
-  draft = { person: '', dog: '' };
+  draft = { person: '', dog: '', avatar: 'handler' };
   location.hash = '#/today';
 }
 
@@ -369,13 +394,29 @@ function mount(root) {
         const ready = step === PERSON_STEP ? draft.person.trim() : draft.dog.trim();
         next.disabled = !ready;
       }
-      const initials = root.querySelector('[data-initials]');
-      if (initials && key === 'person') {
-        const typed = draft.person.trim();
-        if (typed) initials.textContent = initialsOf(draft.person);
-        else initials.innerHTML = String(icon('user'));
-      }
+
     });
+
+  on('[data-pick-avatar]', 'click', () => {
+    personAvatarSheet({
+      options: PERSON_AVATARS,
+      currentId: draft.avatar,
+      onChoose: (chosen) => {
+        draft.avatar = chosen.id;
+        // In place: a re-render would take the caret out of the name field,
+        // and somebody who has typed half a name and gone to pick a face
+        // should come back to it exactly as they left it.
+        const img = root.querySelector('[data-pick-avatar] img');
+        if (img) img.src = chosen.src;
+        const label = root.querySelector('[data-avatar-name]');
+        if (label) label.textContent = chosen.name;
+        const button = root.querySelector('[data-pick-avatar]');
+        if (button) {
+          button.setAttribute('aria-label', `Choose your avatar. ${chosen.name} selected.`);
+        }
+      },
+    });
+  });
 
   field('[data-person]', 'person');
   field('[data-dog]', 'dog');

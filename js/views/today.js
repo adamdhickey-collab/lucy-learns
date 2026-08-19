@@ -16,7 +16,16 @@ import {
 import { programProgress } from '../program.js';
 import { programStrip } from '../programui.js';
 import { openPersonSwitcher } from '../person.js';
-import { html, raw, join, icon, badge, initialsOf, firstNameOf, focusHeading } from '../ui.js';
+import {
+  html,
+  raw,
+  join,
+  icon,
+  badge,
+  personPortrait,
+  firstNameOf,
+  focusHeading,
+} from '../ui.js';
 
 // One greeting, at any hour. The three time-of-day variants were a clock
 // reading dressed up as warmth: they changed the heading three times a day
@@ -111,7 +120,7 @@ function render() {
           data-person-switch
           aria-label="Practicing as ${person.name}. Change who is practicing."
         >
-          <span aria-hidden="true">${initialsOf(person.name)}</span>
+          ${personPortrait(person, 'avatar')}
         </button>
       </div>
 

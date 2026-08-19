@@ -41,7 +41,7 @@ const emptyState = () => ({
    * is the shape the data has always had; only the UI for it was missing.
    */
   dog: { ...DOG_DEFAULT },
-  people: [{ id: HANDLER_DEFAULT.id, name: HANDLER_DEFAULT.fullName }],
+  people: [{ id: HANDLER_DEFAULT.id, name: HANDLER_DEFAULT.fullName, avatar: 'handler' }],
   activePersonId: HANDLER_DEFAULT.id,
   sessions: [],
   incidents: [],
@@ -114,6 +114,11 @@ function migrate(next) {
   const photo = next.dog && next.dog.photo;
   if (typeof photo === 'string' && /^img\/avatars\/dog-\d+\.png$/.test(photo)) {
     next.dog = { ...next.dog, photo: photo.replace(/\.png$/, '.jpg') };
+  }
+  // People predate having a portrait. Everyone without one gets the handler
+  // from the illustrations, which is the same answer a fresh install gives.
+  if (Array.isArray(next.people)) {
+    next.people = next.people.map((p) => (p && p.avatar ? p : { ...p, avatar: 'handler' }));
   }
   return next;
 }
@@ -319,6 +324,14 @@ export function setPersonName(name) {
  * the next session is logged under, so fixing a spelling would quietly move
  * attribution. An id costs nothing and avoids that entirely.
  */
+/** Give the active person a portrait. */
+export function setPersonAvatar(avatarId) {
+  const person = getPerson();
+  if (!person) return;
+  person.avatar = avatarId;
+  persist();
+}
+
 export function renamePerson(id, name) {
   const person = state.people.find((p) => p.id === id);
   if (!person) return false;
@@ -338,7 +351,7 @@ export function renamePerson(id, name) {
  * the wrong one, which is the single thing this feature exists to get right.
  */
 export function addPerson(name) {
-  const person = { id: uid(), name: name.trim() };
+  const person = { id: uid(), name: name.trim(), avatar: 'handler' };
   state.people.push(person);
   state.activePersonId = person.id;
   persist();
