@@ -296,7 +296,7 @@ function mount(root) {
         // also rewrites the attention cue — "Lucy!" becomes "Rufus!" — and
         // that happens on a screen the household is not looking at. Better to
         // say so than to have them find it mid-session.
-        toast(renamed ? `Now ${getDog().name}, including the attention cue` : 'Breed updated');
+        toast(renamed ? `Now ${getDog().name}, including the attention cue` : 'Name updated');
       },
     });
   });

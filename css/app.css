@@ -3578,14 +3578,30 @@ details.disclosure .disclosure-body {
 
 .toast {
   position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
+  /* Centred by layout, not by transform.
+     -------------------------------------------------------------------------
+     It used to be `left: 50%` pulled back with `translateX(-50%)`, which makes
+     the centring and the entrance animation fight over one property. The
+     animation's first frame sets `translateY` and drops the X with it, so
+     every toast slid in from half a screen right of where it belongs; and the
+     reduced-motion rule sets `transform: none`, which leaves it stuck there
+     for anybody who has that switched on. Worse than off-centre: pinned at
+     the 50% mark it only had half the screen to grow into, so a sentence that
+     fits on two lines was wrapping onto four.
+
+     Nothing here is a transform now, so the animation can have that property
+     to itself and reduced motion can take it away without moving anything. */
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  width: fit-content;
   bottom: calc(var(--nav-h) + var(--s-5));
   z-index: 70;
   display: flex;
   align-items: center;
   gap: var(--s-3);
   max-width: calc(100vw - var(--s-6));
+  /* No transition on `bottom`; see the lift rule below. */
   background: var(--text-primary);
   color: var(--text-on-dark);
   padding: var(--s-3) var(--s-3) var(--s-3) var(--s-4);
@@ -3595,9 +3611,26 @@ details.disclosure .disclosure-body {
   animation: sheet-in 0.2s ease;
 }
 
+/* Out of the install hint's way.
+   ---------------------------------------------------------------------------
+   Both live in the same strip above the tab bar, and both are dark, so a
+   toast raised while the hint was up landed directly on top of it — one dark
+   pill on another dark slab, which is the layout that looked wrong. The toast
+   wins on z-index, so nothing was hidden; it just read as a mess.
+
+   A sibling selector rather than a flag in JavaScript, because the hint
+   already answers to `hidden` and the toast is always appended after it. When
+   the hint is dismissed the next toast simply comes back down. */
+.install-hint:not([hidden]) ~ .toast {
+  bottom: calc(var(--nav-h) + var(--s-5) + 68px);
+}
+
 .toast-action {
-  min-height: 36px;
-  padding: 0 var(--s-3);
+  /* The one control in the app that is on screen for seven seconds and then
+     gone. It was 36px, under the 48 everything else here answers to, on the
+     button somebody is reaching for in a hurry to undo something. */
+  min-height: var(--tap);
+  padding: 0 var(--s-4);
   border: 0;
   border-radius: var(--r-pill);
   background: rgba(255, 255, 255, 0.16);
