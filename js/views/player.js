@@ -874,17 +874,33 @@ function stepScreen(activity, level) {
                     )}
                   </p>`
                 : ''}
+              ${/* Miss on the left, went-well on the right.
+                    -----------------------------------------------------------
+                    Every other pair of buttons in this app puts the quiet one
+                    on the left and the one that carries on to the right — the
+                    footer's Previous and Next, Keep going and End and log,
+                    Cancel and Confirm. These two were the single exception,
+                    and an app that puts its main action on the right four
+                    times and on the left once has not made a point, it has
+                    made a mistake somebody will pay for at speed.
+
+                    It does hand the common answer the easier thumb, which is
+                    the bias these buttons were rebuilt to remove. That fix
+                    was about a gap of a whole scroll, though, not of one
+                    thumb-width between adjacent controls, and the things
+                    that carried it — identical size, identical weight, the
+                    yardstick sitting above both — are all still here. The
+                    only difference left between them is fill.
+
+                    "Went well", not "That went well": it is the exact phrase
+                    the criteria above define, and the longer version wrapped
+                    at half width. */ ''}
               <div class="tally-answers">
-                ${/* "Went well", not "That went well": it is the exact phrase
-                      the yardstick above it defines, and at half width the
-                      longer version wrapped to two lines beside a
-                      single-line "Not that one", which made two deliberately
-                      equal buttons look unequal again. */ ''}
-                <button class="btn btn--lg tally-good" type="button" data-rep="1">
-                  ${commandButtonLabel('good')}
-                </button>
                 <button class="btn btn--quiet tally-miss" type="button" data-rep="0">
                   ${commandButtonLabel('miss')}
+                </button>
+                <button class="btn btn--lg tally-good" type="button" data-rep="1">
+                  ${commandButtonLabel('good')}
                 </button>
               </div>
             </div>`

@@ -116,7 +116,6 @@ function render() {
               type="text"
               data-person
               value="${draft.person}"
-              placeholder="Fabiola"
               ${/* Generous enough for any real name, short enough that the
                     greeting and the CSV cannot be handed something absurd.
                     The heading scales down for long names; it does not scale
@@ -126,7 +125,16 @@ function render() {
               autocomplete="given-name"
               enterkeyhint="next"
             />
-            <span class="avatar avatar--preview" aria-hidden="true" data-initials>
+            ${/* Empty until there is a name to make initials from. Shown
+                  before that it is a grey disc with nothing in it, which
+                  reads as something failing to load rather than as a preview
+                  waiting to happen. */ ''}
+            <span
+              class="avatar avatar--preview"
+              aria-hidden="true"
+              data-initials
+              ${draft.person.trim() ? '' : 'hidden'}
+            >
               ${initialsOf(draft.person)}
             </span>
           </div>
@@ -152,7 +160,6 @@ function render() {
             type="text"
             data-dog
             value="${draft.dog}"
-            placeholder="Lucy"
             maxlength="24"
             autocapitalize="words"
             ${/* Off, or the browser offers the human names it has saved for
@@ -387,7 +394,10 @@ function mount(root) {
         next.disabled = !ready;
       }
       const initials = root.querySelector('[data-initials]');
-      if (initials && key === 'person') initials.textContent = initialsOf(draft.person);
+      if (initials && key === 'person') {
+        initials.textContent = initialsOf(draft.person);
+        initials.hidden = !draft.person.trim();
+      }
     });
 
   field('[data-person]', 'person');
