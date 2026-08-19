@@ -543,6 +543,21 @@ export const COMMANDS = [
   { id: 'finish', phrase: 'finish session', alternates: ['finish practice', 'end session'] },
 ];
 
+/**
+ * The phrase, written the way a button writes it.
+ *
+ * Buttons take their words from here rather than holding their own, because
+ * the two had drifted: the control said "Next" while the microphone only
+ * answered to "next step", so the screen was quietly teaching the wrong
+ * words. One source means a command cannot be renamed without its button
+ * following, and somebody who has read the buttons already knows what to say.
+ */
+export const commandLabel = (id) => {
+  const command = COMMANDS.find((c) => c.id === id);
+  if (!command) return '';
+  return command.phrase.charAt(0).toUpperCase() + command.phrase.slice(1);
+};
+
 const normalize = (s) =>
   String(s || '')
     .toLowerCase()

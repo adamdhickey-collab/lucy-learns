@@ -2234,6 +2234,25 @@ details.disclosure .disclosure-body {
   color: var(--caution-text);
 }
 
+/* A control that answers to a spoken phrase says so with a small mic, set
+   before its own words. Not the treatment cues get — those are quoted under
+   "Say" because they are words for the dog, and blurring the two is the one
+   confusion this app cannot afford, since a cue reaching the microphone logs
+   a rep nobody did. This is a footnote on a button; that is an instruction. */
+.btn-voice {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  justify-content: center;
+}
+
+.btn-voice svg {
+  width: 1em;
+  height: 1em;
+  flex: none;
+  opacity: 0.75;
+}
+
 /* --- diagnostics -----------------------------------------------------------
    Plainer than the rest of the app on purpose. This screen is read once, by
    somebody trying to work out why something is broken, and every value on it

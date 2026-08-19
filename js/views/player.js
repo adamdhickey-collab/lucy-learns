@@ -38,6 +38,7 @@ import {
 } from '../store.js';
 import {
   availableCommands,
+  commandLabel,
   canListen,
   canSpeak,
   cueCollisions,
@@ -697,6 +698,29 @@ function voiceChip() {
   </button>`;
 }
 
+/**
+ * A control's words, and whether it can also be spoken.
+ *
+ * The label comes from the command itself, so the button and the microphone
+ * cannot disagree about the wording — they did, and a screen that says "Next"
+ * while only answering to "next step" teaches the wrong phrase to the person
+ * reading it.
+ *
+ * The mark is deliberately not the treatment cues get. A cue is printed in
+ * quotes under "Say" because it is a word for the dog, and the one thing this
+ * app cannot afford to blur is which words are aimed at the dog and which at
+ * the phone — they share a room, and a cue reaching the microphone is a rep
+ * logged by mistake. So voice-capable controls take a small mic instead, and
+ * only while the microphone is actually on: a hint about a feature nobody
+ * switched on is decoration.
+ */
+function commandButtonLabel(id) {
+  const label = commandLabel(id);
+  const voiceOn = getVoice().listen && canListen() && micState !== 'blocked';
+  if (!voiceOn) return html`${label}`;
+  return html`<span class="btn-voice">${icon('mic')}<span>${label}</span></span>`;
+}
+
 function stepScreen(activity, level) {
   const steps = stepsForLevel(activity, level);
   const step = steps[session.stepIndex];
@@ -849,10 +873,10 @@ function stepScreen(activity, level) {
                       single-line "Not that one", which made two deliberately
                       equal buttons look unequal again. */ ''}
                 <button class="btn btn--lg tally-good" type="button" data-rep="1">
-                  Went well
+                  ${commandButtonLabel('good')}
                 </button>
                 <button class="btn btn--quiet tally-miss" type="button" data-rep="0">
-                  Not that one
+                  ${commandButtonLabel('miss')}
                 </button>
               </div>
             </div>`
@@ -916,14 +940,14 @@ function stepScreen(activity, level) {
           data-prev
           ${session.stepIndex === 0 ? 'disabled' : ''}
         >
-          Back
+          ${commandButtonLabel('prev')}
         </button>
         ${/* Finish appears as soon as there is anything to save, on every
               step — stopping mid-pass after four good reps is a normal way
               for a session to end, not an edge case. */ ''}
         ${!isLast && count > 0
           ? html`<button class="btn btn--quiet" type="button" data-finish-practice>
-              Finish
+              ${commandButtonLabel('finish')}
             </button>`
           : ''}
         ${/* Nothing counted yet means nothing to finish, and on the first
@@ -937,10 +961,12 @@ function stepScreen(activity, level) {
                 type="button"
                 data-finish-practice
               >
-                Finish
+                ${commandButtonLabel('finish')}
               </button>`
             : ''
-          : html`<button class="btn" type="button" data-next>Next</button>`}
+          : html`<button class="btn" type="button" data-next>
+              ${commandButtonLabel('next')}
+            </button>`}
       </div>
     </div>
   `;

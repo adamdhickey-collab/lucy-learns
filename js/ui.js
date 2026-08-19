@@ -130,6 +130,16 @@ export const ICONS = {
     '<circle cx="4" cy="20" r="2"/>' +
     '</svg>',
 
+  // Voice commands, on the controls that answer to one — `mic`. Small and
+  // quiet: it marks a button that can also be spoken, so it has to read as a
+  // note about the control rather than as a second thing to press.
+  mic:
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M12 19v3"/>' +
+    '<path d="M19 10v2a7 7 0 0 1-14 0v-2"/>' +
+    '<rect x="9" y="2" width="6" height="13" rx="3"/>' +
+    '</svg>',
+
   // The end of the route — `star`. Solid is the point: the marks before it are
   // outlines of things still to be done, and this one is filled because it is
   // the prize. `icon--solid` is what lets the stroke rules every other icon
