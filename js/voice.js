@@ -22,18 +22,16 @@ const synth = typeof speechSynthesis !== 'undefined' ? speechSynthesis : null;
 export const canSpeak = () => Boolean(synth);
 
 /**
- * Pick the best voice on the device instead of taking what is handed over.
+ * Not eligible at all, as opposed to eligible and poor.
  *
- * Left alone, iOS reads with the default compact voice — the small robotic
- * one that ships in the system image. The good voices are there, they are
- * just not the default: Siri's, and the Enhanced and Premium downloads under
- * Accessibility. Same story on Android with the Google network voices. So the
- * single biggest improvement available to spoken steps costs nothing but
- * choosing.
- *
- * Scored rather than matched by name, because the naming is not consistent
- * across platforms or versions and a list of known-good identifiers would rot.
+ * These have to be different things, and conflating them is what dropped
+ * three of an iPhone's six English voices. Quality is expressed as a penalty,
+ * so a rough voice scores below zero — and while "ineligible" was also
+ * spelled as a negative number, a filter for usable voices could not tell
+ * "wrong language" from "the only build of Karen this phone has".
  */
+const INELIGIBLE = -Infinity;
+
 /**
  * Apple ships a set of joke voices — a robot, a set of bells, one that sings.
  * They are real voices by every flag the API exposes, so nothing but their
@@ -80,16 +78,6 @@ const VOICE_HINTS = [
 ];
 
 /**
- * Nothing in here trusts a voice to be well formed.
- *
- * `getVoices()` is a list handed over by the platform, and platforms vary: a
- * voice with no `lang`, or no `name`, is rare but real, and calling `.split`
- * on it throws — inside a render, which takes down the whole screen and
- * shows an error page instead of a training session. An optional feature for
- * reading steps aloud does not get to do that, so every field is coerced
- * before it is used.
- */
-/**
  * Locales are not written the same way everywhere. `en_US` with an underscore
  * turns up on Android engines and in some WebKit builds, and comparing it
  * against `en-US` character by character says they are different languages —
@@ -98,23 +86,35 @@ const VOICE_HINTS = [
  */
 const normLang = (value) => String(value || '').replace(/_/g, '-').toLowerCase();
 
+/**
+ * Rank one voice for reading this app's instructions.
+ *
+ * Returns INELIGIBLE for anything that must never be used, and otherwise a
+ * number that may well be negative — a penalised tier is still a candidate.
+ *
+ * Nothing in here trusts a voice to be well formed. `getVoices()` is a list
+ * handed over by the platform, and platforms vary: a voice with no `lang`, or
+ * no `name`, is rare but real, and calling `.split` on it throws — inside a
+ * render, which replaces a training session with an error page. So every
+ * field is coerced before it is used.
+ */
 function scoreVoice(voice, lang) {
-  if (!voice) return -1;
+  if (!voice) return INELIGIBLE;
   const name = `${voice.name || ''} ${voice.voiceURI || ''}`;
   const voiceLang = normLang(voice.lang);
   const wanted = normLang(lang) || 'en-us';
   // A voice that will not say what language it speaks cannot be ranked
   // against one that does.
-  if (!voiceLang) return -1;
+  if (!voiceLang) return INELIGIBLE;
   // Eloquence is a speech-synthesis relic that reads like a modem. Compact
   // is merely poor, and is penalised in VOICE_HINTS rather than refused,
   // because on iOS it is all there is.
-  if (/eloquence/i.test(name)) return -1;
+  if (/eloquence/i.test(name)) return INELIGIBLE;
   // And a joke voice is never the answer. This was only filtering the picker,
   // not the automatic choice, so an iPhone whose list happens to put Albert
   // before Samantha had its training steps read by a comedy robot — the
   // "really bad voice" that started all this.
-  if (isNovelty(voice)) return -1;
+  if (isNovelty(voice)) return INELIGIBLE;
 
   let score = 0;
   VOICE_HINTS.forEach(([pattern, points]) => {
@@ -123,7 +123,7 @@ function scoreVoice(voice, lang) {
   // An exact locale beats the bare language, which beats nothing.
   if (voiceLang === wanted) score += 20;
   else if (voiceLang.split('-')[0] === wanted.split('-')[0]) score += 10;
-  else return -1;
+  else return INELIGIBLE;
   // On-device voices do not stall on a bad connection at the door.
   if (voice.localService) score += 5;
   if (voice.default) score += 1;
@@ -184,7 +184,7 @@ function choosePreferredOrBest() {
   let best = null;
   voices.filter(Boolean).forEach((voice) => {
     const score = scoreVoice(voice, lang);
-    if (score >= 0 && (!best || score > best.score)) best = { voice, score };
+    if (Number.isFinite(score) && (!best || score > best.score)) best = { voice, score };
   });
   chosenVoice = best ? best.voice : null;
   return chosenVoice;
@@ -230,7 +230,7 @@ function buildVoiceList() {
         .replace(/\s*\((?:English|Language)[^)]*(?:\([^)]*\))?\)\s*$/i, '')
         .trim(),
     }))
-    .filter((v) => v.score >= 0 && v.base)
+    .filter((v) => Number.isFinite(v.score) && v.base)
     .sort((a, b) => b.score - a.score);
 
   // One entry per name and locale, best first.
