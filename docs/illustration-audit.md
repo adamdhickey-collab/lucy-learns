@@ -50,7 +50,7 @@ into seven different shapes, including two squares:
 | Player step figure | 4:3, full width | all step images |
 | Player "Get ready" | 4:3 | activity covers |
 | "Lucy is too excited" sheet | 16:10 | fallback images |
-| Today hero | **16:7**, focus `center 42%` | cover of the focus activity |
+| Today hero | **16:7**, focus `center 42%` on a phone; **16:10**, focus `center 15%` from 45rem/45rem up | cover of the focus activity |
 | Activity detail hero | 4:3 | activity covers |
 | Program hero | **21:9** | `dg-01` |
 | Welcome panel | 5:4 | `dg-01`, `dg-03` |
@@ -65,7 +65,18 @@ Consequences for the new art:
   sit inside a horizontal band across the middle *and* inside a centered square.
   Today's covers mostly fail one or the other: `dg-24` puts Lucy hard left with
   half the frame empty hallway, so the 56px square lands on floorboards.
-- **Step images are 4:3 only** and can use the full frame.
+- **The 16:7 band is a phone budget, and it is the binding one.** Today has to
+  fit a greeting, the program row and the whole activity card above the tab bar
+  on an 812pt screen, and the illustration is the only element there that can
+  give up height. A tablet or a laptop has room the phone does not, so from
+  45rem/45rem the band opens to 16:10 and the focus moves up to `center 15%` —
+  the whole of everyone, down to the ankles, in all four covers. Compose for
+  16:7 regardless: the phone is still the screen that has to work, and 16:10 is
+  the crop that forgives rather than the one to aim at.
+- **Step images are 4:3 only** and can use the full frame — on every screen. The
+  tablet rule used to cap their height and crop with `cover`, which took the top
+  of a head and a pair of shoes off each one; the frame narrows to meet the
+  height now instead.
 - **Nothing may depend on a detail smaller than ~5% of frame width** — it is
   gone at 56px, and the map rail is where a household scans the four activities.
 

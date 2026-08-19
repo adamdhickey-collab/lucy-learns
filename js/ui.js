@@ -688,7 +688,7 @@ export function personAvatarSheet({ options, currentId, onChoose }) {
 
   backdrop.innerHTML = `
     <div class="sheet sheet--dialog" role="dialog" aria-modal="true" aria-labelledby="person-avatar-title">
-      <h2 id="person-avatar-title">Choose your avatar</h2>
+      <h2 class="avatar-sheet-title" id="person-avatar-title">Choose your avatar</h2>
       <p class="avatar-name-plate" data-name aria-live="polite">${esc(selected.name)}</p>
       <ul class="avatar-grid avatar-grid--people" role="radiogroup" aria-labelledby="person-avatar-title">
         ${options.map(tile).join('')}
