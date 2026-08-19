@@ -1,8 +1,10 @@
 # Scene prompts — new trainer and new guest
 
-Seven scenes still to redraw. Everything else in the app is now the new cast: the
-19 August delivery filled the guest slots, and the gaze-directed set filled twenty
-more. These seven are what neither delivery depicts.
+Five scenes still to redraw. Everything else in the app is now the new cast. These
+five are the last of it, and they have one thing in common: each is a picture of
+restraint — nothing being asked, nobody being greeted, a conversation with an empty
+porch — which is exactly the kind of moment a generator likes to fill in with
+action it was not asked for. The **Must be true** lines matter most here.
 
 Paste **Block A** and **Block B** ahead of each scene prompt. They are what keeps
 forty illustrations looking like one set rather than forty separate pictures, so
@@ -50,7 +52,7 @@ teaches the opposite of what the words beside it say.
 
 ---
 
-## The seven scenes
+## The five scenes
 
 ### 1. door-sound-01-setup — getting set up
 > The handler stands relaxed beside Lucy a few feet back from the closed front
@@ -86,36 +88,13 @@ teaches the opposite of what the words beside it say.
 
 **Must be true:** she is leaning and settled — this scene is about a *long* stay, so her posture has to read as unhurried. Empty porch again.
 
-### 5. door-greet-05-reward — paying her while a guest waits
-> The handler **crouches** beside Lucy's bed and feeds her a treat from a flat palm.
-> Lucy stays lying on the bed. At the **open front door in the background stands the
-> guest** — black cap, blue hoodie — waiting patiently just outside the threshold,
-> not entering, not looking at the dog. Daylight behind him.
-
-**Must be true:** the guest waits outside and ignores Lucy; the reward happens while she holds the bed with him in view.
-
-### 6. plan-mat — asleep on the mat
+### 5. plan-mat — asleep on the mat
 > Lucy lies **flat on her side, fully asleep** on a soft mat — legs extended, body
 > relaxed, eyes closed. Nearby, a person sits quietly on a chair or sofa doing
 > something of their own, paying her no attention at all. Soft, domestic, late-afternoon
 > light. Deep quiet.
 
 **Must be true:** she is genuinely asleep and flat out, and the person is not interacting with her.
-
-### 7. door-greet-cover — the pause before the greeting
-> The cover of the Controlled Real Greeting activity, and the one image that has to
-> say what the whole activity is for. **The beat immediately before contact, with
-> everyone still.** Lucy sits squarely at the handler's left side, all four paws
-> down, leash hanging in a slack curve, looking up at the guest. The guest stands
-> **one step away, hands relaxed at his sides — not reaching, not crouching, not
-> touching her** — smiling down at her. The handler stands straight and easy beside
-> Lucy, holding the slack leash. The open front door and daylight are behind the
-> guest. Medium distance: all three in one close triangle, centered, filling the
-> frame, with the room readable around them.
-
-**Must be true:** nobody is touching anybody, and the leash is slack. The greeting has not started yet — that held moment *is* the activity, and it is what makes this different from the greeting itself.
-
-**Also true, because this one is a cover:** it is drawn at 240×180 on the activities list and the program map, so keep the three figures grouped tightly and centered, with nothing that matters near a corner or edge. It should read at a glance as "a person, a dog, and a door".
 
 ---
 
@@ -126,14 +105,15 @@ a plaid shirt, with a taut leash where the prompt says slack, or with the handle
 bending over the dog from above, it is worth regenerating — those three are the
 errors that change what the picture teaches.
 
-Five scenes that were on this list are gone from it: the gaze-directed set turned
-out to contain a crossing to the door, a kneeling treat on the bed, a settled bed
-cover, a send to the bed, and a four-paws focus. They are installed.
+Seven scenes have left this list as they were drawn: five came out of the
+gaze-directed set (a crossing to the door, a kneeling treat on the bed, a settled
+bed cover, a send to the bed, a four-paws focus) and two were drawn to these
+prompts (the reward with a guest waiting, and the greeting cover). All seven are
+installed.
 
-One warning about that set, since it is the obvious place to look for the rest:
-**it still draws the guest in the plaid shirt and the navy quilted jacket.** That
-is why the greeting scenes below still need drawing even though the folder appears
-to contain them.
+One warning about the gaze-directed folder, since it is the obvious place to look
+for the rest: **it still draws the guest in the plaid shirt and the navy quilted
+jacket.** Nothing in it can fill a greeting slot.
 
 Scene 12 exists to break a tie: `door-greet-cover` and `door-greet-08-petting`
 currently share one picture, because the delivered greeting image fits both. It is

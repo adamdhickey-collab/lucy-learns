@@ -255,7 +255,7 @@ export const IMAGES = withThumb({
   },
   'door-greet-cover': {
     src: 'img/door-greet-cover.jpg',
-    alt: 'Lucy sits with all four paws down while a crouching guest rests an open palm on her chest and her handler holds the leash in a loose loop behind her.',
+    alt: 'Lucy sits at her handler’s side on a slack leash while a guest stands a step away with his hands at his sides, the open front door behind him.',
   },
 
   // --- batch 3: the whole of Doorbell Means Place ---------------------------
