@@ -33,6 +33,9 @@
 :root {
   /* --- color ------------------------------------------------------------ */
   --background: #f7f5ef;
+  /* What sits behind the content column when the window is wider than it is.
+     Unused on a phone, where the column is the window. */
+  --field: #ebe6da;
   --surface: #ffffff;
   --surface-sunken: #f1ede4;
   --text-primary: #233239;
@@ -508,50 +511,6 @@ a.visually-hidden:focus {
 
   .tabbar a {
     flex: 0 1 8.5rem;
-  }
-}
-
-/* --- tablets ---------------------------------------------------------------
-   Both dimensions have to be large, not just the width. A phone held sideways
-   is 932px across and 430px tall, and a width-only breakpoint hands it a
-   layout built for a screen with room to breathe — which is how "optimise for
-   tablet" quietly ruins landscape on a phone.
-
-   The column widens rather than the whole app stretching. Line length is the
-   constraint that does not move: text set the full width of an iPad is
-   unreadable no matter how much space is going spare, so the extra width buys
-   a larger illustration and calmer margins, not longer lines. Type steps up
-   once, because a tablet is held further away than a phone. */
-@media (min-width: 45rem) and (min-height: 45rem) {
-  :root {
-    --page-max: 44rem;
-    --step-0: 1.0625rem;
-    --step-1: 1.25rem;
-    --step-2: 1.5rem;
-    --step-3: 2rem;
-    --step-4: 2.5rem;
-    --nav-h: calc(68px + env(safe-area-inset-bottom));
-  }
-
-  /* The step picture is the app's best asset and the reason to be on a bigger
-     screen at all. Capped by height as well as width: at 44rem a 4:3 frame is
-     528px tall, which pushes the instruction under it off the screen. */
-  .step-figure img {
-    max-height: 46vh;
-    object-fit: cover;
-  }
-
-  /* A session on a tablet is usually propped up rather than held, so the
-     controls sit where a hand reaches rather than spanning the whole width. */
-  .player-foot .btn-row,
-  .player-inner {
-    margin-inline: auto;
-  }
-
-  /* Sheets stop being full-bleed slabs on a screen this size. */
-  .sheet {
-    border-radius: var(--r-lg);
-    margin-bottom: var(--s-6);
   }
 }
 
@@ -1510,7 +1469,12 @@ a.visually-hidden:focus {
 }
 
 .sticky-hint {
-  margin: 0 0 var(--s-2);
+  /* `auto` on the inline sides, not 0. This is a shorthand, so writing `0 0`
+     here quietly cancelled the `margin-inline: auto` it gets from
+     `.sticky-action > *` — and on a wide screen that dropped the hint against
+     the left edge of the window while the button it labels stayed centred in
+     the content column, two hundred pixels away. */
+  margin: 0 auto var(--s-2);
   text-align: center;
   font-size: var(--step--1);
   font-weight: 600;
@@ -2906,21 +2870,21 @@ details.disclosure .disclosure-body {
   gap: var(--s-3);
 }
 
+/* A tile is a picture now, and nothing else.
+   ---------------------------------------------------------------------------
+   This was a flex column holding an image above a caption, and it kept the
+   column, the gap, the text colour, the line-height and a `--step--2` font
+   size that never existed in the scale — so it resolved to nothing and
+   inherited 16px. With the caption gone all of that was reserving room for a
+   line of text that is never drawn: 32px per tile, which is 128px of empty
+   space down a four-row grid. `grid` with one child collapses to the child. */
 .avatar-choice {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--s-2);
+  display: grid;
   width: 100%;
   padding: var(--s-2);
   border: 1.5px solid transparent;
   border-radius: var(--r-lg);
   background: transparent;
-  color: var(--text-secondary);
-  font: inherit;
-  font-size: var(--step--2);
-  line-height: 1.2;
-  text-align: center;
   cursor: pointer;
 }
 
@@ -2933,6 +2897,12 @@ details.disclosure .disclosure-body {
 .avatar-choice img {
   width: 100%;
   height: auto;
+  /* `.sheet img` gives pictures 16px above and below, which is right for the
+     one the fallback sheet shows in a column of prose and wrong for a tile in
+     a grid: it added 32px to every tile, 128px down four rows, and pushed the
+     Cancel button under the fold. Worth stating rather than deleting the
+     inheritance, because the sheet rule is correct where it was aimed. */
+  margin: 0;
   aspect-ratio: 1;
   border-radius: 50%;
   object-fit: cover;
@@ -6221,4 +6191,93 @@ svg.icon--solid {
 
 .avatar--preview:empty {
   opacity: 0.35;
+}
+
+/* --- tablets ---------------------------------------------------------------
+   Last in the file on purpose. These are overrides of rules defined above,
+   and at equal specificity the later rule wins — sitting near the top, this
+   block lost `.sticky-action` to its own base rule three thousand lines
+   later and threw the pinned bar half off the screen.
+   Both dimensions have to be large, not just the width. A phone held sideways
+   is 932px across and 430px tall, and a width-only breakpoint hands it a
+   layout built for a screen with room to breathe — which is how "optimise for
+   tablet" quietly ruins landscape on a phone.
+
+   The column widens rather than the whole app stretching. Line length is the
+   constraint that does not move: text set the full width of an iPad is
+   unreadable no matter how much space is going spare, so the extra width buys
+   a larger illustration and calmer margins, not longer lines. Type steps up
+   once, because a tablet is held further away than a phone. */
+@media (min-width: 45rem) and (min-height: 45rem) {
+  :root {
+    --page-max: 44rem;
+    --step-0: 1.0625rem;
+    --step-1: 1.25rem;
+    --step-2: 1.5rem;
+    --step-3: 2rem;
+    --step-4: 2.5rem;
+    --nav-h: calc(68px + env(safe-area-inset-bottom));
+  }
+
+  /* The step picture is the app's best asset and the reason to be on a bigger
+     screen at all. Capped by height as well as width: at 44rem a 4:3 frame is
+     528px tall, which pushes the instruction under it off the screen. */
+  .step-figure img {
+    max-height: 46vh;
+    object-fit: cover;
+  }
+
+  /* A session on a tablet is usually propped up rather than held, so the
+     controls sit where a hand reaches rather than spanning the whole width. */
+  .player-foot .btn-row,
+  .player-inner {
+    margin-inline: auto;
+  }
+
+  /* Sheets stop being full-bleed slabs on a screen this size. */
+  .sheet {
+    border-radius: var(--r-lg);
+    margin-bottom: var(--s-6);
+  }
+
+  /* The column reads as a column.
+     -------------------------------------------------------------------------
+     On a phone the content fills the screen, so page and column being the
+     same colour is invisible. Give it 400px of margin either side and the
+     absence starts to show: the text simply stops, with nothing saying where
+     the app ends and the window begins.
+
+     The field steps back rather than the column stepping forward. Turning the
+     column white was the obvious move and the wrong one — the cards are
+     white, and this app puts almost everything in cards, so a white column
+     would have left them outlined against their own colour. A deeper field
+     leaves every one of those relationships alone and still gives the column
+     an edge. */
+  body {
+    background: var(--field);
+  }
+
+  .screen,
+  .player {
+    background: var(--background);
+  }
+
+  /* Only the sides: the column runs off the top and bottom of the window, and
+     a line across either end would draw a box around something unbounded. */
+  .screen {
+    min-height: 100dvh;
+    border-inline: 1px solid var(--border);
+  }
+
+  /* The pinned bar keeps to the column too. Fixed to the window, it painted
+     its own background the full width and laid a cream band straight across
+     the field — cutting the column's edges off at the ankles, right where the
+     eye goes to check them. */
+  .sticky-action {
+    left: 50%;
+    right: auto;
+    width: min(100%, var(--page-max));
+    transform: translateX(-50%);
+    border-inline: 1px solid var(--border);
+  }
 }

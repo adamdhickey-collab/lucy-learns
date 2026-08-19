@@ -6,7 +6,6 @@
 export const DOG = {
   id: 'lucy',
   name: 'Lucy',
-  breed: 'Lab / German Wirehaired Pointer mix',
   /**
    * One of the ten pickable portraits, not Lucy's own.
    *
@@ -23,7 +22,7 @@ export const DOG = {
    * exactly that reason, and the picker offers it back to anyone whose stored
    * photo is not in the ten.
    */
-  photo: 'img/avatars/dog-01.png',
+  photo: 'img/avatars/dog-01.jpg',
   about: 'Friendly and affectionate. Gets over-aroused around arrivals and unfamiliar people.',
 };
 

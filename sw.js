@@ -48,17 +48,17 @@ const SHELL = [
   './img/splash-mark.jpg',
   // The ten dog portraits. All of them, not just the chosen one: the picker
   // shows the full grid, and a household that opens it offline to change their
-  // mind should not meet nine broken tiles. 80 KB for the set.
-  './img/avatars/dog-01.png',
-  './img/avatars/dog-02.png',
-  './img/avatars/dog-03.png',
-  './img/avatars/dog-04.png',
-  './img/avatars/dog-05.png',
-  './img/avatars/dog-06.png',
-  './img/avatars/dog-07.png',
-  './img/avatars/dog-08.png',
-  './img/avatars/dog-09.png',
-  './img/avatars/dog-10.png',
+  // mind should not meet nine broken tiles. 340 KB for the set.
+  './img/avatars/dog-01.jpg',
+  './img/avatars/dog-02.jpg',
+  './img/avatars/dog-03.jpg',
+  './img/avatars/dog-04.jpg',
+  './img/avatars/dog-05.jpg',
+  './img/avatars/dog-06.jpg',
+  './img/avatars/dog-07.jpg',
+  './img/avatars/dog-08.jpg',
+  './img/avatars/dog-09.jpg',
+  './img/avatars/dog-10.jpg',
   './img/thumb-door-cover.jpg',
   './img/thumb-door-place-03-send.jpg',
   './img/thumb-door-place-cover.jpg',

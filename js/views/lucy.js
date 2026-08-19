@@ -1,4 +1,4 @@
-import { PROGRAMS, TRAINER, DOG_AVATARS, BREEDS } from '../content.js';
+import { PROGRAMS, TRAINER, DOG_AVATARS } from '../content.js';
 import { downloadCsv } from './report.js';
 import {
   getState,
@@ -62,15 +62,16 @@ function render() {
                 because there was exactly one portrait and it was Lucy's. With
                 ten to choose from the description has to come from the choice,
                 so the button is named for what it does and the picture is
-                decorative — the dog's name and breed are already read out
+                decorative — the dog's name is already read out
                 beside it. */ ''}
           <button class="profile-photo" type="button" data-avatar aria-label="Change ${dog.name}’s picture">
             <img src="${dog.photo}" alt="" />
-            <span class="profile-photo-hint">${icon('plus')}</span>
+            ${/* A pencil, not a plus. There is already a picture here; this
+                  changes it. A plus offers to add a second one. */ ''}
+            <span class="profile-photo-hint">${icon('pencil')}</span>
           </button>
           <div>
             <h2>${dog.name}</h2>
-            ${dog.breed ? html`<p>${dog.breed}</p>` : ''}
             ${dog.about ? html`<p>${dog.about}</p>` : ''}
           </div>
           ${/* A named button rather than the whole text block made tappable.
@@ -78,7 +79,7 @@ function render() {
                 paragraph in a button gives a screen reader one long unreadable
                 control name and gives everyone else a huge invisible target
                 next to a second one. This says what it does. */ ''}
-          <button class="profile-edit" type="button" data-edit-dog aria-label="Edit name and breed">
+          <button class="profile-edit" type="button" data-edit-dog aria-label="Edit ${dog.name}’s name">
             ${icon('pencil')}
           </button>
         </div>
@@ -273,11 +274,9 @@ function mount(root) {
     const before = getDog();
     dogSheet({
       name: before.name,
-      breed: before.breed,
-      breeds: BREEDS,
-      onSave: ({ name, breed }) => {
+      onSave: ({ name }) => {
         const renamed = name !== before.name;
-        setDog({ name, breed });
+        setDog({ name });
         refreshApp();
         // Named specifically when the name changed, because renaming the dog
         // also rewrites the attention cue — "Lucy!" becomes "Rufus!" — and

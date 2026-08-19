@@ -555,7 +555,6 @@ export function exportSummary() {
 
   const lines = [
     csvRow([`${getDog().name} — training log`]),
-    csvRow([getDog().breed || '']),
     csvRow([
       'Range',
       stamps.length ? `${prettyDate(stamps[0])} to ${prettyDate(stamps[stamps.length - 1])}` : 'No entries yet',

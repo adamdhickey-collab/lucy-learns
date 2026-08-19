@@ -6,7 +6,7 @@
 // to that array alone: the dots, the "step N of M" label, the Skip target, and
 // the last-panel button copy all follow.
 
-import { IMAGES, PROGRAMS, TRAINER, BREEDS } from '../content.js';
+import { IMAGES, PROGRAMS, TRAINER } from '../content.js';
 import { completeOnboarding, seedDemoSessions, setDog, setPersonName } from '../store.js';
 import { programProgress } from '../program.js';
 import { routePreview } from '../programui.js';
@@ -21,11 +21,11 @@ let step = 0;
  * abandoning the welcome half way leaves no trace — the same promise the demo
  * choice already made.
  */
-let draft = { person: '', dog: '', breed: '' };
+let draft = { person: '', dog: '' };
 
 export const restart = () => {
   step = 0;
-  draft = { person: '', dog: '', breed: '' };
+  draft = { person: '', dog: '' };
 };
 
 
@@ -169,28 +169,6 @@ function render() {
           />
         </div>
 
-        <div class="field setup-field">
-          <label for="setup-breed">Breed <span class="setup-optional">optional</span></label>
-          <input
-            id="setup-breed"
-            type="text"
-            data-breed
-            value="${draft.breed}"
-            list="breed-list"
-            placeholder="Mixed breed, Labrador, not sure…"
-            maxlength="48"
-            autocapitalize="words"
-            autocomplete="off"
-            enterkeyhint="done"
-          />
-          <datalist id="breed-list">
-            ${join(BREEDS.map((b) => raw(`<option value="${b}"></option>`)))}
-          </datalist>
-          <p class="section-note">
-            However you would describe them. “Mixed” and “not sure” are perfectly
-            good answers.
-          </p>
-        </div>
 
         ${/* Said once, here, on the screen where somebody has just typed their
               own dog's name — which is the moment the mismatch is about to
@@ -349,12 +327,12 @@ function finish(withDemo) {
     // about one specific dog, and setup never asks for it. Better an empty
     // line on the profile than a description somebody else's app wrote about
     // a dog it has never met. The profile renders it only when present.
-    setDog({ name: dog, breed: draft.breed.trim(), about: '' });
+    setDog({ name: dog, about: '' });
   }
   if (withDemo) seedDemoSessions({ force: true });
   completeOnboarding();
   step = 0;
-  draft = { person: '', dog: '', breed: '' };
+  draft = { person: '', dog: '' };
   location.hash = '#/today';
 }
 
@@ -402,7 +380,6 @@ function mount(root) {
 
   field('[data-person]', 'person');
   field('[data-dog]', 'dog');
-  field('[data-breed]', 'breed');
 
   on('[data-choice]', 'click', (e) => {
     finish(e.currentTarget.dataset.choice === 'demo');

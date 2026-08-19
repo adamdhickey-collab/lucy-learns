@@ -419,31 +419,6 @@ export const IMAGES = withThumb({
   },
 });
 
-/**
- * Suggestions, not a taxonomy. The field accepts anything typed into it.
- *
- * A single-select of two hundred breeds is the usual answer here and it is the
- * wrong one: a third to a half of dogs in US homes are mixed, and rescues
- * routinely arrive with a guess on the paperwork and nothing behind it. Those
- * owners have to either pick something false or give up on the field.
- *
- * A datalist suggests without constraining — "lab" offers Labrador Retriever,
- * and "some kind of terrier" is accepted exactly as typed. It can afford to be
- * this relaxed because the answer is never computed with: breed is printed on
- * the profile and in one CSV header and touches no threshold, no
- * recommendation and no metric anywhere in the app.
- */
-export const BREEDS = [
-  'Mixed breed', 'Not sure', 'Australian Shepherd', 'Beagle', 'Bernese Mountain Dog',
-  'Border Collie', 'Boxer', 'Bulldog', 'Cavalier King Charles Spaniel', 'Chihuahua',
-  'Cocker Spaniel', 'Corgi', 'Dachshund', 'Dalmatian', 'Doberman', 'French Bulldog',
-  'German Shepherd', 'German Shorthaired Pointer', 'Golden Retriever', 'Great Dane',
-  'Greyhound', 'Havanese', 'Husky', 'Jack Russell Terrier', 'Labradoodle',
-  'Labrador Retriever', 'Maltese', 'Mastiff', 'Newfoundland', 'Pit Bull Terrier',
-  'Pomeranian', 'Poodle', 'Pug', 'Rottweiler', 'Schnauzer', 'Shar Pei', 'Shiba Inu',
-  'Shih Tzu', 'Staffordshire Bull Terrier', 'Vizsla', 'Weimaraner', 'Whippet',
-  'Yorkshire Terrier',
-];
 
 // ---------------------------------------------------------------------------
 // Dog avatars
@@ -462,45 +437,47 @@ export const BREEDS = [
  * question being answered is "which looks like my dog", not "which breed is
  * mine". The reasoning is in art/source/prompts-dog-avatars.txt.
  *
- * PNG, not JPEG, and not for the usual reason. These are flat vector-style
- * illustrations with crisp edges on a flat field, which is the exact case JPEG
- * handles worst: it rings around every hard edge and mottles the plain
- * background. At 400² the PNGs are also smaller than the JPEGs would be.
+ * JPEG, having been PNG. The old set was flat vector-style work with crisp
+ * edges on a flat field, which is the one case JPEG handles worst. These are
+ * painted — soft fur, graded light, no hard edges to ring around — and that
+ * reverses the answer: the set weighs 340KB as JPEG against 2MB as PNG, on a
+ * shell the service worker precaches in full before the app will open
+ * offline. Eight times the weight of the whole app's worth of avatars is not
+ * a price worth paying for a format chosen to solve a problem these pictures
+ * no longer have.
  *
- * Two names each, and the pairing is a rule rather than a convenience.
+ * `label` is the accessible name and is no longer printed on the tile. The
+ * question a household is answering here is "which one looks like my dog",
+ * and they answer it by looking; a caption reading "Staffordshire or pit
+ * type" under a picture invites an argument about breed that the app has no
+ * stake in and often cannot win — plenty of dogs are a guess in a coat. The
+ * pictures are the content, so the grid is pictures.
  *
- * `label` is the accessible name — a screen reader should hear "Staffordshire
- * or pit type", not "image". `short` is what is printed under the tile, at
- * three across on a 375px screen, where the full names wrapped to two lines
- * and made the grid tall enough to push the last row and the Cancel button
- * below the fold.
- *
- * **Every `short` is a substring of its `label`.** That is not tidiness: a
- * voice-control user says what they can see, so an accessible name that does
- * not contain the visible text leaves them saying "click Pit type" at a
- * control the browser knows as something else. It is why this is "Pit type"
- * and not "Staffy", and "Bulldog" rather than "Frenchie".
+ * The names stay in `label` because a screen reader still needs to hear
+ * something other than "button", and `short` stays beside it because voice
+ * control matches on the accessible name: somebody saying "Golden" should
+ * land on the golden retriever.
  */
 export const DOG_AVATARS = [
-  { id: 'lab-black', label: 'Black Labrador', short: 'Black Lab', src: 'img/avatars/dog-01.png' },
-  { id: 'golden', label: 'Golden Retriever', short: 'Golden', src: 'img/avatars/dog-02.png' },
-  { id: 'shepherd', label: 'German Shepherd', short: 'Shepherd', src: 'img/avatars/dog-03.png' },
-  { id: 'frenchie', label: 'French Bulldog', short: 'Bulldog', src: 'img/avatars/dog-04.png' },
-  { id: 'poodle', label: 'Poodle or doodle', short: 'Poodle', src: 'img/avatars/dog-05.png' },
-  { id: 'dachshund', label: 'Dachshund', short: 'Dachshund', src: 'img/avatars/dog-06.png' },
-  { id: 'beagle', label: 'Beagle', short: 'Beagle', src: 'img/avatars/dog-07.png' },
-  { id: 'collie', label: 'Border Collie', short: 'Collie', src: 'img/avatars/dog-08.png' },
+  { id: 'lab-black', label: 'Black Labrador', short: 'Black Lab', src: 'img/avatars/dog-01.jpg' },
+  { id: 'golden', label: 'Golden Retriever', short: 'Golden', src: 'img/avatars/dog-02.jpg' },
+  { id: 'shepherd', label: 'German Shepherd', short: 'Shepherd', src: 'img/avatars/dog-03.jpg' },
+  { id: 'frenchie', label: 'French Bulldog', short: 'Bulldog', src: 'img/avatars/dog-04.jpg' },
+  { id: 'poodle', label: 'Poodle or doodle', short: 'Poodle', src: 'img/avatars/dog-05.jpg' },
+  { id: 'dachshund', label: 'Dachshund', short: 'Dachshund', src: 'img/avatars/dog-06.jpg' },
+  { id: 'beagle', label: 'Beagle', short: 'Beagle', src: 'img/avatars/dog-07.jpg' },
+  { id: 'collie', label: 'Border Collie', short: 'Collie', src: 'img/avatars/dog-08.jpg' },
   {
     id: 'staffy',
     label: 'Staffordshire or pit type',
     short: 'Pit type',
-    src: 'img/avatars/dog-09.png',
+    src: 'img/avatars/dog-09.jpg',
   },
   {
     id: 'shihtzu',
     label: 'Shih Tzu or small fluffy',
     short: 'Small fluffy',
-    src: 'img/avatars/dog-10.png',
+    src: 'img/avatars/dog-10.jpg',
   },
 ];
 

@@ -548,55 +548,39 @@ export function confirmSheet({
 }
 
 /**
- * Fix the dog's name or breed after setup.
+ * Fix the dog's name after setup.
  *
- * Both in one sheet rather than two rows that each open something: they were
- * asked together on one setup screen, they are printed together on one card,
- * and somebody correcting a typed-in-a-hurry name usually wants a look at the
- * breed while they are there.
+ * One field now that breed has gone, and still a sheet rather than an input
+ * edited in place on the card. A sheet for a single field looks like
+ * overkill until you build the alternative: editing in place needs its own
+ * save and cancel, its own escape key, its own focus handling and its own
+ * answer for what a half-typed name means if the screen changes underneath
+ * it — all of which this already does, and does the same way as every other
+ * edit in the app. The cost of the modal is one tap; the cost of the
+ * inline version is four behaviours reimplemented in a card.
  *
- * A form element, not a pair of buttons, so the phone keyboard offers "next"
- * between the fields and "done" on the last, and so Enter submits from either.
+ * A form element, not a pair of buttons, so the phone keyboard offers "done"
+ * and Enter submits.
  *
  * @param {object}   opts
  * @param {string}   opts.name
- * @param {string}   opts.breed
- * @param {string[]} opts.breeds   datalist suggestions
- * @param {Function} opts.onSave   ({ name, breed }) => void — only when changed
+ * @param {Function} opts.onSave   ({ name }) => void — only when changed
  */
-export function dogSheet({ name, breed, breeds = [], onSave }) {
+export function dogSheet({ name, onSave }) {
   const backdrop = document.createElement('div');
   backdrop.className = 'sheet-backdrop';
 
   backdrop.innerHTML = `
     <div class="sheet sheet--dialog" role="dialog" aria-modal="true" aria-labelledby="dog-sheet-title">
-      <h2 id="dog-sheet-title">Name and breed</h2>
+      <h2 id="dog-sheet-title">Their name</h2>
       <form data-form>
         <div class="field">
           <label for="dog-sheet-name">Their name</label>
           <input id="dog-sheet-name" type="text" data-name value="${esc(name)}"
                  maxlength="24" autocapitalize="words" autocomplete="off"
-                 enterkeyhint="next" required />
+                 enterkeyhint="done" required />
         </div>
 
-        <div class="field" style="margin-top: var(--s-4)">
-          <label for="dog-sheet-breed">Breed <span class="setup-optional">optional</span></label>
-          <input id="dog-sheet-breed" type="text" data-breed value="${esc(breed || '')}"
-                 list="dog-sheet-breeds" placeholder="Mixed breed, Labrador, not sure…"
-                 maxlength="48" autocapitalize="words" autocomplete="off"
-                 enterkeyhint="done" />
-          <datalist id="dog-sheet-breeds">
-            ${breeds.map((b) => `<option value="${esc(b)}"></option>`).join('')}
-          </datalist>
-          ${/* The same reassurance the setup screen gives, for the same
-                reason: the field looks like it wants a pedigree and does not.
-                Somebody re-opening this to fix a name should not be talked
-                into a breed they are not sure of. */ ''}
-          <p class="section-note">
-            However you would describe them. “Mixed” and “not sure” are perfectly
-            good answers.
-          </p>
-        </div>
 
         <div class="btn-row" style="margin-top: var(--s-5)">
           <button class="btn btn--quiet" type="button" data-cancel>Cancel</button>
@@ -612,7 +596,6 @@ export function dogSheet({ name, breed, breeds = [], onSave }) {
   };
 
   const nameInput = backdrop.querySelector('[data-name]');
-  const breedInput = backdrop.querySelector('[data-breed]');
   const saveBtn = backdrop.querySelector('[data-save]');
 
   // A dog with no name breaks the greeting, the report title and the attention
@@ -631,12 +614,12 @@ export function dogSheet({ name, breed, breeds = [], onSave }) {
 
   backdrop.querySelector('[data-form]').addEventListener('submit', (e) => {
     e.preventDefault();
-    const next = { name: nameInput.value.trim(), breed: breedInput.value.trim() };
+    const next = { name: nameInput.value.trim() };
     if (!next.name) return;
     close();
     // Silence on no change: saving identical values would still fire a toast
     // and a re-render, which reads as though something happened.
-    if (next.name !== name || next.breed !== (breed || '')) onSave(next);
+    if (next.name !== name) onSave(next);
   });
 
   document.body.appendChild(backdrop);
@@ -673,22 +656,21 @@ export function avatarSheet({ options, currentSrc, onPick }) {
         data-pick="${esc(o.id)}"
       >
         ${/* Decorative: the button is named by its aria-label, so alt text
-              here would have a screen reader say the breed twice. */ ''}
+              here would have a screen reader say the name twice. */ ''}
         ${/* Not lazy. The whole set is precached and weighs less than one
               illustration, and every tile is on screen the moment the sheet
               opens — lazy here buys nothing and costs a grid that fills in
               under the reader. */ ''}
         <img src="${esc(o.src)}" alt="" width="400" height="400" />
-        <span>${esc(o.short || o.label)}</span>
       </button>
     </li>`;
 
   backdrop.innerHTML = `
     <div class="sheet sheet--dialog" role="dialog" aria-modal="true" aria-labelledby="avatar-sheet-title">
-      <h2 id="avatar-sheet-title">Pick a picture</h2>
+      <h2 id="avatar-sheet-title">Choose a picture</h2>
       <p class="section-note">
         The illustrations in the sessions all show the same dog. This one is
-        yours — pick whichever comes closest.
+        yours — choose whichever comes closest.
       </p>
       <ul class="avatar-grid" role="radiogroup" aria-labelledby="avatar-sheet-title">
         ${options.map(tile).join('')}
