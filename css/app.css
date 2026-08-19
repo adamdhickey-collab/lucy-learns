@@ -511,6 +511,50 @@ a.visually-hidden:focus {
   }
 }
 
+/* --- tablets ---------------------------------------------------------------
+   Both dimensions have to be large, not just the width. A phone held sideways
+   is 932px across and 430px tall, and a width-only breakpoint hands it a
+   layout built for a screen with room to breathe — which is how "optimise for
+   tablet" quietly ruins landscape on a phone.
+
+   The column widens rather than the whole app stretching. Line length is the
+   constraint that does not move: text set the full width of an iPad is
+   unreadable no matter how much space is going spare, so the extra width buys
+   a larger illustration and calmer margins, not longer lines. Type steps up
+   once, because a tablet is held further away than a phone. */
+@media (min-width: 45rem) and (min-height: 45rem) {
+  :root {
+    --page-max: 44rem;
+    --step-0: 1.0625rem;
+    --step-1: 1.25rem;
+    --step-2: 1.5rem;
+    --step-3: 2rem;
+    --step-4: 2.5rem;
+    --nav-h: calc(68px + env(safe-area-inset-bottom));
+  }
+
+  /* The step picture is the app's best asset and the reason to be on a bigger
+     screen at all. Capped by height as well as width: at 44rem a 4:3 frame is
+     528px tall, which pushes the instruction under it off the screen. */
+  .step-figure img {
+    max-height: 46vh;
+    object-fit: cover;
+  }
+
+  /* A session on a tablet is usually propped up rather than held, so the
+     controls sit where a hand reaches rather than spanning the whole width. */
+  .player-foot .btn-row,
+  .player-inner {
+    margin-inline: auto;
+  }
+
+  /* Sheets stop being full-bleed slabs on a screen this size. */
+  .sheet {
+    border-radius: var(--r-lg);
+    margin-bottom: var(--s-6);
+  }
+}
+
 /* =========================================================================
    Primitives
    ========================================================================= */
