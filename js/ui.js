@@ -847,7 +847,7 @@ export function personSheet({
   backdrop.className = 'sheet-backdrop';
 
   const row = (p) => `
-    <li>
+    <li class="${p.id === activeId ? 'is-active' : ''}">
       ${/* The portrait is its own control, outside the row it used to sit
              inside. Tapping a face to change it is the gesture people bring
              with them, and it cannot be offered from within a button that

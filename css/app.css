@@ -2420,13 +2420,19 @@ details.disclosure .disclosure-body {
 /* A badge that holds a picture instead of two letters. The initials version
    centres text; this one has to clip an image to the same circle at every
    size the badge is used. */
-.avatar--photo {
+/* Doubled class, because `.avatar` is declared three thousand lines below
+   this and would otherwise win the tie: it paints the badge teal for the
+   initials it used to hold, and pads it a pixel at the top to sit them
+   optically straight. Under a photograph that padding shows as a teal
+   crescent along the rim — the sliver that kept turning up inside the
+   circles — and the fill shows anywhere the image does not reach. */
+.avatar.avatar--photo {
   padding: 0;
   overflow: hidden;
   background: var(--surface-sunken);
 }
 
-.avatar--photo img {
+.avatar.avatar--photo img {
   width: 100%;
   height: 100%;
   margin: 0;
@@ -2449,18 +2455,29 @@ details.disclosure .disclosure-body {
    display time, and every circle now holds a head where a head should be. */
 /* A face in the switcher is a control too. Same badge, smaller, because the
    portrait it sits on is a third the size of the one on the profile card. */
+/* A face in the switcher, at the size the pictures were cropped for.
+   ---------------------------------------------------------------------------
+   It was 34px, which is a favicon of a person: the crop that reads as a
+   portrait everywhere else in the app turned into a smudge here, and the row
+   went cluttered because four controls were crowding a thumbnail. At 56 the
+   same crop reads the same way it does on the profile card, the badge has
+   room to sit on the rim rather than over a cheek, and the row has a subject
+   rather than a decoration.
+
+   Big enough to be its own tap target now, so no padding trick is needed. */
 .person-row-face {
   position: relative;
   flex: none;
-  /* The portrait reads at 34px and has to be tappable at 44. The padding buys
-     the difference without drawing anything, and the negative margin stops it
-     pushing the name out of line. */
-  padding: var(--s-2);
-  margin: calc(var(--s-2) * -1);
+  padding: 0;
   border: 0;
   background: none;
   cursor: pointer;
-  --edit-badge-size: 18px;
+  --edit-badge-size: 20px;
+}
+
+.person-row-face .avatar {
+  width: 56px;
+  height: 56px;
 }
 
 /* --- the handler's portrait -------------------------------------------------
@@ -3243,9 +3260,11 @@ details.disclosure .disclosure-body {
   display: flex;
   align-items: center;
   gap: var(--s-3);
+  /* Tall enough to stand beside a 56px portrait without the name floating in
+     the middle of a column of air. */
+  min-height: 56px;
   padding: var(--s-2) var(--s-3);
-  border: 1.5px solid transparent;
-  border-radius: var(--r-lg);
+  border: 0;
   background: transparent;
   color: inherit;
   font: inherit;
@@ -3253,14 +3272,44 @@ details.disclosure .disclosure-body {
   cursor: pointer;
 }
 
-.person-row--active {
-  border-color: var(--primary);
+/* One person to a row, with a line between them.
+   ---------------------------------------------------------------------------
+   The list read as a heap: four controls per person, no edges, and nothing
+   saying where one person ended and the next began except the gap between
+   them. A rule between rows is the least ink that answers it. */
+.person-list > li {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-2);
+}
+
+/* Between people, and not under the last one or either side of the tinted
+   row, where a line would cut the highlight in half. */
+.person-list > li + li:not(.is-active) {
+  border-top: 1px solid var(--border);
+}
+
+.person-list > li.is-active + li {
+  border-top: 0;
+}
+
+/* The whole row is the selection, not a pill inside it.
+   ---------------------------------------------------------------------------
+   The border used to sit on the name button alone, which left the portrait
+   outside the thing it was part of and squeezed the name into the space left
+   between a tick and a pencil — "Fabiola Hick…" beside a picture of her, with
+   room to spare on both sides. Tinting the row says the same thing, includes
+   the face, and gives the name back its width. */
+.person-list > li.is-active {
   background: var(--primary-wash);
+  border-radius: var(--r-lg);
 }
 
 .person-row-name {
   flex: 1;
   min-width: 0;
+  font-size: var(--step-1);
   font-weight: 600;
   /* A name is free text capped at 32 characters, which overruns this row long
      before it overruns the field. One line, clipped with an ellipsis: the
