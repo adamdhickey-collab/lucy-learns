@@ -26,6 +26,14 @@ export const MASTERY_LADDER = [
 const WATCH = ['barked', 'jumped', 'nipped', 'pulled', 'broke_position'];
 
 /**
+ * The shortest session that is allowed to advance a level on its own.
+ *
+ * Exported so the setting screen can say the same number rather than repeat it
+ * in prose and drift from it later.
+ */
+export const MIN_REPS_TO_ADVANCE = 3;
+
+/**
  * Total repetitions behind a set of sessions — the denominator under every
  * percentage this app prints.
  *
@@ -130,6 +138,13 @@ export function readyToAdvance(activityId, levelNumber) {
   if (!sessions.length) return false;
   return sessions.every((s) => {
     const reps = s.repetitions || 0;
+    // A rate needs something under it. Reps per session is a setting now, and
+    // at its floor a single good repetition is a 100% session — enough, on the
+    // rule below, to move the household up a level on one lucky pass. Three is
+    // the smallest count where the 80% bar is asking for a pattern rather than
+    // an outcome, so shorter sessions still log, still count toward mastery,
+    // and simply do not decide the next level on their own.
+    if (reps < MIN_REPS_TO_ADVANCE) return false;
     const rate = reps ? (s.successfulRepetitions || 0) / reps : 0;
     const tags = s.behaviorsObserved || [];
     return rate >= 0.8 && !tags.includes('nipped') && (s.arousalLevel || 4) <= 3;

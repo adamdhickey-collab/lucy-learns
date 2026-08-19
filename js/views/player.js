@@ -31,6 +31,7 @@ import {
   hintSeen,
   isStorageOk,
   markHintSeen,
+  repTarget,
   resolveCue,
   setLevel,
   setVoice,
@@ -632,7 +633,7 @@ function readyScreen(activity, level) {
               appearing at the end of the first pass reads as a surprise. */ ''}
         <p class="section-note" style="margin-top: var(--s-5)">
           About ${activity.estimatedMinutes} minutes. Your first time through the steps
-          counts as rep one; aim for ${level.reps} and stop early if she is still doing
+          counts as rep one; aim for ${repTarget(level)} and stop early if she is still doing
           well.
         </p>
       </div>
@@ -740,7 +741,7 @@ function stepScreen(activity, level) {
   // count that begins at zero. Completed reps come from the log as always.
   const count = session.repLog.length;
   const good = session.repLog.filter(Boolean).length;
-  const target = level.reps;
+  const target = repTarget(level);
   const rep = count + 1;
   const met = count >= target;
   const showAdvanceHint =
@@ -1784,10 +1785,14 @@ function wire(root) {
   // strip's arrival animation and the bar's sweep fire once rather than on
   // every rep after it. The flag is consumed by the render it triggers.
   const countRep = (good) => {
-    const wasMet = session.repLog.length >= level.reps;
+    // Read once per rep rather than captured at session start: the setting is
+    // on another screen, and a session left open while it changes should agree
+    // with what the strip above it is already drawing.
+    const goal = repTarget(level);
+    const wasMet = session.repLog.length >= goal;
     session.repLog.push(good);
     syncTotals();
-    session.celebrate = !wasMet && session.repLog.length >= level.reps;
+    session.celebrate = !wasMet && session.repLog.length >= goal;
     session.stepIndex = 0;
     // Only the one that carries news the screen does not. Every rep already
     // announces itself twice — the new step takes focus and the strip updates

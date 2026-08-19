@@ -47,6 +47,20 @@ const emptyState = () => ({
   incidents: [],
   levelOverrides: {}, // activityId -> level number chosen manually
   weeklyGoal: 5,
+  /**
+   * How many repetitions a session aims for, 1 to 5.
+   *
+   * A cap rather than a replacement. Every level in the program carries its
+   * own `reps` — the number The Canine Coach asks for there, 4 or 5 — and this
+   * lowers it without ever raising it above what the program wanted. At 5 the
+   * levels keep their own numbers; at 3, which is the default, everything
+   * shortens to 3.
+   *
+   * It defaults below every level's own count on purpose. A session that ends
+   * while the dog is still going well is the one worth having, and the number
+   * on the screen is what most households will actually stop at.
+   */
+  repsPerSession: 3,
   seeded: false,
   // Has the household been through the welcome? Nothing is seeded until they
   // choose, so the app can be handed to someone genuinely empty.
@@ -258,6 +272,23 @@ export function setWeeklyGoal(n) {
   state.weeklyGoal = n;
   persist();
 }
+
+/** Clamped on read as well as write: a bad stored value cannot break a session. */
+const clampReps = (n) => Math.min(5, Math.max(1, Math.round(Number(n) || 0) || 3));
+
+export const getRepsPerSession = () => clampReps(state.repsPerSession);
+
+export function setRepsPerSession(n) {
+  state.repsPerSession = clampReps(n);
+  persist();
+}
+
+/**
+ * How many reps this level should aim for, once the household's setting is
+ * applied. The one place the two numbers meet, so nothing has to remember
+ * which of them wins.
+ */
+export const repTarget = (level) => Math.min(level && level.reps ? level.reps : 5, getRepsPerSession());
 
 export function setNotes(text) {
   state.notes = text;

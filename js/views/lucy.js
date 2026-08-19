@@ -1,9 +1,11 @@
-import { PROGRAMS, TRAINER, DOG_AVATARS, PERSON_AVATARS, personAvatar } from '../content.js';
+import { ACTIVITIES, PROGRAMS, TRAINER, DOG_AVATARS, PERSON_AVATARS, personAvatar } from '../content.js';
 import { downloadCsv } from './report.js';
 import {
   getState,
   updateCommand,
   setWeeklyGoal,
+  getRepsPerSession,
+  setRepsPerSession,
   hasDemoData,
   clearDemoData,
   clearAll,
@@ -15,6 +17,7 @@ import {
   startFresh,
   seedDemoSessions,
 } from '../store.js';
+import { MIN_REPS_TO_ADVANCE } from '../metrics.js';
 import { restart as restartWelcome } from './welcome.js';
 import { openPersonSwitcher } from '../person.js';
 import { APP_VERSION } from '../version.js';
@@ -39,6 +42,14 @@ function render() {
   const person = getPerson();
   const people = getPeople();
   const program = PROGRAMS[0];
+  const repsPref = getRepsPerSession();
+  // The program is not uniform — its levels ask for anywhere between 2 and 5 —
+  // so the sentence about levels that ask for fewer is only true above the
+  // shortest one. Derived rather than written down, because a level edited to
+  // ask for one rep would otherwise leave the copy quietly lying.
+  const shortestLevel = Math.min(
+    ...ACTIVITIES.flatMap((a) => a.levels.map((l) => l.reps || 5))
+  );
 
   const cues = state.commands.map(
     (c) => html`<div class="cue-row">
@@ -148,7 +159,35 @@ function render() {
               <button type="button" data-goal="1" aria-label="Raise the weekly goal">+</button>
             </div>
           </div>
+          ${/* Sits under sessions-per-week because the two answer the same
+                question at different scales — how much practice — and a
+                household changing one usually wants to see the other. */ ''}
+          <div class="cue-row">
+            <span class="situation">Reps per session</span>
+            <div class="stepper">
+              <button type="button" data-reps-pref="-1" aria-label="Fewer reps per session">−</button>
+              <output data-reps-pref-out aria-live="polite">${repsPref}</output>
+              <button type="button" data-reps-pref="1" aria-label="More reps per session">+</button>
+            </div>
+          </div>
         </div>
+        ${/* Two things a number alone cannot say: that some levels ask for
+              fewer than this, and that a very short session still counts for
+              everything except deciding the next level. The second one matters
+              — without it, a household practising in twos would watch the map
+              stop moving and have no way to know why. */ ''}
+        <p class="section-note" style="margin-top: var(--s-3)">
+          A ceiling, not a quota.
+          ${repsPref > shortestLevel
+            ? html`${TRAINER.name} sets each level's own number, and the shortest ask for
+                ${shortestLevel}.`
+            : html`Every level in the program asks for at least this many, so this is the
+                number you will see throughout.`}
+          ${repsPref < MIN_REPS_TO_ADVANCE
+            ? html`Sessions under ${MIN_REPS_TO_ADVANCE} reps still log and still count toward
+                mastery, but they will not move you up a level on their own.`
+            : ''}
+        </p>
       </section>
 
       <section class="section">
@@ -341,6 +380,16 @@ function mount(root) {
     else e.currentTarget.value = getState().commands.find(
       (c) => c.id === e.currentTarget.dataset.cue
     ).cue;
+  });
+
+  on('[data-reps-pref]', 'click', (e) => {
+    const next = Math.min(5, Math.max(1, getRepsPerSession() + Number(e.currentTarget.dataset.repsPref)));
+    setRepsPerSession(next);
+    // A full redraw rather than patching the number in place the way the weekly
+    // goal does: the note under the card appears and disappears as the value
+    // crosses the advancement floor, so there is more than an <output> to keep
+    // in step.
+    refreshApp();
   });
 
   on('[data-goal]', 'click', (e) => {
