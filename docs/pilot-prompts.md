@@ -171,10 +171,18 @@ pays her, the food has to be in the frame and separate from the fingers.
 > treat pouch clipped at her right hip. Her face is in profile or turned away.
 > Calm, unhurried, upright.
 >
-> **The guest** is a man in his thirties with short brown hair, **clean-shaven,
-> no beard and no stubble**, a blue-gray checked shirt, tan trousers and brown
-> boots. Relaxed, hands at his sides, never leaning over the dog. The same man,
-> with the same face, in every image.
+> **The guest** is a man in his fifties with short greying hair under **a black
+> baseball cap**, **pale-rimmed glasses**, and **clean-shaven, no beard and no
+> stubble**. He wears a **blue zip-up hoodie over a white t-shirt**, dark navy
+> jeans and black shoes. Relaxed, hands at his sides, never leaning over the
+> dog. The same man, with the same face, in every image.
+>
+> *(Rewritten 2026-08-20. It described a man in his thirties in a blue-gray
+> checked shirt, tan trousers and brown boots — the guest who was replaced on
+> 19 August and has not appeared in a shipped image since. Every scene written
+> against this block was quietly asking for the old cast back and being saved
+> only by the attachment. Scene 48 is where it showed: the scene said "his cap
+> and glasses" and the block three hundred lines above it said checked shirt.)*
 >
 > **Props, only where a scene names them:** **her bed — a rectangular gray
 > mattress-style dog bed, deep and clearly cushioned, roughly a hand's depth,
