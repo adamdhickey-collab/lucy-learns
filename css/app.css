@@ -2288,16 +2288,28 @@ details.disclosure .disclosure-body {
    icon set already uses to vary emphasis by context — the tab bar runs 1.75
    and thickens to 2.25 when current. Fading it instead would have cost
    contrast on the filled answer button, where the mark is white on teal and
-   has none to spare. `flex` and the stroke colour come from `.btn svg`. */
+   has none to spare. */
 .btn-voice-mark {
   display: inline-flex;
   flex: none;
 }
 
+/* Self-contained, which it was not.
+   ---------------------------------------------------------------------------
+   Stroke, fill and joins used to be inherited from `.btn svg`, on the
+   assumption the mark only ever sits inside a button. It has a second home
+   now — the "Why this matters" summary, which is voice-capable and says so
+   the same way — and outside a `.btn` those declarations simply were not
+   there: no `fill: none` renders the mic as a solid blob. A mark that can
+   appear next to any label carries its own presentation. */
 .btn-voice svg {
   width: 1em;
   height: 1em;
+  stroke: currentColor;
+  fill: none;
   stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 /* --- diagnostics -----------------------------------------------------------

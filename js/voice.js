@@ -541,6 +541,16 @@ export const COMMANDS = [
   { id: 'good', phrase: 'went well', alternates: ['that went well', 'it went well'] },
   { id: 'miss', phrase: 'not that one', alternates: ['not this one', 'no that one'] },
   { id: 'finish', phrase: 'finish session', alternates: ['finish practice', 'end session'] },
+  // The only one that asks rather than acts. Everything above moves the
+  // session and the screen reports the result; this one is a question, and it
+  // is answered out loud because the eyes it would otherwise need are on a
+  // dog. `why this matters` is what the drawer has always been labelled, so
+  // the phrase is read off the screen rather than learned.
+  {
+    id: 'why',
+    phrase: 'why this matters',
+    alternates: ['why does this matter', 'why it matters', 'tell me why'],
+  },
 ];
 
 /**

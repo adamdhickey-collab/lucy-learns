@@ -815,8 +815,8 @@ function stepScreen(activity, level) {
               for Next. The step is the screen; the reasoning is there when it
               is wanted. */ ''}
         ${step.helper
-          ? html`<details class="disclosure">
-              <summary>Why this matters</summary>
+          ? html`<details class="disclosure" data-why>
+              <summary>${commandButtonLabel('why')}</summary>
               <div class="disclosure-body">${step.helper}</div>
             </details>`
           : ''}
@@ -1593,6 +1593,12 @@ function paintVoiceChip() {
  * could never reach.
  */
 function runVoiceCommand(id) {
+  // The one command that is a question, so it does not go through a button.
+  // Clicking the summary would be the consistent move and is the wrong one
+  // twice over: `<summary>` toggles, so a second "why this matters" would shut
+  // the drawer on somebody asking to hear it again, and a drawer that opens
+  // silently answers nothing to a handler who is not looking at the phone.
+  if (id === 'why') return answerWhy();
   const selector = {
     next: '[data-next]',
     prev: '[data-prev]',
@@ -1603,6 +1609,28 @@ function runVoiceCommand(id) {
   if (!selector) return;
   const button = document.querySelector(selector);
   if (button && !button.disabled) button.click();
+}
+
+/**
+ * Open the drawer and read what is in it.
+ *
+ * Read only when it was asked for out loud. Tapping the summary opens it in
+ * silence, as it always has: a thumb on the drawer is attached to eyes on the
+ * screen, and reading a paragraph at somebody already halfway through it is
+ * the app talking over itself. Saying the words is the case where the answer
+ * has nowhere else to go.
+ *
+ * Taken from the rendered text rather than from `step.helper`, so whatever is
+ * on the screen is what gets said — there is no second copy to fall out of
+ * step with the first.
+ */
+function answerWhy() {
+  const drawer = document.querySelector('[data-why]');
+  if (!drawer) return;
+  drawer.open = true;
+  const body = drawer.querySelector('.disclosure-body');
+  const text = body ? body.textContent.trim() : '';
+  if (text && getVoice().speak && canSpeak()) speak(text);
 }
 
 function wire(root) {
