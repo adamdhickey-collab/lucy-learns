@@ -2363,6 +2363,38 @@ details.disclosure .disclosure-body {
   color: var(--danger, var(--caution-text));
 }
 
+/* Two halves that are actually halves. `.btn-row` sizes buttons to their
+   content, which is right for a Cancel beside a Confirm and wrong for a pair
+   of navigation controls that should look like one thing split in two —
+   Previous step and Next step came out 139px and 109px and read as a mistake
+   at a glance. */
+.btn-row--split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+/* Alone on the last step, where the rep question is the way on. */
+.btn-row--split > :only-child {
+  grid-column: 1 / -1;
+}
+
+/* Slightly tighter than the app's body setting. These labels are two words
+   set in a button rather than prose, and at this size the default tracking
+   pushes "Previous step" wider than it needs to be. */
+.btn-row--split .btn {
+  letter-spacing: -0.01em;
+  /* Half the inline padding a full-width button takes, for the same reason
+     the answer buttons needed it: that padding keeps a label off the edges of
+     something spanning the screen, and in a half-width button with a centred
+     label it only narrows the line. "Previous step" wants 126px of content
+     and had 118, so it wrapped to two lines beside a one-line "Next step". */
+  padding-inline: var(--s-3);
+}
+
+.finish-session {
+  margin-top: var(--s-3);
+}
+
 /* --- fallback sheet ------------------------------------------------------- */
 
 .sheet-backdrop {

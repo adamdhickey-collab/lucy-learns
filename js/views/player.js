@@ -949,6 +949,22 @@ function stepScreen(activity, level) {
             </div>`
           : ''}
 
+        ${/* Finishing sits with the count it acts on, not in the footer with
+              the step controls. It is a statement about the session — this
+              one is over, save it — and the strip above is where the session
+              already reports itself. Full width, so the label has room to
+              stay on one line, and quiet, because pressing it is a decision
+              rather than the way forward. */ ''}
+        ${count > 0
+          ? html`<button
+              class="btn ${met ? '' : 'btn--quiet'} btn--block finish-session"
+              type="button"
+              data-finish-practice
+            >
+              ${commandButtonLabel('finish')}
+            </button>`
+          : ''}
+
         <div class="panic-slot">
           <button class="btn btn--caution panic" type="button" data-panic>
             ${getDog().name} is too excited
@@ -956,8 +972,26 @@ function stepScreen(activity, level) {
         </div>
       </div>
     </div>
+    ${/* The footer walks the steps. Nothing else.
+          -------------------------------------------------------------------
+          It held three buttons — Previous step, Finish session, Next step —
+          and the three labels cannot be made to fit a phone: at 13px, below
+          anything this app would set, they still want 375px of a 343px row.
+          So they wrapped to two lines each, came out three different widths,
+          and the last one ran off the edge of the screen.
+
+          Squeezing was the wrong answer anyway, because the three are not
+          peers. Next is pressed about twenty-five times in a session, Previous
+          is a correction, and Finish happens once. Standing a once-a-session
+          action permanently beside the most-pressed one is what created the
+          crowding, and equal sizing would have made three unequal things look
+          alike.
+
+          So navigation keeps the footer, in two halves that are genuinely
+          equal because those two genuinely are peers, and Finish moves up to
+          sit with the count it acts on. */ ''}
     <div class="player-foot">
-      <div class="btn-row">
+      <div class="btn-row btn-row--split">
         <button
           class="btn btn--quiet"
           type="button"
@@ -966,28 +1000,10 @@ function stepScreen(activity, level) {
         >
           ${commandButtonLabel('prev')}
         </button>
-        ${/* Finish appears as soon as there is anything to save, on every
-              step — stopping mid-pass after four good reps is a normal way
-              for a session to end, not an edge case. */ ''}
-        ${!isLast && count > 0
-          ? html`<button class="btn btn--quiet" type="button" data-finish-practice>
-              ${commandButtonLabel('finish')}
-            </button>`
-          : ''}
-        ${/* Nothing counted yet means nothing to finish, and on the first
-              pass a Finish button sitting beside the rep question reads as a
-              second way to answer it. It arrives once there is a session
-              worth saving. */ ''}
+        ${/* On the last step the rep question is the way on, so there is no
+              Next to offer and Previous takes the row alone. */ ''}
         ${isLast
-          ? count > 0
-            ? html`<button
-                class="btn ${met ? '' : 'btn--quiet'}"
-                type="button"
-                data-finish-practice
-              >
-                ${commandButtonLabel('finish')}
-              </button>`
-            : ''
+          ? ''
           : html`<button class="btn" type="button" data-next>
               ${commandButtonLabel('next')}
             </button>`}

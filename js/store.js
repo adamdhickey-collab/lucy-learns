@@ -89,10 +89,33 @@ function load() {
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return emptyState();
-    return { ...emptyState(), ...JSON.parse(raw) };
+    return migrate({ ...emptyState(), ...JSON.parse(raw) });
   } catch {
     return emptyState();
   }
+}
+
+/**
+ * Bring a stored state up to date with the files that actually exist.
+ *
+ * The dog portraits were redrawn and moved from PNG to JPEG, and the chosen
+ * one is saved by path — so every install that had already picked a picture
+ * kept pointing at a file that is no longer in the build, and the profile
+ * showed a broken image where their dog had been. A default in config.js only
+ * ever reaches a fresh install; anybody who has used the app has their own
+ * copy of that string.
+ *
+ * Rewriting the extension is enough because the numbering did not change:
+ * dog-01 is still the black Labrador. Anything unrecognised is left exactly
+ * as it is rather than reset to the default, since a path this code does not
+ * know is more likely to be something later than something broken.
+ */
+function migrate(next) {
+  const photo = next.dog && next.dog.photo;
+  if (typeof photo === 'string' && /^img\/avatars\/dog-\d+\.png$/.test(photo)) {
+    next.dog = { ...next.dog, photo: photo.replace(/\.png$/, '.jpg') };
+  }
+  return next;
 }
 
 function persist() {
