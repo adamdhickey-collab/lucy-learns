@@ -473,14 +473,16 @@ export const IMAGES = withThumb({
  * ponytail who appears in thirty scenes — which is why she is the default. It
  * is the one choice that makes the pictures agree with the profile.
  *
- * The second was delivered as "Adam Pixel Whisperer". The name is kept and
- * the first name dropped: this app is handed to one household at a time and
- * the person typing their own name into the field above should not meet
- * somebody else's in the list beside it.
+ * The second keeps its full name, "Adam Pixel Whisperer", as delivered. I had
+ * trimmed the first name off on the reasoning that a household typing their
+ * own name into the field above should not meet a stranger's in the list
+ * beside it — overruled, and rightly: these are characters rather than
+ * suggestions, and a character with a first name is funnier than a job title.
+ * Nobody reads "Duke of Drool" as an instruction either.
  */
 export const PERSON_AVATARS = [
   { id: 'handler', name: 'The Handler', src: 'img/avatars/people/person-01.jpg' },
-  { id: 'pixel', name: 'Pixel Whisperer', src: 'img/avatars/people/person-02.jpg' },
+  { id: 'pixel', name: 'Adam Pixel Whisperer', src: 'img/avatars/people/person-02.jpg' },
   { id: 'professor', name: 'Professor Fetch', src: 'img/avatars/people/person-03.jpg' },
   { id: 'disco', name: 'Disco Dog Coach', src: 'img/avatars/people/person-04.jpg' },
   { id: 'zen', name: 'Zen Leash Master', src: 'img/avatars/people/person-05.jpg' },
