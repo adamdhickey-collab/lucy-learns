@@ -2597,8 +2597,9 @@ art rather than the pre-restyle cast it used to be. Redraws
 >
 > **The handler stands at the left**, turned inward toward the dog and the
 > guest, calm and unhurried, the slack leash held low in one hand. Her treat
-> pouch is at her hip. Her head is **near the top of the frame but not touching
-> it** — leave a clear margin of wall above her hair.
+> pouch is at her hip. **Leave a clear fifth of the frame as empty wall above
+> the tallest head.** "A margin above her hair" was the first wording and it
+> bought about two per cent; the number is the instruction.
 >
 > **The guest stands a step away at the right**, upright, **hands at his sides**,
 > looking down at Lucy with a small friendly expression. He is not reaching for
@@ -2631,6 +2632,49 @@ art rather than the pre-restyle cast it used to be. Redraws
 >
 > The single thing this image must make obvious: a stranger is standing right
 > there and she is sitting still.
+>
+> Landscape 4:3, wider than tall.
+
+### 48a — Everyone lower in the frame, and the leash attached to the dog
+*Attach the round-22 generation of `door-greet-cover`. Edit, not a redraw: the
+cast, the palette and the square crop are right and should not move.*
+
+> Keep everything about this picture — the two people, their clothes and faces,
+> the dog, the room, the palette — and change how it is framed, plus three
+> details.
+>
+> **1. Everyone sits too high. Move the whole group down and give the picture
+> headroom.** Right now the tops of both heads are at the very top edge. There
+> must be **a clear fifth of the frame — empty cream wall — above the tallest
+> head**, so the two faces sit between a fifth and a third of the way down the
+> picture. Nothing above them but wall.
+>
+> **2. Make Lucy bigger, and step the two people back.** She should be closer to
+> the camera than either of them and read as the largest single shape in the
+> frame — her seated height about half the height of the whole picture. The
+> people are a step further away and correspondingly smaller. This is what
+> creates the headroom in point 1 without cutting anyone in half: their heads
+> come down because they are further off, not because the camera moved.
+>
+> **3. The leash must be clipped to her collar.** It is currently a loop hanging
+> from the handler's hand and attached to nothing — the dog is loose. Clip it to
+> the metal ring on the front of her purple collar, under her chin, and run it
+> slack up to the handler's hand with a visible curve in it.
+>
+> **4. Lucy's muzzle is too smooth.** She is a Labrador and German Wirehaired
+> Pointer mix and the scruff is what makes her recognisable: **a slightly
+> scruffy, wiry muzzle and scruffy eyebrows**, not the clean face of a plain
+> Labrador. Keep her ears soft and floppy, ears forward, topline level, bright
+> and unworried.
+>
+> **5. The door.** Behind the guest, put the **charcoal panelled front door
+> standing open** with daylight in the opening — the same door as the attached
+> reference, not a glass panel at the edge of frame. Only its lower part needs
+> to be in shot.
+>
+> Everything else stays: both people cropped by the bottom edge, hands at the
+> guest's sides, Lucy sitting square with four paws down and her head turned up
+> toward him, purple collar and round blue tag clear.
 >
 > Landscape 4:3, wider than tall.
 
