@@ -61,7 +61,7 @@ const SHELL = [
   './img/avatars/dog-10.jpg',
   // The fourteen handler portraits, for the same reason as the dogs: the
   // picker shows all of them at once, and a household opening it offline
-  // should not meet a grid of holes. 600 KB for the set.
+  // should not meet a grid of holes. 376 KB for the set.
   './img/avatars/people/person-01.jpg',
   './img/avatars/people/person-02.jpg',
   './img/avatars/people/person-03.jpg',

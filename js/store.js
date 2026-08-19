@@ -326,7 +326,18 @@ export function setPersonName(name) {
  */
 /** Give the active person a portrait. */
 export function setPersonAvatar(avatarId) {
-  const person = getPerson();
+  setPersonAvatarFor(state.activePersonId, avatarId);
+}
+
+/**
+ * Give anybody a portrait, by id.
+ *
+ * Needed because the switcher lists everyone and their pictures are the
+ * fastest way to tell them apart, which makes it the natural place to change
+ * one — including for somebody who is not the person currently logging.
+ */
+export function setPersonAvatarFor(id, avatarId) {
+  const person = state.people.find((p) => p.id === id);
   if (!person) return;
   person.avatar = avatarId;
   persist();

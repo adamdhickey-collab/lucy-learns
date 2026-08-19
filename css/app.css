@@ -2434,6 +2434,35 @@ details.disclosure .disclosure-body {
   object-fit: cover;
 }
 
+/* Framing the handler portraits.
+   ---------------------------------------------------------------------------
+   Done to the files, not in CSS. They arrived as busts on a square field and
+   dropped into a circle that read as sloppy: a band of empty field above the
+   head, the chest sliced by the rim below.
+
+   A single transform was tried first and cannot work here. The subject starts
+   anywhere between 3% and 15% down depending on the hair, and one scale and
+   origin either leaves the low ones adrift in space or shaves the tops off
+   the tall ones — both of which happened. So each was measured and cropped to
+   its own subject: a 300px window of the 400, twelve pixels of air above the
+   hair, centred on the subject rather than on the frame. Nothing to undo at
+   display time, and every circle now holds a head where a head should be. */
+/* A face in the switcher is a control too. Same badge, smaller, because the
+   portrait it sits on is a third the size of the one on the profile card. */
+.person-row-face {
+  position: relative;
+  flex: none;
+  /* The portrait reads at 34px and has to be tappable at 44. The padding buys
+     the difference without drawing anything, and the negative margin stops it
+     pushing the name out of line. */
+  padding: var(--s-2);
+  margin: calc(var(--s-2) * -1);
+  border: 0;
+  background: none;
+  cursor: pointer;
+  --edit-badge-size: 18px;
+}
+
 /* --- the handler's portrait -------------------------------------------------
    The one place the app plays. Everything after setup is counting repetitions
    honestly and reporting what they add up to, so the joke lives here, before
@@ -2459,29 +2488,10 @@ details.disclosure .disclosure-body {
   object-fit: cover;
 }
 
-/* Sits on the rim rather than over the face. */
-.avatar-pick-mark {
-  position: absolute;
-  right: -2px;
-  bottom: -2px;
-  width: 26px;
-  height: 26px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--primary);
-  color: var(--text-on-dark);
-  box-shadow: 0 0 0 2px var(--background);
-}
-
-.avatar-pick-mark svg {
-  width: 14px;
-  height: 14px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+/* Setup sits on the page rather than on a card, so the badge rings itself
+   against that instead. */
+.avatar-pick {
+  --edit-badge-ring: var(--background);
 }
 
 .setup-avatar-name strong {
@@ -3001,23 +3011,36 @@ details.disclosure .disclosure-body {
 /* A picture with no affordance is a picture. This is the smallest mark that
    says "this is yours to change" without a label crowding the card, and it
    sits on the circle's lower right where it cannot cover the dog's face. */
-.profile-photo-hint {
+/* The mark that says a picture can be changed.
+   ---------------------------------------------------------------------------
+   One class, three places: the dog on the profile card, the handler in setup,
+   and every face in the person switcher. They were three near-copies that had
+   already drifted — different ring, different stroke — and the point of the
+   badge is that it means the same thing wherever it appears. Changing a
+   picture should be the same gesture whether the picture is of a dog or of a
+   person.
+
+   The ring matches whatever the badge sits on, which is not always the same
+   surface, so it is a variable the context sets rather than a colour baked in
+   here. Size likewise: on a 40px face in a list, 26px of badge is a button
+   wearing a hat. */
+.edit-badge {
   position: absolute;
   right: -2px;
   bottom: -2px;
-  width: 26px;
-  height: 26px;
+  width: var(--edit-badge-size, 26px);
+  height: var(--edit-badge-size, 26px);
   display: grid;
   place-items: center;
   border-radius: 50%;
   background: var(--primary);
-  border: 2px solid var(--surface);
+  border: 2px solid var(--edit-badge-ring, var(--surface));
   color: var(--text-on-dark);
 }
 
-.profile-photo-hint svg {
-  width: 14px;
-  height: 14px;
+.edit-badge svg {
+  width: 55%;
+  height: 55%;
   fill: none;
   stroke: currentColor;
   stroke-width: 3;

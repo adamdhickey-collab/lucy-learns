@@ -833,12 +833,35 @@ export function avatarSheet({ options, currentSrc, onPick }) {
  * @param {Function} [opts.onRemove]    (id) => void, omitted when only one person
  * @param {Function} [opts.onClose]
  */
-export function personSheet({ people, activeId, onSelect, onAdd, onRename, onRemove, onClose }) {
+export function personSheet({
+  people,
+  activeId,
+  onSelect,
+  onAdd,
+  onRename,
+  onRemove,
+  onPickAvatar,
+  onClose,
+}) {
   const backdrop = document.createElement('div');
   backdrop.className = 'sheet-backdrop';
 
   const row = (p) => `
     <li>
+      ${/* The portrait is its own control, outside the row it used to sit
+             inside. Tapping a face to change it is the gesture people bring
+             with them, and it cannot be offered from within a button that
+             already means "switch to this person" — a button inside a button
+             is not markup, it is a guess about which one you hit. */ ''}
+      ${
+        onPickAvatar
+          ? `<button class="person-row-face" type="button" data-avatar-for="${esc(p.id)}"
+               aria-label="Change ${esc(p.name)}'s picture">
+               ${personPortrait(p)}
+               <span class="edit-badge" aria-hidden="true">${ICONS.pencil}</span>
+             </button>`
+          : personPortrait(p)
+      }
       <button
         class="person-row ${p.id === activeId ? 'person-row--active' : ''}"
         type="button"
@@ -846,7 +869,6 @@ export function personSheet({ people, activeId, onSelect, onAdd, onRename, onRem
         aria-checked="${p.id === activeId}"
         data-person="${esc(p.id)}"
       >
-        ${personPortrait(p)}
         <span class="person-row-name">${esc(p.name)}</span>
         ${p.id === activeId ? `<span class="person-row-mark">${ICONS.check}</span>` : ''}
       </button>
@@ -931,6 +953,13 @@ export function personSheet({ people, activeId, onSelect, onAdd, onRename, onRem
       // happen. Closing is the right response — they have confirmed.
       if (id !== activeId) onSelect(id);
       close();
+    });
+  });
+
+  backdrop.querySelectorAll('[data-avatar-for]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      close();
+      onPickAvatar(btn.dataset.avatarFor);
     });
   });
 

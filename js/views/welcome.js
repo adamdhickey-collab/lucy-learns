@@ -151,7 +151,7 @@ function render() {
               aria-label="Choose your avatar. ${personAvatar(draft.avatar).name} selected."
             >
               <img src="${personAvatar(draft.avatar).src}" alt="" width="400" height="400" />
-              <span class="avatar-pick-mark" aria-hidden="true">${icon('pencil')}</span>
+              <span class="edit-badge" aria-hidden="true">${icon('pencil')}</span>
             </button>
           </div>
           ${/* The name of the picture, under the picture, where it reads

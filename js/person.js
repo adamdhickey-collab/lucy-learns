@@ -10,10 +10,18 @@ import {
   getPerson,
   addPerson,
   setActivePerson,
+  setPersonAvatarFor,
   removePerson,
   renamePerson,
 } from './store.js';
-import { personSheet, refreshApp, toast, firstNameOf } from './ui.js';
+import { PERSON_AVATARS } from './content.js';
+import {
+  personSheet,
+  personAvatarSheet,
+  refreshApp,
+  toast,
+  firstNameOf,
+} from './ui.js';
 
 /**
  * Open the switcher.
@@ -28,6 +36,26 @@ import { personSheet, refreshApp, toast, firstNameOf } from './ui.js';
  * expensive to get wrong, since the next logged session is attributed to
  * whoever this left active.
  */
+/**
+ * Choose a portrait for one person, then put the switcher back.
+ *
+ * Reopened afterwards on purpose: both ways in start from that list, and
+ * dropping somebody onto the profile screen after they picked a face for the
+ * person they had just added would lose the thread of what they were doing.
+ */
+function pickAvatarFor(id, name) {
+  personAvatarSheet({
+    options: PERSON_AVATARS,
+    currentId: (getPeople().find((p) => p.id === id) || {}).avatar,
+    onChoose: (chosen) => {
+      setPersonAvatarFor(id, chosen.id);
+      refreshApp();
+      toast(`${firstNameOf(name)} is ${chosen.name}`);
+      openPersonSwitcher();
+    },
+  });
+}
+
 export function openPersonSwitcher() {
   const people = getPeople();
 
@@ -37,17 +65,30 @@ export function openPersonSwitcher() {
   };
 
   personSheet({
-    people: people.map((p) => ({ id: p.id, name: p.name })),
+    // The avatar travels with the person. Mapping to id and name alone left
+    // every row drawing the default portrait, which made the switcher's whole
+    // point — telling people apart at a glance — quietly impossible.
+    people: people.map((p) => ({ id: p.id, name: p.name, avatar: p.avatar })),
     activeId: getPerson().id,
+
+    onPickAvatar: (id) => {
+      const person = getPeople().find((p) => p.id === id);
+      if (person) pickAvatarFor(person.id, person.name);
+    },
 
     onSelect: (id) => {
       setActivePerson(id);
       announce(getPerson().name);
     },
 
+    // Straight into the picker for the person who has just been added. They
+    // have no picture yet and the switcher is about to list them beside
+    // somebody who has, which is the moment the absence is most obvious and
+    // the choice cheapest to make.
     onAdd: (name) => {
-      addPerson(name);
+      const person = addPerson(name);
       announce(name);
+      if (person) pickAvatarFor(person.id, name);
     },
 
     // Any row, not only the active one. The typo worth fixing is usually in

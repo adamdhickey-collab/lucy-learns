@@ -70,7 +70,7 @@ function render() {
             <img src="${dog.photo}" alt="" />
             ${/* A pencil, not a plus. There is already a picture here; this
                   changes it. A plus offers to add a second one. */ ''}
-            <span class="profile-photo-hint">${icon('pencil')}</span>
+            <span class="edit-badge">${icon('pencil')}</span>
           </button>
           <div>
             <h2>${dog.name}</h2>
