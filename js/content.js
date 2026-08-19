@@ -182,7 +182,7 @@ export const IMAGES = withThumb({
   },
   'door-sound-cover': {
     src: 'img/door-sound-cover.jpg',
-    alt: 'A handler crouches beside Lucy well back from the closed front door, offering a treat from her fingers while Lucy sits and takes it.',
+    alt: 'Lucy and her handler close together and face to face, the handler’s hand resting on Lucy’s chest.',
   },
 
   // --- batch 2: the whole of Controlled Real Greeting -----------------------
