@@ -244,7 +244,9 @@ if (existsSync(source)) {
   // Maskable: shrink into the safe zone, then pad out with the artwork's own
   // background colour so a circular or squircle crop never clips the subject.
   const corner = sampleCorner(source);
-  const pad = corner ? toHex(corner) : 'f7f5ef';
+  // Fallback is the artwork's cream (the splash field), not the app paper —
+  // the app paper is cool slate now and would ring the art in gray.
+  const pad = corner ? toHex(corner) : 'fad8ba';
   const inner = Math.round(MASKABLE.size * MASKABLE.safeZone);
   const out = resolve(iconDir, MASKABLE.name);
   sips(['-Z', String(inner), '-s', 'format', 'png', source, '--out', out]);
