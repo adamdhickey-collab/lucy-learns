@@ -88,9 +88,11 @@ const ART_CENTER_Y = 0.5;
 //
 // This used to be the app's paper, #f7f5ef, because the art was a badge sitting
 // on the app's field and the two had to agree or the launch flashed. The art
-// now *is* the screen, so the field has to be the art's cream instead — if it
-// were paper you would see the illustration as a lighter rectangle on a
-// slightly different cream, which is the same seam in the other direction.
+// now *is* the screen, so the field has to be the art's own edge color
+// instead — if it were paper you would see the illustration as a rectangle on
+// a slightly different tint, which is the same seam in the other direction.
+// Since the splash was redrawn for the collar palette that color is a pale
+// lavender a breath away from --violet-50, not the old cream.
 //
 // Keep in step with `--splash-field` in css/app.css. The in-app splash paints
 // that colour, so the OS image and the first frame still match exactly; what
@@ -100,7 +102,7 @@ const ART_CENTER_Y = 0.5;
 // already is at its edges or the art sits on the splash as a visible rectangle.
 // Every redraw has shifted it slightly — re-measure and update this and
 // --splash-field together whenever the art changes.
-const FIELD = [0xfa, 0xd8, 0xba];
+const FIELD = [0xf0, 0xea, 0xf7];
 
 // --- decode ----------------------------------------------------------------
 

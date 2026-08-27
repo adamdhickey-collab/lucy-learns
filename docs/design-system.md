@@ -32,26 +32,34 @@ Everything else follows from two rules:
    reward moments: mastery badges, the reward meter, the goal star. Because
    nothing else in the chrome is warm, warmth itself becomes a signal.
 
-The splash screen is the deliberate exception: its field is the artwork's own
-cream (`--splash-field`, baked into the iOS launch images by
-`scripts/make-splash.mjs`), because the splash *is* an illustration. The
-wordmark on it is `--primary-dark` — the collar violet worn directly against
-the art, and the one place the two palettes meet in the same frame. The fade
-from splash to app is where the cool paper arrives.
+The splash is the one illustration drawn *for* this palette rather than
+graded into it: it was regenerated against the collar system, and its field
+is the artwork's own pale lavender (`--splash-field: #f0eaf7`, a breath away
+from `--violet-50`, measured from a six-pixel ring around the source and
+baked into the iOS launch images by `scripts/make-splash.mjs`). The wordmark
+on it is `--primary-dark` — the collar violet against the field the art was
+drawn on, at 8.52:1. The launch now opens inside the cool system; the fade
+to the app is just the paper arriving.
 
 ### The art grade
 
 The illustrations were painted for the tan UI, so in the app they pass
-through one grade: `--art-grade` (a mild desaturation on the `img`) and
-`--art-veil` (a 7% wash of the collar violet, painted by a `::before` on
-each illustration container). The grade cools the art's cream the same
-direction the paper went without touching the source files, and it is two
-tokens — one decision, reversible by setting them to `none` and
-`transparent`. Exempt on purpose: the splash art, which must stay
-byte-identical to the baked iOS launch images, and the household's avatar
-photos, which are photographs rather than paintings. If the illustration
-set is ever regenerated with a cooler palette, delete the grade rather
-than stacking the two.
+through one grade: `--art-grade` (`saturate(0.62) brightness(0.97)` on the
+`img`) and `--art-veil` (a 16% wash of the collar violet, painted by a
+`::before` on each illustration container). The grade cools the art's
+cream the same direction the paper went without touching the source
+files, and it is two tokens — one decision, reversible by setting them to
+`none` and `transparent`. It began gentler (`saturate(0.86)`, 7%) and was
+strengthened on review, then lifted a step brighter; if it moves again,
+these numbers and this sentence are the whole edit.
+
+The avatars take the filter too — they are painted portraits from the same
+set, on the same warm cream, and ungraded they were the one warm note left
+in the chrome — but not the veil: at avatar size the filter alone carries
+the grade. The one exemption is the splash art, which was redrawn for this
+palette and must stay byte-identical to the baked iOS launch images. If the
+illustration set is ever regenerated with a cooler palette, delete the
+grade rather than stacking the two.
 
 ## Token architecture
 
@@ -122,7 +130,7 @@ non-text indicators 3:1 (WCAG 1.4.11).
 | reward-text on wash / paper / card | 4.5 | 5.90 / 6.13 / 6.70 |
 | success on card / wash / paper | 4.5 | 5.60 / 4.70 / 5.11 |
 | caution-text on paper / wash / card | 4.5 | 5.58 / 5.19 / 6.10 |
-| splash wordmark (primary-dark) on `--splash-field` | 4.5 | 7.46 |
+| splash wordmark (primary-dark) on `--splash-field` | 4.5 | 8.52 |
 | focus ring (primary) vs paper | 3 | 7.09 |
 | caution border vs card / paper | 3 | 4.06 / 3.71 |
 | primary or secondary meter fill vs track | 3 | 6.65 / 4.64 |

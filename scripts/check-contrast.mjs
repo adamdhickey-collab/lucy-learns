@@ -73,7 +73,7 @@ const pairs = [
   ['text-on-dark', 'text-primary', AA, 'toast text on dark pill'],
   ['primary-dark', 'surface', AA, 'quiet button label'],
   ['primary-dark', 'primary-wash', AA, 'current tab label on its fill'],
-  ['primary-dark', 'splash-field', AA, 'splash wordmark on the artwork cream'],
+  ['primary-dark', 'splash-field', AA, 'splash wordmark on the artwork field'],
   ['reward-text', 'reward-wash', AA, 'reward text on its wash'],
   ['reward-text', 'background', AA, 'reward text on paper'],
   ['reward-text', 'surface', AA, 'reward text on card'],

@@ -174,14 +174,19 @@
      The illustrations were painted for the tan UI and arrive a touch warmer
      and more saturated than the chrome that now frames them. Instead of
      regenerating the whole set, every illustration passes through one
-     grade: saturation eased, and a whisper of the collar's violet laid over
-     the top, which cools the art's cream the same direction the paper went.
+     grade: saturation pulled well back, the light dimmed a step, and a wash
+     of the collar's violet laid over the top, which cools the art's cream
+     the same direction the paper went. It started gentler (0.86 / 7%) and
+     was strengthened on review — the first pass still read warm next to
+     the slate.
      Two tokens so the treatment is one decision, made once — set both to
-     `none` and `transparent` to see the paintings as painted. The splash
-     art is exempt (it must stay byte-identical to the iOS launch images),
-     and so are the household's avatar photos. */
-  --art-grade: saturate(0.86) brightness(1.01);
-  --art-veil: color-mix(in srgb, var(--violet-700) 7%, transparent);
+     `none` and `transparent` to see the paintings as painted. The avatars
+     get the filter too — they are painted portraits from the same set, on
+     the same warm cream, and ungraded they were the one warm note left in
+     the chrome. The one exemption is the splash art: it was redrawn for
+     this palette and must stay byte-identical to the iOS launch images. */
+  --art-grade: saturate(0.62) brightness(0.97);
+  --art-veil: color-mix(in srgb, var(--violet-700) 16%, transparent);
 
   --tap: 48px;
   --nav-h: calc(60px + env(safe-area-inset-bottom));
@@ -283,14 +288,21 @@ img {
    veil is a positioned ::before on the container, which paints above a static
    img and below any positioned control inside the same frame (the hero's
    backlink, the player's advance hint) without anyone needing a z-index.
-   Not listed on purpose: .splash-mark and the avatars — see the tokens. */
+   The avatars take the filter but not the veil: they are painted portraits
+   from the same set, but they render as small circles inside rings and
+   pickers whose geometry is their own, and at that size the filter alone
+   carries the grade. Not listed on purpose: .splash-mark — see the tokens. */
 .hero img,
 .activity-card img,
 .detail-hero img,
 .step-figure img,
 .step-pair-item img,
 .welcome-figure img,
-.sheet img {
+.sheet img,
+.avatar img,
+.avatar-pick img,
+.avatar-choice img,
+.profile img {
   filter: var(--art-grade);
 }
 
@@ -3877,18 +3889,22 @@ details.disclosure .disclosure-body {
   position: fixed;
   inset: 0;
   z-index: 100;
-  /* The artwork's own cream, not the app's paper. The splash art is now a
+  /* The artwork's own field, not the app's paper. The splash art is now a
      portrait illustration that runs the full width of the screen rather than a
      badge sitting on the app's field, so the field has to be the color the
      illustration already has at its edges — otherwise the art reads as a
      lighter rectangle on paper. Keep in step with FIELD in
      scripts/make-splash.mjs. The fade to the app is where paper arrives.
 
+     The splash was redrawn for the collar palette: its field is a pale
+     lavender a breath away from --violet-50, so the launch now opens inside
+     the cool system instead of flashing the old cream at it.
+
      Measured, not eyeballed: the mean of a six-pixel ring around the source
      PNG. Re-measure it whenever the art changes — this value drifted a little
      with each new illustration, and a mismatch shows up as a faint rectangle
      exactly where the two are supposed to be indistinguishable. */
-  --splash-field: #fad8ba;
+  --splash-field: #f0eaf7;
   background: var(--splash-field);
   transition: opacity 420ms ease-in;
 
@@ -3927,8 +3943,8 @@ details.disclosure .disclosure-body {
 
 }
 
-/* A slow warm vignette at the very edges of the field. It gives the flat
-   cream some depth once the composition has assembled, and it breathes in
+/* A slow violet vignette at the very edges of the field. It gives the flat
+   lavender some depth once the composition has assembled, and it breathes in
    over more than a second precisely so it cannot exist on the first frame —
    the launch image is a flat field, so the first frame must be too. Kept
    faint enough that where it grazes the art's corners it reads as light,
@@ -3941,7 +3957,7 @@ details.disclosure .disclosure-body {
   background: radial-gradient(
     140% 110% at 50% 42%,
     transparent 58%,
-    rgba(122, 82, 44, 0.09) 100%
+    rgba(85, 48, 122, 0.07) 100%
   );
   animation: splash-vignette-in 1400ms 500ms ease-out both;
 }
@@ -4054,10 +4070,10 @@ details.disclosure .disclosure-body {
   font-size: clamp(3rem, min(25vw, 12vh), 6.5rem);
   font-weight: 600;
   letter-spacing: -0.03em;
-  /* Reads on the artwork's cream at 7.4:1 — the field is warmer than the app's
-     paper, so the app's default ink is the wrong ink here. The collar violet
-     on the artwork's own cream is also the one place the two palettes meet in
-     the same frame: the wordmark is the collar, worn against the art. */
+  /* Reads on the artwork's lavender at 8.5:1 (verified by
+     scripts/check-contrast.mjs, which resolves --splash-field from this
+     file). The wordmark is the collar's own violet against the field the
+     art was drawn on. */
   color: var(--primary-dark);
 }
 
@@ -4202,8 +4218,8 @@ details.disclosure .disclosure-body {
   height: 100%;
   /* No mask. The art was a square badge and the launch images cut it to its
      inscribed circle, so this had to match at the edge. Both are rectangles
-     now: the field is the artwork's own cream, so there is no edge to hide,
-     and a circle would take the dog's ears and paws with it. */
+     now: the field is the artwork's own color at its edges, so there is no
+     edge to hide, and a circle would take the dog's ears and paws with it. */
   /* Starts at exactly 1 — the size the launch image is already showing — and
      drifts in from there, so the first frame is identical and the motion
      begins after the handoff rather than through it. */
