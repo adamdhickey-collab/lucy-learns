@@ -65,9 +65,11 @@ Art drawn cool and then graded cooler goes grey.
 > Light is even and ambient. No cast shadows except a single soft contact shadow
 > under each figure. Generous empty floor; the room is calm and uncluttered.
 >
-> **The one saturated note in every image is Lucy's purple collar.** Nothing else
-> competes with it. Where a picture needs a warning or a "not this" reading, use
-> rose **#c25e79** and nothing more urgent than that.
+> **The one saturated note in every image is Lucy's purple collar, #4a216d — a
+> deep violet, not a bright lilac.** Nothing else competes with it: desaturate
+> the mustard treat pouch a step so it never out-saturates the collar. Where a
+> picture needs a warning or a "not this" reading, use rose **#c25e79** and
+> nothing more urgent than that.
 >
 > No text, lettering, labels, numbers, checkmarks, X marks, arrows, logos,
 > watermarks, borders or UI of any kind anywhere in the image.
@@ -135,6 +137,31 @@ room still reads as a *home*. If it comes back clinical, warm the floor and the
 doormat one step and leave the walls alone: those two props carry all the domestic
 warmth in this palette, which is exactly why they are the only warm-grey values in
 Block A.
+
+## What the first pilot scene taught
+
+`door-sound-01-setup` is drawn and in the app (pilot 1 of 5). Two things are
+worth knowing before the other four.
+
+**Naming the hexes worked.** Sampled off the returned file, the wall came back
+`#e3dce8` against the specified `#eae7f0`, the floor `#c7b8b1` against
+`#c3b5a8`, the door `#45464f` against `#3a3a46`, the hoodie `#6c6a4d` against
+`#6b7150`, the jeans `#303d51` against `#2f3f5c` — every one inside tolerance.
+Keep the hex list in Block A; it is doing real work.
+
+**Two things missed, and both are now written into Block A above.** The collar
+came back lighter and bluer than the sampled strap — `#573578` and `#5f3483`
+against `#4a216d` — and it was not the most saturated thing in the frame: of
+the most-saturated pixels in each take, 83–87% sat in the orange-yellow band,
+which is the treat pouch and the floor. The "one saturated note" line was in
+the brief and still did not survive, so it now names the hex and calls out the
+pouch by name.
+
+**Check the pixel dimensions before doing anything else with a returned file.**
+One of the two takes arrived at 1397×1126 — a 1.24 ratio the app cannot use,
+since it cuts both a 4:3 and a square from the same file. It cropped cleanly to
+1397×1048 because the trim came off the bottom, which held nothing but floor,
+but a scene with content at both edges would have had to be redrawn.
 
 ## Notes for the generator
 
