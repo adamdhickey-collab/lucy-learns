@@ -57,14 +57,27 @@ arriving.
 ### The art grade
 
 The illustrations were painted for the tan UI, so in the app they pass
-through one grade: `--art-grade` (`saturate(0.62) brightness(0.97)` on the
-`img`) and `--art-veil` (a 16% wash of the collar violet, painted by a
-`::before` on each illustration container). The grade cools the art's
-cream the same direction the paper went without touching the source
-files, and it is two tokens — one decision, reversible by setting them to
-`none` and `transparent`. It began gentler (`saturate(0.86)`, 7%) and was
-strengthened on review, then lifted a step brighter; if it moves again,
-these numbers and this sentence are the whole edit.
+through one grade: `--art-grade`
+(`saturate(0.78) brightness(1.05) contrast(1.06)` on the `img`) and
+`--art-veil` (an 8% wash of the collar violet, painted by a `::before` on
+each illustration container). The grade cools the art's cream the same
+direction the paper went without touching the source files, and it is two
+tokens — one decision, reversible by setting them to `none` and
+`transparent`.
+
+Three passes to get here, and the middle one is worth keeping on the
+record. It began gentle (`saturate(0.86)`, 7%), was strengthened to
+`saturate(0.62) brightness(0.97)` at 16% because the first pass still read
+warm against the slate — and at 16% the pictures went drab. A flat
+translucent wash does not only tint, it lifts the blacks, and lifted
+blacks are what haze *is*. The fix was not more brightness on top of the
+wash but less wash: 8%, saturation back up to a still-disciplined 0.78,
+and `contrast(1.06)` to cancel what the wash still costs. Measured on the
+hero portrait, that restores the ungraded luminance (value 72.5 against
+72.2 raw) while holding saturation about 30% under it.
+
+If it moves again, those two numbers and this passage are the whole edit —
+and the lesson is: reach for the veil before the brightness.
 
 The avatars take the filter too — they are painted portraits from the same
 set, on the same warm cream, and ungraded they were the one warm note left
