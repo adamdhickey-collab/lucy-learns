@@ -174,11 +174,20 @@
      The illustrations were painted for the tan UI and arrive a touch warmer
      and more saturated than the chrome that now frames them. Instead of
      regenerating the whole set, every illustration passes through one
-     grade: saturation pulled well back, the light dimmed a step, and a wash
-     of the collar's violet laid over the top, which cools the art's cream
-     the same direction the paper went. It started gentler (0.86 / 7%) and
-     was strengthened on review — the first pass still read warm next to
-     the slate.
+     grade: saturation pulled back, the light lifted a little, and a thin
+     wash of the collar's violet laid over the top, which cools the art's
+     cream the same direction the paper went.
+
+     Three passes to get here, and the middle one is the lesson. It began
+     gentle (0.86 / 7%), was strengthened to 0.62 / 16% because the first
+     pass still read warm next to the slate — and at 16% the pictures went
+     drab. A flat translucent wash does not only tint: it lifts the blacks,
+     and lifting the blacks is what haze *is*. So the veil came back to 8%,
+     saturation rose to a still-disciplined 0.78, and `contrast(1.06)`
+     cancels what the wash still costs. Measured on the hero portrait, this
+     restores the ungraded luminance (value 72.5 against 72.2 raw) while
+     holding saturation ~30% under it — bright pictures, cool palette,
+     which is the whole point.
      Two tokens so the treatment is one decision, made once — set both to
      `none` and `transparent` to see the paintings as painted. The avatars
      get the filter too — they are painted portraits from the same set, on
@@ -186,8 +195,8 @@
      the chrome. The one exemption is the splash art, which must stay
      byte-identical to the iOS launch images — its grade is baked into the
      source instead (a gentler pass; see the .splash block). */
-  --art-grade: saturate(0.62) brightness(0.97);
-  --art-veil: color-mix(in srgb, var(--violet-700) 16%, transparent);
+  --art-grade: saturate(0.78) brightness(1.05) contrast(1.06);
+  --art-veil: color-mix(in srgb, var(--violet-700) 8%, transparent);
 
   --tap: 48px;
   --nav-h: calc(60px + env(safe-area-inset-bottom));
