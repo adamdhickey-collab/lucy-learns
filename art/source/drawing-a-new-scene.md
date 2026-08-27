@@ -143,6 +143,22 @@ two faces steady, and the one time this file described the handler in words inst
 the words drifted the character somewhere she should not have gone. There is no
 sentence that can do the job; do not write one back into Block B.
 
+**Both sheets are painted in the old style, and that is the one trap in this
+brief.** They were cropped from the existing warm, painterly set, because that is
+where the likenesses live — but it means every request now carries an example of
+exactly the rendering Block A is trying to leave behind, and a generator asked to
+match a face will happily match the brushwork with it. If a scene comes back
+painterly, say so explicitly and regenerate:
+
+> The reference sheets are for **likeness only** — the faces, the hair, the build,
+> the clothing, Lucy's markings and beard. Do **not** copy their rendering style,
+> shading or background: they are painted in an older style being replaced. Draw
+> these same two characters in the flat, vector-like style described above, on the
+> cool palette described above.
+
+Once the pilot produces a flat scene that holds both likenesses, recrop the sheets
+from *it* and this trap closes for good.
+
 Ask for one scene per image, at 1448×1086 — the app resizes to 1100×825 and cuts a
 240×180 thumbnail from the same file. Covers get drawn at 84pt with `object-fit:
 cover`, so a cover needs its subject grouped and centered or the square crop throws
