@@ -3,10 +3,10 @@
 Every illustration in the app is drawn. This file is no longer a to-do list — it is
 what the next scene should be drawn against, whenever there is one.
 
-Paste **Block A** and **Block B** ahead of any scene prompt and attach
-`trainer-reference.jpg`. They are what keeps forty illustrations looking like one
-set rather than forty separate pictures, so they go in every time, unchanged, even
-when it feels repetitive.
+Paste **Block A** and **Block B** ahead of any scene prompt and attach both
+reference sheets, `trainer-reference.jpg` and `lucy-reference.jpg`. They are what
+keeps forty illustrations looking like one set rather than forty separate pictures,
+so they go in every time, unchanged, even when it feels repetitive.
 
 Give the new scene a **Must be true** line of its own. Each image sits on a step
 that teaches something, and the picture is the instruction — a handler leaning over
@@ -16,18 +16,67 @@ what stopped that happening.
 
 ---
 
+## What changed, and why this file was rewritten
+
+The set in `img/` today is **matte painterly and warm**: soft airbrushed shading,
+cream-peach walls, honey oak. It was drawn for a tan UI that no longer exists. The
+app now runs on the collar palette — cool slate paper, violet accents — and the
+gap is currently papered over in CSS by the art grade (`--art-grade` and
+`--art-veil` in `css/app.css`), which desaturates each picture and lays a thin
+violet wash over it. That grade is a bridge, not a destination, and
+`docs/design-system.md` says so.
+
+Block A below is the destination: **flat, drawn cool, in the app's own colors.**
+It merges two decisions that were made separately and never written down together
+— the flat instructional style prescribed in `docs/illustration-audit.md` §6 (as
+"Warm Instructional Vector"), and the collar palette that replaced the tan one
+afterwards. The style survives; the temperature inverts.
+
+**When the set is replaced, delete the art grade** rather than stacking the two.
+Art drawn cool and then graded cooler goes grey.
+
+---
+
 ## Block A — style
 
-> Painted digital illustration, warm and calm: soft airbrushed shading, clean
-> confident linework, matte finish. Not photorealistic, not cartoonish, no heavy
-> outlines, no harsh shadows, no lens blur or bokeh. Landscape 4:3, 1448×1086.
+> Contemporary instructional illustration for a dog-training manual. **Simplified,
+> vector-like forms: crisp clean edges, flat color fills, at most two tones per
+> surface — one light, one shadow — with no gradient between them.** No airbrushed
+> or painterly rendering, no soft blurred shading, no photorealistic fur or fabric
+> texture, no lens blur, no drop shadows, no outline heavier than a hairline. Not
+> childish or cartoonish either: the shapes are simplified but the proportions and
+> the anatomy stay accurate and adult. Flat, calm composition, everything at eye
+> level, viewed straight on or in clean three-quarter. One clearly readable action
+> per image. Landscape 4:3, 1448×1086.
 >
-> Interior entryway of an ordinary suburban home: warm cream-peach walls, white
-> baseboards, honey-toned wood floor, a charcoal-gray paneled front door with a
-> four-pane window in its upper half, a coir doormat inside the threshold, a
-> rectangular gray dog bed with a soft rolled edge. Even, soft daylight from the
-> door. Muted palette — olive green, dusty blue, warm cream, charcoal, honey wood.
-> Plenty of empty floor; the room is calm and uncluttered.
+> **Cool palette, and these are the actual colors — match them.** Interior entryway
+> of an ordinary suburban home:
+>
+> - walls a pale lavender-grey **#eae7f0**, flat, no texture
+> - baseboards and door trim off-white **#f5f4f9**
+> - floor a desaturated oak that reads as warm grey rather than honey, **#c3b5a8**,
+>   with plank lines as thin flat strokes and no wood grain
+> - the front door a cool charcoal **#3a3a46**, panelled, with a small four-pane
+>   window in its upper half
+> - daylight through that window a pale spruce **#34735c** for foliage, no sky detail
+> - a rectangular dog bed in cool grey **#b6b4c0**
+> - a woven doormat in muted taupe **#b0a394**
+>
+> Light is even and ambient. No cast shadows except a single soft contact shadow
+> under each figure. Generous empty floor; the room is calm and uncluttered.
+>
+> **The one saturated note in every image is Lucy's purple collar.** Nothing else
+> competes with it. Where a picture needs a warning or a "not this" reading, use
+> rose **#c25e79** and nothing more urgent than that.
+>
+> No text, lettering, labels, numbers, checkmarks, X marks, arrows, logos,
+> watermarks, borders or UI of any kind anywhere in the image.
+
+Those hexes are not decorative precision — they are the app's own tokens. The
+lavender wall is kin to `--slate-100`, the mustard pouch in Block B is literally
+`--gold-400`, the guest's hoodie is `--denim-600`, the foliage is `--spruce-600`,
+the warning rose is `--rose-400`. Drawing the pictures out of the interface's own
+palette is what will let the grade be deleted instead of merely reduced.
 
 ## Block B — the cast
 
@@ -36,44 +85,74 @@ what stopped that happening.
 > art already in the app. Copy that likeness. Do not restyle her, do not re-age her,
 > do not reinterpret her features, and do not substitute a generic type: this is one
 > specific person drawn repeatedly, and a description in words is not enough to hold
-> her steady across forty pictures.
+> her steady across forty pictures. Simplify her rendering to the flat style in
+> Block A without changing who she is.
 >
 > Everything else about her: early forties, dark brown hair worn in a low ponytail
-> with a few loose strands at the temple, a warm olive-green pullover hoodie, dark
-> navy jeans, gray sneakers, and a mustard-yellow treat pouch clipped at her right
-> hip. Calm and unhurried. She never looms over the dog: she crouches or kneels to
-> the dog's level, or stands straight and relaxed.
+> with a few loose strands at the temple, a warm olive-green pullover hoodie
+> **#6b7150**, dark navy jeans **#2f3f5c**, grey sneakers **#b9b6bd**, and a
+> mustard-yellow treat pouch **#e3b448** clipped at her right hip in every image.
+> Calm and unhurried. She never looms over the dog: she crouches or kneels to the
+> dog's level, or stands straight and relaxed.
+>
+> **LUCY** — **attach `lucy-reference.jpg` and match the dog to it.** Three views of
+> one specific dog, cropped from art already in the app. A black Labrador mix: matte
+> black coat **#1b1a22** with cool grey highlights rather than glossy reflections,
+> the scruffy wire-haired beard along the jaw and chin, a soft floppy triangular
+> ear, a modest dark-amber eye, a small white flash on her chest, white tips on her
+> toes. She wears a flat **purple collar #4a216d with a round blue tag #2f6fb0, and
+> no harness — never a harness, in any image.** Where a leash is attached it clips
+> to the ring on that collar at the front of her neck. Medium-large and athletic,
+> with a soft, gentle expression. Never anxious, never cowering, never
+> anthropomorphised.
 >
 > **THE GUEST** — a man in his late forties, clear-framed glasses, a **black
-> baseball cap**, a **medium-blue zip-up hoodie** over a white tee, dark navy
-> trousers, dark shoes. Friendly, relaxed, unhurried. **He must wear the blue
+> baseball cap**, a **medium-blue zip-up hoodie #4c6b9b** over a white tee, dark
+> navy trousers, dark shoes. Friendly, relaxed, unhurried. **He must wear the blue
 > hoodie and black cap in every image. Do not draw him in a plaid or checked
 > shirt** — that was an earlier version of this character and is being replaced
 > everywhere.
 >
-> **LUCY** — a black Labrador mix with a glossy black coat, a small white flash on
-> her chest, white tips on her toes, and a flat **purple collar with a round blue
-> tag**. Medium-large and athletic, with a soft, gentle expression. Never anxious,
-> never cowering.
+> Recurring props: the flat grey dog bed, a black leash, the mustard treat pouch,
+> the charcoal panelled front door, the woven doormat. Nothing else unless the
+> scene brief names it.
 
 ---
 
+## Do the pilot first
+
+Forty images is too many to commit to a style on faith, and
+`docs/illustration-audit.md` §6 already chose the five that exercise every hard
+part of it exactly once: a partial-figure close-up, a moving leash, a three-figure
+interaction, a corrective pair, and a wide multi-person room. Its five scene briefs
+still stand — only Block A's temperature and finish changed. Draw those five, put
+them in the app beside the graded old ones, and only then decide about the rest.
+
+Two things the pilot is really testing. Whether flat fills survive the 84pt
+thumbnail crop — they should do better than painterly ones, not worse, since flat
+shapes hold at small sizes and soft rendering turns to mush. And whether a cool
+room still reads as a *home*. If it comes back clinical, warm the floor and the
+doormat one step and leave the walls alone: those two props carry all the domestic
+warmth in this palette, which is exactly why they are the only warm-grey values in
+Block A.
+
 ## Notes for the generator
 
-Attach `trainer-reference.jpg` to every request. It is the only thing holding her
-face steady, and the one time this file described her in words instead, the words
-drifted the character somewhere she should not have gone. There is no sentence that
-can do the job; do not write one back into Block B.
+Attach both reference sheets to every request. They are the only thing holding the
+two faces steady, and the one time this file described the handler in words instead,
+the words drifted the character somewhere she should not have gone. There is no
+sentence that can do the job; do not write one back into Block B.
 
 Ask for one scene per image, at 1448×1086 — the app resizes to 1100×825 and cuts a
 240×180 thumbnail from the same file. Covers get drawn at 84pt with `object-fit:
 cover`, so a cover needs its subject grouped and centered or the square crop throws
 it away.
 
-Four errors are worth regenerating over: her likeness wandering off the reference
-sheet, the guest in a plaid shirt, a taut leash where the prompt says slack, and the
-handler bending over the dog from above. The last three change what the picture
-teaches; the first breaks the person.
+Five errors are worth regenerating over: her likeness wandering off the reference
+sheet, Lucy drawn glossy and photorealistic instead of flat, the guest in a plaid
+shirt, a taut leash where the prompt says slack, and the handler bending over the
+dog from above. The last three change what the picture teaches; the first two break
+the set.
 
 One warning about the `lucy-learns-updated-trainer-gaze-directed-v2` folder, since
 it is the obvious place to look for spare scenes: **it still draws the guest in the
