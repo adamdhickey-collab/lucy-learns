@@ -329,6 +329,33 @@ img {
   background: var(--art-veil);
 }
 
+/* --- the pilot ledger ------------------------------------------------------
+   Art redrawn against art/source/drawing-a-new-scene.md arrives already flat
+   and already cool, so the grade above would grade it a second time — and cool
+   art graded cooler goes grey, which is the one failure that file names. Every
+   redrawn file is listed here and opts out of both halves of the grade.
+
+   The suffix selector deliberately catches the thumbnail too: `thumb-x.jpg`
+   ends with `x.jpg`, so one entry per picture covers both files.
+
+   This list grows as the set is redrawn and then vanishes. When no warm art is
+   left, delete --art-grade, --art-veil, the rules above and this whole block
+   together — not one at a time, or the last few pictures will be graded alone.
+
+   Redrawn so far: door-sound-01-setup (pilot 1 of 5). */
+img[src$="door-sound-01-setup.jpg"] {
+  filter: none;
+}
+
+.hero:has(img[src$="door-sound-01-setup.jpg"]),
+.activity-card .card-illo:has(img[src$="door-sound-01-setup.jpg"]),
+.detail-hero:has(img[src$="door-sound-01-setup.jpg"]),
+.step-figure:has(img[src$="door-sound-01-setup.jpg"]),
+.step-pair-item:has(img[src$="door-sound-01-setup.jpg"]),
+.welcome-figure:has(img[src$="door-sound-01-setup.jpg"]) {
+  --art-veil: transparent;
+}
+
 /* The hero's veil covers only the illustration's 16/7 strip at the top of the
    card, not the text body below it. Same ratio as .hero img; change together. */
 .hero::before {
