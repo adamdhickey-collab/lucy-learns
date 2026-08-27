@@ -170,6 +170,19 @@
   --shadow-card: 0 1px 2px rgba(22, 20, 40, 0.05);
   --shadow-lift: 0 6px 20px rgba(22, 20, 40, 0.1);
 
+  /* --- the art grade ----------------------------------------------------
+     The illustrations were painted for the tan UI and arrive a touch warmer
+     and more saturated than the chrome that now frames them. Instead of
+     regenerating the whole set, every illustration passes through one
+     grade: saturation eased, and a whisper of the collar's violet laid over
+     the top, which cools the art's cream the same direction the paper went.
+     Two tokens so the treatment is one decision, made once — set both to
+     `none` and `transparent` to see the paintings as painted. The splash
+     art is exempt (it must stay byte-identical to the iOS launch images),
+     and so are the household's avatar photos. */
+  --art-grade: saturate(0.86) brightness(1.01);
+  --art-veil: color-mix(in srgb, var(--violet-700) 7%, transparent);
+
   --tap: 48px;
   --nav-h: calc(60px + env(safe-area-inset-bottom));
   --page-max: 34rem;
@@ -263,6 +276,53 @@ textarea {
 img {
   max-width: 100%;
   display: block;
+}
+
+/* --- the art grade, applied ------------------------------------------------
+   Every surface that shows an illustration. The filter lives on the img; the
+   veil is a positioned ::before on the container, which paints above a static
+   img and below any positioned control inside the same frame (the hero's
+   backlink, the player's advance hint) without anyone needing a z-index.
+   Not listed on purpose: .splash-mark and the avatars — see the tokens. */
+.hero img,
+.activity-card img,
+.detail-hero img,
+.step-figure img,
+.step-pair-item img,
+.welcome-figure img,
+.sheet img {
+  filter: var(--art-grade);
+}
+
+.detail-hero::before,
+.step-figure::before,
+.step-pair-item::before,
+.welcome-figure::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: var(--art-veil);
+}
+
+/* The hero's veil covers only the illustration's 16/7 strip at the top of the
+   card, not the text body below it. Same ratio as .hero img; change together. */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  aspect-ratio: 16 / 7;
+  pointer-events: none;
+  background: var(--art-veil);
+}
+
+/* The two containers above that did not already establish a position. */
+.step-pair-item,
+.welcome-figure {
+  position: relative;
 }
 
 ul {

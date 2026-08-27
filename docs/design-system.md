@@ -39,6 +39,20 @@ wordmark on it is `--primary-dark` — the collar violet worn directly against
 the art, and the one place the two palettes meet in the same frame. The fade
 from splash to app is where the cool paper arrives.
 
+### The art grade
+
+The illustrations were painted for the tan UI, so in the app they pass
+through one grade: `--art-grade` (a mild desaturation on the `img`) and
+`--art-veil` (a 7% wash of the collar violet, painted by a `::before` on
+each illustration container). The grade cools the art's cream the same
+direction the paper went without touching the source files, and it is two
+tokens — one decision, reversible by setting them to `none` and
+`transparent`. Exempt on purpose: the splash art, which must stay
+byte-identical to the baked iOS launch images, and the household's avatar
+photos, which are photographs rather than paintings. If the illustration
+set is ever regenerated with a cooler palette, delete the grade rather
+than stacking the two.
+
 ## Token architecture
 
 Three layers, top of `css/app.css`:
