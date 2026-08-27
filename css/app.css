@@ -1055,7 +1055,11 @@ a.visually-hidden:focus {
   display: block;
   height: 100%;
   border-radius: var(--r-pill);
-  background: var(--primary);
+  /* Was --primary. A meter here always shows levels already cleared — banked
+     progress — and banked is spruce, the same claim the cleared pips and the
+     rail's finished nodes make. Violet stays for position ("you are here"),
+     which no .meter carries; the player's session bar is its own component. */
+  background: var(--success);
 }
 
 .meter--reward > span {
@@ -5082,17 +5086,20 @@ details.disclosure .disclosure-body {
   border: 1px solid var(--border-strong);
 }
 
-/* Cleared is teal everywhere, including inside a finished stage. Green was
-   doing double duty here — it means "this whole stage is done", which is what
-   the node and the state label already say, and having a cleared level change
-   color depending on its neighbors made one idea look like two. */
+/* Cleared is spruce everywhere — the same claim the rail's finished nodes
+   and the level list's ticks make. This said "teal everywhere" when cleared
+   borrowed the accent; once the accent went collar-violet, cleared pips were
+   indistinguishable from the selected level's disc, and the palette read as
+   one violet idea instead of two. Banked is green; violet is for where you
+   are — which is exactly what the live pip below says. */
 .pips-row i.on {
-  background: var(--primary);
-  border-color: var(--primary);
+  background: var(--success);
+  border-color: var(--success);
 }
 
 /* The level being worked right now: a half-filled pip, so "in progress" is a
-   shape and not a hue. */
+   shape and not a hue — and violet, because this pip is the one place in the
+   row that means "you are here" rather than "behind you". */
 .pips-row i.live {
   border-color: var(--primary);
   background: linear-gradient(90deg, var(--primary) 50%, transparent 50%);
@@ -5508,10 +5515,22 @@ details.disclosure .disclosure-body {
 
 /* A cleared level keeps its number slot but swaps in a tick, so the level list
    doubles as a checklist without adding a column.
-   Teal, not green: the tick means "behind you", which is not the same claim as
-   the mastery badge sitting next to it. A level can be ticked and still say
-   "Improving", and those two facts must not look like they disagree. */
+   Spruce, and no longer the accent: when cleared wore the accent it was the
+   same disc as the selected row's, and "behind you" and "practicing this"
+   looked like one state. The tick still is not the mastery badge's claim — a
+   level can be ticked and still say "Improving"; done and quality are
+   different facts and now different families. The selected row's disc stays
+   violet and carries an arrow, not a tick — see detail.js. */
 .level-row--cleared .n {
+  background: var(--success);
+  border-color: var(--success);
+  color: var(--text-on-dark);
+}
+
+/* Selection outranks cleared on the disc — same specificity, so source order
+   decides, and this rule exists to sit after the one above. The arrow rides
+   violet even when the practiced row happens to be cleared. */
+.level-row[aria-pressed='true'] .n {
   background: var(--primary);
   border-color: var(--primary);
   color: var(--text-on-dark);
@@ -6018,7 +6037,9 @@ svg.icon--solid {
 }
 
 .rung--reached .rung-bar {
-  background: var(--primary);
+  /* Reached is banked, and banked is spruce; the rung you are on keeps its
+     violet label and extra height below, so position stays the accent's job. */
+  background: var(--success);
   box-shadow: none;
 }
 
@@ -6034,7 +6055,7 @@ svg.icon--solid {
 }
 
 /* Reliable is the top of the ladder and the hardest thing in the app to earn,
-   so arriving there is gold rather than more teal. */
+   so arriving there is gold rather than more spruce. */
 .ladder .rung:last-child.rung--here .rung-bar {
   background: var(--reward);
 }

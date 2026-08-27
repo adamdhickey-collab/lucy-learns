@@ -33,11 +33,14 @@ Everything else follows from three rules:
    nothing else in the chrome is warm, warmth itself becomes a signal.
    (The player's cue callout learned this the hard way: it wore gold for a
    while, and a cue is an instruction, not a reward — it speaks violet now.)
-3. **Violet marks what you can tap and where you are.** Buttons, links,
-   focus rings, the current tab, the current step — violet is a promise of
-   action or presence. Eyebrows, captions, and counts are metadata and speak
-   slate; the activity marks are identity and speak denim. When everything
-   is violet, nothing is.
+3. **Violet marks what you can tap and where you are; spruce marks what is
+   behind you.** Buttons, links, focus rings, the current tab, the live pip,
+   the level being practiced — violet is a promise of action or presence.
+   Progress already banked — meters, cleared pips and ticks, reached rungs
+   on the mastery ladder — is spruce: green says behind you, violet says you
+   are here. Eyebrows, captions, and counts are metadata and speak slate;
+   the activity marks are identity and speak denim. When everything is
+   violet, nothing is.
 
 The splash was redrawn *for* this palette, then given a gentle version of
 the art grade baked into the source pixels (saturation ×0.85, 7% violet
@@ -112,12 +115,12 @@ to the collar's family, not so much that secondary text reads purple.
 | `--text-primary` | slate-800 | body text; also the dark fill behind toasts |
 | `--text-primary-dark` | slate-900 | hover only |
 | `--text-secondary` | slate-500 | supporting text, inactive tabs |
-| `--primary` | violet-600 | actions: fills under white text, links, focus rings, meters |
+| `--primary` | violet-600 | actions: fills under white text, links, focus rings, the live pip and the practiced level's arrow |
 | `--primary-dark` | violet-700 | hover, current tab, quiet-button labels, the splash wordmark |
 | `--primary-wash` | violet-50 | tints behind current/selected states |
 | `--secondary` | denim-600 | informational accents — the activity marks — and the second series where one accent is not enough |
 | `--reward` / `--reward-text` / `--reward-wash` | gold | reward moments only; `--reward` is fills and accents, never text |
-| `--success` / `--success-wash` | spruce | "that held", improvement deltas |
+| `--success` / `--success-wash` | spruce | "that held", improvement deltas, and banked progress: meters, cleared pips and ticks, reached rungs |
 | `--caution` / `--caution-text` / `--caution-text-dark` / `--caution-wash` | rose | "too excited", regressions; `--caution` is fills and borders, `--caution-text` is the text-safe step |
 | `--border` / `--border-strong` | slate-200/300 | hairlines and control outlines |
 
@@ -143,6 +146,8 @@ non-text indicators 3:1 (WCAG 1.4.11).
 | caution-text on paper / wash / card | 4.5 | 5.58 / 5.19 / 6.10 |
 | splash wordmark (primary-dark) on `--splash-field` | 4.5 | 7.53 |
 | denim activity mark on card | 3 | 5.41 |
+| tick on a cleared spruce disc | 4.5 | 5.60 |
+| spruce meter fill vs track | 3 | 4.80 |
 | focus ring (primary) vs paper | 3 | 7.09 |
 | caution border vs card / paper | 3 | 4.06 / 3.71 |
 | primary or secondary meter fill vs track | 3 | 6.65 / 4.64 |

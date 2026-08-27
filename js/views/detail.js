@@ -136,7 +136,18 @@ function render({ slug }) {
       aria-pressed="${String(level.number === active.number)}"
     >
       <span class="n" aria-hidden="true">
-        ${cleared ? icon('check') : raw(String(level.number))}
+        ${/* Three states, three marks: the row being practiced carries an
+              arrow ("this one next"), a cleared row the spruce tick
+              ("behind you"), everything else its number. The arrow wins on a
+              row that is both — the card's wash and its "practicing this"
+              line already say selected, and two rows wearing identical ticks
+              was exactly how "ready for the next step" and "level cleared"
+              stopped being distinguishable. */ ''}
+        ${level.number === active.number
+          ? icon('arrow')
+          : cleared
+            ? icon('check')
+            : raw(String(level.number))}
       </span>
       <span class="txt">
         <strong>${level.title}</strong>
