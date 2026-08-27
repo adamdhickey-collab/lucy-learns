@@ -88,6 +88,7 @@ const pairs = [
   ['caution', 'background', NT, 'caution border on paper'],
   ['primary', 'surface-sunken', NT, 'meter fill against its track'],
   ['secondary', 'surface-sunken', NT, 'denim fill against its track'],
+  ['secondary', 'surface', NT, 'denim activity mark on card'],
 ];
 /* Not listed on purpose: --reward against its track. The gold meter fill is
    decorative by rule (never text, always beside a label with the value) and

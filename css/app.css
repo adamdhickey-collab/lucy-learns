@@ -183,8 +183,9 @@
      `none` and `transparent` to see the paintings as painted. The avatars
      get the filter too — they are painted portraits from the same set, on
      the same warm cream, and ungraded they were the one warm note left in
-     the chrome. The one exemption is the splash art: it was redrawn for
-     this palette and must stay byte-identical to the iOS launch images. */
+     the chrome. The one exemption is the splash art, which must stay
+     byte-identical to the iOS launch images — its grade is baked into the
+     source instead (a gentler pass; see the .splash block). */
   --art-grade: saturate(0.62) brightness(0.97);
   --art-veil: color-mix(in srgb, var(--violet-700) 16%, transparent);
 
@@ -293,7 +294,7 @@ img {
    pickers whose geometry is their own, and at that size the filter alone
    carries the grade. Not listed on purpose: .splash-mark — see the tokens. */
 .hero img,
-.activity-card img,
+.activity-card .card-illo img,
 .detail-hero img,
 .step-figure img,
 .step-pair-item img,
@@ -306,6 +307,7 @@ img {
   filter: var(--art-grade);
 }
 
+.activity-card .card-illo::before,
 .detail-hero::before,
 .step-figure::before,
 .step-pair-item::before,
@@ -1138,7 +1140,20 @@ a.visually-hidden:focus {
   font-weight: 650;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--primary-dark);
+  /* Was --primary-dark. Violet is reserved for what you can tap and for
+     "you are here"; an eyebrow is metadata, and painting it violet put it
+     in competition with the button below it. The activity's mark keeps a
+     voice of its own in denim, below. */
+  color: var(--text-secondary);
+}
+
+/* The activity's mark — the one informational token that is neither action
+   nor state — speaks denim: the second accent, from her tag, doing the job
+   it was sampled for. Scoped to the hero and the library card; the program
+   strip's route marks carry state and keep their own colors. */
+.hero-body .eyebrow-mark,
+.activity-card-mark .eyebrow-mark {
+  color: var(--secondary);
 }
 
 /* The eyebrow carrying the activity's mark. Inline-flex rather than a floated
@@ -1317,11 +1332,21 @@ a.visually-hidden:focus {
   background: var(--surface-sunken);
 }
 
-.activity-card img {
+/* The thumb's frame. Sizing lives on the span so its ::before veil clips to
+   the same rounded box; the planned cards keep their own .planned-thumb
+   treatment and stay outside both the frame and the grade. */
+.activity-card .card-illo {
+  position: relative;
   width: 84px;
   height: 84px;
   flex: none;
   border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.activity-card .card-illo img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   background: var(--surface-sunken);
 }
@@ -1980,9 +2005,13 @@ details.disclosure .disclosure-body {
   gap: var(--s-2);
   flex-wrap: wrap;
   padding: var(--s-3) var(--s-4);
-  background: var(--reward-wash);
+  /* Was the reward wash. A cue is an instruction — the system speaking —
+     not a reward, and the gold box was the loudest thing on the step screen,
+     outshouting the instruction itself. Gold means one thing here: that went
+     well. The cue speaks in the system's own violet instead. */
+  background: var(--primary-wash);
   border-radius: var(--r-md);
-  border-left: 4px solid var(--reward);
+  border-left: 4px solid var(--primary);
 }
 
 .say .label {
@@ -1990,7 +2019,7 @@ details.disclosure .disclosure-body {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--reward-text);
+  color: var(--primary-dark);
 }
 
 .say .cue {
@@ -3896,15 +3925,19 @@ details.disclosure .disclosure-body {
      lighter rectangle on paper. Keep in step with FIELD in
      scripts/make-splash.mjs. The fade to the app is where paper arrives.
 
-     The splash was redrawn for the collar palette: its field is a pale
-     lavender a breath away from --violet-50, so the launch now opens inside
-     the cool system instead of flashing the old cream at it.
+     The splash was redrawn for the collar palette, then given a gentle
+     version of the art grade baked into the source pixels (saturation 0.85,
+     7% violet blend) so it carries the same finish as the graded set — CSS
+     cannot reach the OS launch images, so the treatment has to live in the
+     file. The field is the graded art's own lavender, and the ungraded
+     original sits beside the source as splash-source-ungraded.png; re-treat
+     from that, never from the already-graded file.
 
      Measured, not eyeballed: the mean of a six-pixel ring around the source
      PNG. Re-measure it whenever the art changes — this value drifted a little
      with each new illustration, and a mismatch shows up as a faint rectangle
      exactly where the two are supposed to be indistinguishable. */
-  --splash-field: #f0eaf7;
+  --splash-field: #e4dcec;
   background: var(--splash-field);
   transition: opacity 420ms ease-in;
 
@@ -5199,7 +5232,9 @@ details.disclosure .disclosure-body {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-weight: 700;
-  color: var(--primary);
+  /* Was --primary; same demotion as the hero eyebrow. "Activity 1 of 4" is
+     a caption, not a control. */
+  color: var(--text-secondary);
 }
 
 /* The program as the same row of marks the welcome route draws, one size

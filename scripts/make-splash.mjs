@@ -102,7 +102,7 @@ const ART_CENTER_Y = 0.5;
 // already is at its edges or the art sits on the splash as a visible rectangle.
 // Every redraw has shifted it slightly — re-measure and update this and
 // --splash-field together whenever the art changes.
-const FIELD = [0xf0, 0xea, 0xf7];
+const FIELD = [0xe4, 0xdc, 0xec];
 
 // --- decode ----------------------------------------------------------------
 

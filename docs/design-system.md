@@ -18,7 +18,7 @@ button fill. The deeper steps of the ramp stay within arm's reach of the
 sampled strap, so the buttons and the collar in the pictures read as the same
 object.
 
-Everything else follows from two rules:
+Everything else follows from three rules:
 
 1. **The chrome is cool; the art is warm.** The illustrations carry their own
    warm cream fields, wood floors, and olive greens. The app does not compete
@@ -31,15 +31,25 @@ Everything else follows from two rules:
    ochre — is the one warm family the UI keeps, and it appears only on
    reward moments: mastery badges, the reward meter, the goal star. Because
    nothing else in the chrome is warm, warmth itself becomes a signal.
+   (The player's cue callout learned this the hard way: it wore gold for a
+   while, and a cue is an instruction, not a reward — it speaks violet now.)
+3. **Violet marks what you can tap and where you are.** Buttons, links,
+   focus rings, the current tab, the current step — violet is a promise of
+   action or presence. Eyebrows, captions, and counts are metadata and speak
+   slate; the activity marks are identity and speak denim. When everything
+   is violet, nothing is.
 
-The splash is the one illustration drawn *for* this palette rather than
-graded into it: it was regenerated against the collar system, and its field
-is the artwork's own pale lavender (`--splash-field: #f0eaf7`, a breath away
-from `--violet-50`, measured from a six-pixel ring around the source and
-baked into the iOS launch images by `scripts/make-splash.mjs`). The wordmark
-on it is `--primary-dark` — the collar violet against the field the art was
-drawn on, at 8.52:1. The launch now opens inside the cool system; the fade
-to the app is just the paper arriving.
+The splash was redrawn *for* this palette, then given a gentle version of
+the art grade baked into the source pixels (saturation ×0.85, 7% violet
+blend — CSS cannot reach the OS launch images, so its treatment lives in
+the file; the ungraded original is kept at
+`art/source/splash-source-ungraded.png`). Its field is the graded art's own
+lavender (`--splash-field: #e4dcec`, measured from a six-pixel ring around
+the source and baked into the iOS launch images by
+`scripts/make-splash.mjs`). The wordmark on it is `--primary-dark` — the
+collar violet against the field the art was drawn on, at 7.53:1. The launch
+now opens inside the cool system; the fade to the app is just the paper
+arriving.
 
 ### The art grade
 
@@ -56,10 +66,11 @@ these numbers and this sentence are the whole edit.
 The avatars take the filter too — they are painted portraits from the same
 set, on the same warm cream, and ungraded they were the one warm note left
 in the chrome — but not the veil: at avatar size the filter alone carries
-the grade. The one exemption is the splash art, which was redrawn for this
-palette and must stay byte-identical to the baked iOS launch images. If the
-illustration set is ever regenerated with a cooler palette, delete the
-grade rather than stacking the two.
+the grade. The one exemption is the splash art, which must stay
+byte-identical to the baked iOS launch images — its gentler grade is baked
+into the source pixels instead, as described above. If the illustration set
+is ever regenerated with a cooler palette, delete the grade rather than
+stacking the two.
 
 ## Token architecture
 
@@ -104,7 +115,7 @@ to the collar's family, not so much that secondary text reads purple.
 | `--primary` | violet-600 | actions: fills under white text, links, focus rings, meters |
 | `--primary-dark` | violet-700 | hover, current tab, quiet-button labels, the splash wordmark |
 | `--primary-wash` | violet-50 | tints behind current/selected states |
-| `--secondary` | denim-600 | the second series where one accent is not enough |
+| `--secondary` | denim-600 | informational accents — the activity marks — and the second series where one accent is not enough |
 | `--reward` / `--reward-text` / `--reward-wash` | gold | reward moments only; `--reward` is fills and accents, never text |
 | `--success` / `--success-wash` | spruce | "that held", improvement deltas |
 | `--caution` / `--caution-text` / `--caution-text-dark` / `--caution-wash` | rose | "too excited", regressions; `--caution` is fills and borders, `--caution-text` is the text-safe step |
@@ -130,7 +141,8 @@ non-text indicators 3:1 (WCAG 1.4.11).
 | reward-text on wash / paper / card | 4.5 | 5.90 / 6.13 / 6.70 |
 | success on card / wash / paper | 4.5 | 5.60 / 4.70 / 5.11 |
 | caution-text on paper / wash / card | 4.5 | 5.58 / 5.19 / 6.10 |
-| splash wordmark (primary-dark) on `--splash-field` | 4.5 | 8.52 |
+| splash wordmark (primary-dark) on `--splash-field` | 4.5 | 7.53 |
+| denim activity mark on card | 3 | 5.41 |
 | focus ring (primary) vs paper | 3 | 7.09 |
 | caution border vs card / paper | 3 | 4.06 / 3.71 |
 | primary or secondary meter fill vs track | 3 | 6.65 / 4.64 |

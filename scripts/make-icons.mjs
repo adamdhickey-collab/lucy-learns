@@ -246,7 +246,7 @@ if (existsSync(source)) {
   const corner = sampleCorner(source);
   // Fallback is the artwork's own field (the splash lavender), not the app
   // paper — the two are close now, but the sampled corner is the truth.
-  const pad = corner ? toHex(corner) : 'f0eaf7';
+  const pad = corner ? toHex(corner) : 'e4dcec';
   const inner = Math.round(MASKABLE.size * MASKABLE.safeZone);
   const out = resolve(iconDir, MASKABLE.name);
   sips(['-Z', String(inner), '-s', 'format', 'png', source, '--out', out]);
