@@ -84,9 +84,12 @@ set, on the same warm cream, and ungraded they were the one warm note left
 in the chrome — but not the veil: at avatar size the filter alone carries
 the grade. The one exemption is the splash art, which must stay
 byte-identical to the baked iOS launch images — its gentler grade is baked
-into the source pixels instead, as described above. If the illustration set
-is ever regenerated with a cooler palette, delete the grade rather than
-stacking the two.
+into the source pixels instead, as described above.
+
+The grade is a bridge, not a destination. `art/source/drawing-a-new-scene.md`
+now specifies the destination — flat, vector-like illustration drawn cool, out
+of these same tokens — and when the set is redrawn to it, **delete the grade**
+rather than stacking the two. Art drawn cool and then graded cooler goes grey.
 
 ## Token architecture
 

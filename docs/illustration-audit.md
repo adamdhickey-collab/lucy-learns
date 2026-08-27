@@ -666,6 +666,15 @@ also cover all seven crops and both squares.
 
 **Shared brief for all five — Warm Instructional Vector**
 
+> **Superseded on palette — see [Block A in
+> `art/source/drawing-a-new-scene.md`](../art/source/drawing-a-new-scene.md).**
+> The *style* below is still the target and the five scene briefs still stand.
+> The *temperature* is not: this block was written against the tan UI, so it
+> asks for a warm cream background and a teal palette, and the app has since
+> moved to the collar palette — cool lavender walls, violet as the one
+> saturated note, rose rather than coral for warnings. Draw from Block A;
+> read this for the scene briefs.
+
 > Contemporary dog-training instruction manual illustration. Simplified
 > vector-like forms, crisp edges, restrained detail. Mostly flat color with
 > subtle dimensional shading. Warm cream background. Muted green, teal, blue and
