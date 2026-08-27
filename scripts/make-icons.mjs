@@ -193,8 +193,8 @@ const toHex = (rgb) => rgb.map((c) => c.toString(16).padStart(2, '0')).join('');
 
 // --- placeholder mark ------------------------------------------------------
 
-const CREAM = [247, 245, 239];
-const TEAL = [25, 123, 131];
+const PAPER = [245, 244, 249];
+const VIOLET = [106, 61, 148];
 const WHITE = [255, 255, 255];
 
 const distanceToSegment = (px, py, ax, ay, bx, by) => {
@@ -216,10 +216,10 @@ function placeholderPixel(x, y, size) {
   const px = x + 0.5;
   const py = y + 0.5;
 
-  let color = CREAM;
+  let color = PAPER;
 
   const circle = coverage(Math.hypot(px - cx, py - cy) - s * 0.36);
-  if (circle > 0) color = mix(color, TEAL, circle);
+  if (circle > 0) color = mix(color, VIOLET, circle);
 
   const thickness = s * 0.075;
   const check = Math.min(
@@ -244,7 +244,9 @@ if (existsSync(source)) {
   // Maskable: shrink into the safe zone, then pad out with the artwork's own
   // background colour so a circular or squircle crop never clips the subject.
   const corner = sampleCorner(source);
-  const pad = corner ? toHex(corner) : 'f7f5ef';
+  // Fallback is the artwork's own field (the splash lavender), not the app
+  // paper — the two are close now, but the sampled corner is the truth.
+  const pad = corner ? toHex(corner) : 'e4dcec';
   const inner = Math.round(MASKABLE.size * MASKABLE.safeZone);
   const out = resolve(iconDir, MASKABLE.name);
   sips(['-Z', String(inner), '-s', 'format', 'png', source, '--out', out]);

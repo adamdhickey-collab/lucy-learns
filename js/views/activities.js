@@ -25,12 +25,17 @@ function activityCard(activity) {
   const { stage } = stageFor(activity);
   return html`<li>
     <a class="activity-card" href="#/activity/${activity.slug}">
-      <img
-        src="${img.thumb}"
-        alt=""
-        loading="lazy"
-        style="view-transition-name: card-${activity.id}"
-      />
+      ${/* The span exists for the art grade: the thumb needs the same violet
+            veil the heroes get, and a veil is a ::before on a positioned
+            container — an <img> cannot paint over itself. */ ''}
+      <span class="card-illo">
+        <img
+          src="${img.thumb}"
+          alt=""
+          loading="lazy"
+          style="view-transition-name: card-${activity.id}"
+        />
+      </span>
       <div class="body">
         ${/* The same mark and one-word name the program strip uses, and Today's
               hero above it. Three places name each activity — the strip, the

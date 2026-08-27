@@ -1,8 +1,10 @@
 /* =========================================================================
    Lucy Learns
    Design tokens first, then primitives, then screens.
-   Light only by design: the instructional illustrations are warm and bright,
-   and the app is used in a lit entryway with a leash in one hand.
+   Light only by design: the app is used in a lit entryway with a leash in
+   one hand. Cool by design too: the chrome runs violet, denim, and slate —
+   drawn from Lucy's collar — while the illustrations keep their warm cream.
+   The temperature difference is deliberate. See docs/design-system.md.
    ========================================================================= */
 
 /* --- fonts ----------------------------------------------------------------
@@ -31,38 +33,102 @@
 }
 
 :root {
-  /* --- color ------------------------------------------------------------ */
-  --background: #f7f5ef;
+  /* --- color ------------------------------------------------------------
+     Two layers. Primitives are raw ramps, each named for where it lives in
+     the artwork: Lucy's collar (violet), the visitor's hoodie and her tag
+     (denim), the treat pouch (gold), the yard (spruce), a rose for caution,
+     and a slate neutral pulled a few degrees toward the collar so the grays
+     belong to the same family. Semantic tokens below them are what the rest
+     of this file uses; nothing outside this block reaches for a primitive.
+
+     The chrome is cool on purpose while the illustrations stay warm. The
+     temperature difference is the frame: warm pictures sit forward on a
+     cool field the way they do on a gallery wall, instead of dissolving
+     into a paper the same color as their own cream. Gold is the one warm
+     family the UI keeps, and it is reserved for reward moments, so warmth
+     always means the same thing here: that went well.
+
+     Contrast figures in the comments are computed, not eyeballed, and the
+     full pair-by-pair table lives in docs/design-system.md. Re-verify
+     before moving any value. */
+
+  /* the collar. #452368 is the lit strap as sampled from the art
+     (splash-mark.jpg reads #4a216d); 600 is the same hue — 271° — lifted
+     just far enough to hold AA both as text on paper and under white text
+     as a fill. */
+  --violet-50: #efe9f6;
+  --violet-100: #e0d5f0;
+  --violet-300: #a98fd0;
+  --violet-600: #6a3d94;
+  --violet-700: #55307a;
+  --violet-800: #452368;
+  --violet-900: #34204f;
+
+  /* slate: the neutrals, hue ≈245 at 2–8% saturation. Enough cast to read
+     cool beside the warm art, not so much that gray text turns purple. */
+  --slate-25: #f5f4f9;
+  --slate-50: #ededf4;
+  --slate-100: #e9e8f1;
+  --slate-200: #dcdbe8;
+  --slate-300: #c1c0d4;
+  --slate-500: #5b5977;
+  --slate-800: #24223a;
+  --slate-900: #161428;
+
+  /* denim: the blue hoodie and Lucy's tag */
+  --denim-600: #4c6b9b;
+
+  /* gold: the treat pouch */
+  --gold-100: #f9f0d8;
+  --gold-400: #e3b448;
+  --gold-800: #755718;
+
+  /* spruce: the yard through the open door */
+  --spruce-100: #e2eeea;
+  --spruce-600: #34735c;
+
+  /* rose: caution. It replaces the old terracotta — same warmth of meaning,
+     but it sits on the magenta side of the collar, so it reads as kin to
+     the violet rather than a visitor from the tan palette. */
+  --rose-100: #f8e9ed;
+  --rose-400: #c25e79;
+  --rose-600: #a63d5b;
+  --rose-700: #92344e;
+
+  /* --- semantic roles --------------------------------------------------- */
+  --background: var(--slate-25);
   /* What sits behind the content column when the window is wider than it is.
      Unused on a phone, where the column is the window. */
-  --field: #ebe6da;
+  --field: var(--slate-100);
   --surface: #ffffff;
-  --surface-sunken: #f1ede4;
-  --text-primary: #233239;
-  --text-primary-dark: #16232a;   /* hover only */
-  --text-secondary: #5c6a70;      /* 5.06:1 on --background */
+  --surface-sunken: var(--slate-50);
+  --text-primary: var(--slate-800);       /* 14.06:1 on --background */
+  --text-primary-dark: var(--slate-900);  /* hover only */
+  --text-secondary: var(--slate-500);     /* 6.11:1 on --background */
   --text-on-dark: #ffffff;
 
-  --primary: #197b83;             /* 4.60:1 on --background, 5.02:1 on white */
-  --primary-dark: #125d63;
-  --primary-wash: #e6f0f0;
-  --secondary: #5d7f91;
+  --primary: var(--violet-600);           /* 7.09:1 on --background, 7.75:1 on white,
+                                             and 7.75:1 under white button text */
+  --primary-dark: var(--violet-700);
+  --primary-wash: var(--violet-50);
+  --secondary: var(--denim-600);
 
-  --reward: #e6b94b;              /* fills and accents only, never text */
-  --reward-text: #7a5c12;         /* 5.55:1 on --reward-wash, 5.72:1 on --background */
-  --reward-wash: #fbf1d8;
-  --success: #427459;             /* 5.44:1 on white */
-  --success-wash: #e6efe9;
-  --caution: #c8755b;             /* fills and borders */
-  /* 5.04:1 on --background, 4.72:1 on --caution-wash, 5.49:1 on white.
-     The previous #b25a40 failed AA on the first two, which included the
-     "Lucy is too excited" button and the watch chips. */
-  --caution-text: #a3523a;
-  --caution-text-dark: #8e4833;   /* hover */
-  --caution-wash: #f9ebe6;
+  --reward: var(--gold-400);              /* fills and accents only, never text */
+  --reward-text: var(--gold-800);         /* 5.90:1 on --reward-wash, 6.13:1 on --background */
+  --reward-wash: var(--gold-100);
+  --success: var(--spruce-600);           /* 5.60:1 on white */
+  --success-wash: var(--spruce-100);
+  --caution: var(--rose-400);             /* fills and borders */
+  /* 5.58:1 on --background, 5.19:1 on --caution-wash, 6.10:1 on white.
+     The terracotta this replaces had already been lifted once for AA on
+     the "Lucy is too excited" button and the watch chips; the rose keeps
+     those same three floors. */
+  --caution-text: var(--rose-600);
+  --caution-text-dark: var(--rose-700);   /* hover */
+  --caution-wash: var(--rose-100);
 
-  --border: #dde3e1;
-  --border-strong: #c3ccc9;
+  --border: var(--slate-200);
+  --border-strong: var(--slate-300);
 
   /* --- type ------------------------------------------------------------- */
   --font: 'Karla', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -100,8 +166,28 @@
   --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
 
-  --shadow-card: 0 1px 2px rgba(35, 50, 57, 0.05);
-  --shadow-lift: 0 6px 20px rgba(35, 50, 57, 0.1);
+  /* Shadow ink is --slate-900, so shadows cool with everything else. */
+  --shadow-card: 0 1px 2px rgba(22, 20, 40, 0.05);
+  --shadow-lift: 0 6px 20px rgba(22, 20, 40, 0.1);
+
+  /* --- the art grade ----------------------------------------------------
+     The illustrations were painted for the tan UI and arrive a touch warmer
+     and more saturated than the chrome that now frames them. Instead of
+     regenerating the whole set, every illustration passes through one
+     grade: saturation pulled well back, the light dimmed a step, and a wash
+     of the collar's violet laid over the top, which cools the art's cream
+     the same direction the paper went. It started gentler (0.86 / 7%) and
+     was strengthened on review — the first pass still read warm next to
+     the slate.
+     Two tokens so the treatment is one decision, made once — set both to
+     `none` and `transparent` to see the paintings as painted. The avatars
+     get the filter too — they are painted portraits from the same set, on
+     the same warm cream, and ungraded they were the one warm note left in
+     the chrome. The one exemption is the splash art, which must stay
+     byte-identical to the iOS launch images — its grade is baked into the
+     source instead (a gentler pass; see the .splash block). */
+  --art-grade: saturate(0.62) brightness(0.97);
+  --art-veil: color-mix(in srgb, var(--violet-700) 16%, transparent);
 
   --tap: 48px;
   --nav-h: calc(60px + env(safe-area-inset-bottom));
@@ -196,6 +282,61 @@ textarea {
 img {
   max-width: 100%;
   display: block;
+}
+
+/* --- the art grade, applied ------------------------------------------------
+   Every surface that shows an illustration. The filter lives on the img; the
+   veil is a positioned ::before on the container, which paints above a static
+   img and below any positioned control inside the same frame (the hero's
+   backlink, the player's advance hint) without anyone needing a z-index.
+   The avatars take the filter but not the veil: they are painted portraits
+   from the same set, but they render as small circles inside rings and
+   pickers whose geometry is their own, and at that size the filter alone
+   carries the grade. Not listed on purpose: .splash-mark — see the tokens. */
+.hero img,
+.activity-card .card-illo img,
+.detail-hero img,
+.step-figure img,
+.step-pair-item img,
+.welcome-figure img,
+.sheet img,
+.avatar img,
+.avatar-pick img,
+.avatar-choice img,
+.profile img {
+  filter: var(--art-grade);
+}
+
+.activity-card .card-illo::before,
+.detail-hero::before,
+.step-figure::before,
+.step-pair-item::before,
+.welcome-figure::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: var(--art-veil);
+}
+
+/* The hero's veil covers only the illustration's 16/7 strip at the top of the
+   card, not the text body below it. Same ratio as .hero img; change together. */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  aspect-ratio: 16 / 7;
+  pointer-events: none;
+  background: var(--art-veil);
+}
+
+/* The two containers above that did not already establish a position. */
+.step-pair-item,
+.welcome-figure {
+  position: relative;
 }
 
 ul {
@@ -453,8 +594,8 @@ a.visually-hidden:focus {
 
 /* The whole tab lights up, not a pill around its icon.
    ------------------------------------------------------------------------
-   Color alone was not carrying this. Inactive is #5c6a70 and current was
-   #125d63 — different hues, but almost the same *lightness*, so at 24px the
+   Color alone was not carrying this. Inactive is #5b5977 and current was
+   #55307a — different hues, but almost the same *lightness*, so at 24px the
    only real cue was a half-pixel of extra stroke weight and the row read as
    four identical tabs. Value contrast is what the eye finds first; hue is what
    it confirms with. So the current tab is a filled shape, the same idiom the
@@ -999,7 +1140,20 @@ a.visually-hidden:focus {
   font-weight: 650;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--primary-dark);
+  /* Was --primary-dark. Violet is reserved for what you can tap and for
+     "you are here"; an eyebrow is metadata, and painting it violet put it
+     in competition with the button below it. The activity's mark keeps a
+     voice of its own in denim, below. */
+  color: var(--text-secondary);
+}
+
+/* The activity's mark — the one informational token that is neither action
+   nor state — speaks denim: the second accent, from her tag, doing the job
+   it was sampled for. Scoped to the hero and the library card; the program
+   strip's route marks carry state and keep their own colors. */
+.hero-body .eyebrow-mark,
+.activity-card-mark .eyebrow-mark {
+  color: var(--secondary);
 }
 
 /* The eyebrow carrying the activity's mark. Inline-flex rather than a floated
@@ -1178,11 +1332,21 @@ a.visually-hidden:focus {
   background: var(--surface-sunken);
 }
 
-.activity-card img {
+/* The thumb's frame. Sizing lives on the span so its ::before veil clips to
+   the same rounded box; the planned cards keep their own .planned-thumb
+   treatment and stay outside both the frame and the grade. */
+.activity-card .card-illo {
+  position: relative;
   width: 84px;
   height: 84px;
   flex: none;
   border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.activity-card .card-illo img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   background: var(--surface-sunken);
 }
@@ -1426,7 +1590,7 @@ a.visually-hidden:focus {
 
 /* The fallback list is help, not warnings. Keep it visually quiet. */
 .notes-list--calm li::before {
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23197b83' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 6 15 12 9 18'/%3E%3C/svg%3E")
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236a3d94' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 6 15 12 9 18'/%3E%3C/svg%3E")
     center / contain no-repeat;
 }
 
@@ -1438,7 +1602,7 @@ a.visually-hidden:focus {
   background: linear-gradient(
     to top,
     var(--background) 55%,
-    rgba(247, 245, 239, 0)
+    rgba(245, 244, 249, 0)
   );
 }
 
@@ -1465,7 +1629,7 @@ a.visually-hidden:focus {
   bottom: 100%;
   height: var(--s-6);
   pointer-events: none;
-  background: linear-gradient(to top, var(--background), rgba(247, 245, 239, 0));
+  background: linear-gradient(to top, var(--background), rgba(245, 244, 249, 0));
 }
 
 .sticky-hint {
@@ -1505,7 +1669,7 @@ details.disclosure summary::after {
   width: 16px;
   height: 16px;
   margin-left: auto;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23125d63' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E")
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2355307a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E")
     center / contain no-repeat;
   transition: transform 0.15s ease;
 }
@@ -1841,9 +2005,13 @@ details.disclosure .disclosure-body {
   gap: var(--s-2);
   flex-wrap: wrap;
   padding: var(--s-3) var(--s-4);
-  background: var(--reward-wash);
+  /* Was the reward wash. A cue is an instruction — the system speaking —
+     not a reward, and the gold box was the loudest thing on the step screen,
+     outshouting the instruction itself. Gold means one thing here: that went
+     well. The cue speaks in the system's own violet instead. */
+  background: var(--primary-wash);
   border-radius: var(--r-md);
-  border-left: 4px solid var(--reward);
+  border-left: 4px solid var(--primary);
 }
 
 .say .label {
@@ -1851,7 +2019,7 @@ details.disclosure .disclosure-body {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--reward-text);
+  color: var(--primary-dark);
 }
 
 .say .cue {
@@ -2442,7 +2610,7 @@ details.disclosure .disclosure-body {
   padding-top: var(--s-3);
   padding-bottom: calc(var(--s-5) + env(safe-area-inset-bottom));
   background: var(--surface);
-  box-shadow: 0 -12px 16px -12px rgba(35, 50, 57, 0.18);
+  box-shadow: 0 -12px 16px -12px rgba(22, 20, 40, 0.18);
 }
 
 /* A badge that holds a picture instead of two letters. The initials version
@@ -2634,7 +2802,7 @@ details.disclosure .disclosure-body {
   position: fixed;
   inset: 0;
   z-index: 60;
-  background: rgba(35, 50, 57, 0.45);
+  background: rgba(22, 20, 40, 0.45);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -3750,18 +3918,26 @@ details.disclosure .disclosure-body {
   position: fixed;
   inset: 0;
   z-index: 100;
-  /* The artwork's own cream, not the app's paper. The splash art is now a
+  /* The artwork's own field, not the app's paper. The splash art is now a
      portrait illustration that runs the full width of the screen rather than a
      badge sitting on the app's field, so the field has to be the color the
      illustration already has at its edges — otherwise the art reads as a
      lighter rectangle on paper. Keep in step with FIELD in
      scripts/make-splash.mjs. The fade to the app is where paper arrives.
 
+     The splash was redrawn for the collar palette, then given a gentle
+     version of the art grade baked into the source pixels (saturation 0.85,
+     7% violet blend) so it carries the same finish as the graded set — CSS
+     cannot reach the OS launch images, so the treatment has to live in the
+     file. The field is the graded art's own lavender, and the ungraded
+     original sits beside the source as splash-source-ungraded.png; re-treat
+     from that, never from the already-graded file.
+
      Measured, not eyeballed: the mean of a six-pixel ring around the source
      PNG. Re-measure it whenever the art changes — this value drifted a little
      with each new illustration, and a mismatch shows up as a faint rectangle
      exactly where the two are supposed to be indistinguishable. */
-  --splash-field: #fad8ba;
+  --splash-field: #e4dcec;
   background: var(--splash-field);
   transition: opacity 420ms ease-in;
 
@@ -3800,8 +3976,8 @@ details.disclosure .disclosure-body {
 
 }
 
-/* A slow warm vignette at the very edges of the field. It gives the flat
-   cream some depth once the composition has assembled, and it breathes in
+/* A slow violet vignette at the very edges of the field. It gives the flat
+   lavender some depth once the composition has assembled, and it breathes in
    over more than a second precisely so it cannot exist on the first frame —
    the launch image is a flat field, so the first frame must be too. Kept
    faint enough that where it grazes the art's corners it reads as light,
@@ -3814,7 +3990,7 @@ details.disclosure .disclosure-body {
   background: radial-gradient(
     140% 110% at 50% 42%,
     transparent 58%,
-    rgba(122, 82, 44, 0.09) 100%
+    rgba(85, 48, 122, 0.07) 100%
   );
   animation: splash-vignette-in 1400ms 500ms ease-out both;
 }
@@ -3927,8 +4103,10 @@ details.disclosure .disclosure-body {
   font-size: clamp(3rem, min(25vw, 12vh), 6.5rem);
   font-weight: 600;
   letter-spacing: -0.03em;
-  /* Reads on the artwork's cream at 8.9:1 — the field is warmer than the app's
-     paper, so the app's default ink is the wrong ink here. */
+  /* Reads on the artwork's lavender at 8.5:1 (verified by
+     scripts/check-contrast.mjs, which resolves --splash-field from this
+     file). The wordmark is the collar's own violet against the field the
+     art was drawn on. */
   color: var(--primary-dark);
 }
 
@@ -4073,8 +4251,8 @@ details.disclosure .disclosure-body {
   height: 100%;
   /* No mask. The art was a square badge and the launch images cut it to its
      inscribed circle, so this had to match at the edge. Both are rectangles
-     now: the field is the artwork's own cream, so there is no edge to hide,
-     and a circle would take the dog's ears and paws with it. */
+     now: the field is the artwork's own color at its edges, so there is no
+     edge to hide, and a circle would take the dog's ears and paws with it. */
   /* Starts at exactly 1 — the size the launch image is already showing — and
      drifts in from there, so the first frame is identical and the motion
      begins after the handoff rather than through it. */
@@ -5054,7 +5232,9 @@ details.disclosure .disclosure-body {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-weight: 700;
-  color: var(--primary);
+  /* Was --primary; same demotion as the hero eyebrow. "Activity 1 of 4" is
+     a caption, not a control. */
+  color: var(--text-secondary);
 }
 
 /* The program as the same row of marks the welcome route draws, one size
