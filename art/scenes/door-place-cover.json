@@ -1,0 +1,32 @@
+{
+  "id": "door-place-cover",
+  "briefId": "cool-flat-v1",
+  "title": "Doorbell Means Place — activity cover",
+  "activity": "Doorbell Means Place",
+  "step": "the activity cover",
+  "note": "Cover, and the geometry is settled rather than guessed. This activity's cover used to be door-place-03-send, which failed the 16:7 Today band three times running — sliced across the eyes, then decapitated at the shoulders — because the band keeps 58% of the height and a standing adult above a floor-level bed does not fit in it. Every cover that passed first time has a crouching or kneeling human. Mirrored left-to-right against the Stay pictures on purpose: door-place-cover and door-stay-cover sit side by side on the program map rail, and a previous attempt passed every crop and still failed because at 56px the two were the same picture.",
+  "blocks": [
+    "style",
+    "cast"
+  ],
+  "references": [
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-sound-02-self.png",
+      "role": "continuity:room"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-cover.png",
+      "role": "continuity:room"
+    }
+  ],
+  "scene": "Interior entry hall, side view at standing eye level. MIRROR the layout used elsewhere in this program: the bed sits on the RIGHT of the frame and the closed charcoal front door on the LEFT, well away in the background. Lucy lies settled on her cool-grey dog bed — a proper mattress with real thickness, a padded slab about a hand deep with a soft raised edge, not a flat mat or a thin rug on the right — elbows and hips down, head up and level, calm and unhurried. The handler CROUCHES beside her on the bed's right, down on her heels so her head is low and near Lucy's, turned toward her, one hand resting lightly on Lucy's shoulder. She is crouching, not standing and not bending from the waist. Nothing is being offered: both her hands are empty, there is no treat anywhere in the picture. They are plainly well back from the door, with a long stretch of empty floor between them and it. No leash. Both figures, Lucy's head and the resting hand sit inside the middle 75% of the width AND the middle 60% of the height, so the centred square and the Today band both hold them whole. Take only the bed's shape, depth and cool grey from the second reference, not its open door or its guest. Background: the lavender wall, one baseboard line, the distant closed door, the bed.",
+  "mustBeTrue": "the handler is crouched down on her heels with her head low beside Lucy's rather than standing or bending from the waist, both of them are well back from the closed door with clear floor between, no treat appears anywhere, the bed is on the RIGHT of the frame with the door on the LEFT, and both figures sit inside the middle 75% of the width and the middle 60% of the height."
+}
