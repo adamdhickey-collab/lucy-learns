@@ -20,8 +20,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, BLOCK_IDS, BRIEF_ID, loadBlocks } from './brief.mjs';
+import { ledgerKeys } from './ledger.mjs';
 
 export const SCENES_DIR = path.join(ROOT, 'art/scenes');
+const APPROVED_REL = 'art/pilot/approved';
 
 /**
  * Where the tan-era masters live.
@@ -64,7 +66,30 @@ export const ROLES = {
     'the same room in an adjacent moment — match the camera angle, eye level, wall, floor, door and distance exactly',
   'continuity:pair':
     'the companion picture to this one — the two are shown side by side, so nothing but the action may differ',
+  'continuity:ladder':
+    'the previous rung of this ladder — same room, same camera, same distance from the viewer, same size of dog; only the one thing this step changes may differ',
 };
+
+/**
+ * Which scenes have been redrawn against the current brief.
+ *
+ * Read off the pilot ledger in css/app.css, which `approve` maintains, because
+ * "is there a file at art/pilot/approved/<key>.png" is the wrong question: for
+ * almost every key there already is one, and it is the **warm** master. A
+ * ladder rung attaching that would inherit the style the whole restyle exists
+ * to replace, and the picture would come back looking plausible and wrong.
+ *
+ * When the set is finished the ledger is deleted along with the grade. At that
+ * point every approved master is current by definition, so a missing ledger
+ * means "all of them" rather than "none".
+ */
+function redrawnKeys(cssPath = path.join(ROOT, 'css/app.css')) {
+  try {
+    return new Set(ledgerKeys(fs.readFileSync(cssPath, 'utf8')));
+  } catch {
+    return null; // no ledger: the restyle is over, everything approved is current
+  }
+}
 
 const LIKENESS_WARNING =
   'The likeness references are for likeness only. Do NOT copy their rendering ' +
@@ -122,25 +147,41 @@ export function validateScene(spec, { checkFiles = true } = {}) {
   if (!Array.isArray(spec.references) || spec.references.length === 0) {
     problems.push('references must be a non-empty ordered array');
   } else {
+    const redrawn = checkFiles ? redrawnKeys() : null;
     const seen = new Set();
     spec.references.forEach((ref, i) => {
       const where = `references[${i}]`;
-      if (!ref || typeof ref.path !== 'string' || ref.path === '') {
-        problems.push(`${where}: path is required`);
+      const hasPath = typeof ref?.path === 'string' && ref.path !== '';
+      const hasScene = typeof ref?.scene === 'string' && ref.scene !== '';
+      if (hasPath === hasScene) {
+        problems.push(`${where}: needs exactly one of path or scene`);
         return;
       }
       if (!ROLES[ref.role]) {
         problems.push(`${where}: unknown role "${ref.role}" (expected ${Object.keys(ROLES).join(' | ')})`);
       }
-      if (seen.has(ref.path)) problems.push(`${where}: duplicate reference "${ref.path}"`);
-      seen.add(ref.path);
 
-      const abs = path.resolve(ROOT, ref.path);
+      // A scene reference names another scene rather than a file: it resolves
+      // to that scene's approved master, which does not exist until it has been
+      // generated and approved. That is the point — the ladder's rungs have to
+      // be drawn in order, each off the last, and this is where that ordering
+      // lives instead of in someone's memory.
+      const from = hasScene ? ref.scene : null;
+      const rel = hasScene ? `${APPROVED_REL}/${ref.scene}.png` : ref.path;
+      if (hasScene && ref.scene === spec.id) problems.push(`${where}: a scene cannot reference itself`);
+
+      if (seen.has(rel)) problems.push(`${where}: duplicate reference "${rel}"`);
+      seen.add(rel);
+
+      const abs = path.resolve(ROOT, rel);
       const exists = fs.existsSync(abs);
-      if (checkFiles && !exists) problems.push(`${where}: file not found — ${ref.path}`);
+      // Pending means "not yet drawn against this brief" — either no file at
+      // all, or the legacy warm master still sitting under that name.
+      const pending = hasScene && redrawn !== null && !redrawn.has(ref.scene);
+      if (checkFiles && !hasScene && !exists) problems.push(`${where}: file not found — ${rel}`);
       // Order is the array's order, recorded explicitly so the plan output and
       // the eventual request cannot disagree about it.
-      refs.push({ order: i + 1, path: ref.path, abs, role: ref.role, exists });
+      refs.push({ order: i + 1, path: rel, abs, role: ref.role, exists, fromScene: from, pending });
     });
   }
 
@@ -200,4 +241,9 @@ export function assemblePrompt(scene, blocks = loadBlocks()) {
   parts.push(`SCENE. ${scene.scene.trim()}`);
   parts.push(`MUST BE TRUE: ${scene.mustBeTrue.trim()}`);
   return parts.join('\n\n');
+}
+
+/** Ladder rungs this scene is waiting on, in declared order. Empty when ready. */
+export function pendingReferences(scene) {
+  return scene.references.filter((r) => r.pending);
 }

@@ -10,7 +10,15 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { validateScene, loadScene, assemblePrompt, legacyMaster, ROLES, SCENES_DIR } from './scene.mjs';
+import {
+  validateScene,
+  loadScene,
+  assemblePrompt,
+  legacyMaster,
+  pendingReferences,
+  ROLES,
+  SCENES_DIR,
+} from './scene.mjs';
 import { loadBlocks, BLOCK_IDS, BRIEF_ID } from './brief.mjs';
 
 const BLOCKS = { style: 'STYLE BLOCK', porch: 'PORCH BLOCK', cast: 'CAST BLOCK' };
@@ -223,4 +231,102 @@ test('every scene spec in art/scenes/ is valid', () => {
     : [];
   assert.ok(files.length > 0, 'expected at least the pilot scene');
   for (const f of files) loadScene(f.replace(/\.json$/, ''));
+});
+
+// --- ladder references ------------------------------------------------------
+//
+// A rung names the scene before it rather than a file. The file it resolves to
+// usually EXISTS already — as the legacy warm master — so "is it on disk" is
+// the wrong question and these guard the right one.
+
+test('a scene reference resolves to that scene\'s approved master', () => {
+  const spec = good({
+    references: [{ scene: 'door-sound-01-setup', role: 'continuity:ladder' }],
+  });
+  const s = validateScene(spec, { checkFiles: false });
+  assert.equal(s.references[0].path, 'art/pilot/approved/door-sound-01-setup.png');
+  assert.equal(s.references[0].fromScene, 'door-sound-01-setup');
+});
+
+test('a reference needs exactly one of path or scene', () => {
+  for (const ref of [
+    { role: 'continuity:ladder' },
+    { path: 'a.png', scene: 'b', role: 'continuity:ladder' },
+  ]) {
+    assert.throws(
+      () => validateScene(good({ references: [ref] }), { checkFiles: false }),
+      /needs exactly one of path or scene/
+    );
+  }
+});
+
+test('a scene cannot reference itself', () => {
+  const spec = good({ id: 'loop', references: [{ scene: 'loop', role: 'continuity:ladder' }] });
+  assert.throws(() => validateScene(spec, { checkFiles: false }), /cannot reference itself/);
+});
+
+test('a rung whose predecessor is redrawn is not pending', () => {
+  // door-sound-01-setup is in the pilot ledger, so it counts as current.
+  const spec = good({ references: [{ scene: 'door-sound-01-setup', role: 'continuity:ladder' }] });
+  const s = validateScene(spec, { checkFiles: true });
+  assert.equal(s.references[0].pending, false);
+  assert.deepEqual(pendingReferences(s), []);
+});
+
+test('a legacy warm master on disk still counts as pending', () => {
+  // The trap: art/pilot/approved/door-sound-03-name.png exists, but it is the
+  // warm master. Existence is not the question — the ledger is.
+  const abs = path.join(SCENES_DIR, '../pilot/approved/door-sound-03-name.png');
+  assert.ok(fs.existsSync(abs), 'the legacy master should be present for this test to mean anything');
+  const spec = good({ references: [{ scene: 'door-sound-03-name', role: 'continuity:ladder' }] });
+  const s = validateScene(spec, { checkFiles: true });
+  assert.equal(s.references[0].exists, true, 'the file is there');
+  assert.equal(s.references[0].pending, true, 'but it is not the current brief');
+  assert.deepEqual(pendingReferences(s).map((r) => r.fromScene), ['door-sound-03-name']);
+});
+
+test('a pending rung is not a validation error — plan must still run', () => {
+  const spec = good({ references: [{ scene: 'door-stay-03-cross', role: 'continuity:ladder' }] });
+  assert.doesNotThrow(() => validateScene(spec, { checkFiles: true }));
+});
+
+test('the Stay ladder chains in order, each rung off the last', () => {
+  const order = [
+    'door-stay-03-onestep',
+    'door-stay-03-halfway',
+    'door-stay-03-cross',
+    'door-stay-03-handle',
+    'door-stay-03-crack',
+    'door-stay-03-pretend',
+    'door-stay-03-conversation',
+  ];
+  order.forEach((id, i) => {
+    const scene = loadScene(id);
+    const rungs = scene.references.filter((r) => r.role === 'continuity:ladder');
+    if (i === 0) {
+      assert.equal(rungs.length, 0, 'the first rung has nothing before it');
+    } else {
+      assert.deepEqual(rungs.map((r) => r.fromScene), [order[i - 1]],
+        `${id} must be drawn off ${order[i - 1]}`);
+    }
+  });
+});
+
+test('every ladder rung is currently waiting, since none are redrawn yet', () => {
+  const scene = loadScene('door-stay-03-conversation');
+  assert.deepEqual(pendingReferences(scene).map((r) => r.fromScene), ['door-stay-03-pretend']);
+});
+
+test('the two documented near-duplicates are told apart in their own text', () => {
+  // The tan-era post-mortem names these two collisions; the distinction has to
+  // survive in the spec, not just in the write-up.
+  const halfway = loadScene('door-stay-03-halfway');
+  const cross = loadScene('door-stay-03-cross');
+  assert.match(halfway.mustBeTrue, /standing still|stopped/i);
+  assert.match(cross.mustBeTrue, /walking/i);
+
+  const pretend = loadScene('door-stay-03-pretend');
+  const conversation = loadScene('door-stay-03-conversation');
+  assert.match(pretend.mustBeTrue, /square and upright|not leaning/i);
+  assert.match(conversation.mustBeTrue, /leaning/i);
 });

@@ -1,0 +1,36 @@
+{
+  "id": "door-stay-03-cross",
+  "briefId": "cool-flat-v1",
+  "title": "All the way to the door",
+  "activity": "Stay While the Door Opens",
+  "step": "Level 3, rung 3 — the far side of the room",
+  "note": "Used three times. This is the walking one: mid-stride, going away, back mostly to the viewer. That motion is what tells it apart from door-stay-03-halfway, which is stopped and turned back.",
+  "blocks": [
+    "style",
+    "cast"
+  ],
+  "references": [
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-sound-02-self.png",
+      "role": "continuity:room"
+    },
+    {
+      "scene": "door-stay-03-halfway",
+      "role": "continuity:ladder"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-cover.png",
+      "role": "continuity:room"
+    }
+  ],
+  "scene": "Interior entry hall, side view, camera at standing eye level. This is the same room, the same camera position and the same distance from the viewer as the other rungs of this ladder: Lucy's rectangular cool-grey dog bed on the left, the closed charcoal front door on the right, and a clear span of taupe-grey floor between them, with the whole walk from bed to door visible in frame. Lucy lies on the bed in a settled down — elbows and hips on the bed, head up and level, watching calmly. Her size in frame, the bed's position and the camera never change between these pictures. No leash. Only one thing changes from the previous rung: the handler has crossed the room and is arriving at the closed front door, and she is WALKING — caught mid-stride with one foot forward and the trailing heel lifted off the floor, moving away from Lucy, her back and shoulder mostly toward the viewer. She is not stopped and she is not looking back at Lucy. Lucy lies on her bed in the near foreground, larger in frame than the handler, holding her down and watching her go. The front door is still shut and no hand is on it yet.",
+  "mustBeTrue": "the handler is unmistakably walking — one foot forward, the trailing heel lifted — moving away with her back toward the viewer and not looking round, while Lucy holds her down on the bed in the foreground and the door is still shut."
+}

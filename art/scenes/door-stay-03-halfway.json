@@ -1,0 +1,36 @@
+{
+  "id": "door-stay-03-halfway",
+  "briefId": "cool-flat-v1",
+  "title": "Halfway, and a glance back",
+  "activity": "Stay While the Door Opens",
+  "step": "Level 3, rung 2 — halfway",
+  "note": "This is the one that collides with door-stay-03-cross. The difference is motion, and it is the whole subject: this is STOPPED and turned round; cross is WALKING, mid-stride, going away. Said twice in the scene text on purpose.",
+  "blocks": [
+    "style",
+    "cast"
+  ],
+  "references": [
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-sound-02-self.png",
+      "role": "continuity:room"
+    },
+    {
+      "scene": "door-stay-03-onestep",
+      "role": "continuity:ladder"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-cover.png",
+      "role": "continuity:room"
+    }
+  ],
+  "scene": "Interior entry hall, side view, camera at standing eye level. This is the same room, the same camera position and the same distance from the viewer as the other rungs of this ladder: Lucy's rectangular cool-grey dog bed on the left, the closed charcoal front door on the right, and a clear span of taupe-grey floor between them, with the whole walk from bed to door visible in frame. Lucy lies on the bed in a settled down — elbows and hips on the bed, head up and level, watching calmly. Her size in frame, the bed's position and the camera never change between these pictures. No leash. Only one thing changes from the previous rung: the handler is now halfway between the bed and the door, at the midpoint of the floor. She has STOPPED there — both feet planted, weight settled back on her heels, body squared up — and has turned round to glance back at Lucy over her shoulder. She is not walking and not mid-stride: no foot is lifted, no leg is extended, there is no sense of forward motion at all. She is standing still and looking back. The front door stays closed.",
+  "mustBeTrue": "the handler is stopped at the midpoint with both feet flat on the floor and no leg extended or lifted — visibly standing still rather than walking — and has turned to look back at Lucy, who holds her down on the bed."
+}

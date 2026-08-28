@@ -1,0 +1,36 @@
+{
+  "id": "door-stay-03-conversation",
+  "briefId": "cool-flat-v1",
+  "title": "A longer conversation",
+  "activity": "Stay While the Door Opens",
+  "step": "Level 3, rung 7 — the door held open a while",
+  "note": "The lean is the subject. It is the only thing separating this from door-stay-03-pretend: weight on one hip, shoulder against the door edge, a hand in a pocket — a body that has been there thirty seconds and expects to stay.",
+  "blocks": [
+    "style",
+    "cast"
+  ],
+  "references": [
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-sound-02-self.png",
+      "role": "continuity:room"
+    },
+    {
+      "scene": "door-stay-03-pretend",
+      "role": "continuity:ladder"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-cover.png",
+      "role": "continuity:room"
+    }
+  ],
+  "scene": "Interior entry hall, side view, camera at standing eye level. This is the same room, the same camera position and the same distance from the viewer as the other rungs of this ladder: Lucy's rectangular cool-grey dog bed on the left, the closed charcoal front door on the right, and a clear span of taupe-grey floor between them, with the whole walk from bed to door visible in frame. Lucy lies on the bed in a settled down — elbows and hips on the bed, head up and level, watching calmly. Her size in frame, the bed's position and the camera never change between these pictures. No leash. Only one thing changes from the previous rung: the handler has settled into a longer conversation with the empty porch. She LEANS on the open door — one shoulder and forearm resting against its edge, weight dropped onto one hip so that hip is visibly higher than the other, the far leg relaxed and crossed slightly over — with her free hand pushed into her jeans pocket. Her whole posture says she has been there half a minute and is in no hurry. She faces out, talking to nobody. The porch is empty: daylight and flat spruce foliage, no visitor. Lucy holds her settled down on the bed across the room.",
+  "mustBeTrue": "the handler is visibly LEANING on the open door — shoulder against its edge, weight dropped onto one hip, one hand in a pocket — rather than standing square in the doorway, the porch beyond is empty, and Lucy stays settled on her bed."
+}

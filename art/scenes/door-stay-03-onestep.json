@@ -1,0 +1,32 @@
+{
+  "id": "door-stay-03-onestep",
+  "briefId": "cool-flat-v1",
+  "title": "One step away",
+  "activity": "Stay While the Door Opens",
+  "step": "Level 3, rung 1 — the first step",
+  "note": "The tan-era version failed a blind pilot 4/4: every viewer read it as 'walking away toward the door', which is a different picture one activity over. The fix is that a still cannot show 'one step and no more' — an absence is unscoreable — so the claim is how CLOSE she still is to the bed. She is barely away from it.",
+  "blocks": [
+    "style",
+    "cast"
+  ],
+  "references": [
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-sound-02-self.png",
+      "role": "continuity:room"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-cover.png",
+      "role": "continuity:room"
+    }
+  ],
+  "scene": "Interior entry hall, side view, camera at standing eye level. This is the same room, the same camera position and the same distance from the viewer as the other rungs of this ladder: Lucy's rectangular cool-grey dog bed on the left, the closed charcoal front door on the right, and a clear span of taupe-grey floor between them, with the whole walk from bed to door visible in frame. Lucy lies on the bed in a settled down — elbows and hips on the bed, head up and level, watching calmly. Her size in frame, the bed's position and the camera never change between these pictures. No leash. The handler has taken a single step away from the bed and stopped. She is still very close to it — near enough that she could reach the bed by leaning — with far more floor between her and the door than between her and Lucy. She stands square and settled with both feet planted and her weight even, turned back toward Lucy and looking at her. She is NOT mid-stride, not leaning toward the door, and not walking. The front door stays closed across the room, still far away.",
+  "mustBeTrue": "the handler is still much closer to the bed than to the door — barely away from it — and is standing still with both feet planted and her weight even, turned back to look at Lucy rather than caught mid-stride."
+}

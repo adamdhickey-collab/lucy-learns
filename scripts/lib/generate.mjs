@@ -29,7 +29,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { ROOT } from './brief.mjs';
-import { loadScene, assemblePrompt, legacyMaster } from './scene.mjs';
+import { loadScene, assemblePrompt, legacyMaster, pendingReferences } from './scene.mjs';
 import {
   REQUEST,
   RESTYLE_DIR,
@@ -102,6 +102,22 @@ export async function cmdGenerate(
   const out = outputPaths(scene.id, round);
   if (fs.existsSync(abs(out.dir))) {
     throw new Error(`${out.dir} already exists — refusing to overwrite a round`);
+  }
+
+  // A ladder is one composition sampled at several points, and it only reads as
+  // progress if each rung is drawn off the last. Generating out of order gets a
+  // picture that looks fine alone and wrong in the sequence — and, worse, the
+  // legacy warm master is already sitting under that name, so the attachment
+  // would silently be the old style.
+  const pending = pendingReferences(scene);
+  if (pending.length) {
+    throw new Error(
+      `${scene.id} is waiting on ${pending.length === 1 ? 'a scene' : 'scenes'} that ` +
+        `${pending.length === 1 ? 'has' : 'have'} not been redrawn yet:\n` +
+        pending.map((r) => `    ${r.fromScene}  (${r.role})`).join('\n') +
+        `\n  Generate and approve ${pending.length === 1 ? 'it' : 'them'} first — this rung has to be` +
+        `\n  drawn off the last one, or the ladder stops reading as one walk.`
+    );
   }
 
   if (!yes) {

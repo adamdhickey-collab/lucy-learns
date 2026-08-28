@@ -56,10 +56,25 @@ export function cmdPlan(sceneId) {
 
   console.log(rule('REFERENCES, in send order'));
   for (const r of scene.references) {
-    const size = r.exists ? `${(fs.statSync(r.abs).size / 1024).toFixed(0)} KB` : 'MISSING';
     console.log(`  ${r.order}. ${r.path}`);
     console.log(`     role  ${r.role} — ${ROLES[r.role]}`);
-    console.log(`     file  ${r.exists ? 'ok' : 'NOT FOUND'} · ${size}`);
+    if (r.fromScene) {
+      console.log(
+        `     from  scene ${r.fromScene} — ` +
+          (r.pending
+            ? 'NOT REDRAWN YET. Generate and approve it before this one.'
+            : 'redrawn and approved')
+      );
+    }
+    const size = r.exists ? `${(fs.statSync(r.abs).size / 1024).toFixed(0)} KB` : '—';
+    const state = r.pending ? 'WAITING' : r.exists ? 'ok' : 'NOT FOUND';
+    console.log(`     file  ${state} · ${size}`);
+  }
+
+  const waiting = scene.references.filter((r) => r.pending);
+  if (waiting.length) {
+    console.log(`\n  This scene cannot be generated yet. It is waiting on:`);
+    for (const r of waiting) console.log(`    ${r.fromScene}`);
   }
 
   console.log(rule('PLANNED API OPERATION'));

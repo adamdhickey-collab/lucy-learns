@@ -1,0 +1,36 @@
+{
+  "id": "door-stay-03-crack",
+  "briefId": "cool-flat-v1",
+  "title": "A few inches of daylight",
+  "activity": "Stay While the Door Opens",
+  "step": "Level 3, rung 5 — the door opens",
+  "note": "The gap has to be small and unmistakable — a few inches, a bright vertical slot. A door drawn a third open is a different rung, and the next two are the ones that own the open door.",
+  "blocks": [
+    "style",
+    "cast"
+  ],
+  "references": [
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-sound-02-self.png",
+      "role": "continuity:room"
+    },
+    {
+      "scene": "door-stay-03-handle",
+      "role": "continuity:ladder"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-cover.png",
+      "role": "continuity:room"
+    }
+  ],
+  "scene": "Interior entry hall, side view, camera at standing eye level. This is the same room, the same camera position and the same distance from the viewer as the other rungs of this ladder: Lucy's rectangular cool-grey dog bed on the left, the closed charcoal front door on the right, and a clear span of taupe-grey floor between them, with the whole walk from bed to door visible in frame. Lucy lies on the bed in a settled down — elbows and hips on the bed, head up and level, watching calmly. Her size in frame, the bed's position and the camera never change between these pictures. No leash. Only one thing changes from the previous rung: the handler has pulled the front door open a few inches and holds it there. The gap is narrow — a bright vertical slot of pale daylight and a hint of spruce foliage, no wider than her hand — not a third open, not half open. She keeps hold of the handle and stays still, in profile, looking at the gap. Nobody is outside. Lucy holds her down on the bed across the room and looks toward the door without getting up.",
+  "mustBeTrue": "the door is open only a narrow few-inch slot of daylight, no wider than the handler's hand, with her hand still on the handle — and Lucy stays lying on the bed even though the door has opened."
+}

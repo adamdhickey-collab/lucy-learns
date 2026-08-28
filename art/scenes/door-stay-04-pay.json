@@ -1,0 +1,32 @@
+{
+  "id": "door-stay-04-pay",
+  "briefId": "cool-flat-v1",
+  "title": "Pay her on the bed",
+  "activity": "Stay While the Door Opens",
+  "step": "Level 4 — paying for the stay",
+  "note": "Used twice. She is paid ON the bed and stays lying down — the treat comes to her. A dog drawn standing up to take it has been paid for getting up, which is the opposite of the lesson.",
+  "blocks": [
+    "style",
+    "cast"
+  ],
+  "references": [
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-sound-02-self.png",
+      "role": "continuity:room"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-cover.png",
+      "role": "continuity:room"
+    }
+  ],
+  "scene": "Interior entry hall, closer in than the ladder scenes. The handler kneels on one knee beside Lucy's rectangular cool-grey dog bed and brings a treat down to her. Lucy stays LYING DOWN on the bed throughout — elbows and hips still on the bed, head lifted just enough to take it. She has not stood up, not sat up, not stepped off. The handler's hand is flat and open, palm up, fingers straight and together with the treat resting on it, brought right down to Lucy's muzzle at bed height rather than held above her. Her other hand rests easily on her own knee. The closed charcoal front door sits in the background across the room. No leash.",
+  "mustBeTrue": "Lucy is still lying down on the bed with her elbows and hips on it — not standing, sitting or stepping off — and the treat is offered on a flat open upturned palm brought down to her muzzle at bed height."
+}

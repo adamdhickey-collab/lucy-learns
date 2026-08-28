@@ -1,0 +1,36 @@
+{
+  "id": "door-stay-cover",
+  "briefId": "cool-flat-v1",
+  "title": "Stay While the Door Opens — activity cover",
+  "activity": "Stay While the Door Opens",
+  "step": "the activity cover",
+  "note": "Cover: everything essential inside the middle 75% of the width, because the card and the map rail crop it to a centred square. That fights the ladder's wide bed-to-door framing, so this one tightens up — it is the only rung allowed to move the camera.",
+  "blocks": [
+    "style",
+    "cast"
+  ],
+  "references": [
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-sound-02-self.png",
+      "role": "continuity:room"
+    },
+    {
+      "scene": "door-stay-03-conversation",
+      "role": "continuity:ladder"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-cover.png",
+      "role": "continuity:room"
+    }
+  ],
+  "scene": "Interior entry hall, side view at standing eye level, the same room, bed, door and palette as the rest of this activity — but framed TIGHTER than the ladder scenes so that both figures fall well inside the middle 75% of the width. Lucy lies settled on her rectangular cool-grey dog bed on the left, elbows and hips down, head up, calm and steady. The handler stands at the front door on the right and holds it wide open onto pale daylight and flat spruce foliage; she is turned back toward Lucy, and her posture is easy and pleased rather than braced. The porch is empty — no visitor. Nothing that matters may sit in the outer eighth of the width on either side. No leash. Background: the lavender wall, one baseboard line, the bed, the open door.",
+  "mustBeTrue": "the door is held wide open onto daylight with nobody on the porch, Lucy is lying settled on her bed and has not got up, and both figures sit entirely inside the middle 75% of the width so a centred square crop loses neither of them."
+}

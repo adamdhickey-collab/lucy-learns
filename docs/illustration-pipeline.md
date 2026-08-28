@@ -67,10 +67,46 @@ attachment is exactly the quiet failure this format exists to prevent:
 | `likeness:lucy` | copy her markings, beard, ear and build only |
 | `continuity:room` | the same room in an adjacent moment — match camera, eye level, wall, floor, door, distance |
 | `continuity:pair` | the companion picture, shown side by side, so nothing but the action may differ |
+| `continuity:ladder` | the previous rung of this ladder — only the one thing this step changes may differ |
 
 `mustBeTrue` is one sentence naming the thing the picture has to get right. It
 goes into the prompt *and* onto the review sheet, so a review answers a written
 question rather than "does this look nice".
+
+### A ladder rung names a scene, not a file
+
+Some activities are one composition sampled at several points on a single walk.
+Stay While the Door Opens is seven rungs of it: what changes between them is the
+handler's distance from the door and the state of the door, **and nothing else.**
+If the camera moves, or the room shifts, or Lucy is drawn a different size, the
+ladder stops reading as progress and starts reading as unrelated pictures.
+
+The tan-era set learned that the hard way, and its instruction was "generate them
+in order, each with the previous approved one attached" — which is exactly the
+kind of thing nobody remembers three weeks later. So a reference can name a
+scene instead of a path:
+
+```json
+{ "scene": "door-stay-03-halfway", "role": "continuity:ladder" }
+```
+
+which resolves to that scene's approved master. `plan` shows it as `WAITING`
+until that scene has been redrawn, and `generate` refuses outright:
+
+```
+door-stay-03-crack is waiting on a scene that has not been redrawn yet:
+    door-stay-03-handle  (continuity:ladder)
+  Generate and approve it first — this rung has to be
+  drawn off the last one, or the ladder stops reading as one walk.
+```
+
+"Redrawn" is read off the **pilot ledger in `css/app.css`**, not off the
+filesystem — and that distinction is the whole point. For nearly every key there
+is already a file at `art/pilot/approved/<id>.png`: the legacy warm master. A
+rung that attached it would inherit the style the restyle exists to replace, and
+come back looking plausible and wrong. So the question is never "is the file
+there" but "has this scene been drawn against the current brief", and the ledger
+is the only thing that knows.
 
 ### The likeness warning is not optional
 
@@ -171,6 +207,7 @@ written.
 | a spec with a stale or missing `briefId` | warm prompt, cool set — invisible until the image arrives |
 | a reference that is not on disk | a silently dropped attachment is a style drift you cannot attribute |
 | a duplicate reference, an unknown role, an unknown block | typos that would otherwise produce a plausible wrong prompt |
+| a ladder rung whose previous rung is not redrawn | out of order the sequence stops reading as one walk, and the attachment would be the legacy warm master |
 | more than 16 references | the API's limit, caught before the upload |
 | `generate` without `--yes` | a paid non-deterministic call behind a bare verb is one you make by pressing up-arrow |
 | a round directory that already exists | a re-run is a new round, so the one you are comparing against survives |
@@ -299,7 +336,7 @@ app, and it goes with the ledger at the finish line.
 
     node --test scripts/lib/*.test.mjs
 
-127 tests, no network, no key, no macOS — `fetch` and `sips` are injected, and
+136 tests, no network, no key, no macOS — `fetch` and `sips` are injected, and
 the whole of `generate` and `approve` runs in a temp directory against images the
 suite builds itself. The directory form (`node --test scripts/lib/`) does not
 work on every Node build; the glob always does.
