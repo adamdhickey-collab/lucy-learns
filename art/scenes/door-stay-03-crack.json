@@ -11,16 +11,16 @@
   ],
   "references": [
     {
+      "path": "art/source/Calm Door Greetings/door-sound-02-self.png",
+      "role": "style:exemplar"
+    },
+    {
       "path": "art/source/trainer-reference.jpg",
       "role": "likeness:handler"
     },
     {
       "path": "art/source/lucy-reference.jpg",
       "role": "likeness:lucy"
-    },
-    {
-      "path": "art/source/Calm Door Greetings/door-sound-02-self.png",
-      "role": "continuity:room"
     },
     {
       "scene": "door-stay-03-handle",

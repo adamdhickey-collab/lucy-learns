@@ -11,6 +11,10 @@
   ],
   "references": [
     {
+      "path": "art/source/Calm Door Greetings/door-sound-02-self.png",
+      "role": "style:exemplar"
+    },
+    {
       "path": "art/source/trainer-reference.jpg",
       "role": "likeness:handler"
     },
@@ -21,10 +25,6 @@
     {
       "path": "art/source/Calm Door Greetings/door-greet-08-petting.png",
       "role": "likeness:guest"
-    },
-    {
-      "path": "art/source/Calm Door Greetings/door-sound-02-self.png",
-      "role": "continuity:room"
     }
   ],
   "scene": "Interior entry hall. The guest is stepping BACK OUT through the open front door — one foot already over the threshold onto the porch, his body turned to leave, with pale daylight and flat spruce foliage behind him — and he raises one hand in a small, unhurried goodbye wave. The guest wears the medium-blue zip-up hoodie, black baseball cap and clear-framed glasses from his likeness reference. He is NOT in a plaid or checked shirt — that was an earlier version of this character and is being replaced everywhere. He is plainly leaving, not arriving and not entering. Lucy SITS at the handler's side, square and settled, four paws on the floor, watching him go without rising or straining toward him. The handler stands beside her holding the black leash, which hangs from the collar ring in a slack curve. Give the leash a thin lighter outline where it passes near her coat and keep it off her back.",

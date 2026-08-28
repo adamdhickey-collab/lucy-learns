@@ -196,11 +196,13 @@ test('loadScene rejects malformed JSON with the filename in the message', () => 
 test('the real pilot scene loads, validates and assembles against the live brief', () => {
   const scene = loadScene('door-sound-03-name');
   assert.equal(scene.briefId, BRIEF_ID);
+  // The flat scene was the room reference; it is now the exemplar, which
+  // carries the room instruction with it rather than being attached twice.
   assert.equal(scene.references.length, 3);
   assert.deepEqual(scene.references.map((r) => r.role), [
+    'style:exemplar',
     'likeness:handler',
     'likeness:lucy',
-    'continuity:room',
   ]);
   assert.ok(scene.references.every((r) => r.exists), 'all three references must be on disk');
 
@@ -209,8 +211,9 @@ test('the real pilot scene loads, validates and assembles against the live brief
   assert.match(p, /#eae7f0/, 'must carry the cool wall from the current brief');
   assert.match(p, /#4a216d/, 'must carry the collar violet');
   assert.doesNotMatch(p, /Warm Instructional Vector/);
-  assert.match(p, /1\. trainer-reference\.jpg/);
-  assert.match(p, /3\. door-sound-02-self\.png/);
+  assert.match(p, /1\. door-sound-02-self\.png/);
+  assert.match(p, /2\. trainer-reference\.jpg/);
+  assert.match(p, /ATTACHMENT 1 IS THE STYLE REFERENCE/);
 });
 
 // --- the legacy warm masters ----------------------------------------------
@@ -368,4 +371,41 @@ test('the two documented near-duplicates are told apart in their own text', () =
   const conversation = loadScene('door-stay-03-conversation');
   assert.match(pretend.mustBeTrue, /square and upright|not leaning/i);
   assert.match(conversation.mustBeTrue, /leaning/i);
+});
+
+// --- the style exemplar -----------------------------------------------------
+
+test('the style lead comes before the blocks, not after them', () => {
+  const spec = good({
+    references: [
+      { path: 'art/source/Calm Door Greetings/door-sound-02-self.png', role: 'style:exemplar' },
+      ...good().references,
+    ],
+  });
+  const p = assemblePrompt(validateScene(spec, { checkFiles: false }), BLOCKS);
+  assert.ok(p.indexOf('ATTACHMENT 1 IS THE STYLE REFERENCE') < p.indexOf('STYLE BLOCK'),
+    'three hundred words too late is no use');
+});
+
+test('a scene with no exemplar gets no style lead', () => {
+  const p = assemblePrompt(validateScene(good(), { checkFiles: false }), BLOCKS);
+  assert.doesNotMatch(p, /ATTACHMENT 1 IS THE STYLE REFERENCE/);
+});
+
+test('an exemplar anywhere but first is refused', () => {
+  const spec = good({
+    references: [
+      ...good().references,
+      { path: 'art/source/Calm Door Greetings/door-sound-02-self.png', role: 'style:exemplar' },
+    ],
+  });
+  assert.throws(() => validateScene(spec, { checkFiles: false }), /must be the first reference/);
+});
+
+test('every spec leads with a flat exemplar', () => {
+  const ids = fs.readdirSync(SCENES_DIR).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5));
+  for (const id of ids) {
+    const scene = loadScene(id);
+    assert.equal(scene.references[0].role, 'style:exemplar', `${id} does not lead with one`);
+  }
 });

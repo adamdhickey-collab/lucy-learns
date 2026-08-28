@@ -5,8 +5,15 @@
   "activity": "Doorbell Predicts Rewards",
   "step": "Level 1, step 5 of 5 — the pause",
   "note": "The hard part is drawing nothing happening. Every instinct of an illustration model is to give the pair an activity, and any activity here is the wrong picture: this step exists to show a dog who has been asked for nothing and is fine.",
-  "blocks": ["style", "cast"],
+  "blocks": [
+    "style",
+    "cast"
+  ],
   "references": [
+    {
+      "path": "art/source/Calm Door Greetings/door-sound-02-self.png",
+      "role": "style:exemplar"
+    },
     {
       "path": "art/source/trainer-reference.jpg",
       "role": "likeness:handler"
@@ -14,10 +21,6 @@
     {
       "path": "art/source/lucy-reference.jpg",
       "role": "likeness:lucy"
-    },
-    {
-      "path": "art/source/Calm Door Greetings/door-sound-02-self.png",
-      "role": "continuity:room"
     }
   ],
   "scene": "The entry hall, a few steps back from the closed charcoal front door. Nothing is being asked of Lucy and nothing is being offered. She stands on all four feet beside the handler, loose and neutral — weight even, tail down and relaxed, head level, looking off toward the middle distance rather than at the handler, at the door, or at the viewer. She is not sitting. The handler stands beside her, upright and easy, both arms hanging at her sides: not reaching, not gesturing, not in the treat pouch, not looking down at Lucy. She looks quietly ahead. The black leash is clipped to the ring on Lucy's collar, hangs down in a deep slack curve to the floor and lies loose there; the handler holds its loop lightly in one lowered hand. Draw the leash with a thin lighter outline where it passes near her coat so it stays readable, and never across her back or shoulders. Neither of them is engaging the other. Background: the lavender wall, one baseboard line, the closed door and the doormat well off to one side. Plenty of empty floor.",

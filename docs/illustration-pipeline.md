@@ -87,6 +87,7 @@ attachment is exactly the quiet failure this format exists to prevent:
 
 | role | what the prompt says it is for |
 | --- | --- |
+| `style:exemplar` | **attachment 1 always.** The style authority — match its rendering, palette and the dog's appearance |
 | `likeness:handler` | copy her face, hair and build only |
 | `likeness:lucy` | copy her markings, beard, ear and build only |
 | `likeness:guest` | copy his face, glasses, black cap and blue hoodie — and, unlike the two sheets, match its rendering too |
@@ -97,6 +98,27 @@ attachment is exactly the quiet failure this format exists to prevent:
 `mustBeTrue` is one sentence naming the thing the picture has to get right. It
 goes into the prompt *and* onto the review sheet, so a review answers a written
 question rather than "does this look nice".
+
+### Attachment 1 is always a flat exemplar
+
+The first live call came back painterly, with Lucy smoothed into a plain
+Labrador. The reason was in the request: it shipped **two painterly likeness
+sheets and one flat scene labelled `continuity:room`** — "match the camera
+angle", saying nothing about how anything is drawn. Two examples of the wrong
+style outranked one example of the right style, by position and by instruction.
+
+So every spec now leads with a `style:exemplar`, and the prompt opens with a
+sentence naming it before the blocks rather than after them:
+
+> ATTACHMENT 1 IS THE STYLE REFERENCE. Match it exactly for rendering, palette
+> and the dog's appearance… Where the description below and that image disagree
+> about how something is DRAWN, the image wins. The description governs only
+> what is happening.
+
+It leads because `pilot.mjs` already knew why, from the hand-driven era: the
+model should know the attachment outranks the description before it reads three
+hundred words of description. An exemplar anywhere but first is refused, since
+the sentence calls it "attachment 1" by number.
 
 ### A ladder rung names a scene, not a file
 
@@ -367,7 +389,7 @@ app, and it goes with the ledger at the finish line.
 
     node --test scripts/lib/*.test.mjs
 
-148 tests, no network, no key, no macOS — `fetch` and `sips` are injected, and
+152 tests, no network, no key, no macOS — `fetch` and `sips` are injected, and
 the whole of `generate` and `approve` runs in a temp directory against images the
 suite builds itself. The directory form (`node --test scripts/lib/`) does not
 work on every Node build; the glob always does.

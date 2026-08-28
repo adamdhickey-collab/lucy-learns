@@ -106,17 +106,17 @@ test('every reference is appended as image[], in declared order', () => {
   const form = buildForm(scene, 'PROMPT', stubRead);
   const names = form.getAll('image[]').map((f) => f.name);
   assert.deepEqual(names, [
+    'door-sound-02-self.png',
     'trainer-reference.jpg',
     'lucy-reference.jpg',
-    'door-sound-02-self.png',
   ]);
   assert.deepEqual(names, scene.references.map((r) => path.basename(r.path)));
 });
 
 test('jpg and png references get the right content type', () => {
   const files = buildForm(scene, 'PROMPT', stubRead).getAll('image[]');
-  assert.equal(files[0].type, 'image/jpeg');
-  assert.equal(files[2].type, 'image/png');
+  assert.equal(files[0].type, 'image/png');
+  assert.equal(files[1].type, 'image/jpeg');
 });
 
 test('the body carries the documented parameters and the prompt', () => {

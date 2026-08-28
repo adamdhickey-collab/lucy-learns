@@ -58,6 +58,8 @@ export function legacyMaster(sceneId, dir = LEGACY_APPROVED) {
  * behind. Saying "likeness only" is what stops it being copied.
  */
 export const ROLES = {
+  'style:exemplar':
+    'THE STYLE AUTHORITY — match its rendering exactly: flat two-tone fills, crisp edges, no gradients, no airbrushing, no glossy fur. Match its palette, its line weight and the dog\'s appearance. This is what the finished picture must look like. Where it shows the same room as the scene below, match its camera height, wall, floor, door and proportions too',
   'likeness:handler':
     'a likeness reference for the handler — copy her face, hair and build only',
   'likeness:lucy':
@@ -106,6 +108,26 @@ const PAINTERLY_SHEETS = new Set([
   'art/source/trainer-reference.jpg',
   'art/source/lucy-reference.jpg',
 ]);
+
+/**
+ * The sentence that opens a request carrying a flat exemplar.
+ *
+ * It leads rather than trails, and the reason is written down in pilot.mjs from
+ * the hand-driven era: the model should know the attachment outranks the
+ * description before it reads three hundred words of description.
+ *
+ * Round 1 of door-sound-03-name is why this exists. It shipped two painterly
+ * likeness sheets and one flat scene labelled `continuity:room` — "match the
+ * camera angle", saying nothing about rendering — and came back painterly, with
+ * Lucy smoothed into a plain Labrador. Two examples of the wrong style
+ * outranked one example of the right style by position and by instruction.
+ */
+const STYLE_LEAD =
+  'ATTACHMENT 1 IS THE STYLE REFERENCE. Match it exactly for rendering, palette ' +
+  'and the dog\'s appearance — the same flat two-tone fills with no gradients, the ' +
+  'same crisp edges, the same matte coat, the same scruffy beard. Where the ' +
+  'description below and that image disagree about how something is DRAWN, the ' +
+  'image wins. The description governs only what is happening.';
 
 const LIKENESS_WARNING =
   'The likeness references are for likeness only. Do NOT copy their rendering ' +
@@ -201,6 +223,10 @@ export function validateScene(spec, { checkFiles = true } = {}) {
     });
   }
 
+  const exemplar = refs.findIndex((r) => r.role === 'style:exemplar');
+  if (exemplar > 0) {
+    problems.push('the style:exemplar must be the first reference — the prompt calls it "attachment 1"');
+  }
   if (problems.length) throw new SpecError(id, problems);
   return { ...spec, references: refs };
 }
@@ -243,6 +269,9 @@ export function loadScene(id, { dir = SCENES_DIR, checkFiles = true } = {}) {
  */
 export function assemblePrompt(scene, blocks = loadBlocks()) {
   const parts = [];
+  // The style lead goes first, ahead of the blocks, or it is three hundred
+  // words too late to matter.
+  if (scene.references.some((r) => r.role === 'style:exemplar')) parts.push(STYLE_LEAD);
   for (const id of scene.blocks) parts.push(blocks[id]);
 
   const hasLikeness = scene.references.some((r) => PAINTERLY_SHEETS.has(r.path));
