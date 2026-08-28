@@ -102,6 +102,7 @@ img/                     what the app loads: 1100px JPEGs and 240px thumbs
 art/source/              the full-resolution originals they are made from
 icons/                   PWA icons
 scripts/make-icons.mjs   rebuilds the icon set
+scripts/pilot.mjs        the illustration pipeline — see docs/illustration-pipeline.md
 ```
 
 ### App icon
@@ -174,6 +175,13 @@ cd "/Users/ahickey/dev/claude-local/Lucy Learns" && for f in art/source/*/*.png;
 
 Every image key in `js/content.js` carries alt text. Keep writing it — the whole
 app is instructional images, and they need to work read aloud.
+
+The set is currently being redrawn flat and cool to match the purple UI, one
+scene at a time, through a scripted pipeline: a scene is a JSON file, the prompt
+is assembled from a single brief, and one command installs an approved round and
+ticks it off the list. See
+[`docs/illustration-pipeline.md`](docs/illustration-pipeline.md) and the
+worklist at [`art/source/restyle-worklist.md`](art/source/restyle-worklist.md).
 
 `docs/image-prompts.md` holds the house style, the character sheets, and a
 ready-to-paste prompt plus target filename for every image the app still wants.

@@ -16,10 +16,25 @@ a time, or the stragglers get graded alone. That deletion is the finish line.
 
 ## How to work the list
 
-Paste Block A + Block B, attach `trainer-reference.jpg` and `lucy-reference.jpg`,
-then the scene. **The alt text in the table is the scene description** — it was
-written against the picture each key is supposed to be, so it doubles as the
-brief. Add a Must-be-true line naming the one thing the picture has to get right.
+Write `art/scenes/<key>.json`, then:
+
+    node scripts/pilot.mjs plan <key>                        free, read the prompt
+    node --env-file=.env.local scripts/pilot.mjs generate <key> --yes
+    node scripts/pilot.mjs approve <key> --yes               installs and ticks the row below
+
+The pipeline assembles Block A + Block B, attaches the references in declared
+order and writes a review sheet; `approve` renders both shipped files, files the
+master, opts the flat art out of the CSS art grade and ticks this list. Full
+reference: [`../../docs/illustration-pipeline.md`](../../docs/illustration-pipeline.md).
+
+**The alt text in the table is the scene description** — it was written against
+the picture each key is supposed to be, so it doubles as the brief. Add a
+`mustBeTrue` naming the one thing the picture has to get right.
+
+By hand instead: paste Block A + Block B, attach `trainer-reference.jpg` and
+`lucy-reference.jpg`, then the scene. That is how the first eight were drawn.
+What it loses is the record of which references were attached in which order,
+which is why the pipeline exists.
 
 Carry these on every scene, all learned from the pilot:
 
@@ -32,7 +47,10 @@ Carry these on every scene, all learned from the pilot:
   of the height.
 - **Pairs**: attach the finished half as a third reference so the room, camera
   and distances match.
-- Check the returned file is exactly **1448×1086** before anything else.
+- The returned file must be exactly **1472×1104**, and the master exactly
+  **1448×1086**. Both are checked for you — a wrong canvas keeps the raw file
+  and refuses to make a master, because reaching 4:3 from another ratio needs
+  a crop and that should be a decision.
 
 ## The list
 

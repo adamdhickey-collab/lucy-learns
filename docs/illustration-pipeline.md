@@ -1,0 +1,338 @@
+# The illustration pipeline
+
+Three commands take a scene from a JSON file to an installed picture:
+
+    node scripts/pilot.mjs plan <scene>                     read the request
+    node --env-file=.env.local scripts/pilot.mjs generate <scene> --yes
+    node scripts/pilot.mjs approve <scene> --yes            install the round you kept
+
+`plan` costs nothing and touches nothing. `generate` is the only command that
+spends money. `approve` is the only one that changes what the app shows. Nothing
+commits.
+
+This is for the restyle — thirty-seven illustrations being redrawn flat and cool
+against [`art/source/drawing-a-new-scene.md`](../art/source/drawing-a-new-scene.md).
+The older hand-driven commands in the same script (`prompt`, `add`, `check`,
+`sheet`) drove the tan-era set through a chat window and still work; see
+[`pilot-prompts.md`](pilot-prompts.md) for that history.
+
+## Why it exists
+
+The first eight scenes of the restyle were drawn by pasting Block A, Block B and
+a scene paragraph into a chat window and picking attachments by eye. That
+worked. It also lost the two things that make a failure diagnosable: **which
+references were attached, and in what order.** Neither was written down
+anywhere, so a scene could not be regenerated identically, and a picture that
+came back wrong could not be attributed to the prompt or to the attachments.
+
+Attachment order is not a detail. Rounds 1–19 of the tan-era set found the
+attached image to be the single strongest lever on consistency — rounds 4 and 5
+of one scene differed only in the human's pose, and the dog came back right both
+times off the reference. So the pipeline treats references as ordered data, and
+the numbered attachment list inside the prompt is *generated from that array*,
+so the text and the send order cannot disagree.
+
+## A scene, as a file
+
+`art/scenes/<id>.json`:
+
+```json
+{
+  "id": "door-sound-03-name",
+  "briefId": "cool-flat-v1",
+  "title": "Say her name in a bright, happy voice",
+  "activity": "Doorbell Predicts Rewards",
+  "step": "Level 1, step 3 of 5",
+  "note": "Why this scene is the way it is. Not sent to the model.",
+  "blocks": ["style", "cast"],
+  "references": [
+    { "path": "art/source/trainer-reference.jpg", "role": "likeness:handler" },
+    { "path": "art/source/lucy-reference.jpg", "role": "likeness:lucy" },
+    { "path": "art/source/Calm Door Greetings/door-sound-02-self.png", "role": "continuity:room" }
+  ],
+  "scene": "Interior entry hall, beside the closed charcoal front door…",
+  "mustBeTrue": "both of the handler's hands are visibly empty and away from the pouch…"
+}
+```
+
+`blocks` names the reusable prose to prepend, in order: `style` (Block A),
+`porch` (the exterior sub-block, for scenes shot from outside the front door),
+`cast` (Block B). `references` is an **ordered** array; the roles are a closed
+set, because an unknown role is a typo and a typo that produced an unlabelled
+attachment is exactly the quiet failure this format exists to prevent:
+
+| role | what the prompt says it is for |
+| --- | --- |
+| `likeness:handler` | copy her face, hair and build only |
+| `likeness:lucy` | copy her markings, beard, ear and build only |
+| `continuity:room` | the same room in an adjacent moment — match camera, eye level, wall, floor, door, distance |
+| `continuity:pair` | the companion picture, shown side by side, so nothing but the action may differ |
+
+`mustBeTrue` is one sentence naming the thing the picture has to get right. It
+goes into the prompt *and* onto the review sheet, so a review answers a written
+question rather than "does this look nice".
+
+### The likeness warning is not optional
+
+Both reference sheets were cropped from the old painterly set, because that is
+where the likenesses live. Every request therefore ships an example of the
+rendering the brief is trying to leave behind. When a spec carries any
+`likeness:` reference, the assembled prompt adds a paragraph saying the sheets
+are for likeness only and must not be copied for style. Removing that paragraph
+brings the old style back.
+
+## The two briefs, and which one is live
+
+There are two prompt briefs in this repo and only one of them is current:
+
+| file | status |
+| --- | --- |
+| `art/source/drawing-a-new-scene.md` | **live.** Flat, cool, drawn in the app's own tokens. |
+| `docs/pilot-prompts.md` | superseded on palette. The tan-era "Warm Instructional Vector", kept for its round-by-round post-mortems. |
+
+Assembling a scene out of the second one produces a warm prompt for a cool set,
+and the mistake does not surface until an image comes back. So `brief.mjs` names
+the live file explicitly and reads nothing else, every spec carries a `briefId`,
+and a spec declaring anything but the current brief is **refused** rather than
+generated. Bump `BRIEF_ID` when the brief changes in a way that changes the
+pictures.
+
+## The canvas, and why it is 1472×1104
+
+The master is 1448×1086. That size cannot be requested: gpt-image-2 takes custom
+resolutions only when both edges are multiples of 16, and 1448 is not.
+
+1472×1104 is the nearest size that is, and it is **exactly 4:3** — the same
+ratio as the master. So 1472→1448 and 1104→1086 are one and the same 0.98370
+factor, and the master is a proportional downscale with no crop and no crop box
+computed anywhere on that path:
+
+    sips --resampleHeightWidth 1086 1448 <raw> --out <master>
+
+`--resampleHeightWidth` takes **height then width**, which is the reverse of how
+everything else in this repo names a size.
+
+This matters more than it sounds. The brief's composition rules are written as
+fractions of the frame — everything essential inside the middle 75% of the width
+on covers, inside the middle 60% of the height on the wide ones — and cropping
+to reach the ratio would silently move both. The tan-era set came back 3:2 and
+had to be cropped; those rules are what that cost.
+
+What is actually sent, as multipart/form-data to
+`POST https://api.openai.com/v1/images/edits`:
+
+    model    gpt-image-2
+    size     1472x1104
+    n        1
+    quality  high
+    prompt   the assembled text
+    image[]  one repeated field per reference, in declared order
+
+The image arrives back base64 in `data[0].b64_json`, as PNG bytes.
+
+The documented limits, kept in `SIZE_LIMITS` beside the value they gate: edges a
+multiple of 16, longest edge ≤ 3840, aspect within 3:1 either way, total pixels
+between 655,360 and 8,294,400, at most 16 reference images per call.
+
+`input_fidelity` is **not sent.** gpt-image-2 processes every input at high
+fidelity automatically and rejects the parameter. `output_format` is not sent
+either: PNG is the default and the only encoding the model reliably honours — a
+webp request comes back as PNG bytes anyway.
+
+## The key
+
+`generate` reads `process.env.OPENAI_API_KEY` and nothing else, at the moment of
+the call, and uses it in one header. It is never an argument, never in the form
+body, never in a manifest, never in the sheet, and never in an error — a failure
+prints the API's own message and nothing of the request.
+
+Supply it with `--env-file` rather than the shell, which keeps it out of shell
+history and off the process command line:
+
+    node --env-file=.env.local scripts/pilot.mjs generate <scene> --yes
+
+`.env*` is gitignored with an exception for `.env.example`. Two tests hold the
+rest of the line, scanning source with comments stripped so a mention cannot
+pass for an access:
+
+- only `request.mjs` may reach `process.env` at all;
+- the only variable it reads is `OPENAI_API_KEY`.
+
+`plan` reads no environment variables whatsoever, which is a stronger guarantee
+than "it does not print the key": there is nothing there for it to print.
+
+## What it refuses, and why
+
+The refusals are the design. Most of them run before anything is spent or
+written.
+
+| refused | because |
+| --- | --- |
+| a spec with a stale or missing `briefId` | warm prompt, cool set — invisible until the image arrives |
+| a reference that is not on disk | a silently dropped attachment is a style drift you cannot attribute |
+| a duplicate reference, an unknown role, an unknown block | typos that would otherwise produce a plausible wrong prompt |
+| more than 16 references | the API's limit, caught before the upload |
+| `generate` without `--yes` | a paid non-deterministic call behind a bare verb is one you make by pressing up-arrow |
+| a round directory that already exists | a re-run is a new round, so the one you are comparing against survives |
+| a returned canvas that is not 1472×1104 | reaching 4:3 from another ratio needs a crop; that should be your decision |
+| a 4xx, retried | it would just be charged twice. Only 429 and 5xx are retried, once |
+| a 200 with no image | better an error than an empty file |
+| `approve` on a master that is not 1448×1086 | wrong-shaped shipped image, thumbnail that no longer matches |
+| `approve` on a round generated against another brief | the same trap, one stage later |
+
+A validation error collects **every** problem at once, so a bad spec is one fix
+rather than five.
+
+## Where things land
+
+    art/pilot/restyle/round-NN/
+      raw/<scene>.png      1472×1104, exactly as it arrived — never edited
+      <scene>.png          the 1448×1086 master
+      crops/               the review renditions
+      sheet.html           the review sheet
+      manifest.json        what was sent, and whether it was approved
+
+Restyle rounds have **their own counter starting at 1.** The tan-era rounds 1–19
+are cited by number throughout `pilot-prompts.md`, so continuing that numbering
+would make every one of those citations ambiguous. Both trees are gitignored;
+`art/pilot/approved/` is not, and never should be.
+
+## The review renditions
+
+A master looks fine at master size. What it has to survive is being cropped to a
+21:9 program hero and shrunk to the 56px map rail — and the failures that got
+through rounds 1–19 were all failures at some *other* size: action drifting out
+of the 21:9 band, a composition that turned to mush small.
+
+So every round produces six renditions from the master and puts them on one page
+with the scene's `mustBeTrue` line above them:
+
+| rendition | where the app uses it |
+| --- | --- |
+| `today-16x7` | Today hero (focal point at 42%, read off `app.css`) |
+| `program-21x9` | program hero |
+| `welcome-5x4` | welcome panel |
+| `square` | library card / map rail |
+| `square-84` | 84px, rendered at true size |
+| `square-56` | 56px, rendered at true size |
+
+The two thumbnails are cut from the square crop rather than from the master,
+because the app shows the square and then shrinks it — shrinking anything else
+answers a different question. They are rendered unscaled in the sheet, since a
+thumbnail displayed large tells you nothing about whether the thumbnail works.
+
+The crop table and its geometry are shared with the older `check` command, so
+the two cannot drift apart. Crops are expressed as **ratios and a focal
+fraction, never pixels**: `sips` does not refuse a crop larger than its source,
+it pads it, so a pixel-sized crop against a smaller file yields a confident wrong
+answer instead of an error.
+
+## What approve does
+
+Installing a picture is one copy. The five steps around it are where this
+project has actually lost time:
+
+| | |
+| --- | --- |
+| `img/<key>.jpg` | 1100px wide, JPEG quality 72 |
+| `img/thumb-<key>.jpg` | 240px wide, same quality — `js/content.js` derives this path from the full one, so the name is a contract |
+| `art/pilot/approved/<key>.png` | the master, filed under the shipped key |
+| `css/app.css` | seven lines in two blocks, so the flat art skips the warm-art grade |
+| `art/source/restyle-worklist.md` | the tick |
+
+Miss the CSS and the picture renders slightly greyer than the one beside it,
+which is the one failure nobody spots. Miss the tick and the list quietly lies
+about what is left.
+
+The numbers are measured, not chosen: the quantisation tables of the existing
+shipped files match JPEG quality 72 exactly, and both 1100 and 240 divide
+1448×1086 to whole numbers, so there is no rounding to argue about. The thumb is
+rendered from the master rather than from the shipped JPEG, and both files are
+re-read after writing — a thumb that failed to write is a broken image on every
+card, not a missing file someone notices.
+
+The ledger and the worklist are edited as data by pure functions with their own
+tests. The ledger's container list is **read off the block** rather than
+hardcoded, so a new kind of art container is added once by hand and every later
+key picks it up. Both edits are idempotent, the running count is regenerated from
+the selectors rather than incremented, and the total comes from the worklist, so
+the two cannot disagree about what is left.
+
+`approve` does **not** commit and does **not** bump `APP_VERSION`. Both are
+release decisions, and the release here is the finish line.
+
+## The finish line
+
+While the set is half redrawn, the app carries two vocabularies at once: the
+warm art is cooled by `--art-grade` and `--art-veil` in `css/app.css`, and every
+redrawn file opts out of both through the pilot ledger. Cool art graded cooler
+goes grey, which is why the ledger exists.
+
+When the last row of the worklist is ticked — `approve` says so, and names this
+— delete `--art-grade`, `--art-veil`, the rules that apply them and the whole
+ledger block **in one commit.** Not one at a time, or the stragglers get graded
+alone. That deletion is the finish line, and it is when the branch merges.
+
+## The code
+
+    scripts/pilot.mjs          the CLI: dispatch and the older hand-driven commands
+    scripts/lib/markdown.mjs   blockquote extraction, shared with pilot.mjs
+    scripts/lib/brief.mjs      the reusable blocks, from the live brief, and BRIEF_ID
+    scripts/lib/scene.mjs      spec validation, ordered references, prompt assembly
+    scripts/lib/request.mjs    the request surface, the key, the call, output paths
+    scripts/lib/plan.mjs       the dry run
+    scripts/lib/generate.mjs   the run
+    scripts/lib/approve.mjs    the install
+    scripts/lib/renditions.mjs the crop table and geometry, shared with `check`
+    scripts/lib/ledger.mjs     the pilot ledger in css/app.css, as data
+    scripts/lib/worklist.mjs   the worklist checkboxes, as data
+    scripts/lib/sheet.mjs      the review sheet
+    scripts/lib/imagesize.mjs  PNG and JPEG dimensions, without shelling out
+
+Zero dependencies, as the rest of this repo is. Node's built-in `fetch`,
+`FormData`, `--env-file` and `node --test` do everything a package would.
+
+`ledger.mjs` is temporary by design: it exists only while both styles are in the
+app, and it goes with the ledger at the finish line.
+
+## Running the tests
+
+    node --test scripts/lib/*.test.mjs
+
+124 tests, no network, no key, no macOS — `fetch` and `sips` are injected, and
+the whole of `generate` and `approve` runs in a temp directory against images the
+suite builds itself. The directory form (`node --test scripts/lib/`) does not
+work on every Node build; the glob always does.
+
+Covered end to end: refusals, rate limits, a 200 with no image, a wrong canvas, an
+existing round, the ledger and worklist transforms against the real files, and
+that nothing is ever written outside the round directory.
+
+## Still unverified
+
+The request surface was checked against
+[the official image-generation guide](https://developers.openai.com/api/docs/guides/image-generation)
+on 2026-08-28, but documentation is not a live call. One thing only a real
+request can settle: **whether the model honours `image[]` order as reference
+precedence** the way the assembled prompt's numbered attachment list assumes it
+does. Watch the first round for it.
+
+Cost is billed per token — $8/M in, $30/M out — and published per-image figures
+for `quality: high` vary widely by reseller. Treat the `~$0.20–0.35` that `plan`
+prints as an order of magnitude and check it against the first invoice. A scene
+being iterated for composition rather than finish is worth re-running at
+`quality: medium`, which is roughly a quarter of the price.
+
+## Adding a scene
+
+1. Write `art/scenes/<key>.json`. The alt text in the worklist was written
+   against the picture each key is supposed to be, so it doubles as the scene
+   text; add a `mustBeTrue` line naming the one thing it has to get right.
+2. Attach the two likeness sheets first, then any continuity reference. If the
+   scene is half of a pair, attach the finished half so the room, camera and
+   distances match.
+3. `plan <key>` and read the assembled prompt. This is free.
+4. `generate <key> --yes`, then open the sheet.
+5. Good? `approve <key> --yes`, review the diff, commit it yourself.
+   Not good? Adjust the spec and run again — it takes the next round number and
+   leaves the last one where it is.

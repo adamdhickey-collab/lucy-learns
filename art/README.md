@@ -80,6 +80,11 @@ Numbering was deliberately not reset: the per-batch post-mortems in
 ("round 4 and round 5 of Scene 6 differed only in the human's pose"), and
 renumbering would turn those into references to the wrong thing.
 
+The restyle writes to `art/pilot/restyle/round-NN/` instead, on **its own
+counter starting at 1**, for the same reason: sharing this one would make every
+citation above ambiguous. Also gitignored. See
+[`../docs/illustration-pipeline.md`](../docs/illustration-pipeline.md).
+
 Before deleting a round, check that every shipped image still has its master in
 `approved/` — **and that the master is still the same picture.** Use:
 

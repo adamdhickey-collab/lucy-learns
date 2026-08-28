@@ -70,8 +70,22 @@ clips an ear — a 740 crop was tried and did. Re-measure if the icon changes.
 
 ## Adding an image
 
-Don't copy files here by hand. `node scripts/pilot.mjs add <key>` takes the
-newest download from the Desktop, checks its aspect ratio, refuses a duplicate
-it has already seen, writes both the full and the thumb, and files the master
-in `art/pilot/`. Then add the key to `js/content.js` and to the precache list
-in `sw.js` — an image absent from that list is the one that fails offline.
+Don't copy files here by hand — the two sizes, the quality and the thumb's name
+all have to be right, and nothing checks them afterwards.
+
+**Redrawing an existing key** (the restyle) goes through the pipeline, which
+generates, renders both files, files the master, opts the flat art out of the
+CSS art grade and ticks the worklist:
+
+    node scripts/pilot.mjs approve <key> --yes
+
+See [`../docs/illustration-pipeline.md`](../docs/illustration-pipeline.md).
+
+**A picture that arrived some other way** goes through the older command:
+`node scripts/pilot.mjs add <key>` takes the newest download from the Desktop,
+checks its aspect ratio, refuses a duplicate it has already seen, writes both
+the full and the thumb, and files the master in `art/pilot/`.
+
+Either way, a **new** key also needs adding to `js/content.js` and to the
+precache list in `sw.js` — an image absent from that list is the one that fails
+offline.
