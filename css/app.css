@@ -342,10 +342,12 @@ img {
    left, delete --art-grade, --art-veil, the rules above and this whole block
    together — not one at a time, or the last few pictures will be graded alone.
 
-   Redrawn so far: door-sound-01-setup, door-greet-07-approach,
-   door-greet-08-petting, door-greet-08-jumping, door-cover
-   door-sound-02-self, door-sound-02-bell, door-sound-02-knock
-   (8 of 37; 29 still warm — see
+   Redrawn so far:
+   door-sound-01-setup, door-greet-07-approach, door-greet-08-petting,
+   door-greet-08-jumping, door-cover, door-sound-02-self, door-sound-02-bell,
+   door-sound-02-knock, door-sound-03-name, door-sound-03-name-distant,
+   door-stay-03-onestep
+   (11 of 37; 26 still warm — see
    art/source/restyle-worklist.md). */
 img[src$="door-sound-01-setup.jpg"],
 img[src$="door-greet-07-approach.jpg"],
@@ -354,7 +356,10 @@ img[src$="door-greet-08-jumping.jpg"],
 img[src$="door-cover.jpg"],
 img[src$="door-sound-02-self.jpg"],
 img[src$="door-sound-02-bell.jpg"],
-img[src$="door-sound-02-knock.jpg"] {
+img[src$="door-sound-02-knock.jpg"],
+img[src$="door-sound-03-name.jpg"],
+img[src$="door-sound-03-name-distant.jpg"],
+img[src$="door-stay-03-onestep.jpg"] {
   filter: none;
 }
 
@@ -405,7 +410,25 @@ img[src$="door-sound-02-knock.jpg"] {
 .detail-hero:has(img[src$="door-sound-02-knock.jpg"]),
 .step-figure:has(img[src$="door-sound-02-knock.jpg"]),
 .step-pair-item:has(img[src$="door-sound-02-knock.jpg"]),
-.welcome-figure:has(img[src$="door-sound-02-knock.jpg"]) {
+.welcome-figure:has(img[src$="door-sound-02-knock.jpg"]),
+.hero:has(img[src$="door-sound-03-name.jpg"]),
+.activity-card .card-illo:has(img[src$="door-sound-03-name.jpg"]),
+.detail-hero:has(img[src$="door-sound-03-name.jpg"]),
+.step-figure:has(img[src$="door-sound-03-name.jpg"]),
+.step-pair-item:has(img[src$="door-sound-03-name.jpg"]),
+.welcome-figure:has(img[src$="door-sound-03-name.jpg"]),
+.hero:has(img[src$="door-sound-03-name-distant.jpg"]),
+.activity-card .card-illo:has(img[src$="door-sound-03-name-distant.jpg"]),
+.detail-hero:has(img[src$="door-sound-03-name-distant.jpg"]),
+.step-figure:has(img[src$="door-sound-03-name-distant.jpg"]),
+.step-pair-item:has(img[src$="door-sound-03-name-distant.jpg"]),
+.welcome-figure:has(img[src$="door-sound-03-name-distant.jpg"]),
+.hero:has(img[src$="door-stay-03-onestep.jpg"]),
+.activity-card .card-illo:has(img[src$="door-stay-03-onestep.jpg"]),
+.detail-hero:has(img[src$="door-stay-03-onestep.jpg"]),
+.step-figure:has(img[src$="door-stay-03-onestep.jpg"]),
+.step-pair-item:has(img[src$="door-stay-03-onestep.jpg"]),
+.welcome-figure:has(img[src$="door-stay-03-onestep.jpg"]) {
   --art-veil: transparent;
 }
 
@@ -4030,7 +4053,7 @@ details.disclosure .disclosure-body {
      PNG. Re-measure it whenever the art changes — this value drifted a little
      with each new illustration, and a mismatch shows up as a faint rectangle
      exactly where the two are supposed to be indistinguishable. */
-  --splash-field: #e4dcec;
+  --splash-field: #e6deed;
   background: var(--splash-field);
   transition: opacity 420ms ease-in;
 

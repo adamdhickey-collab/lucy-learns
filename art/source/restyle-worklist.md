@@ -63,8 +63,8 @@ Carry these on every scene, all learned from the pilot:
 | [x] | `door-sound-02-bell` | used ×2 | A visitor at the closed front door presses the doorbell. |
 | [x] | `door-sound-02-knock` | — | A visitor at the closed front door knocks on it. |
 | [x] | `door-sound-02-self` | used ×2 | A handler knocks on the door frame while standing right beside Lucy with the leash under her foot. |
-| [ ] | `door-sound-03-name` | used ×2 | Lucy turns away from the door to look up at her handler, who crouches beside her at her level with both hands empty. |
-| [ ] | `door-sound-03-name-distant` | used ×2 | Lucy sits on her bed near the front door and turns her head toward her handler, who is beckoning from the far end of the hallway. |
+| [x] | `door-sound-03-name` | used ×2 | Lucy turns away from the door to look up at her handler, who crouches beside her at her level with both hands empty. |
+| [x] | `door-sound-03-name-distant` | used ×2 | Lucy sits on her bed near the front door and turns her head toward her handler, who is beckoning from the far end of the hallway. |
 | [ ] | `door-sound-04-treats` | — | A flat open palm held out at Lucy’s head height, cropped close, with Lucy sitting and looking up at it. |
 | [ ] | `door-sound-05-settle` | — | Lucy stands relaxed on a slack leash beside her handler in a quiet moment between repetitions, with nothing being asked of her. |
 | [ ] | `door-sound-cover` | **cover** · square-safe | Lucy and her handler close together and face to face, the handler’s hand resting on Lucy’s chest. |
@@ -79,7 +79,7 @@ Carry these on every scene, all learned from the pilot:
 | [ ] | `door-stay-03-cross` | used ×3 | Lucy holds her down on her bed in the foreground while her handler stands at the closed front door across the room. |
 | [ ] | `door-stay-03-halfway` | — | Lucy holds her bed while a handler pauses halfway across the room and glances back at her. |
 | [ ] | `door-stay-03-handle` | — | A handler rests a hand on the front door handle while Lucy holds her bed across the room. |
-| [ ] | `door-stay-03-onestep` | — | A handler stands one step from Lucy’s bed looking down at her, the closed front door still across the room, while Lucy holds her down. |
+| [x] | `door-stay-03-onestep` | — | A handler stands one step from Lucy’s bed looking down at her, the closed front door still across the room, while Lucy holds her down. |
 | [ ] | `door-stay-03-pretend` | used ×3 | A handler stands in the open doorway talking to an empty porch while Lucy stays on her bed. |
 | [ ] | `door-stay-04-pay` | used ×2 | A handler kneels beside Lucy’s bed and feeds her a treat for staying in place. |
 | [ ] | `door-stay-05-release` | used ×2 | Lucy steps off her bed toward her handler’s open hands as she is released from the stay. |
