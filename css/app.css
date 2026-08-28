@@ -343,10 +343,11 @@ img {
    together — not one at a time, or the last few pictures will be graded alone.
 
    Redrawn so far: door-sound-01-setup, door-greet-07-approach,
-   door-greet-08-petting (pilot 3 of 5). */
+   door-greet-08-petting, door-greet-08-jumping (pilot 4 of 5). */
 img[src$="door-sound-01-setup.jpg"],
 img[src$="door-greet-07-approach.jpg"],
-img[src$="door-greet-08-petting.jpg"] {
+img[src$="door-greet-08-petting.jpg"],
+img[src$="door-greet-08-jumping.jpg"] {
   filter: none;
 }
 
@@ -367,7 +368,13 @@ img[src$="door-greet-08-petting.jpg"] {
 .detail-hero:has(img[src$="door-greet-08-petting.jpg"]),
 .step-figure:has(img[src$="door-greet-08-petting.jpg"]),
 .step-pair-item:has(img[src$="door-greet-08-petting.jpg"]),
-.welcome-figure:has(img[src$="door-greet-08-petting.jpg"]) {
+.welcome-figure:has(img[src$="door-greet-08-petting.jpg"]),
+.hero:has(img[src$="door-greet-08-jumping.jpg"]),
+.activity-card .card-illo:has(img[src$="door-greet-08-jumping.jpg"]),
+.detail-hero:has(img[src$="door-greet-08-jumping.jpg"]),
+.step-figure:has(img[src$="door-greet-08-jumping.jpg"]),
+.step-pair-item:has(img[src$="door-greet-08-jumping.jpg"]),
+.welcome-figure:has(img[src$="door-greet-08-jumping.jpg"]) {
   --art-veil: transparent;
 }
 
