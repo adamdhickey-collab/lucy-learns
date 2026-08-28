@@ -27,3 +27,33 @@ export function tickWorklist(md, key) {
   if (!re.test(md)) throw new Error(`"${key}" is not a row in the worklist`);
   return md.replace(re, '$1[x]$3');
 }
+
+/**
+ * Every row, in list order, with the activity heading it sits under.
+ *
+ * The worklist is the register of what exists: 37 rows, one per shipped key.
+ * Parsing it rather than keeping a second list in JavaScript is the same
+ * decision as reading the prompt out of the brief — a list that exists twice
+ * drifts, and the drift is invisible until someone acts on the wrong half.
+ */
+export function worklistRows(md) {
+  const rows = [];
+  let activity = '(none)';
+  for (const line of md.split('\n')) {
+    const heading = /^###\s+(.+?)\s*$/.exec(line);
+    if (heading) {
+      activity = heading[1];
+      continue;
+    }
+    const row = /^\|\s*\[([ x])\]\s*\|\s*`([^`]+)`\s*\|([^|]*)\|/.exec(line);
+    if (row) {
+      rows.push({
+        activity,
+        key: row[2],
+        ticked: row[1] === 'x',
+        notes: row[3].trim().replace(/\*\*/g, ''),
+      });
+    }
+  }
+  return rows;
+}

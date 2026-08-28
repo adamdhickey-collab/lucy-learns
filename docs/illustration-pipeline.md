@@ -8,7 +8,7 @@ Three commands take a scene from a JSON file to an installed picture:
 
 `plan` costs nothing and touches nothing. `generate` is the only command that
 spends money. `approve` is the only one that changes what the app shows. Nothing
-commits.
+commits. A fourth, `status`, answers "what is left" — see below.
 
 This is for the restyle — thirty-seven illustrations being redrawn flat and cool
 against [`art/source/drawing-a-new-scene.md`](../art/source/drawing-a-new-scene.md).
@@ -31,6 +31,30 @@ of one scene differed only in the human's pose, and the dog came back right both
 times off the reference. So the pipeline treats references as ordered data, and
 the numbered attachment list inside the prompt is *generated from that array*,
 so the text and the send order cannot disagree.
+
+## Knowing where you are
+
+    node scripts/pilot.mjs status [filter]
+
+Thirty-seven pictures drawn over weeks, some of which cannot be started until
+others are finished. The state of any one of them lives in four places — the
+worklist says whether it is done, `css/app.css` says whether it is opted out of
+the art grade, `art/scenes/` says whether it has been written, and
+`art/pilot/restyle/` says whether anything has been drawn — and holding that in
+your head across a session is how a rung gets skipped.
+
+    ✓ door-sound-02-self           redrawn and shipping  · used ×2
+    · door-stay-03-onestep         ready to generate
+    ⋯ door-stay-03-halfway         after door-stay-03-onestep
+    ~ door-place-cover             round 3 (of 2) — review it
+      door-greet-cover             no spec yet  · cover · square-safe
+
+    8 approved · 0 awaiting review · 11 ready · 7 blocked · 11 unspecced   (37 total)
+
+It writes nothing. It also cross-checks the two registers `approve` maintains —
+the worklist's ticks and the ledger's opt-outs — and says so if they disagree,
+because they are written by the same command and a disagreement means an approve
+stopped halfway.
 
 ## A scene, as a file
 
@@ -324,6 +348,7 @@ alone. That deletion is the finish line, and it is when the branch merges.
     scripts/lib/ledger.mjs     the pilot ledger in css/app.css, as data
     scripts/lib/worklist.mjs   the worklist checkboxes, as data
     scripts/lib/sheet.mjs      the review sheet
+    scripts/lib/status.mjs     where all 37 pictures stand
     scripts/lib/imagesize.mjs  PNG and JPEG dimensions, without shelling out
 
 Zero dependencies, as the rest of this repo is. Node's built-in `fetch`,
@@ -336,7 +361,7 @@ app, and it goes with the ledger at the finish line.
 
     node --test scripts/lib/*.test.mjs
 
-136 tests, no network, no key, no macOS — `fetch` and `sips` are injected, and
+146 tests, no network, no key, no macOS — `fetch` and `sips` are injected, and
 the whole of `generate` and `approve` runs in a temp directory against images the
 suite builds itself. The directory form (`node --test scripts/lib/`) does not
 work on every Node build; the glob always does.

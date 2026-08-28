@@ -20,6 +20,7 @@
 //   node scripts/pilot.mjs plan <scene>       dry run the automated pipeline
 //   node scripts/pilot.mjs generate <scene> --yes
 //   node scripts/pilot.mjs approve <scene> --yes   install the round you kept
+//   node scripts/pilot.mjs status                  where the whole set stands
 //
 // Prompts are read from markdown rather than duplicated here; that file is the
 // source of truth and this only strips the markdown off it. There are two, and
@@ -40,6 +41,7 @@ import { blockquoteAfter, findHeading } from './lib/markdown.mjs';
 import { cmdPlan } from './lib/plan.mjs';
 import { cmdGenerate } from './lib/generate.mjs';
 import { cmdApprove } from './lib/approve.mjs';
+import { cmdStatus } from './lib/status.mjs';
 import { CROPS, cropBox } from './lib/renditions.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
@@ -638,6 +640,7 @@ const [cmd, ...rest] = process.argv.slice(2);
   plan: () => cmdPlan(rest[0]),
   generate: () => cmdGenerate(rest[0], rest.slice(1)).catch(die),
   approve: () => cmdApprove(rest[0], rest.slice(1)).catch(die),
+  status: () => cmdStatus(rest),
 }[cmd] ||
   (() =>
     die(
@@ -650,5 +653,6 @@ const [cmd, ...rest] = process.argv.slice(2);
         '  sheet [dir]             contact sheet to review them side by side\n' +
         '  plan <scene-id>         dry run: prompt, references, request, paths\n' +
         '  generate <scene-id>     send it — needs --yes, and spends money\n' +
-        '  approve <scene-id>      install a round: img/, master, ledger, worklist'
+        '  approve <scene-id>      install a round: img/, master, ledger, worklist\n' +
+        '  status [filter]         where all 37 pictures stand'
     )))();
