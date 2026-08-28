@@ -176,6 +176,18 @@ The second sentence is the cause rather than the symptom: a black line on a
 black coat has no edge to read against, so there is nothing anchoring where it
 ends up.
 
+**Flat art survives the thumbnail, which was half of what the pilot set out
+to learn.** Scene 6.3 is a cover, so it gets cut to a centred square and then
+down to 84px and 56px. At 84px all three figures still read — the standing
+handler, the sitting dog, the crouching guest — and the collar still registers
+as a violet note. Painterly art at that size turned to mush. The flat style is
+the right call for this app and not only for its palette.
+
+For any scene that will be cropped square, say so in the prompt and give the
+number: **everything essential inside the middle 75% of the width**, nothing
+important in the outer 12% either side. Vaguer wording ("group them tightly")
+was what the audit used and it is not a constraint anyone can check.
+
 **Check the pixel dimensions before doing anything else with a returned file.**
 One of the two takes arrived at 1397×1126 — a 1.24 ratio the app cannot use,
 since it cuts both a 4:3 and a square from the same file. It cropped cleanly to
