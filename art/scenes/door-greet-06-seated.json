@@ -1,0 +1,36 @@
+{
+  "id": "door-greet-06-seated",
+  "briefId": "cool-flat-v1",
+  "title": "Everyone sits down and ignores her",
+  "activity": "Controlled Real Greeting",
+  "step": "Level 6 — the visit settles",
+  "note": "Replaces the most cluttered composition in the library: two seated figures, sofa, armchair, side table, rug, plant, framed picture, doormat and door. It is now armchair, sofa, bed, wall and floor — nothing else. The armchair and sofa are not in Block A, so their colours are named here, inside the established palette.",
+  "blocks": [
+    "style",
+    "cast"
+  ],
+  "references": [
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-greet-08-petting.png",
+      "role": "likeness:guest"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-sound-02-self.png",
+      "role": "continuity:room"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-cover.png",
+      "role": "continuity:room"
+    }
+  ],
+  "scene": "Interior living space off the same hall, same pale lavender wall and desaturated oak floor. FIVE THINGS ONLY: an armchair, a sofa, the dog bed, the wall and the floor. No side table, no rug, no plant, no framed picture, no lamp, no doormat and no door in frame. The guest sits back in a plain armchair in muted taupe on the right, relaxed, hands in his lap. The guest wears the medium-blue zip-up hoodie, black baseball cap and clear-framed glasses from his likeness reference. He is NOT in a plaid or checked shirt — that was an earlier version of this character and is being replaced everywhere. The handler sits on a plain sofa in muted slate-blue on the left, turned toward him mid-conversation. NEITHER of them is looking at Lucy — both faces are turned toward each other. Lucy lies settled on her cool-grey dog bed — a proper mattress with real thickness, a padded slab about a hand deep with a soft raised edge, not a flat mat on the floor between them, elbows and hips down, head resting level, entirely ignored and entirely fine. No leash.",
+  "mustBeTrue": "the picture contains only an armchair, a sofa, the dog bed, the wall and the floor — no table, rug, plant, picture or lamp — and neither the guest nor the handler is looking at Lucy, who lies settled between them."
+}

@@ -89,6 +89,7 @@ attachment is exactly the quiet failure this format exists to prevent:
 | --- | --- |
 | `likeness:handler` | copy her face, hair and build only |
 | `likeness:lucy` | copy her markings, beard, ear and build only |
+| `likeness:guest` | copy his face, glasses, black cap and blue hoodie — and, unlike the two sheets, match its rendering too |
 | `continuity:room` | the same room in an adjacent moment — match camera, eye level, wall, floor, door, distance |
 | `continuity:pair` | the companion picture, shown side by side, so nothing but the action may differ |
 | `continuity:ladder` | the previous rung of this ladder — only the one thing this step changes may differ |
@@ -134,12 +135,17 @@ is the only thing that knows.
 
 ### The likeness warning is not optional
 
-Both reference sheets were cropped from the old painterly set, because that is
-where the likenesses live. Every request therefore ships an example of the
-rendering the brief is trying to leave behind. When a spec carries any
-`likeness:` reference, the assembled prompt adds a paragraph saying the sheets
-are for likeness only and must not be copied for style. Removing that paragraph
-brings the old style back.
+The handler's and Lucy's reference sheets were cropped from the old painterly
+set, because that is where the likenesses live. Every request that carries one
+therefore ships an example of the rendering the brief is trying to leave behind,
+so the assembled prompt adds a paragraph saying they are for likeness only and
+must not be copied for style. Removing it brings the old style back.
+
+The warning fires on **those two files specifically**, not on the word
+`likeness`. The guest's likeness reference is a redrawn scene — already flat,
+already cool — and telling the model to ignore its rendering would throw away
+the only example of the target style in the request. When the two sheets are
+eventually redrawn, the warning comes out with them.
 
 ## The two briefs, and which one is live
 
@@ -361,7 +367,7 @@ app, and it goes with the ledger at the finish line.
 
     node --test scripts/lib/*.test.mjs
 
-146 tests, no network, no key, no macOS — `fetch` and `sips` are injected, and
+148 tests, no network, no key, no macOS — `fetch` and `sips` are injected, and
 the whole of `generate` and `approve` runs in a temp directory against images the
 suite builds itself. The directory form (`node --test scripts/lib/`) does not
 work on every Node build; the glob always does.

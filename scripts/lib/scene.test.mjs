@@ -225,6 +225,45 @@ test('a scene with no legacy master returns null rather than a bad path', () => 
   assert.equal(legacyMaster('no-such-scene-anywhere'), null);
 });
 
+test('the painterly warning fires on the sheets, not on the word likeness', () => {
+  // The guest's likeness reference is a redrawn scene — already flat, already
+  // cool. Telling the model to ignore its rendering would throw away the only
+  // example of the target style in the request.
+  const guestOnly = good({
+    references: [
+      { path: 'art/source/Calm Door Greetings/door-greet-08-petting.png', role: 'likeness:guest' },
+    ],
+  });
+  const p = assemblePrompt(validateScene(guestOnly, { checkFiles: false }), BLOCKS);
+  assert.match(p, /likeness:guest|copy his face/i, 'the guest reference is still labelled');
+  assert.doesNotMatch(p, /painted in an older style/,
+    'a flat reference must not be described as painterly');
+
+  // The two sheets still trigger it.
+  const withSheets = assemblePrompt(validateScene(good(), { checkFiles: false }), BLOCKS);
+  assert.match(withSheets, /painted in an older style/);
+});
+
+test('every greeting scene puts the guest in the current clothes', () => {
+  for (const id of [
+    'door-greet-04-open',
+    'door-greet-05-reward',
+    'door-greet-06-enter',
+    'door-greet-06-seated',
+    'door-greet-09-leaves',
+    'door-greet-cover',
+  ]) {
+    const scene = loadScene(id);
+    assert.match(scene.scene, /blue zip-up hoodie/, `${id} must name the hoodie`);
+    assert.match(scene.scene, /NOT in a plaid or checked shirt/,
+      `${id} must rule out the replaced character`);
+    assert.ok(
+      scene.references.some((r) => r.role === 'likeness:guest'),
+      `${id} must attach the guest's likeness`
+    );
+  }
+});
+
 test('every scene spec in art/scenes/ is valid', () => {
   const files = fs.existsSync(SCENES_DIR)
     ? fs.readdirSync(SCENES_DIR).filter((f) => f.endsWith('.json'))

@@ -1,0 +1,32 @@
+{
+  "id": "door-greet-01-settle",
+  "briefId": "cool-flat-v1",
+  "title": "Clip the leash on, well back from the door",
+  "activity": "Controlled Real Greeting",
+  "step": "Level 1 — settling her before anyone arrives",
+  "note": "No guest in this one: it is the moment before anybody comes. The distance from the door is the instruction.",
+  "blocks": [
+    "style",
+    "cast"
+  ],
+  "references": [
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-sound-02-self.png",
+      "role": "continuity:room"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-cover.png",
+      "role": "continuity:room"
+    }
+  ],
+  "scene": "Interior entry hall. The handler crouches down on her heels beside her cool-grey dog bed — a proper mattress with real thickness, a padded slab about a hand deep with a soft raised edge, not a flat mat, clipping the black leash onto the ring at the front of Lucy's purple collar — the clip is visibly at the collar ring, and the rest of the leash falls slack to the floor in a loose curve. Lucy lies settled on the bed, elbows and hips down, head up and calm, letting it happen. They are well back from the closed charcoal front door, which sits far off across the room with a long stretch of empty floor between. Nobody else is present and the door is shut. Draw the leash with a thin lighter outline where it passes near her coat, and never across her back or shoulders.",
+  "mustBeTrue": "the clip is going onto the ring at the front of her collar, Lucy is lying settled on the bed rather than standing, and the two of them are clearly well back from the closed door with a long span of empty floor between them and it."
+}

@@ -1,0 +1,32 @@
+{
+  "id": "door-greet-cover",
+  "briefId": "cool-flat-v1",
+  "title": "Controlled Real Greeting — activity cover",
+  "activity": "Controlled Real Greeting",
+  "step": "the activity cover",
+  "note": "Cover, and the composition constraint is measured rather than guessed. The previous cover lost the guest's head to the 16:7 Today band, which is an acceptable trade for a step image and not for a cover. Three figures have to sit inside both the band and the centred square, and every cover that passed first time has a crouching or kneeling human — so the guest crouches.",
+  "blocks": [
+    "style",
+    "cast"
+  ],
+  "references": [
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-greet-08-petting.png",
+      "role": "likeness:guest"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-sound-02-self.png",
+      "role": "continuity:room"
+    }
+  ],
+  "scene": "Interior entry hall, the open front door behind the figures with pale daylight and flat spruce foliage beyond it. Lucy SITS at the handler's side with all four paws on the floor, calm and square, on a black leash that hangs from her collar ring in a visibly slack curve to the handler's hand. The handler stands close beside her. The guest is a step away, CROUCHED down on his heels so his head comes to about Lucy's height, hands resting on his own knees and at his sides — he is not reaching for her and not touching her. The guest wears the medium-blue zip-up hoodie, black baseball cap and clear-framed glasses from his likeness reference. He is NOT in a plaid or checked shirt — that was an earlier version of this character and is being replaced everywhere. All three figures — the guest's head and glasses, the handler's head, and Lucy's four paws on the floor — sit inside the middle 60% of the HEIGHT and the middle 75% of the WIDTH, so the Today band keeps every head whole and the centred square holds all three of them. Keep them grouped close together in the middle rather than spread across the frame.",
+  "mustBeTrue": "all three figures are entirely inside the middle 75% of the width and the middle 60% of the height with no head cut off, the guest is crouched down rather than standing over her, and Lucy sits with all four paws on the floor on a visibly slack leash."
+}

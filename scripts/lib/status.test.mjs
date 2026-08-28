@@ -87,7 +87,7 @@ test('the head of the ladder is ready, not blocked', () => {
 });
 
 test('a picture with no spec reads as unspecced rather than ready', () => {
-  const row = restyleState().find((r) => r.key === 'door-greet-cover');
+  const row = restyleState().find((r) => r.key === 'plan-mat');
   assert.equal(row.status, 'none');
   assert.match(row.detail, /no spec/);
 });

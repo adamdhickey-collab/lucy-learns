@@ -66,6 +66,8 @@ export const ROLES = {
     'the same room in an adjacent moment — match the camera angle, eye level, wall, floor, door and distance exactly',
   'continuity:pair':
     'the companion picture to this one — the two are shown side by side, so nothing but the action may differ',
+  'likeness:guest':
+    'a likeness reference for the guest — copy his face, glasses, black cap and blue hoodie; this one is already in the current style, so match its rendering too',
   'continuity:ladder':
     'the previous rung of this ladder — same room, same camera, same distance from the viewer, same size of dog; only the one thing this step changes may differ',
 };
@@ -90,6 +92,20 @@ function redrawnKeys(cssPath = path.join(ROOT, 'css/app.css')) {
     return null; // no ledger: the restyle is over, everything approved is current
   }
 }
+
+/**
+ * The two reference sheets that are still painted in the old style.
+ *
+ * The warning below is about these files specifically, not about the word
+ * "likeness". The guest's likeness reference is a redrawn scene — already flat,
+ * already cool — and telling the model to ignore its rendering would throw away
+ * the only example of the target style in the request. So the warning fires on
+ * the sheets, and when these two are eventually redrawn it comes out with them.
+ */
+const PAINTERLY_SHEETS = new Set([
+  'art/source/trainer-reference.jpg',
+  'art/source/lucy-reference.jpg',
+]);
 
 const LIKENESS_WARNING =
   'The likeness references are for likeness only. Do NOT copy their rendering ' +
@@ -229,7 +245,7 @@ export function assemblePrompt(scene, blocks = loadBlocks()) {
   const parts = [];
   for (const id of scene.blocks) parts.push(blocks[id]);
 
-  const hasLikeness = scene.references.some((r) => r.role.startsWith('likeness:'));
+  const hasLikeness = scene.references.some((r) => PAINTERLY_SHEETS.has(r.path));
   const list = scene.references
     .map((r) => `${r.order}. ${path.basename(r.path)} — ${ROLES[r.role]}.`)
     .join('\n');

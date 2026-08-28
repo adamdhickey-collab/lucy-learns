@@ -1,0 +1,36 @@
+{
+  "id": "door-greet-04-open",
+  "briefId": "cool-flat-v1",
+  "title": "She holds the bed while the door is open",
+  "activity": "Controlled Real Greeting",
+  "step": "Level 4 — a real person at the open door",
+  "note": "Used twice. It replaces one that had NO handler and NO leash anywhere in it, on a step whose whole instruction is to hold her on the bed on one. Both are load-bearing here: the handler stands beside her holding the leash, and the leash is visibly slack.",
+  "blocks": [
+    "style",
+    "cast"
+  ],
+  "references": [
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-greet-08-petting.png",
+      "role": "likeness:guest"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-sound-02-self.png",
+      "role": "continuity:room"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-cover.png",
+      "role": "continuity:room"
+    }
+  ],
+  "scene": "Interior entry hall. The front door stands open on the right and the guest waits OUTSIDE it on the porch, not across the threshold — pale daylight and flat spruce foliage behind him. The guest wears the medium-blue zip-up hoodie, black baseball cap and clear-framed glasses from his likeness reference. He is NOT in a plaid or checked shirt — that was an earlier version of this character and is being replaced everywhere. He stands still and easy with his hands at his sides, not reaching in, not looking at Lucy. Lucy SITS on her cool-grey dog bed — a proper mattress with real thickness, a padded slab about a hand deep with a soft raised edge, not a flat mat on the left, four paws on the bed, calm and upright. The handler stands beside the bed holding the black leash, which runs from the ring on Lucy's collar up to her hand in a clearly SLACK curve — loose, never straight or taut. The handler is present and visible in full; she is not cropped out. Give the leash a thin lighter outline where it passes near Lucy's coat, and keep it off her back and shoulders.",
+  "mustBeTrue": "the handler is in the picture holding the leash and the leash hangs in a visibly slack curve rather than a taut line, Lucy is sitting on her bed, and the guest is outside the open door rather than inside it."
+}
