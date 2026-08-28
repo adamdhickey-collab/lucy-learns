@@ -178,6 +178,50 @@ test('a 400 throws with the API\'s own message, and nothing of the request', asy
   );
 });
 
+test('the verification 403 carries its remedy, and says nothing was charged', async () => {
+  await assert.rejects(
+    () =>
+      callApi({
+        form: new FormData(),
+        key: 'sk-secret',
+        fetchImpl: async () =>
+          fail(403, {
+            error: { message: 'Your organization must be verified to use the model `gpt-image-2`' },
+          }),
+      }),
+    (e) => {
+      assert.match(e.message, /403: Your organization must be verified/);
+      assert.match(e.message, /platform\.openai\.com\/settings\/organization\/general/);
+      assert.match(e.message, /30 minutes/);
+      assert.match(e.message, /Nothing was charged/);
+      assert.doesNotMatch(e.message, /sk-secret/, 'a hint must not start leaking the request');
+      return true;
+    }
+  );
+});
+
+test('no credit and no model each get their own remedy', async () => {
+  const withMessage = (status, message) =>
+    callApi({ form: new FormData(), key: 'k', fetchImpl: async () => fail(status, { error: { message } }) });
+  await assert.rejects(() => withMessage(429, 'You exceeded your current quota'), /no credit/i);
+  await assert.rejects(() => withMessage(404, 'The model `x` does not exist'), /REQUEST\.parameters\.model/);
+});
+
+test('an ordinary failure gets no invented advice', async () => {
+  await assert.rejects(
+    () =>
+      callApi({
+        form: new FormData(),
+        key: 'k',
+        fetchImpl: async () => fail(400, { error: { message: 'your prompt was rejected' } }),
+      }),
+    (e) => {
+      assert.equal(e.message, 'the API returned 400: your prompt was rejected');
+      return true;
+    }
+  );
+});
+
 test('a non-JSON error body is still reported rather than swallowed', async () => {
   await assert.rejects(
     () => callApi({ form: new FormData(), key: 'k', fetchImpl: async () => fail(502, '<html>bad gateway</html>') }),

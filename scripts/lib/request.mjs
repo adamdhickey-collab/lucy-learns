@@ -286,9 +286,38 @@ export async function callApi({
       await sleep(wait);
       continue;
     }
-    throw new Error(`the API returned ${res.status}: ${detail}`);
+    throw new Error(`the API returned ${res.status}: ${detail}${hintFor(detail)}`);
   }
   throw new Error(`the API returned ${lastStatus} on every attempt`);
+}
+
+/**
+ * A remedy for the failures whose own message does not carry one.
+ *
+ * These are account gates, not bugs, and each costs a search to work out the
+ * first time. Matched on the message rather than the status, because the status
+ * alone does not distinguish them from ordinary refusals.
+ */
+function hintFor(detail) {
+  const say = (lines) => '\n\n  ' + lines.join('\n  ');
+  if (/organization must be verified|organization.*not verified/i.test(detail)) {
+    return say([
+      'This is an account gate, not a problem with the request.',
+      'Verify the organization at platform.openai.com/settings/organization/general',
+      '(Persona ID check, physical government ID), then wait up to 30 minutes for',
+      'access to propagate before re-running. Nothing was charged.',
+    ]);
+  }
+  if (/insufficient_quota|exceeded your current quota/i.test(detail)) {
+    return say(['The account has no credit. Add billing, then re-run.']);
+  }
+  if (/model_not_found|does not exist|do not have access to/i.test(detail)) {
+    return say([
+      'The model id in scripts/lib/request.mjs is not available to this account.',
+      'Check the current image model ids and update REQUEST.parameters.model.',
+    ]);
+  }
+  return '';
 }
 
 /** The API's own error text, or the raw body if it did not send JSON. */
