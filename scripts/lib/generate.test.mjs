@@ -14,7 +14,7 @@ import path from 'node:path';
 import zlib from 'node:zlib';
 
 import { apiKey, buildForm, callApi, REQUEST, SOURCE, MASTER } from './request.mjs';
-import { pngSize } from './png.mjs';
+import { pngSize } from './imagesize.mjs';
 import { CROPS, cropBox, THUMBS, renditionPlan, sipsCrop, sipsThumb } from './renditions.mjs';
 import { reviewSheet } from './sheet.mjs';
 import { loadScene, assemblePrompt } from './scene.mjs';

@@ -45,7 +45,7 @@ import {
   manifestSkeleton,
 } from './request.mjs';
 import { renditionPlan } from './renditions.mjs';
-import { pngSize } from './png.mjs';
+import { pngSize } from './imagesize.mjs';
 import { reviewSheet } from './sheet.mjs';
 
 /** sips, with its output swallowed — it narrates every file it touches. */
