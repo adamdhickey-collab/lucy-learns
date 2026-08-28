@@ -157,6 +157,25 @@ which is the treat pouch and the floor. The "one saturated note" line was in
 the brief and still did not survive, so it now names the hex and calls out the
 pouch by name.
 
+**A black leash on a black dog needs an edge, and scene 6.2 proved it.** The
+first take of the walking scene came back with the leash attached to nothing:
+it ran from the hand diagonally across Lucy's chest and foreleg and trailed off
+at the floor, with the collar ring bare. That is the same equipment error the
+audit's §3.2 is entirely about, arriving in a third new form — first a harness,
+then equipment changing mid-session, now a clip that is simply absent. Two
+lines fixed it on the redraw, and both belong in any scene with a leash:
+
+> The leash must be visibly clipped to the metal ring on Lucy's collar at the
+> front of her neck — **draw the clip.** The line runs from that clip to the
+> handler's hand hanging in a loose J below, and must not cross her back or
+> shoulders. Since Lucy is black and the leash is black, draw the leash with a
+> thin lighter outline where it passes near her body so the line stays readable
+> against her coat.
+
+The second sentence is the cause rather than the symptom: a black line on a
+black coat has no edge to read against, so there is nothing anchoring where it
+ends up.
+
 **Check the pixel dimensions before doing anything else with a returned file.**
 One of the two takes arrived at 1397×1126 — a 1.24 ratio the app cannot use,
 since it cuts both a 4:3 and a square from the same file. It cropped cleanly to
