@@ -292,7 +292,7 @@ export const IMAGES = withThumb({
   },
   'door-stay-03-cross': {
     src: 'img/door-stay-03-cross.jpg',
-    alt: 'Lucy holds her down on her bed in the foreground while her handler stands at the closed front door across the room.',
+    alt: 'Lucy holds her down on her bed while her handler walks away across the room toward the closed front door.',
   },
   'door-stay-03-pretend': {
     src: 'img/door-stay-03-pretend.jpg',

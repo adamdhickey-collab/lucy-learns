@@ -74,16 +74,16 @@ Carry these on every scene, all learned from the pilot:
 | ✓ | key | notes | scene (the alt text) |
 | --- | --- | --- | --- |
 | [ ] | `door-stay-02-cue` | — | A handler stands beside Lucy’s bed with a flat open palm raised at chest height while Lucy lies on the bed, head up, holding her eye. |
-| [ ] | `door-stay-03-conversation` | — | A handler leans on the open front door talking to an empty porch while Lucy stays settled on her bed across the room. |
-| [ ] | `door-stay-03-crack` | — | A handler holds the front door open a few inches onto daylight while Lucy stays lying on her bed. |
-| [ ] | `door-stay-03-cross` | used ×3 | Lucy holds her down on her bed in the foreground while her handler stands at the closed front door across the room. |
-| [ ] | `door-stay-03-halfway` | — | Lucy holds her bed while a handler pauses halfway across the room and glances back at her. |
-| [ ] | `door-stay-03-handle` | — | A handler rests a hand on the front door handle while Lucy holds her bed across the room. |
+| [x] | `door-stay-03-conversation` | — | A handler leans on the open front door talking to an empty porch while Lucy stays settled on her bed across the room. |
+| [x] | `door-stay-03-crack` | — | A handler holds the front door open a few inches onto daylight while Lucy stays lying on her bed. |
+| [x] | `door-stay-03-cross` | used ×3 | Lucy holds her down on her bed while her handler walks away across the room toward the closed front door. |
+| [x] | `door-stay-03-halfway` | — | Lucy holds her bed while a handler pauses halfway across the room and glances back at her. |
+| [x] | `door-stay-03-handle` | — | A handler rests a hand on the front door handle while Lucy holds her bed across the room. |
 | [x] | `door-stay-03-onestep` | — | A handler stands one step from Lucy’s bed looking down at her, the closed front door still across the room, while Lucy holds her down. |
-| [ ] | `door-stay-03-pretend` | used ×3 | A handler stands in the open doorway talking to an empty porch while Lucy stays on her bed. |
+| [x] | `door-stay-03-pretend` | used ×3 | A handler stands in the open doorway talking to an empty porch while Lucy stays on her bed. |
 | [ ] | `door-stay-04-pay` | used ×2 | A handler kneels beside Lucy’s bed and feeds her a treat for staying in place. |
 | [ ] | `door-stay-05-release` | used ×2 | Lucy steps off her bed toward her handler’s open hands as she is released from the stay. |
-| [ ] | `door-stay-cover` | **cover** · square-safe | A handler holds the front door wide open onto daylight while Lucy stays lying on her bed across the room. |
+| [x] | `door-stay-cover` | **cover** · square-safe | A handler holds the front door wide open onto daylight while Lucy stays lying on her bed across the room. |
 
 ### Doorbell Means Place
 

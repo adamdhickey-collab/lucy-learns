@@ -346,8 +346,10 @@ img {
    door-sound-01-setup, door-greet-07-approach, door-greet-08-petting,
    door-greet-08-jumping, door-cover, door-sound-02-self, door-sound-02-bell,
    door-sound-02-knock, door-sound-03-name, door-sound-03-name-distant,
-   door-stay-03-onestep
-   (11 of 37; 26 still warm — see
+   door-stay-03-onestep, door-stay-03-halfway, door-stay-03-cross,
+   door-stay-03-handle, door-stay-03-crack, door-stay-03-pretend,
+   door-stay-03-conversation, door-stay-cover
+   (18 of 37; 19 still warm — see
    art/source/restyle-worklist.md). */
 img[src$="door-sound-01-setup.jpg"],
 img[src$="door-greet-07-approach.jpg"],
@@ -359,7 +361,14 @@ img[src$="door-sound-02-bell.jpg"],
 img[src$="door-sound-02-knock.jpg"],
 img[src$="door-sound-03-name.jpg"],
 img[src$="door-sound-03-name-distant.jpg"],
-img[src$="door-stay-03-onestep.jpg"] {
+img[src$="door-stay-03-onestep.jpg"],
+img[src$="door-stay-03-halfway.jpg"],
+img[src$="door-stay-03-cross.jpg"],
+img[src$="door-stay-03-handle.jpg"],
+img[src$="door-stay-03-crack.jpg"],
+img[src$="door-stay-03-pretend.jpg"],
+img[src$="door-stay-03-conversation.jpg"],
+img[src$="door-stay-cover.jpg"] {
   filter: none;
 }
 
@@ -428,7 +437,49 @@ img[src$="door-stay-03-onestep.jpg"] {
 .detail-hero:has(img[src$="door-stay-03-onestep.jpg"]),
 .step-figure:has(img[src$="door-stay-03-onestep.jpg"]),
 .step-pair-item:has(img[src$="door-stay-03-onestep.jpg"]),
-.welcome-figure:has(img[src$="door-stay-03-onestep.jpg"]) {
+.welcome-figure:has(img[src$="door-stay-03-onestep.jpg"]),
+.hero:has(img[src$="door-stay-03-halfway.jpg"]),
+.activity-card .card-illo:has(img[src$="door-stay-03-halfway.jpg"]),
+.detail-hero:has(img[src$="door-stay-03-halfway.jpg"]),
+.step-figure:has(img[src$="door-stay-03-halfway.jpg"]),
+.step-pair-item:has(img[src$="door-stay-03-halfway.jpg"]),
+.welcome-figure:has(img[src$="door-stay-03-halfway.jpg"]),
+.hero:has(img[src$="door-stay-03-cross.jpg"]),
+.activity-card .card-illo:has(img[src$="door-stay-03-cross.jpg"]),
+.detail-hero:has(img[src$="door-stay-03-cross.jpg"]),
+.step-figure:has(img[src$="door-stay-03-cross.jpg"]),
+.step-pair-item:has(img[src$="door-stay-03-cross.jpg"]),
+.welcome-figure:has(img[src$="door-stay-03-cross.jpg"]),
+.hero:has(img[src$="door-stay-03-handle.jpg"]),
+.activity-card .card-illo:has(img[src$="door-stay-03-handle.jpg"]),
+.detail-hero:has(img[src$="door-stay-03-handle.jpg"]),
+.step-figure:has(img[src$="door-stay-03-handle.jpg"]),
+.step-pair-item:has(img[src$="door-stay-03-handle.jpg"]),
+.welcome-figure:has(img[src$="door-stay-03-handle.jpg"]),
+.hero:has(img[src$="door-stay-03-crack.jpg"]),
+.activity-card .card-illo:has(img[src$="door-stay-03-crack.jpg"]),
+.detail-hero:has(img[src$="door-stay-03-crack.jpg"]),
+.step-figure:has(img[src$="door-stay-03-crack.jpg"]),
+.step-pair-item:has(img[src$="door-stay-03-crack.jpg"]),
+.welcome-figure:has(img[src$="door-stay-03-crack.jpg"]),
+.hero:has(img[src$="door-stay-03-pretend.jpg"]),
+.activity-card .card-illo:has(img[src$="door-stay-03-pretend.jpg"]),
+.detail-hero:has(img[src$="door-stay-03-pretend.jpg"]),
+.step-figure:has(img[src$="door-stay-03-pretend.jpg"]),
+.step-pair-item:has(img[src$="door-stay-03-pretend.jpg"]),
+.welcome-figure:has(img[src$="door-stay-03-pretend.jpg"]),
+.hero:has(img[src$="door-stay-03-conversation.jpg"]),
+.activity-card .card-illo:has(img[src$="door-stay-03-conversation.jpg"]),
+.detail-hero:has(img[src$="door-stay-03-conversation.jpg"]),
+.step-figure:has(img[src$="door-stay-03-conversation.jpg"]),
+.step-pair-item:has(img[src$="door-stay-03-conversation.jpg"]),
+.welcome-figure:has(img[src$="door-stay-03-conversation.jpg"]),
+.hero:has(img[src$="door-stay-cover.jpg"]),
+.activity-card .card-illo:has(img[src$="door-stay-cover.jpg"]),
+.detail-hero:has(img[src$="door-stay-cover.jpg"]),
+.step-figure:has(img[src$="door-stay-cover.jpg"]),
+.step-pair-item:has(img[src$="door-stay-cover.jpg"]),
+.welcome-figure:has(img[src$="door-stay-cover.jpg"]) {
   --art-veil: transparent;
 }
 

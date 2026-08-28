@@ -377,9 +377,25 @@ test('the Stay ladder chains in order, each rung off the last', () => {
   });
 });
 
-test('every ladder rung is currently waiting, since none are redrawn yet', () => {
-  const scene = loadScene('door-stay-03-conversation');
-  assert.deepEqual(pendingReferences(scene).map((r) => r.fromScene), ['door-stay-03-pretend']);
+test('a rung waits on its predecessor exactly while that predecessor is not redrawn', () => {
+  // This asserted that every rung was waiting, "since none are redrawn yet",
+  // which stopped being true the day the ladder was finished — the sixth test in
+  // this repo to fail because the thing it described had succeeded. The
+  // relationship holds at every point on the walk, so that is what it checks.
+  const redrawn = new Set(ledgerKeys(fs.readFileSync(path.join(ROOT, 'css/app.css'), 'utf8')));
+  const chain = {
+    'door-stay-03-halfway': 'door-stay-03-onestep',
+    'door-stay-03-cross': 'door-stay-03-halfway',
+    'door-stay-03-handle': 'door-stay-03-cross',
+    'door-stay-03-crack': 'door-stay-03-handle',
+    'door-stay-03-pretend': 'door-stay-03-crack',
+    'door-stay-03-conversation': 'door-stay-03-pretend',
+    'door-stay-cover': 'door-stay-03-conversation',
+  };
+  for (const [rung, predecessor] of Object.entries(chain)) {
+    const waiting = pendingReferences(loadScene(rung)).map((r) => r.fromScene);
+    assert.deepEqual(waiting, redrawn.has(predecessor) ? [] : [predecessor], rung);
+  }
 });
 
 test('the two documented near-duplicates are told apart in their own text', () => {
