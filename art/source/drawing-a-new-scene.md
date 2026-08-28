@@ -130,13 +130,32 @@ interaction, a corrective pair, and a wide multi-person room. Its five scene bri
 still stand — only Block A's temperature and finish changed. Draw those five, put
 them in the app beside the graded old ones, and only then decide about the rest.
 
-Two things the pilot is really testing. Whether flat fills survive the 84pt
-thumbnail crop — they should do better than painterly ones, not worse, since flat
-shapes hold at small sizes and soft rendering turns to mush. And whether a cool
-room still reads as a *home*. If it comes back clinical, warm the floor and the
-doormat one step and leave the walls alone: those two props carry all the domestic
-warmth in this palette, which is exactly why they are the only warm-grey values in
-Block A.
+**The pilot is done, and both of its questions came back yes.**
+
+*Do flat fills survive the crops?* Better than the painterly set did. Scene 6.3
+still reads at 84px — three figures distinct, the collar still a violet note —
+where soft rendering turned to mush at that size. Scene 6.5 survives the 21:9
+letterbox, which throws away 43% of the height, with all three figures intact,
+and holds the 5:4 and square crops as well. Flat is the right call for this app
+on its own merits, not only for the palette.
+
+*Does a cool room still read as a home?* Yes, and the floor and doormat are why.
+They are the only warm-grey values in Block A and they carry all the domestic
+warmth; the lavender walls read as calm rather than clinical because those two
+props sit under them. If a future scene ever does come back cold, warm those two
+a step and leave the walls alone.
+
+Two more things the pilot settled that were not on its list. An error reads as
+an error with no symbol in the frame — scene 6.4 works purely on body language
+and a taut rose line, which is what lets the app supply the label instead of the
+picture carrying its own verdict. And attaching a finished scene as a third
+reference is what holds a pair in the same room; use it for any two pictures
+that will be shown side by side.
+
+The decision after the pilot was **not** to ship it alone. All thirty-seven
+registered scenes get redrawn before any of them go live, so the app changes
+style once instead of carrying two vocabularies at the same time. The list is
+[restyle-worklist.md](restyle-worklist.md).
 
 ## What the first pilot scene taught
 

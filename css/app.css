@@ -343,11 +343,14 @@ img {
    together — not one at a time, or the last few pictures will be graded alone.
 
    Redrawn so far: door-sound-01-setup, door-greet-07-approach,
-   door-greet-08-petting, door-greet-08-jumping (pilot 4 of 5). */
+   door-greet-08-petting, door-greet-08-jumping, door-cover
+   (pilot complete, 5 of 5; 32 scenes still warm — see
+   art/source/restyle-worklist.md). */
 img[src$="door-sound-01-setup.jpg"],
 img[src$="door-greet-07-approach.jpg"],
 img[src$="door-greet-08-petting.jpg"],
-img[src$="door-greet-08-jumping.jpg"] {
+img[src$="door-greet-08-jumping.jpg"],
+img[src$="door-cover.jpg"] {
   filter: none;
 }
 
@@ -374,7 +377,13 @@ img[src$="door-greet-08-jumping.jpg"] {
 .detail-hero:has(img[src$="door-greet-08-jumping.jpg"]),
 .step-figure:has(img[src$="door-greet-08-jumping.jpg"]),
 .step-pair-item:has(img[src$="door-greet-08-jumping.jpg"]),
-.welcome-figure:has(img[src$="door-greet-08-jumping.jpg"]) {
+.welcome-figure:has(img[src$="door-greet-08-jumping.jpg"]),
+.hero:has(img[src$="door-cover.jpg"]),
+.activity-card .card-illo:has(img[src$="door-cover.jpg"]),
+.detail-hero:has(img[src$="door-cover.jpg"]),
+.step-figure:has(img[src$="door-cover.jpg"]),
+.step-pair-item:has(img[src$="door-cover.jpg"]),
+.welcome-figure:has(img[src$="door-cover.jpg"]) {
   --art-veil: transparent;
 }
 

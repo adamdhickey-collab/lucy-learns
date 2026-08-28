@@ -93,7 +93,7 @@ Carry these on every scene, all learned from the pilot:
 
 | ✓ | key | notes | scene (the alt text) |
 | --- | --- | --- | --- |
-| [ ] | `door-cover` | **cover** · square-safe | Lucy sits on her bed a few feet inside the entryway while a visitor stands in the open doorway and a handler holds a loose leash. |
+| [x] | `door-cover` | **cover** · square-safe | Lucy sits on her bed a few feet inside the entryway while a visitor stands in the open doorway and a handler holds a loose leash. |
 
 ### Planned activities
 
