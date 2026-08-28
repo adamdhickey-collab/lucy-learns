@@ -1,0 +1,29 @@
+{
+  "id": "app-icon",
+  "briefId": "cool-flat-v1",
+  "profile": "icon",
+  "title": "The app icon — Lucy's portrait",
+  "activity": "Brand marks",
+  "step": "Home screen, tab strip and launcher",
+  "note": "Not one of the thirty-seven: no worklist row, no ledger opt-out, and the finish line does not move. See the profiles section of docs/illustration-pipeline.md. The existing icon is attached as continuity:pair because the point of redrawing it is NOT to change it — it is already on the cool palette and already the right composition; what it is not is flat. It carries the soft gradient shading of the painterly era on the coat, which is the one thing that makes it sit oddly beside the redrawn scenes. So the composition, crop and palette are held by the attachment and only the rendering changes. The maskable icon is the constraint that decides the crop: Android crops it to whatever shape the launcher likes, so anything outside the middle 80% is not guaranteed to survive, and a portrait that fills the square loses its ears to a circle.",
+  "blocks": [
+    "style",
+    "cast"
+  ],
+  "references": [
+    {
+      "role": "style:exemplar",
+      "scene": "door-sound-02-self"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    },
+    {
+      "path": "icons/source.png",
+      "role": "continuity:pair"
+    }
+  ],
+  "scene": "A square portrait of Lucy alone — head, neck and the top of her shoulders, nothing else. She faces to the right in near profile with her head lifted slightly, calm and alert, ears soft, mouth closed, the expression settled rather than eager. Match the third attachment for the composition, the crop and how much of her is in frame: this is the same portrait, drawn flat. The one thing to change is the rendering — the coat in that attachment carries soft airbrushed gradients, and here it must be the flat two-tone fill of attachment 1: one matte black body tone and one cool grey highlight tone, a hard edge between them, no blending, no gloss, no fur texture. Keep the scruffy wire-haired beard along her jaw and chin, the soft floppy triangular ear, the modest dark-amber eye, and the flat purple collar with the round blue tag. No harness. Behind her, a single flat field of the pale lavender-grey wall colour with nothing in it at all — no room, no floor, no baseboard, no shadow, no vignette, no border. CROP AND SAFE ZONE: this image is cropped to a circle by some launchers, so everything that matters must sit inside the middle 80% of the square. Her ears, the top of her head, her muzzle and the whole collar and tag stay inside that middle 80%, with the lavender field running out to all four edges around them. Nothing important touches an edge or a corner.",
+  "mustBeTrue": "Lucy's head, ears, muzzle, collar and tag all sit inside the middle 80% of the square so a circular launcher mask cannot clip them, the coat is flat two-tone with a hard edge and no gradient, the collar is purple with the round blue tag and there is no harness, and the background is one flat lavender field with nothing else in it."
+}

@@ -21,6 +21,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, BLOCK_IDS, BRIEF_ID, loadBlocks } from './brief.mjs';
 import { ledgerKeys } from './ledger.mjs';
+import { PROFILE_IDS } from './profiles.mjs';
 
 export const SCENES_DIR = path.join(ROOT, 'art/scenes');
 const APPROVED_REL = 'art/pilot/approved';
@@ -96,18 +97,36 @@ function redrawnKeys(cssPath = path.join(ROOT, 'css/app.css')) {
 }
 
 /**
- * The two reference sheets that are still painted in the old style.
+ * Every reference that is useful for what it shows but wrong about how it is drawn.
  *
- * The warning below is about these files specifically, not about the word
- * "likeness". The guest's likeness reference is a redrawn scene — already flat,
- * already cool — and telling the model to ignore its rendering would throw away
- * the only example of the target style in the request. So the warning fires on
- * the sheets, and when these two are eventually redrawn it comes out with them.
+ * The warning fires on these files specifically, not on the word "likeness". The
+ * guest's likeness reference is a redrawn scene — already flat, already cool —
+ * and telling the model to ignore its rendering would throw away the only example
+ * of the target style in the request. When one of these is eventually redrawn it
+ * comes out of this map with it.
+ *
+ * It was a set of the two likeness sheets until the app icon came into the
+ * pipeline. Round 9 of app-icon attached the shipping icon as a `continuity:pair`
+ * to hold the composition, and came back with the icon's soft airbrushed coat:
+ * two softly-rendered attachments against one flat exemplar, which is the exact
+ * shape of the round-1 failure this whole mechanism exists to prevent. The set
+ * did not fire because it was a list of two filenames rather than a statement
+ * about what a reference carries — so it is a map now, and the reason travels
+ * with the entry.
  */
-const PAINTERLY_SHEETS = new Set([
-  'art/source/trainer-reference.jpg',
-  'art/source/lucy-reference.jpg',
+const SUPERSEDED_RENDERING = new Map([
+  ['art/source/trainer-reference.jpg', 'a likeness sheet cropped from the painterly set'],
+  ['art/source/lucy-reference.jpg', 'a likeness sheet cropped from the painterly set'],
+  ['icons/source.png', 'the shipping app icon — the right palette, but soft airbrushed shading'],
+  [
+    'art/source/splash-source.png',
+    'the shipping launch illustration — a gentle art grade is baked into its own pixels ' +
+      '(saturation 0.85), so its colour is deliberately not the brief\'s',
+  ],
 ]);
+
+/** Marks an attachment whose rendering must not be copied, in its own line. */
+const NOT_ITS_RENDERING = ' — NOT its rendering, see the note below';
 
 /**
  * The sentence that opens a request carrying a flat exemplar.
@@ -129,10 +148,18 @@ const STYLE_LEAD =
   'description below and that image disagree about how something is DRAWN, the ' +
   'image wins. The description governs only what is happening.';
 
-const LIKENESS_WARNING =
-  'The likeness references are for likeness only. Do NOT copy their rendering ' +
-  'style, shading or background: they are painted in an older style being ' +
-  'replaced. Draw these characters flat, in the style and palette above.';
+/**
+ * Keep the phrases "likeness only" and "painted in an older style" — the first
+ * is what the likeness sheets need said about them, and both are what the tests
+ * pin, because a warning that gets reworded into vagueness stops working and
+ * nothing else in the request would show it.
+ */
+const RENDERING_WARNING =
+  'The attachments marked NOT ITS RENDERING are for likeness only, or for ' +
+  'composition only, exactly as their line says. They are painted in an older ' +
+  'style that is being replaced. Do NOT copy their shading, their edges, their ' +
+  'gradients or their background from them. Draw everything flat, in the style ' +
+  'and palette of attachment 1.';
 
 /** Throw with every problem at once, so a bad spec is one fix rather than five. */
 class SpecError extends Error {
@@ -171,6 +198,13 @@ export function validateScene(spec, { checkFiles = true } = {}) {
         ? `briefId is required — this brief is "${BRIEF_ID}"`
         : `briefId "${spec.briefId}" is not the current brief "${BRIEF_ID}"`
     );
+  }
+
+  // Absent is `scene`, so the thirty-seven existing specs need no edit. A typo
+  // is refused rather than defaulted: silently drawing an icon on a 4:3 canvas
+  // is a wasted paid call whose cause is invisible in the result.
+  if (spec.profile !== undefined && !PROFILE_IDS.includes(spec.profile)) {
+    problems.push(`unknown profile "${spec.profile}" (expected ${PROFILE_IDS.join(' | ')})`);
   }
 
   if (!Array.isArray(spec.blocks) || spec.blocks.length === 0) {
@@ -227,6 +261,15 @@ export function validateScene(spec, { checkFiles = true } = {}) {
   if (exemplar > 0) {
     problems.push('the style:exemplar must be the first reference — the prompt calls it "attachment 1"');
   }
+  // The exemplar is the one attachment the prompt says to copy exactly. Pointing
+  // it at a file drawn in the style being replaced would make the whole request
+  // argue for the old style, and the result would look plausible and wrong.
+  if (exemplar !== -1 && SUPERSEDED_RENDERING.has(refs[exemplar].path)) {
+    problems.push(
+      `the style:exemplar cannot be ${refs[exemplar].path} — ` +
+        `${SUPERSEDED_RENDERING.get(refs[exemplar].path)}, so it is not the style to match`
+    );
+  }
   if (problems.length) throw new SpecError(id, problems);
   return { ...spec, references: refs };
 }
@@ -274,13 +317,21 @@ export function assemblePrompt(scene, blocks = loadBlocks()) {
   if (scene.references.some((r) => r.role === 'style:exemplar')) parts.push(STYLE_LEAD);
   for (const id of scene.blocks) parts.push(blocks[id]);
 
-  const hasLikeness = scene.references.some((r) => PAINTERLY_SHEETS.has(r.path));
+  // The mark goes on the attachment's own line as well as in the note. A role
+  // like continuity:pair says "nothing but the action may differ", which reads as
+  // an instruction to match rendering; a warning three lines below does not
+  // reliably outrank it, and round 9 of app-icon is what that looks like.
+  const superseded = scene.references.filter((r) => SUPERSEDED_RENDERING.has(r.path));
   const list = scene.references
-    .map((r) => `${r.order}. ${path.basename(r.path)} — ${ROLES[r.role]}.`)
+    .map(
+      (r) =>
+        `${r.order}. ${path.basename(r.path)} — ${ROLES[r.role]}` +
+        `${SUPERSEDED_RENDERING.has(r.path) ? NOT_ITS_RENDERING : ''}.`
+    )
     .join('\n');
   parts.push(
     `ATTACHED REFERENCES, in the order they are attached:\n${list}` +
-      (hasLikeness ? `\n\n${LIKENESS_WARNING}` : '')
+      (superseded.length ? `\n\n${RENDERING_WARNING}` : '')
   );
 
   parts.push(`SCENE. ${scene.scene.trim()}`);

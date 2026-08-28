@@ -30,6 +30,7 @@
 
 import path from 'node:path';
 import { ROOT } from './brief.mjs';
+import { PROFILES, profileFor } from './profiles.mjs';
 
 /**
  * gpt-image-2's documented constraints on `size`, kept beside the value they
@@ -58,12 +59,17 @@ export const SIZE_LIMITS = {
  * crop to reach the ratio would silently move both. The tan-era set came back
  * 3:2 and had to be cropped, which is the failure those rules were written
  * against; see docs/pilot-prompts.md.
+ *
+ * These two are the `scene` profile's shape, re-exported because that is what
+ * "the canvas" meant when there was only one. Anything that can be handed a
+ * non-scene spec — the form, the manifest, the downscale — takes a profile now;
+ * see profiles.mjs.
  */
-export const SOURCE = { width: 1472, height: 1104 };
-export const MASTER = { width: 1448, height: 1086 };
+export const SOURCE = PROFILES.scene.source;
+export const MASTER = PROFILES.scene.master;
 
 /** How the master is made. Named so the plan and the tests read the same word. */
-export const CONVERSION = 'proportional downscale, no crop';
+export const CONVERSION = PROFILES.scene.conversion;
 
 /**
  * The intended request. Values here are printed by plan mode verbatim, so this
@@ -151,12 +157,12 @@ export function nextRound(fs, restyleDir = path.join(ROOT, RESTYLE_DIR)) {
  * There is no crop here and no crop box to compute: source and target are the
  * same 4:3, so this is a single proportional resample.
  */
-export function sipsDownscale(rawPath, masterPath) {
+export function sipsDownscale(rawPath, masterPath, master = MASTER) {
   return [
     'sips',
     '--resampleHeightWidth',
-    String(MASTER.height),
-    String(MASTER.width),
+    String(master.height),
+    String(master.width),
     rawPath,
     '--out',
     masterPath,
@@ -174,26 +180,30 @@ export function sipsDownscale(rawPath, masterPath) {
  * No secret appears here, and none may be added: the key is read from the
  * environment at call time and never travels with the run's own record.
  */
-export function manifestSkeleton(scene, out, generatedAt = null) {
+export function manifestSkeleton(scene, out, generatedAt = null, profile = profileFor(scene)) {
   return {
     briefId: scene.briefId,
     scene: scene.id,
+    // Recorded even when it is the default. A manifest is read months later to
+    // work out why a picture looks the way it does, and "which shape was this
+    // asked for in" stops being obvious the moment there is more than one.
+    profile: profile.id,
     round: out.round,
     generatedAt,
     request: {
       endpoint: REQUEST.endpoint,
       model: REQUEST.parameters.model,
-      size: REQUEST.parameters.size,
+      size: `${profile.source.width}x${profile.source.height}`,
       quality: REQUEST.parameters.quality,
       n: REQUEST.parameters.n,
     },
     references: scene.references.map((r) => ({ order: r.order, role: r.role, path: r.path })),
     output: {
       raw: out.raw,
-      rawSize: `${SOURCE.width}x${SOURCE.height}`,
+      rawSize: `${profile.source.width}x${profile.source.height}`,
       master: out.master,
-      masterSize: `${MASTER.width}x${MASTER.height}`,
-      conversion: CONVERSION,
+      masterSize: `${profile.master.width}x${profile.master.height}`,
+      conversion: profile.conversion,
     },
     approved: false,
   };
@@ -230,14 +240,19 @@ export function apiKey(env = process.env) {
  * No key here. The body carries no credential — that lives in a header, added
  * at the call site and never stored on any object this function returns.
  */
-export function buildForm(scene, prompt, readFile) {
+export function buildForm(scene, prompt, readFile, profile = profileFor(scene)) {
   if (scene.references.length > SIZE_LIMITS.maxImages) {
     throw new Error(
       `${scene.references.length} references, but the API takes at most ${SIZE_LIMITS.maxImages}`
     );
   }
   const form = new FormData();
-  for (const [k, v] of Object.entries(REQUEST.parameters)) form.append(k, String(v));
+  // `size` comes from the profile, not from REQUEST.parameters: the request's
+  // own copy is the scene canvas, and sending a 4:3 size for a square icon is a
+  // failure you only find out about when the image comes back the wrong shape.
+  for (const [k, v] of Object.entries(REQUEST.parameters)) {
+    form.append(k, k === 'size' ? `${profile.source.width}x${profile.source.height}` : String(v));
+  }
   form.append('prompt', prompt);
   for (const ref of scene.references) {
     const bytes = readFile(ref.abs);

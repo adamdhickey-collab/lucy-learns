@@ -58,32 +58,63 @@ test('approved means in the pilot ledger, not merely a file on disk', () => {
   const approved = state.filter((r) => r.status === 'approved').map((r) => r.key).sort();
   assert.deepEqual(approved, [...ledgerKeys(css)].sort());
   // The trap this exists to avoid: a legacy warm master under the same name.
-  const legacy = 'door-sound-03-name';
-  assert.ok(fs.existsSync(path.join(ROOT, `art/pilot/approved/${legacy}.png`)));
-  assert.notEqual(state.find((r) => r.key === legacy).status, 'approved');
+  // This named door-sound-03-name until that scene was redrawn, at which point
+  // the example became its own opposite and the test failed for the one reason
+  // it should not — the pipeline working. So it asserts over every legacy
+  // master the ledger has not claimed yet, and names none of them.
+  const ledger = new Set(ledgerKeys(css));
+  const legacyOnly = state.filter(
+    (r) => !ledger.has(r.key) && fs.existsSync(path.join(ROOT, `art/pilot/approved/${r.key}.png`)),
+  );
+  assert.ok(legacyOnly.length > 0, 'no un-redrawn legacy master left to tell the two apart with');
+  for (const r of legacyOnly) assert.notEqual(r.status, 'approved', r.key);
 });
 
-test('a blocked picture names the rung it is actually waiting on', () => {
+/**
+ * The Stay ladder as a chain: each rung may only be drawn off the one before it.
+ *
+ * The rungs' own states are deliberately not written down here. This test used
+ * to assert that every one of them was blocked and that the head was ready,
+ * which held only until the head was approved — at which point the suite failed
+ * because the ladder had worked. What is true at every point on the walk is the
+ * relationship, so that is what is asserted.
+ */
+const LADDER = {
+  'door-stay-03-halfway': 'door-stay-03-onestep',
+  'door-stay-03-cross': 'door-stay-03-halfway',
+  'door-stay-03-handle': 'door-stay-03-cross',
+  'door-stay-03-crack': 'door-stay-03-handle',
+  'door-stay-03-pretend': 'door-stay-03-crack',
+  'door-stay-03-conversation': 'door-stay-03-pretend',
+  'door-stay-cover': 'door-stay-03-conversation',
+};
+const LADDER_HEAD = 'door-stay-03-onestep';
+
+test('a rung is blocked exactly when the rung before it is not yet approved', () => {
   const state = restyleState();
-  const chain = {
-    'door-stay-03-halfway': 'door-stay-03-onestep',
-    'door-stay-03-cross': 'door-stay-03-halfway',
-    'door-stay-03-handle': 'door-stay-03-cross',
-    'door-stay-03-crack': 'door-stay-03-handle',
-    'door-stay-03-pretend': 'door-stay-03-crack',
-    'door-stay-03-conversation': 'door-stay-03-pretend',
-    'door-stay-cover': 'door-stay-03-conversation',
-  };
-  for (const [key, predecessor] of Object.entries(chain)) {
-    const row = state.find((r) => r.key === key);
-    assert.equal(row.status, 'blocked', `${key} should be blocked`);
-    assert.ok(row.detail.includes(predecessor), `${key} should name ${predecessor}, said "${row.detail}"`);
+  const by = (k) => state.find((r) => r.key === k);
+  for (const [rung, predecessor] of Object.entries(LADDER)) {
+    const row = by(rung);
+    if (by(predecessor).status === 'approved') {
+      assert.notEqual(row.status, 'blocked', `${rung} follows an approved rung, so it is drawable`);
+    } else {
+      assert.equal(row.status, 'blocked', `${rung} follows an unapproved rung, so it is not`);
+      assert.ok(row.detail.includes(predecessor), `${rung} should name ${predecessor}, said "${row.detail}"`);
+    }
   }
 });
 
-test('the head of the ladder is ready, not blocked', () => {
-  const row = restyleState().find((r) => r.key === 'door-stay-03-onestep');
-  assert.equal(row.status, 'ready');
+test('an unfinished ladder always has exactly one rung open, and never two', () => {
+  // The whole point of the chain: one place to work at a time, and never a
+  // state where there is nowhere to work but rungs are still left.
+  const state = restyleState();
+  const rungs = [LADDER_HEAD, ...Object.keys(LADDER)];
+  const statusOf = (k) => state.find((r) => r.key === k).status;
+  const open = rungs.filter((k) => !['approved', 'blocked'].includes(statusOf(k)));
+  assert.ok(open.length <= 1, `the ladder is sequential, so at most one rung is open: ${open}`);
+  if (rungs.some((k) => statusOf(k) !== 'approved')) {
+    assert.equal(open.length, 1, 'rungs are left but none is open — the ladder is stuck');
+  }
 });
 
 test('a picture with no spec reads as unspecced rather than ready', () => {

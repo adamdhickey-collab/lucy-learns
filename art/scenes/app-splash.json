@@ -1,0 +1,33 @@
+{
+  "id": "app-splash",
+  "briefId": "cool-flat-v1",
+  "profile": "splash",
+  "title": "The launch illustration",
+  "activity": "Brand marks",
+  "step": "The iOS startup images and the app's first frame",
+  "note": "Not one of the thirty-seven: no worklist row, no ledger opt-out, and the finish line does not move. The current splash is attached as continuity:pair so the composition survives — it is already the right picture, and like the icon what it is not is flat. It is also marked NOT ITS RENDERING in the prompt, because art/source/restyle-worklist.md records that a gentle art grade was baked into its own pixels at saturation 0.85, which is deliberately not the brief's colour.\n\nThe border is the thing this spec cares about that no other spec does. scripts/make-splash.mjs composes the art onto a field whose colour is the MEAN OF A SIX-PIXEL RING around all four edges, and pilot.mjs approve writes that same measurement into --splash-field in css/app.css and background_color in manifest.webmanifest. If the border is not actually flat — a gradient, a vignette, an object running off an edge — the mean is a colour that matches nothing, and the illustration sits on the launch screen as a visible rectangle of slightly wrong lavender. That is why the review sheet cuts an edge strip.\n\nRound 17 measured a flat border (sd 0.68 across the edge ring, tighter than the art shipping today) and got the composition right, but came back softly rendered: gentle gradients on the coat and the hoodie, and Lucy smoothed toward a plain Labrador. The request carries THREE superseded-rendering attachments — both likeness sheets and the current splash — against one flat exemplar, and although all three are marked NOT ITS RENDERING the ratio still pulls. Since the marks were already firing, round 18 pushes on the text instead, and names the mechanism: a canvas this much larger than the scenes invites rendering detail simply because there is room for it.\n\nRound 18 got the posterised rendering and kept the flat border (sd 0.69) but lost two things to the same paragraph: Lucy's beard was smoothed away, and the handler's hand came up palm-open toward the dog, which reads as offering food on the app's launch screen. The lesson is that 'flatten everything' was heard as 'simplify the shapes too', so round 19 says explicitly that posterising is about tone and not silhouette, and pins both hands at rest.",
+  "blocks": [
+    "style",
+    "cast"
+  ],
+  "references": [
+    {
+      "scene": "door-sound-02-self",
+      "role": "style:exemplar"
+    },
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    },
+    {
+      "path": "art/source/splash-source.png",
+      "role": "continuity:pair"
+    }
+  ],
+  "scene": "A tall portrait illustration for an app launch screen — no room, no furniture, no floor and no horizon, just the two figures standing on one flat field of colour. Match the fourth attachment for the composition and the crop: the handler crouches on the right, low and settled, turned to her left toward Lucy. BOTH OF HER HANDS ARE AT REST — resting on her own knees or hanging loosely down. Neither hand reaches toward Lucy, neither arm is extended, and no palm is held out or turned up. An open palm offered toward the dog reads as feeding her, and this picture is a quiet greeting in which nothing is being offered and nothing is being asked for; Lucy stands on the left facing her, the two of them close and level with each other, nose almost to nose. It is a quiet greeting, not a training step: nobody is signalling, nothing is being asked for, and there is no treat, no leash, no pouch and no door anywhere in the picture. Lucy wears the flat purple collar with the round blue tag and no harness. HOW THIS IS DRAWN, and it matters more than anything else here: posterise every surface to EXACTLY TWO values — one light, one shadow — separated by a hard edge you could cut out with scissors. No third tone, no blending, no soft falloff and no gradient anywhere in the picture: not on the dog's coat, not in the folds of the hoodie, not on the jeans, not on the shoes, not on skin. Lucy's coat is one matte black mass with cool grey highlight shapes that have hard edges, not airbrushed sheen. POSTERISING MEANS TWO FLAT TONES, NOT A SIMPLIFIED SHAPE: every silhouette detail stays. In particular, Lucy's scruffy wire-haired beard along her jaw and chin must be drawn as ragged tufts of hair that visibly BREAK THE OUTLINE of her jaw and muzzle — flat black, hard-edged, no shading, but unmistakably there. Her muzzle must not be a smooth clean curve. She is a scruffy black Labrador MIX, and drawing her as a sleek plain Labrador is the single most common way this picture goes wrong. This picture is much larger than the scenes in the set, and a larger canvas invites more rendering; do not take it. It must look like the same flat drawing as attachment 1 simply enlarged, NOT like a more finished or more painted version of it. Use the full-strength palette of attachment 1 — the fourth attachment has a gentle desaturating grade baked into its pixels and its colour must NOT be copied. THE FIELD AND THE BORDER, which matter more here than in any other picture: the background is a single flat field of the pale lavender-grey wall colour, edge to edge, with absolutely no gradient, no vignette, no texture, no shadow and no darkening toward the corners. The two figures sit well inside the frame with a clear, generous margin of that flat field on all four sides — nothing may touch or run off any edge. The outermost band of the picture, all the way around, must be nothing but that one flat colour, because a colour is measured from it and used as the screen behind the art.",
+  "mustBeTrue": "Lucy's beard is drawn as ragged tufts breaking the outline of her jaw rather than a smooth muzzle, both of the handler's hands are at rest on her knees or hanging with neither arm extended and no palm held out toward the dog, every surface is posterised to two flat values with a hard edge and no gradient anywhere, the outer border is one flat unvaried field colour with nothing touching an edge, and there is no leash, treat, pouch or door in the picture."
+}

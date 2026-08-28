@@ -32,10 +32,15 @@ export function reviewSheet(scene, out, renditions, { generatedAt = '' } = {}) {
   // you nothing about whether the thumbnail works.
   const thumbCards = thumbs
     .map((r) => {
+      // Square unless the rendition says otherwise. The scene and icon profiles
+      // shrink a square, so the name carries the one number; the splash is
+      // portrait, and forcing it square here would review a distorted picture.
       const px = Number(r.name.split('-').pop());
+      const w = r.size ? r.size.w : px;
+      const h = r.size ? r.size.h : px;
       return `<figure class="thumb">
-  <img src="crops/${rel(r.path)}" alt="" width="${px}" height="${px}">
-  <figcaption><b>${px}px</b><span>${esc(r.note)}</span></figcaption>
+  <img src="crops/${rel(r.path)}" alt="" width="${w}" height="${h}">
+  <figcaption><b>${w}${r.size ? `\u00d7${h}` : 'px'}</b><span>${esc(r.note)}</span></figcaption>
 </figure>`;
     })
     .join('\n');

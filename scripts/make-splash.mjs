@@ -36,11 +36,12 @@
 // Pure Node: decodes the PNG (8-bit RGB/RGBA, non-interlaced), unfilters,
 // bilinear-resizes, composes, and re-encodes. No dependencies to install.
 
-import { deflateSync, inflateSync } from 'node:zlib';
+import { deflateSync } from 'node:zlib';
 import { mkdirSync, readFileSync, writeFileSync, statSync, rmSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { decodePng, measureField, toHex } from './lib/splashfield.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SOURCE = resolve(root, 'art/source/splash-source.png');
@@ -88,79 +89,19 @@ const ART_CENTER_Y = 0.5;
 //
 // This used to be the app's paper, #f7f5ef, because the art was a badge sitting
 // on the app's field and the two had to agree or the launch flashed. The art
-// now *is* the screen, so the field has to be the art's own edge color
+// now *is* the screen, so the field has to be the art's own edge colour
 // instead — if it were paper you would see the illustration as a rectangle on
 // a slightly different tint, which is the same seam in the other direction.
-// Since the splash was redrawn for the collar palette that color is a pale
-// lavender a breath away from --violet-50, not the old cream.
 //
-// Keep in step with `--splash-field` in css/app.css. The in-app splash paints
-// that colour, so the OS image and the first frame still match exactly; what
-// changed is which colour both of them use.
-// Measured from the current art's own borders (mean of a six-pixel ring around
-// all four edges), not chosen: the field has to be the colour the illustration
-// already is at its edges or the art sits on the splash as a visible rectangle.
-// Every redraw has shifted it slightly — re-measure and update this and
-// --splash-field together whenever the art changes.
-const FIELD = [0xe4, 0xdc, 0xec];
+// It used to be a constant here, with a comment asking whoever changed the art
+// to re-measure it and update `--splash-field` in css/app.css and
+// `background_color` in manifest.webmanifest to match. That is the comment you
+// write when the code cannot do it for you. It can now: the value is measured
+// off the source art below, and `pilot.mjs approve` writes the same measurement
+// into the other two files, so the three cannot disagree. See
+// scripts/lib/splashfield.mjs.
 
 // --- decode ----------------------------------------------------------------
-
-function decodePng(path) {
-  const file = readFileSync(path);
-  let offset = 8;
-  let header = null;
-  const idat = [];
-  while (offset < file.length) {
-    const length = file.readUInt32BE(offset);
-    const type = file.toString('ascii', offset + 4, offset + 8);
-    const start = offset + 8;
-    if (type === 'IHDR') header = file.subarray(start, start + 13);
-    else if (type === 'IDAT') idat.push(file.subarray(start, start + length));
-    else if (type === 'IEND') break;
-    offset = start + length + 4;
-  }
-  const width = header.readUInt32BE(0);
-  const height = header.readUInt32BE(4);
-  const depth = header[8];
-  const colorType = header[9];
-  const interlace = header[12];
-  if (depth !== 8 || interlace !== 0 || (colorType !== 2 && colorType !== 6)) {
-    throw new Error('need an 8-bit non-interlaced RGB or RGBA PNG');
-  }
-  const bpp = colorType === 2 ? 3 : 4;
-  const raw = inflateSync(Buffer.concat(idat));
-
-  // Undo the per-scanline filters (spec section 9): None/Sub/Up/Average/Paeth.
-  const stride = width * bpp;
-  const out = Buffer.alloc(height * stride);
-  const paeth = (a, b, c) => {
-    const p = a + b - c;
-    const pa = Math.abs(p - a);
-    const pb = Math.abs(p - b);
-    const pc = Math.abs(p - c);
-    return pa <= pb && pa <= pc ? a : pb <= pc ? b : c;
-  };
-  for (let y = 0; y < height; y++) {
-    const filter = raw[y * (stride + 1)];
-    const src = y * (stride + 1) + 1;
-    const dst = y * stride;
-    for (let x = 0; x < stride; x++) {
-      const value = raw[src + x];
-      const left = x >= bpp ? out[dst + x - bpp] : 0;
-      const up = y > 0 ? out[dst - stride + x] : 0;
-      const upLeft = y > 0 && x >= bpp ? out[dst - stride + x - bpp] : 0;
-      let recon;
-      if (filter === 0) recon = value;
-      else if (filter === 1) recon = value + left;
-      else if (filter === 2) recon = value + up;
-      else if (filter === 3) recon = value + ((left + up) >> 1);
-      else recon = value + paeth(left, up, upLeft);
-      out[dst + x] = recon & 0xff;
-    }
-  }
-  return { width, height, bpp, data: out };
-}
 
 // --- resize ----------------------------------------------------------------
 
@@ -254,9 +195,10 @@ function writeRgbPng(path, width, height, pixels) {
 // --- compose ---------------------------------------------------------------
 
 mkdirSync(OUT_DIR, { recursive: true });
-const art = decodePng(SOURCE);
+const art = decodePng(readFileSync(SOURCE));
+const FIELD = measureField(art);
 console.log(
-  `art ${art.width}×${art.height} on field #${FIELD.map((c) => c.toString(16).padStart(2, '0')).join('')}`
+  `art ${art.width}×${art.height} on field ${toHex(FIELD)} (measured from its own edges)`
 );
 
 let total = 0;

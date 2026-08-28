@@ -33,9 +33,6 @@ import { loadScene, assemblePrompt, legacyMaster, pendingReferences } from './sc
 import {
   REQUEST,
   RESTYLE_DIR,
-  SOURCE,
-  MASTER,
-  CONVERSION,
   apiKey,
   buildForm,
   callApi,
@@ -47,6 +44,7 @@ import {
 import { renditionPlan } from './renditions.mjs';
 import { pngSize } from './imagesize.mjs';
 import { reviewSheet } from './sheet.mjs';
+import { profileFor, isDirect } from './profiles.mjs';
 
 /** sips, with its output swallowed — it narrates every file it touches. */
 function runSips(argv, what, cwd) {
@@ -97,6 +95,7 @@ export async function cmdGenerate(
   // before anything is spent: a bad spec, a missing reference, a brief that
   // does not match, a round directory already in the way.
   const scene = loadScene(sceneId);
+  const profile = profileFor(scene);
   const prompt = assemblePrompt(scene);
   const round = nextRound(fs, restyleDir);
   const out = outputPaths(scene.id, round);
@@ -123,7 +122,7 @@ export async function cmdGenerate(
   if (!yes) {
     say(`\n  ${scene.id} — round ${round}, ${scene.references.length} references, ` +
         `${prompt.length} characters of prompt`);
-    say(`  ${REQUEST.parameters.model} at ${REQUEST.parameters.size}, ` +
+    say(`  ${REQUEST.parameters.model} at ${profile.source.width}x${profile.source.height}, ` +
         `quality=${REQUEST.parameters.quality} · ${REQUEST.pricing}`);
     say(`\n  This spends money. Re-run with --yes to send it, or`);
     say(`  \`pilot.mjs plan ${scene.id}\` to read the whole request first.\n`);
@@ -131,7 +130,7 @@ export async function cmdGenerate(
   }
 
   const key = apiKey();
-  const form = buildForm(scene, prompt, (p) => fs.readFileSync(p));
+  const form = buildForm(scene, prompt, (p) => fs.readFileSync(p), profile);
 
   say(`\n  → ${REQUEST.parameters.model}, ${scene.references.length} references, round ${round}`);
   const started = Date.now();
@@ -146,14 +145,14 @@ export async function cmdGenerate(
   // What came back, before anything is resized. A wrong canvas here is the
   // tan-era failure repeating, and resizing it would hide that.
   const got = pngSize(png);
-  const asked = `${SOURCE.width}×${SOURCE.height}`;
+  const asked = `${profile.source.width}×${profile.source.height}`;
   say(`    ${got.width}×${got.height}, ${(png.length / 1048576).toFixed(2)} MB, ${took}s`);
 
   fs.mkdirSync(abs(path.dirname(out.raw)), { recursive: true });
   fs.writeFileSync(abs(out.raw), png);
   say(`\n  raw   ${out.raw}`);
 
-  if (got.width !== SOURCE.width || got.height !== SOURCE.height) {
+  if (got.width !== profile.source.width || got.height !== profile.source.height) {
     throw new Error(
       `the model returned ${got.width}×${got.height}, not the ${asked} that was asked for.\n` +
         `  The raw file is kept at ${out.raw}. The master is NOT made: at a different\n` +
@@ -162,17 +161,33 @@ export async function cmdGenerate(
     );
   }
 
-  sips(sipsDownscale(out.raw, out.master), 'the downscale to master', outBase);
+  // A profile whose canvas already is its master gets a copy, not a resample.
+  // Running sips anyway would re-encode the exact pixels the API returned for no
+  // reason, and "the raw is never edited" would stop being literally true of the
+  // only file that carries the model's own output.
+  if (isDirect(profile)) {
+    fs.copyFileSync(abs(out.raw), abs(out.master));
+  } else {
+    sips(sipsDownscale(out.raw, out.master, profile.master), 'the downscale to master', outBase);
+  }
   const master = pngSize(fs.readFileSync(abs(out.master)));
-  if (master.width !== MASTER.width || master.height !== MASTER.height) {
+  if (master.width !== profile.master.width || master.height !== profile.master.height) {
     throw new Error(
-      `the master came out ${master.width}×${master.height}, not ${MASTER.width}×${MASTER.height}`
+      `the master came out ${master.width}×${master.height}, ` +
+        `not ${profile.master.width}×${profile.master.height}`
     );
   }
-  say(`  master ${out.master}  (${CONVERSION})`);
+  say(`  master ${out.master}  (${profile.conversion})`);
 
   fs.mkdirSync(abs(out.crops), { recursive: true });
-  const renditions = renditionPlan(out.master, out.crops, scene.id, MASTER.width, MASTER.height);
+  const renditions = renditionPlan(
+    out.master,
+    out.crops,
+    scene.id,
+    profile.master.width,
+    profile.master.height,
+    profile.renditions
+  );
   // Crops before thumbs: the thumbnails are cut from the square crop, so it has
   // to exist first. renditionPlan already returns them in that order.
   for (const r of renditions) sips(r.argv, `the ${r.name} rendition`, outBase);
@@ -182,7 +197,7 @@ export async function cmdGenerate(
   fs.writeFileSync(abs(out.sheet), reviewSheet(scene, out, renditions, { generatedAt }));
   fs.writeFileSync(
     abs(out.manifest),
-    JSON.stringify(manifestSkeleton(scene, out, generatedAt), null, 2) + '\n'
+    JSON.stringify(manifestSkeleton(scene, out, generatedAt, profile), null, 2) + '\n'
   );
   say(`  sheet  ${out.sheet}`);
   say(`  manifest ${out.manifest}`);

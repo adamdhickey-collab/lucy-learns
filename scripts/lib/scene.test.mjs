@@ -19,7 +19,8 @@ import {
   ROLES,
   SCENES_DIR,
 } from './scene.mjs';
-import { loadBlocks, BLOCK_IDS, BRIEF_ID } from './brief.mjs';
+import { loadBlocks, BLOCK_IDS, BRIEF_ID, ROOT } from './brief.mjs';
+import { ledgerKeys } from './ledger.mjs';
 
 const BLOCKS = { style: 'STYLE BLOCK', porch: 'PORCH BLOCK', cast: 'CAST BLOCK' };
 
@@ -162,8 +163,13 @@ test('the likeness warning appears only when a likeness sheet is attached', () =
   const withSheet = assemblePrompt(validateScene(good(), { checkFiles: false }), BLOCKS);
   assert.match(withSheet, /likeness only/i);
 
+  // Deliberately a redrawn scene: the fixture used to be splash-source.png,
+  // which later joined SUPERSEDED_RENDERING and started firing the warning it
+  // was here to prove absent. It has to be a reference that is genuinely flat.
   const noSheet = good({
-    references: [{ path: 'art/source/splash-source.png', role: 'continuity:room' }],
+    references: [
+      { path: 'art/source/Calm Door Greetings/door-greet-07-approach.png', role: 'continuity:room' },
+    ],
   });
   const without = assemblePrompt(validateScene(noSheet, { checkFiles: false }), BLOCKS);
   assert.doesNotMatch(without, /likeness only/i);
@@ -315,16 +321,33 @@ test('a rung whose predecessor is redrawn is not pending', () => {
   assert.deepEqual(pendingReferences(s), []);
 });
 
+/**
+ * A scene whose legacy warm master is on disk but which the pilot ledger has
+ * not claimed yet.
+ *
+ * Chosen at run time rather than named. This test used to name
+ * door-sound-03-name, and approving that scene turned the fixture into an
+ * example of the opposite thing — the test failed because the pipeline worked.
+ */
+function legacyOnlyScene() {
+  const ledger = new Set(ledgerKeys(fs.readFileSync(path.join(ROOT, 'css/app.css'), 'utf8')));
+  return fs
+    .readdirSync(SCENES_DIR)
+    .filter((f) => f.endsWith('.json'))
+    .map((f) => f.replace(/\.json$/, ''))
+    .find((id) => !ledger.has(id) && legacyMaster(id));
+}
+
 test('a legacy warm master on disk still counts as pending', () => {
-  // The trap: art/pilot/approved/door-sound-03-name.png exists, but it is the
-  // warm master. Existence is not the question — the ledger is.
-  const abs = path.join(SCENES_DIR, '../pilot/approved/door-sound-03-name.png');
-  assert.ok(fs.existsSync(abs), 'the legacy master should be present for this test to mean anything');
-  const spec = good({ references: [{ scene: 'door-sound-03-name', role: 'continuity:ladder' }] });
+  // The trap: the file is there, but it is the warm master. Existence is not
+  // the question — the ledger is.
+  const id = legacyOnlyScene();
+  assert.ok(id, 'no un-redrawn legacy master left for this test to mean anything');
+  const spec = good({ references: [{ scene: id, role: 'continuity:ladder' }] });
   const s = validateScene(spec, { checkFiles: true });
   assert.equal(s.references[0].exists, true, 'the file is there');
   assert.equal(s.references[0].pending, true, 'but it is not the current brief');
-  assert.deepEqual(pendingReferences(s).map((r) => r.fromScene), ['door-sound-03-name']);
+  assert.deepEqual(pendingReferences(s).map((r) => r.fromScene), [id]);
 });
 
 test('a pending rung is not a validation error — plan must still run', () => {
@@ -371,6 +394,15 @@ test('the two documented near-duplicates are told apart in their own text', () =
   const conversation = loadScene('door-stay-03-conversation');
   assert.match(pretend.mustBeTrue, /square and upright|not leaning/i);
   assert.match(conversation.mustBeTrue, /leaning/i);
+
+  // A third pair, found when these two were given specs so the door's window
+  // could be corrected. They are the same hall, camera, crop, dog and trapped
+  // leash; the arms are the only thing that separates them, so the arms have to
+  // be what each claim is about.
+  const setup = loadScene('door-sound-01-setup');
+  const self = loadScene('door-sound-02-self');
+  assert.match(setup.mustBeTrue, /hands are empty|at her sides/i);
+  assert.match(self.mustBeTrue, /knocking|fist/i);
 });
 
 // --- the style exemplar -----------------------------------------------------

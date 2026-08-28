@@ -24,6 +24,7 @@ import {
   sipsDownscale,
   manifestSkeleton,
 } from './request.mjs';
+import { profileFor, isDirect } from './profiles.mjs';
 
 const rule = (label) => `\n${'─'.repeat(4)} ${label} ${'─'.repeat(Math.max(0, 68 - label.length))}`;
 
@@ -38,6 +39,7 @@ export function cmdPlan(sceneId) {
   }
 
   const scene = loadScene(sceneId);
+  const profile = profileFor(scene);
   const prompt = assemblePrompt(scene);
   const round = nextRound(fs);
   const out = outputPaths(scene.id, round);
@@ -85,7 +87,8 @@ export function cmdPlan(sceneId) {
   console.log(`  model      ${REQUEST.model}`);
   console.log('  parameters');
   for (const [k, v] of Object.entries(REQUEST.parameters)) {
-    console.log(`    ${k.padEnd(15)} ${v}`);
+    const shown = k === 'size' ? `${profile.source.width}x${profile.source.height}` : v;
+    console.log(`    ${k.padEnd(15)} ${shown}`);
   }
   console.log(`  images     ${scene.references.length} of a documented maximum ${SIZE_LIMITS.maxImages}`);
   console.log(`  response   ${REQUEST.response}`);
@@ -96,22 +99,32 @@ export function cmdPlan(sceneId) {
   console.log(`  still unverified: ${REQUEST.unverified}`);
 
   console.log(rule('CANVAS AND CONVERSION'));
-  console.log(`  API canvas    ${SOURCE.width}×${SOURCE.height}`);
-  console.log(`  Final master  ${MASTER.width}×${MASTER.height}`);
-  console.log(`  Conversion    ${CONVERSION}`);
-  console.log(
-    `\n  Both are exactly 4:3, so the two edges scale by the same ${(MASTER.width / SOURCE.width).toFixed(5)}`
-  );
-  console.log('  factor. No crop box is computed anywhere on this path.');
-  console.log('\n  the exact command, run on the Mac:');
-  console.log(`    ${sipsDownscale(out.raw, out.master).join(' ')}`);
-  console.log('    (--resampleHeightWidth takes HEIGHT then WIDTH, in that order)');
+  console.log(`  Profile       ${profile.id} — ${profile.what}`);
+  console.log(`  API canvas    ${profile.source.width}×${profile.source.height}`);
+  console.log(`  Final master  ${profile.master.width}×${profile.master.height}`);
+  console.log(`  Conversion    ${profile.conversion}`);
+  if (isDirect(profile)) {
+    console.log('\n  The canvas is already the master, so there is no resample and no');
+    console.log('  crop box: the master is a copy of the raw.');
+  } else {
+    console.log(
+      `\n  Both are exactly 4:3, so the two edges scale by the same ${(profile.master.width / profile.source.width).toFixed(5)}`
+    );
+    console.log('  factor. No crop box is computed anywhere on this path.');
+    console.log('\n  the exact command, run on the Mac:');
+    console.log(`    ${sipsDownscale(out.raw, out.master, profile.master).join(' ')}`);
+    console.log('    (--resampleHeightWidth takes HEIGHT then WIDTH, in that order)');
+  }
 
   console.log(rule('PLANNED OUTPUT PATHS'));
   console.log(`  round      ${out.round} (next unused under ${RESTYLE_DIR})`);
-  console.log(`  raw        ${out.raw}  — ${SOURCE.width}×${SOURCE.height}, kept as returned`);
-  console.log(`  master     ${out.master}  — ${MASTER.width}×${MASTER.height}`);
-  console.log(`  crops      ${out.crops}/  — square, 84px, 56px, 21:9`);
+  console.log(`  raw        ${out.raw}  — ${profile.source.width}×${profile.source.height}, kept as returned`);
+  console.log(`  master     ${out.master}  — ${profile.master.width}×${profile.master.height}`);
+  console.log(
+    `  crops      ${out.crops}/  — ${
+      profile.renditions === 'icon' ? 'the maskable safe zone, 512, 192, 180, 48' : 'square, 84px, 56px, 21:9'
+    }`
+  );
   console.log(`  sheet      ${out.sheet}`);
   console.log(`  manifest   ${out.manifest}`);
   console.log('\n  Restyle rounds have their own counter starting at 1. The tan-era');
@@ -122,7 +135,7 @@ export function cmdPlan(sceneId) {
 
   console.log(rule('MANIFEST A RUN WOULD WRITE'));
   console.log(
-    JSON.stringify(manifestSkeleton(scene, out), null, 2)
+    JSON.stringify(manifestSkeleton(scene, out, null, profile), null, 2)
       .split('\n')
       .map((l) => `  ${l}`)
       .join('\n')

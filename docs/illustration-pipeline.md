@@ -227,6 +227,67 @@ fidelity automatically and rejects the parameter. `output_format` is not sent
 either: PNG is the default and the only encoding the model reliably honours — a
 webp request comes back as PNG bytes anyway.
 
+## Profiles: what shape a scene comes back in
+
+Everything above describes one shape — a 4:3 instructional illustration — and for
+the thirty-seven that is the only shape there is. The brand marks are the second.
+`docs/illustration-audit.md` left them out of the pilot deliberately, calling them
+"a different style problem with a 16-file cascade behind it", and the cascade is
+exactly the difficulty: the icon is square, it has no 21:9 crop to fail at, and
+installing it is not a copy into `img/` but a source file plus a generator run.
+
+A second set of hardcoded numbers beside the first is how the two drift, so the
+shape is data. `scripts/lib/profiles.mjs` answers four questions and nothing else:
+
+| | `scene` | `icon` |
+| --- | --- | --- |
+| API canvas | 1472×1104 | 1024×1024 |
+| master | 1448×1086 | 1024×1024 |
+| conversion | proportional downscale | copied — the canvas is the master |
+| renditions | 16:7, 21:9, 5:4, square, 84, 56 | maskable safe zone, 512, 192, 180, 48 |
+| install | `img/` + thumb + ledger + tick | `icons/source.png` + `make-icons.mjs` |
+
+A spec selects one with a `"profile"` field. **Absent means `scene`**, so all
+thirty-seven existing specs keep working untouched — a migration that edits every
+file to state what was already true is a migration that introduces typos. An
+unknown value is refused rather than defaulted, because silently drawing an icon
+on a 4:3 canvas is a paid call whose cause is invisible in the result.
+
+Everything a profile does *not* answer is shared on purpose: the brief, the
+reference roles, the attachment-1 rule, the refusals, the round counter, the
+review sheet and the manifest. Those are the parts that were worth building, and
+none of them care about the aspect ratio.
+
+### What the icon profile deliberately does not do
+
+No `img/` file, no thumbnail, **no ledger row and no worklist tick.** Each absence
+is a decision:
+
+- The ledger opts a file out of the warm-art grade, which only applies to art
+  inside the app's art containers. An icon is not in one, so a ledger row would
+  opt out of nothing.
+- The worklist is where the count of thirty-seven comes from, and the finish line
+  is defined as its last row going green. A row for the icon would move the
+  finish line, which is a release decision and not this pipeline's to make.
+
+So the icon is its own small track, which is what the audit called it. `status`
+still says 37, and still means 37.
+
+### The splash, and the colour that is written in three places
+
+The splash is the other half of the cascade and is **not yet in the pipeline.**
+The obstacle is worth writing down before anyone starts: the field colour is
+measured off the artwork's own edge and duplicated in three files —
+`FIELD` in `scripts/make-splash.mjs`, `--splash-field` in `css/app.css`, and
+`background_color` in `manifest.webmanifest`. Both source files carry comments
+saying keep them in step. Redraw the splash without updating all three and every
+cold start flashes a lavender rectangle before the app paints.
+
+That is precisely the "anything that exists twice drifts" case this pipeline
+exists for, so when the splash profile is added, `approve` should measure the
+edge pixel and write all three, the same way it already writes the ledger.
+
+
 ## The key
 
 `generate` reads `process.env.OPENAI_API_KEY` and nothing else, at the moment of
@@ -367,6 +428,7 @@ alone. That deletion is the finish line, and it is when the branch merges.
     scripts/pilot.mjs          the CLI: dispatch and the older hand-driven commands
     scripts/lib/markdown.mjs   blockquote extraction, shared with pilot.mjs
     scripts/lib/brief.mjs      the reusable blocks, from the live brief, and BRIEF_ID
+    scripts/lib/profiles.mjs   the output shapes: canvas, master, renditions, install
     scripts/lib/scene.mjs      spec validation, ordered references, prompt assembly
     scripts/lib/request.mjs    the request surface, the key, the call, output paths
     scripts/lib/plan.mjs       the dry run
@@ -374,6 +436,7 @@ alone. That deletion is the finish line, and it is when the branch merges.
     scripts/lib/approve.mjs    the install
     scripts/lib/renditions.mjs the crop table and geometry, shared with `check`
     scripts/lib/ledger.mjs     the pilot ledger in css/app.css, as data
+    scripts/lib/splashfield.mjs the splash field colour, measured and written
     scripts/lib/worklist.mjs   the worklist checkboxes, as data
     scripts/lib/sheet.mjs      the review sheet
     scripts/lib/status.mjs     where all 37 pictures stand
@@ -389,7 +452,7 @@ app, and it goes with the ledger at the finish line.
 
     node --test scripts/lib/*.test.mjs
 
-152 tests, no network, no key, no macOS — `fetch` and `sips` are injected, and
+187 tests, no network, no key, no macOS — `fetch` and `sips` are injected, and
 the whole of `generate` and `approve` runs in a temp directory against images the
 suite builds itself. The directory form (`node --test scripts/lib/`) does not
 work on every Node build; the glob always does.
@@ -418,9 +481,14 @@ being iterated for composition rather than finish is worth re-running at
 1. Write `art/scenes/<key>.json`. The alt text in the worklist was written
    against the picture each key is supposed to be, so it doubles as the scene
    text; add a `mustBeTrue` line naming the one thing it has to get right.
-2. Attach the two likeness sheets first, then any continuity reference. If the
-   scene is half of a pair, attach the finished half so the room, camera and
-   distances match.
+2. Attach a `style:exemplar` **first** — a scene already redrawn against this
+   brief — then the two likeness sheets, then any continuity reference. That
+   order is the whole lesson of the first live round: leading with the likeness
+   sheets ships two painterly examples ahead of the flat one, and the picture
+   comes back painterly. `validateScene` refuses an exemplar in any other
+   position, since the prompt calls it "attachment 1" by number. If the scene is
+   half of a pair, attach the finished half so the room, camera and distances
+   match.
 3. `plan <key>` and read the assembled prompt. This is free.
 4. `generate <key> --yes`, then open the sheet.
 5. Good? `approve <key> --yes`, review the diff, commit it yourself.
