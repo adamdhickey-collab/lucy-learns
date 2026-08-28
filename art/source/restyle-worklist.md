@@ -42,8 +42,8 @@ Carry these on every scene, all learned from the pilot:
 | ✓ | key | notes | scene (the alt text) |
 | --- | --- | --- | --- |
 | [x] | `door-sound-01-setup` | — | Lucy sits beside her handler near the closed front door with the leash running down under the handler’s shoe. |
-| [ ] | `door-sound-02-bell` | used ×2 | A visitor at the closed front door presses the doorbell. |
-| [ ] | `door-sound-02-knock` | — | A visitor at the closed front door knocks on it. |
+| [x] | `door-sound-02-bell` | used ×2 | A visitor at the closed front door presses the doorbell. |
+| [x] | `door-sound-02-knock` | — | A visitor at the closed front door knocks on it. |
 | [x] | `door-sound-02-self` | used ×2 | A handler knocks on the door frame while standing right beside Lucy with the leash under her foot. |
 | [ ] | `door-sound-03-name` | used ×2 | Lucy turns away from the door to look up at her handler, who crouches beside her at her level with both hands empty. |
 | [ ] | `door-sound-03-name-distant` | used ×2 | Lucy sits on her bed near the front door and turns her head toward her handler, who is beckoning from the far end of the hallway. |

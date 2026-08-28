@@ -74,6 +74,30 @@ Art drawn cool and then graded cooler goes grey.
 > No text, lettering, labels, numbers, checkmarks, X marks, arrows, logos,
 > watermarks, borders or UI of any kind anywhere in the image.
 
+### The porch, for the scenes set outside
+
+A few steps are shot from outside the closed front door — a helper ringing or
+knocking. That is a second background vocabulary and it is deliberately spare,
+so it gets pinned the same way the interior is. Use these and nothing else:
+
+> Exterior, on the porch: flat pale grey-green house siding **#c9ccc8** with
+> thin horizontal lap lines and no texture; a plain porch floor in cool grey
+> **#b8b4b0**; the same charcoal **#3a3a46** front door with the same panelling
+> and the same four-pane window; its off-white frame **#f5f4f9**; a small
+> doorbell button on that frame at about chest height; and soft spruce
+> **#34735c** foliage as a flat silhouette at one edge. **No sky detail, no
+> porch furniture, no potted plants, no house numbers, no light fixture, no
+> mailbox, no steps, no railing.**
+
+The glass reads green from this side, and that is right rather than an error:
+in daylight the panes reflect the garden instead of showing the dim hall
+behind them. From inside the same window shows foliage for the opposite
+reason. Both are the same flat green fill.
+
+A picture with no dog in it has no collar, so the "one saturated note" rule
+above cannot apply — say so explicitly in the prompt and hand the job to the
+guest's blue hoodie instead, or the instruction contradicts itself.
+
 Those hexes are not decorative precision — they are the app's own tokens. The
 lavender wall is kin to `--slate-100`, the mustard pouch in Block B is literally
 `--gold-400`, the guest's hoodie is `--denim-600`, the foliage is `--spruce-600`,

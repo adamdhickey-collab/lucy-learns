@@ -344,14 +344,17 @@ img {
 
    Redrawn so far: door-sound-01-setup, door-greet-07-approach,
    door-greet-08-petting, door-greet-08-jumping, door-cover
-   door-sound-02-self (6 of 37; 31 still warm — see
+   door-sound-02-self, door-sound-02-bell, door-sound-02-knock
+   (8 of 37; 29 still warm — see
    art/source/restyle-worklist.md). */
 img[src$="door-sound-01-setup.jpg"],
 img[src$="door-greet-07-approach.jpg"],
 img[src$="door-greet-08-petting.jpg"],
 img[src$="door-greet-08-jumping.jpg"],
 img[src$="door-cover.jpg"],
-img[src$="door-sound-02-self.jpg"] {
+img[src$="door-sound-02-self.jpg"],
+img[src$="door-sound-02-bell.jpg"],
+img[src$="door-sound-02-knock.jpg"] {
   filter: none;
 }
 
@@ -390,7 +393,19 @@ img[src$="door-sound-02-self.jpg"] {
 .detail-hero:has(img[src$="door-sound-02-self.jpg"]),
 .step-figure:has(img[src$="door-sound-02-self.jpg"]),
 .step-pair-item:has(img[src$="door-sound-02-self.jpg"]),
-.welcome-figure:has(img[src$="door-sound-02-self.jpg"]) {
+.welcome-figure:has(img[src$="door-sound-02-self.jpg"]),
+.hero:has(img[src$="door-sound-02-bell.jpg"]),
+.activity-card .card-illo:has(img[src$="door-sound-02-bell.jpg"]),
+.detail-hero:has(img[src$="door-sound-02-bell.jpg"]),
+.step-figure:has(img[src$="door-sound-02-bell.jpg"]),
+.step-pair-item:has(img[src$="door-sound-02-bell.jpg"]),
+.welcome-figure:has(img[src$="door-sound-02-bell.jpg"]),
+.hero:has(img[src$="door-sound-02-knock.jpg"]),
+.activity-card .card-illo:has(img[src$="door-sound-02-knock.jpg"]),
+.detail-hero:has(img[src$="door-sound-02-knock.jpg"]),
+.step-figure:has(img[src$="door-sound-02-knock.jpg"]),
+.step-pair-item:has(img[src$="door-sound-02-knock.jpg"]),
+.welcome-figure:has(img[src$="door-sound-02-knock.jpg"]) {
   --art-veil: transparent;
 }
 
