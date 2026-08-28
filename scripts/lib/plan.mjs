@@ -126,5 +126,7 @@ export function cmdPlan(sceneId) {
   }
 
   console.log(rule('STATUS'));
-  console.log('  plan only — no API request was made and no files were written.\n');
+  console.log('  plan only — no API request was made and no files were written.');
+  console.log(`\n  to actually send it:\n` +
+    `    node --env-file=.env.local scripts/pilot.mjs generate ${scene.id} --yes\n`);
 }

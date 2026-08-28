@@ -22,7 +22,6 @@ import {
   nextRound,
   sipsDownscale,
   manifestSkeleton,
-  generate,
 } from './request.mjs';
 import { loadScene } from './scene.mjs';
 import { BRIEF_ID } from './brief.mjs';
@@ -150,8 +149,33 @@ test('the manifest carries no credential field, under any spelling', () => {
   assert.doesNotMatch(json, /api[_-]?key|authorization|bearer|secret|credential/i);
 });
 
-// --- the stub --------------------------------------------------------------
+// --- plan mode cannot leak a key -------------------------------------------
 
-test('generate() still refuses to run', async () => {
-  await assert.rejects(() => generate(), /not implemented yet/);
+test('plan mode reads no environment variables at all', () => {
+  // The strongest guarantee available: not "it does not print the key" but
+  // "it never reads the environment", so there is nothing there to print.
+  const src = fs.readFileSync(new URL('./plan.mjs', import.meta.url), 'utf8');
+  assert.doesNotMatch(src, /process\.env/);
+});
+
+/** Source with comments removed, so a mention is not mistaken for an access. */
+const code = (file) =>
+  fs.readFileSync(file, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
+
+test('only request.mjs touches the environment at all', () => {
+  const dir = path.dirname(new URL(import.meta.url).pathname);
+  const readers = fs
+    .readdirSync(dir)
+    .filter((f) => f.endsWith('.mjs') && !f.endsWith('.test.mjs'))
+    .filter((f) => /process\.env/.test(code(path.join(dir, f))));
+  assert.deepEqual(readers, ['request.mjs'], 'only request.mjs may reach process.env');
+});
+
+test('request.mjs reads OPENAI_API_KEY and no other variable', () => {
+  const dir = path.dirname(new URL(import.meta.url).pathname);
+  // process.env arrives as the `env` parameter; every read off it is env.NAME.
+  const src = code(path.join(dir, 'request.mjs')).replaceAll('process.env', '');
+  // Not \b: it would also match the ".env.local" inside the help text.
+  const names = [...src.matchAll(/(?<![.\w])env\.([A-Za-z_]\w*)/g)].map((m) => m[1]);
+  assert.deepEqual([...new Set(names)], ['OPENAI_API_KEY']);
 });

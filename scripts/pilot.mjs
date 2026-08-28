@@ -18,6 +18,7 @@
 //   node scripts/pilot.mjs check              ratios, dupes, crops
 //   node scripts/pilot.mjs sheet              contact sheet for review
 //   node scripts/pilot.mjs plan <scene>       dry run the automated pipeline
+//   node scripts/pilot.mjs generate <scene> --yes
 //
 // Prompts are read from markdown rather than duplicated here; that file is the
 // source of truth and this only strips the markdown off it. There are two, and
@@ -36,6 +37,8 @@ import os from 'node:os';
 
 import { blockquoteAfter, findHeading } from './lib/markdown.mjs';
 import { cmdPlan } from './lib/plan.mjs';
+import { cmdGenerate } from './lib/generate.mjs';
+import { CROPS, cropBox } from './lib/renditions.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const PROMPTS = path.join(ROOT, 'docs/pilot-prompts.md');
@@ -259,40 +262,6 @@ function cmdAdd(name, file) {
 }
 
 // --- checks ----------------------------------------------------------------
-
-// Straight out of §2 of the audit, written the way the app writes them.
-//
-// Ratios and a focal fraction, not pixels. They used to be pixel dimensions
-// measured off a 1448x1086 master, which quietly made 1448x1086 a requirement:
-// `sips` does not refuse a crop bigger than its source, it **pads** it. Hand it
-// an 1100px image and you get a 1448px file with a black bar down one side and
-// a band covering 77% of the height instead of 58% — a confident-looking wrong
-// answer, which is the worst kind for a check to produce. Ratios work at any
-// size, which matters now that the best copy of some art is 1100px wide.
-//
-// `focusY` is `object-position` semantics — the fraction of the *leftover*
-// height above the crop, exactly as CSS resolves it — so it can be read off
-// app.css rather than converted. Today's hero is `center 42%`, and 0.42 of the
-// 452px left over on a 1086px master is the y-offset of 190 that
-// pilot-prompts.md quotes. Anything without a `focusY` is centred, which is
-// what the app does with it.
-const CROPS = [
-  { name: 'today-16x7', aspect: 16 / 7, focusY: 0.42, note: 'Today hero' },
-  { name: 'program-21x9', aspect: 21 / 9, note: 'program hero' },
-  { name: 'welcome-5x4', aspect: 5 / 4, note: 'welcome panel' },
-  { name: 'square', aspect: 1, note: 'library card / map rail' },
-];
-
-/** The largest rect of `aspect` that fits in w×h, placed the way the app places it. */
-function cropBox({ aspect, focusY = 0.5 }, w, h) {
-  let cw = w;
-  let ch = Math.round(w / aspect);
-  if (ch > h) {
-    ch = h;
-    cw = Math.round(h * aspect);
-  }
-  return { w: cw, h: ch, top: Math.round(focusY * (h - ch)), left: Math.round((w - cw) / 2) };
-}
 
 function cmdCheck(dir) {
   const target = dir ? path.resolve(dir) : currentRound();
@@ -665,6 +634,7 @@ const [cmd, ...rest] = process.argv.slice(2);
   masters: () => cmdMasters(),
   sheet: () => cmdSheet(rest[0]),
   plan: () => cmdPlan(rest[0]),
+  generate: () => cmdGenerate(rest[0], rest.slice(1)).catch(die),
 }[cmd] ||
   (() =>
     die(
@@ -675,5 +645,6 @@ const [cmd, ...rest] = process.argv.slice(2);
         '  verify                  every image reference in the app resolves\n' +
         '  masters                 is each approved master still the shipped picture\n' +
         '  sheet [dir]             contact sheet to review them side by side\n' +
-        '  plan <scene-id>         dry run: prompt, references, request, paths'
+        '  plan <scene-id>         dry run: prompt, references, request, paths\n' +
+        '  generate <scene-id>     send it — needs --yes, and spends money'
     )))();

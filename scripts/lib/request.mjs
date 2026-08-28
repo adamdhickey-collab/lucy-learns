@@ -199,12 +199,119 @@ export function manifestSkeleton(scene, out, generatedAt = null) {
   };
 }
 
-/** The stub. Generation is not implemented and must not be reached yet. */
-export async function generate() {
-  throw new Error(
-    'generation is not implemented yet.\n' +
-      '  The request surface in scripts/lib/request.mjs matches the documentation\n' +
-      '  but has never been sent, and no live call has been authorised.\n' +
-      '  Use `pilot.mjs plan <scene>` until it is.'
-  );
+/**
+ * The key, read from the environment and from nowhere else.
+ *
+ * Deliberately a function rather than a module constant: nothing reads the
+ * environment until a call is actually being made, so importing this module —
+ * which `plan` does — still cannot touch it.
+ */
+export function apiKey(env = process.env) {
+  const key = env.OPENAI_API_KEY;
+  if (!key) {
+    throw new Error(
+      'OPENAI_API_KEY is not set.\n' +
+        '  Run the command with the key supplied by the file rather than the shell:\n' +
+        '    node --env-file=.env.local scripts/pilot.mjs generate <scene>\n' +
+        '  which keeps it out of shell history and off the process command line.'
+    );
+  }
+  return key;
+}
+
+/**
+ * The multipart body: the parameters, then every reference as its own repeated
+ * `image[]` field, appended in declared order.
+ *
+ * The order is the whole reason references are data. It is appended straight
+ * from scene.references, which is also what numbers the attachment list inside
+ * the prompt, so the two cannot drift apart.
+ *
+ * No key here. The body carries no credential — that lives in a header, added
+ * at the call site and never stored on any object this function returns.
+ */
+export function buildForm(scene, prompt, readFile) {
+  if (scene.references.length > SIZE_LIMITS.maxImages) {
+    throw new Error(
+      `${scene.references.length} references, but the API takes at most ${SIZE_LIMITS.maxImages}`
+    );
+  }
+  const form = new FormData();
+  for (const [k, v] of Object.entries(REQUEST.parameters)) form.append(k, String(v));
+  form.append('prompt', prompt);
+  for (const ref of scene.references) {
+    const bytes = readFile(ref.abs);
+    form.append('image[]', new Blob([bytes], { type: mimeFor(ref.path) }), path.basename(ref.path));
+  }
+  return form;
+}
+
+const mimeFor = (p) => (/\.jpe?g$/i.test(p) ? 'image/jpeg' : 'image/png');
+
+/** 429 and 5xx are worth another go; nothing else is. A 429 costs nothing. */
+const RETRYABLE = (status) => status === 429 || status >= 500;
+
+/**
+ * Send it, and return the PNG bytes.
+ *
+ * `fetchImpl` and `sleep` are injected so the tests can drive every branch —
+ * a refusal, a rate limit, a malformed body — without a network or a key.
+ *
+ * On failure this prints the API's own message and nothing of the request:
+ * the headers carry the key, so they are never logged, never attached to the
+ * error, and never written anywhere.
+ */
+export async function callApi({
+  form,
+  key,
+  fetchImpl = fetch,
+  attempts = 2,
+  sleep = (ms) => new Promise((r) => setTimeout(r, ms)),
+  onRetry = () => {},
+} = {}) {
+  let lastStatus = 0;
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    const res = await fetchImpl(REQUEST.endpoint, {
+      method: REQUEST.method,
+      headers: { Authorization: `Bearer ${key}` },
+      body: form,
+    });
+    if (res.ok) return decodeImage(await res.json());
+
+    lastStatus = res.status;
+    const detail = await errorMessage(res);
+    if (attempt < attempts && RETRYABLE(res.status)) {
+      const wait = 2000 * attempt;
+      onRetry({ attempt, status: res.status, detail, waitMs: wait });
+      await sleep(wait);
+      continue;
+    }
+    throw new Error(`the API returned ${res.status}: ${detail}`);
+  }
+  throw new Error(`the API returned ${lastStatus} on every attempt`);
+}
+
+/** The API's own error text, or the raw body if it did not send JSON. */
+async function errorMessage(res) {
+  let body = '';
+  try {
+    body = await res.text();
+  } catch {
+    return '(no response body)';
+  }
+  try {
+    const parsed = JSON.parse(body);
+    return parsed?.error?.message || body.slice(0, 400);
+  } catch {
+    return body.slice(0, 400) || '(empty response body)';
+  }
+}
+
+/** Pull the image out of a success body, refusing anything unexpected. */
+function decodeImage(json) {
+  const b64 = json?.data?.[0]?.b64_json;
+  if (typeof b64 !== 'string' || b64 === '') {
+    throw new Error('the API returned 200 but no image in data[0].b64_json');
+  }
+  return Buffer.from(b64, 'base64');
 }
