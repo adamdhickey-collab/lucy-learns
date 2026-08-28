@@ -1,0 +1,29 @@
+{
+  "id": "door-sound-03-name-distant",
+  "briefId": "cool-flat-v1",
+  "title": "Say her name from across the room",
+  "activity": "Doorbell Predicts Rewards",
+  "step": "Level 2, the distance version of the name check-in",
+  "note": "Used by two steps. Drawn deliberately WITHOUT a leash: at this distance a taut line reads as pulling her in, and a slack one is an unreadable puddle of black across the floor. The whole point of the step is that she turns on her own. Say so if you'd rather it carried one.",
+  "blocks": ["style", "cast"],
+  "references": [
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-sound-02-self.png",
+      "role": "continuity:room"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-cover.png",
+      "role": "continuity:room"
+    }
+  ],
+  "scene": "The same entry hall, seen wider and from further back so there is real distance between the two figures. Lucy sits on her rectangular cool-grey dog bed on the right, near the closed charcoal front door, and has turned her head back over her shoulder to look at the handler — her body stays square on the bed, only her head and ears have turned. The handler stands well off to the left, a clear span of empty floor between them, turned toward Lucy with one hand held open at her side in a small welcoming gesture. She is upright and relaxed, not crouching, not leaning, not patting her leg. No leash anywhere in this image — not on Lucy, not in the handler's hand, not on the floor. From the second reference take only the dog bed's low rectangular shape and its cool grey; do not take the open door, the guest, or that image's camera distance. The door stays closed and nobody else is present. Background: the lavender wall, one baseboard line, the closed door, the doormat, the bed. Generous empty floor between them. Nothing else.",
+  "mustBeTrue": "Lucy stays sitting on the bed and has only turned her head toward the handler, the handler is clearly far away across the room and standing upright rather than crouching or beckoning with both arms, there is no leash anywhere in the picture, and the room matches the continuity reference."
+}
