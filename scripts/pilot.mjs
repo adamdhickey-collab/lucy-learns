@@ -17,15 +17,25 @@
 //   node scripts/pilot.mjs add door-cover     name the newest download
 //   node scripts/pilot.mjs check              ratios, dupes, crops
 //   node scripts/pilot.mjs sheet              contact sheet for review
+//   node scripts/pilot.mjs plan <scene>       dry run the automated pipeline
 //
-// Prompts are read from docs/pilot-prompts.md rather than duplicated here.
-// That file is the source of truth; this only strips the markdown off it.
+// Prompts are read from markdown rather than duplicated here; that file is the
+// source of truth and this only strips the markdown off it. There are two, and
+// they are not interchangeable. The hand-driven commands above read
+// docs/pilot-prompts.md, which is the tan-era set kept for its post-mortems.
+// `plan` — and the automated pipeline under scripts/lib/ — read the current
+// flat, cool brief at art/source/drawing-a-new-scene.md. Pointing the new
+// pipeline at the old file would generate warm art that looks correct until it
+// is next to the UI.
 
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
+
+import { blockquoteAfter, findHeading } from './lib/markdown.mjs';
+import { cmdPlan } from './lib/plan.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const PROMPTS = path.join(ROOT, 'docs/pilot-prompts.md');
@@ -51,31 +61,6 @@ const die = (msg) => {
  * the description before it reads three hundred words of description.
  */
 const MATCH = 'Match this attached image exactly for style, palette and the dog\'s appearance — same dog, same woman, same room.';
-
-/** Every line of the blockquote that follows a heading, with the "> " gone. */
-function blockquoteAfter(lines, headingIndex) {
-  const out = [];
-  let started = false;
-  for (let i = headingIndex + 1; i < lines.length; i++) {
-    const line = lines[i];
-    if (line.startsWith('>')) {
-      started = true;
-      out.push(line.replace(/^>\s?/, ''));
-      continue;
-    }
-    // A blank line inside a quote is written as a bare ">", but an unquoted
-    // blank between paragraphs ends nothing — only a new heading does.
-    if (started && (line.startsWith('#') || line.startsWith('---'))) break;
-    if (started && line.trim() === '') continue;
-    if (started) break;
-  }
-  return out.join('\n').replace(/\n{3,}/g, '\n\n').trim();
-}
-
-function findHeading(lines, test) {
-  const i = lines.findIndex((l) => /^#{2,3} /.test(l) && test(l));
-  return i === -1 ? null : i;
-}
 
 /**
  * The "*Attach …*" note under a heading, if it has one.
@@ -679,6 +664,7 @@ const [cmd, ...rest] = process.argv.slice(2);
   verify: () => cmdVerify(),
   masters: () => cmdMasters(),
   sheet: () => cmdSheet(rest[0]),
+  plan: () => cmdPlan(rest[0]),
 }[cmd] ||
   (() =>
     die(
@@ -688,5 +674,6 @@ const [cmd, ...rest] = process.argv.slice(2);
         '  check [dir]             ratios, duplicate detection, every crop from §2\n' +
         '  verify                  every image reference in the app resolves\n' +
         '  masters                 is each approved master still the shipped picture\n' +
-        '  sheet [dir]             contact sheet to review them side by side'
+        '  sheet [dir]             contact sheet to review them side by side\n' +
+        '  plan <scene-id>         dry run: prompt, references, request, paths'
     )))();

@@ -21,3 +21,17 @@ art/pilot/masters.html
 # is generated against, and until they were committed they existed on one
 # laptop. Never add them to this list.
 art/pilot/round-*/
+
+# The restyle rounds, same reasoning, own counter. Kept apart from round-*/
+# because rounds 1-19 are the tan-era set and are cited by number in the
+# post-mortems; continuing that numbering would make every citation ambiguous.
+# The generated review artefacts sit one level deeper here than they did, so
+# the two rules above do not reach them.
+art/pilot/restyle/
+
+# Secrets. The image pipeline reads OPENAI_API_KEY from the environment, and
+# the local command supplies it with `node --env-file=.env.local`. That file is
+# real credentials and must never be committed; the example carries key names
+# only and is safe to track.
+.env*
+!.env.example

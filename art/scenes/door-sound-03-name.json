@@ -1,0 +1,25 @@
+{
+  "id": "door-sound-03-name",
+  "briefId": "cool-flat-v1",
+  "title": "Say her name in a bright, happy voice",
+  "activity": "Doorbell Predicts Rewards",
+  "step": "Level 1, step 3 of 5",
+  "note": "Used by two steps. The empty hands are load-bearing: paying is step 4, so a treat visible here collapses two steps and teaches luring instead of a voluntary check-in.",
+  "blocks": ["style", "cast"],
+  "references": [
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-sound-02-self.png",
+      "role": "continuity:room"
+    }
+  ],
+  "scene": "Interior entry hall, beside the closed charcoal front door. The handler crouches down beside Lucy at her level, knees bent, back straight, her face turned toward Lucy and level with hers — she does not lean over the dog or reach across her. Lucy has turned away from the door and looks up at the handler's face, ears soft and attentive, sitting square. Both of the handler's hands are completely empty and visible — no treat, no food, nothing in either hand, and neither hand is reaching toward Lucy or toward the treat pouch. The black leash is still clipped to the ring on Lucy's collar and still runs down slack under the handler's near shoe. Since Lucy is black and the leash is black, draw the leash with a thin lighter outline where it passes near her body so the line stays readable against her coat; it must not cross her back or shoulders. Background: the door, the doormat, one baseboard line. Nothing else.",
+  "mustBeTrue": "both of the handler's hands are visibly empty and away from the pouch, Lucy is looking at the handler's face and not at the door, the handler is at Lucy's level rather than above her, and the room matches the continuity reference."
+}
