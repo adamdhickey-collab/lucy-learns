@@ -3,19 +3,21 @@
 // generate produces drafts and stops, because approving art is a judgement and
 // a script has no business making it. What a script is good at is everything
 // that follows the judgement, which is where this set has actually lost time:
-// installing a picture is one copy, but the five steps around it are a JPEG
-// recipe with two exact sizes, a thumbnail whose name is load-bearing, a master
-// filed under the shipped key, seven lines of CSS in two blocks so the flat art
-// skips the warm-art grade, and a checkbox on the list the whole effort is
-// measured against. Miss the CSS and the picture renders greyer than its
-// neighbours; miss the checkbox and the list quietly lies about what is left.
+// installing a picture is one copy, but the steps around it are a JPEG recipe
+// with two exact sizes, a thumbnail whose name is load-bearing, a master filed
+// under the shipped key, and a checkbox on the list the whole effort is measured
+// against. Miss the checkbox and the list quietly lies about what is left.
+//
+// There used to be a fifth step: seven lines of CSS in two blocks, so the flat
+// art skipped the warm-art grade that cooled the tan-era pictures. That grade
+// and its ledger were deleted at the finish line, when the last picture was
+// redrawn and there was no warm art left to cool, so `approve` no longer touches
+// the stylesheet at all.
 //
 // So: the judgement is yours, the bookkeeping is this.
 //
 // It does not commit, and it does not bump the version. Both are release
-// decisions, and the release here is the finish line — when the last scene
-// lands, the grade tokens and the ledger come out in one commit and the version
-// moves once.
+// decisions.
 
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -25,7 +27,6 @@ import { ROOT } from './brief.mjs';
 import { loadScene } from './scene.mjs';
 import { MASTER, RESTYLE_DIR, outputPaths } from './request.mjs';
 import { imageSize } from './imagesize.mjs';
-import { addToLedger, ledgerKeys } from './ledger.mjs';
 import { tickWorklist, worklistTotal, worklistRemaining } from './worklist.mjs';
 import { profileFor } from './profiles.mjs';
 import { decodePng, measureField, toHex, setCssField, setManifestBackground } from './splashfield.mjs';
@@ -319,16 +320,13 @@ export async function cmdApprove(
   const shipped = `img/${sceneId}.jpg`;
   const thumb = `img/thumb-${sceneId}.jpg`;
   const master = `${APPROVED_DIR}/${sceneId}.png`;
-  const css = fs.readFileSync(abs(CSS), 'utf8');
   const worklist = fs.readFileSync(abs(WORKLIST), 'utf8');
-  const alreadyLedgered = ledgerKeys(css).includes(sceneId);
 
   if (!yes) {
     say(`\n  approve ${sceneId} from round ${round}\n`);
     say(`    ${shipped}   ← ${SHIPPED.width}px wide, JPEG q${SHIPPED.quality}`);
     say(`    ${thumb}   ← ${THUMB.width}px wide, JPEG q${THUMB.quality}`);
     say(`    ${master}   ← the master, replacing the one shipping today`);
-    say(`    ${CSS}   ${alreadyLedgered ? '(already in the ledger)' : '← opt out of the art grade'}`);
     say(`    ${WORKLIST}   ← tick the row`);
     say(`\n  This replaces what the app shows. Re-run with --yes.\n`);
     return { approved: false };
@@ -353,7 +351,6 @@ export async function cmdApprove(
   fs.copyFileSync(abs(out.master), abs(master));
 
   const total = worklistTotal(worklist);
-  fs.writeFileSync(abs(CSS), addToLedger(css, sceneId, total));
   const ticked = tickWorklist(worklist, sceneId);
   fs.writeFileSync(abs(WORKLIST), ticked);
 
@@ -369,15 +366,13 @@ export async function cmdApprove(
   say(`    ${shipped}   ${rendered.shipped.width}×${rendered.shipped.height}`);
   say(`    ${thumb}   ${rendered.thumb.width}×${rendered.thumb.height}`);
   say(`    ${master}`);
-  say(`    ${CSS}   ${alreadyLedgered ? 'already ledgered' : 'ledgered — skips the art grade'}`);
   say(`    ${WORKLIST}   ticked`);
   say(`\n  ${total - left.length} of ${total} redrawn · ${left.length} still warm`);
   if (left.length) {
     say(`  next: ${left.slice(0, 3).join(', ')}${left.length > 3 ? ', …' : ''}`);
   } else {
-    say('\n  THE LIST IS CLEAR. Now delete --art-grade, --art-veil, the rules that');
-    say('  apply them and the whole ledger block from css/app.css — in one commit,');
-    say('  or the last few pictures get graded alone. That deletion is the finish line.');
+    say('\n  THE LIST IS CLEAR. The finish line is already behind you: the art grade');
+    say('  and its ledger came out of css/app.css when the last picture landed.');
   }
   say('\n  Nothing committed. Review the diff, then commit it yourself.\n');
 

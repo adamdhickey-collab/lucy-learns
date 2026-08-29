@@ -1,10 +1,13 @@
 // node --test scripts/lib/*.test.mjs
 //
-// approve edits four things that are easy to get subtly wrong and hard to
-// notice: two JPEGs at exact sizes, a stylesheet, and a checklist. The
-// stylesheet and the checklist are pure string transforms, so they are tested
-// against the real files without writing to them; the install is driven with a
-// stubbed sips in a temp copy of the tree.
+// approve edits things that are easy to get subtly wrong and hard to notice:
+// two JPEGs at exact sizes and a checklist. The checklist is a pure string
+// transform, so it is tested against the real file without writing to it; the
+// install is driven with a stubbed sips in a temp copy of the tree.
+//
+// It used to edit a stylesheet too — the pilot ledger, which listed every
+// redrawn file so it skipped the warm-art grade. That went at the finish line
+// with the grade itself, and its tests went with it.
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -15,85 +18,49 @@ import zlib from 'node:zlib';
 
 import { ROOT } from './brief.mjs';
 import { MASTER, outputPaths } from './request.mjs';
-import { addToLedger, ledgerKeys, ledgerContainers } from './ledger.mjs';
-import { tickWorklist, worklistTotal, worklistRemaining } from './worklist.mjs';
+import { tickWorklist, worklistTotal, worklistRemaining, worklistRows } from './worklist.mjs';
 import { jpegSize, pngSize, imageSize } from './imagesize.mjs';
 import { cmdApprove, sipsShip, latestRound, SHIPPED, THUMB, CSS, WORKLIST } from './approve.mjs';
 
 const css = fs.readFileSync(path.join(ROOT, CSS), 'utf8');
 const worklist = fs.readFileSync(path.join(ROOT, WORKLIST), 'utf8');
 
-// --- the ledger ------------------------------------------------------------
-
-test('the ledger is found in the real stylesheet, with its containers', () => {
-  const keys = ledgerKeys(css);
-  assert.ok(keys.length >= 8, `expected the redrawn set, got ${keys.length}`);
-  assert.ok(keys.includes('door-sound-01-setup'));
-  assert.deepEqual(ledgerContainers(css), [
-    '.hero',
-    '.activity-card .card-illo',
-    '.detail-hero',
-    '.step-figure',
-    '.step-pair-item',
-    '.welcome-figure',
-  ]);
-});
-
-test('adding a key adds one filter selector and one per container', () => {
-  const before = ledgerKeys(css);
-  const containers = ledgerContainers(css);
-  const after = addToLedger(css, 'a-new-scene', 37);
-  assert.deepEqual(ledgerKeys(after), [...before, 'a-new-scene']);
-  const veils = [...after.matchAll(/:has\(img\[src\$="a-new-scene\.jpg"\]\)/g)];
-  assert.equal(veils.length, containers.length);
-  for (const c of containers) {
-    assert.ok(after.includes(`${c}:has(img[src$="a-new-scene.jpg"])`), `${c} missing`);
-  }
-});
-
-test('the ledger uses the shipped .jpg name, which also catches the thumb', () => {
-  const after = addToLedger(css, 'a-new-scene', 37);
-  assert.match(after, /img\[src\$="a-new-scene\.jpg"\]/);
-  assert.doesNotMatch(after, /a-new-scene\.png/);
-  // thumb-a-new-scene.jpg ends with a-new-scene.jpg, so one entry covers both.
-  assert.ok('thumb-a-new-scene.jpg'.endsWith('a-new-scene.jpg'));
-});
-
-test('the running count is regenerated, never left stale', () => {
-  const after = addToLedger(css, 'a-new-scene', 37);
-  const n = ledgerKeys(after).length;
-  assert.ok(after.includes(`(${n} of 37; ${37 - n} still warm`), 'count must match the selectors');
-  assert.ok(after.includes('a-new-scene'), 'the name list must include it too');
-});
-
-test('adding a key twice changes nothing', () => {
-  const once = addToLedger(css, 'a-new-scene', 37);
-  assert.equal(addToLedger(once, 'a-new-scene', 37), once);
-});
-
-test('the two blocks stay syntactically closed', () => {
-  const after = addToLedger(css, 'a-new-scene', 37);
-  assert.equal((after.match(/\{/g) || []).length, (after.match(/\}/g) || []).length);
-  assert.match(after, /img\[src\$="a-new-scene\.jpg"\] \{\n  filter: none;\n\}/);
-  assert.match(after, /:has\(img\[src\$="a-new-scene\.jpg"\]\) \{\n  --art-veil: transparent;\n\}/);
-});
-
-test('a stylesheet with no ledger fails loudly rather than silently', () => {
-  assert.throws(() => ledgerKeys('body { color: red }'), /filter block is not in this stylesheet/);
-});
-
 // --- the worklist ----------------------------------------------------------
 
-test('the worklist total agrees with the ledger comment', () => {
+test('the worklist accounts for every picture, done or not', () => {
+  // This used to cross-check the worklist against the pilot ledger, because
+  // approve maintained both and a disagreement meant it had stopped halfway.
+  // The ledger is gone; the worklist is the only register now, so what is left
+  // to pin is that it adds up.
   const total = worklistTotal(worklist);
   assert.equal(total, 37);
-  const done = ledgerKeys(css).length;
-  assert.equal(worklistRemaining(worklist).length, total - done,
-    'the ledger and the worklist must not disagree about what is left');
+  const rows = worklistRows(worklist);
+  const remaining = worklistRemaining(worklist);
+  assert.equal(rows.filter((r) => !r.ticked).length, remaining.length);
+  assert.ok(remaining.length <= total);
 });
 
+/**
+ * The worklist with one row put back to unticked, so the tick transform has
+ * something to act on.
+ *
+ * These tests used to take the first remaining row off the real file. That
+ * worked until the last picture was redrawn and nothing remained — the set
+ * being finished, not the transform breaking. They build their own starting
+ * state now.
+ */
+function withOneUnticked() {
+  const key = worklistRows(worklist)[0].key;
+  const before = worklist.replace(
+    new RegExp(`^\\|\\s*\\[x\\]\\s*\\|\\s*\`${key}\``, 'm'),
+    `| [ ] | \`${key}\``,
+  );
+  assert.ok(worklistRemaining(before).includes(key), 'the fixture must actually be unticked');
+  return { key, before };
+}
+
 test('ticking a row removes it from remaining, and only it', () => {
-  const key = worklistRemaining(worklist)[0];
+  const { key, before: worklist } = withOneUnticked();
   const after = tickWorklist(worklist, key);
   assert.equal(worklistRemaining(after).length, worklistRemaining(worklist).length - 1);
   assert.ok(!worklistRemaining(after).includes(key));
@@ -101,7 +68,7 @@ test('ticking a row removes it from remaining, and only it', () => {
 });
 
 test('ticking twice changes nothing, and an unknown key throws', () => {
-  const key = worklistRemaining(worklist)[0];
+  const { key, before: worklist } = withOneUnticked();
   const once = tickWorklist(worklist, key);
   assert.equal(tickWorklist(once, key), once);
   assert.throws(() => tickWorklist(worklist, 'not-a-real-key'), /is not a row in the worklist/);
@@ -216,7 +183,7 @@ function tree({ masterSize = MASTER, round = 1 } = {}) {
   };
 }
 
-test('approve installs both files, the master, the ledger and the tick', async () => {
+test('approve installs both files, the master and the tick', async () => {
   const t = tree();
   const res = await cmdApprove('door-sound-03-name', ['--yes'], t.opts);
   assert.equal(res.approved, true);
@@ -225,8 +192,8 @@ test('approve installs both files, the master, the ledger and the tick', async (
   assert.deepEqual(imageSize(fs.readFileSync(path.join(t.dir, 'img/thumb-door-sound-03-name.jpg'))), { width: 240, height: 180 });
   assert.ok(fs.existsSync(path.join(t.dir, 'art/pilot/approved/door-sound-03-name.png')));
 
-  assert.ok(ledgerKeys(t.read(CSS)).includes('door-sound-03-name'));
   assert.ok(!worklistRemaining(t.read(WORKLIST)).includes('door-sound-03-name'));
+  assert.equal(t.read(CSS), css, 'the stylesheet is no longer touched at all');
 });
 
 test('the promoted master is the round\'s master, byte for byte', async () => {
@@ -279,12 +246,12 @@ test('a round generated against another brief is refused', async () => {
   assert.equal(fs.existsSync(path.join(t.dir, 'img')), false);
 });
 
-test('approving twice is safe — no duplicate selector, no lost row', async () => {
+test('approving twice is safe — no lost row, no double tick', async () => {
   const t = tree();
   await cmdApprove('door-sound-03-name', ['--yes'], t.opts);
-  const after = t.read(CSS);
+  const after = t.read(WORKLIST);
   await cmdApprove('door-sound-03-name', ['--yes'], t.opts);
-  assert.equal(t.read(CSS), after);
+  assert.equal(t.read(WORKLIST), after);
   assert.equal(worklistTotal(t.read(WORKLIST)), 37);
 });
 
@@ -308,5 +275,5 @@ test('the count reported is the worklist\'s, not a second tally', async () => {
   const res = await cmdApprove('door-sound-03-name', ['--yes'], t.opts);
   assert.equal(res.total, 37);
   assert.equal(res.remaining, worklistRemaining(t.read(WORKLIST)).length);
-  assert.equal(ledgerKeys(t.read(CSS)).length, res.total - res.remaining);
+
 });

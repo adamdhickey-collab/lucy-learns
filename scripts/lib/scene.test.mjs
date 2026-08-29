@@ -20,7 +20,6 @@ import {
   SCENES_DIR,
 } from './scene.mjs';
 import { loadBlocks, BLOCK_IDS, BRIEF_ID, ROOT } from './brief.mjs';
-import { ledgerKeys } from './ledger.mjs';
 
 const BLOCKS = { style: 'STYLE BLOCK', porch: 'PORCH BLOCK', cast: 'CAST BLOCK' };
 
@@ -324,7 +323,8 @@ test('a scene cannot reference itself', () => {
 });
 
 test('a rung whose predecessor is redrawn is not pending', () => {
-  // door-sound-01-setup is in the pilot ledger, so it counts as current.
+  // Nothing is pending any more: the ledger went at the finish line and every
+  // approved master is current by definition, because no warm art is left.
   const spec = good({ references: [{ scene: 'door-sound-01-setup', role: 'continuity:ladder' }] });
   const s = validateScene(spec, { checkFiles: true });
   assert.equal(s.references[0].pending, false);
@@ -332,39 +332,20 @@ test('a rung whose predecessor is redrawn is not pending', () => {
 });
 
 /**
- * A scene whose legacy warm master is on disk but which the pilot ledger has
- * not claimed yet.
+ * There is no longer such a thing as a pending reference.
  *
- * Chosen at run time rather than named. This test used to name
- * door-sound-03-name, and approving that scene turned the fixture into an
- * example of the opposite thing — the test failed because the pipeline worked.
+ * While the restyle ran, art/pilot/approved/ held warm masters and cool ones
+ * under the same keys, and only the pilot ledger could tell them apart — so a
+ * scene reference to a not-yet-redrawn picture was "pending" and `generate`
+ * refused it. The ledger was deleted at the finish line and every approved
+ * master is current by definition, so this pins the new answer rather than
+ * keeping a test for a distinction that no longer exists.
  */
-function legacyOnlyScene() {
-  const ledger = new Set(ledgerKeys(fs.readFileSync(path.join(ROOT, 'css/app.css'), 'utf8')));
-  return fs
-    .readdirSync(SCENES_DIR)
-    .filter((f) => f.endsWith('.json'))
-    .map((f) => f.replace(/\.json$/, ''))
-    // .png specifically: a scene reference resolves to
-    // art/pilot/approved/<id>.png, so a scene whose legacy master is a .jpg
-    // would be picked here and then fail the "the file is there" assertion.
-    .find((id) => !ledger.has(id) && legacyMaster(id)?.path.endsWith('.png'));
-}
-
-test('a legacy warm master on disk still counts as pending', (t) => {
-  // The trap: the file is there, but it is the warm master. Existence is not
-  // the question — the ledger is.
-  //
-  // When every specced scene has been redrawn there is nothing left to tell the
-  // two apart with, and that is the restyle succeeding rather than the test
-  // breaking — so it skips rather than failing or passing vacuously.
-  const id = legacyOnlyScene();
-  if (!id) return t.skip('every specced scene is redrawn; no legacy-only master remains');
-  const spec = good({ references: [{ scene: id, role: 'continuity:ladder' }] });
+test('no scene reference is pending now that no warm art is left', () => {
+  const spec = good({ references: [{ scene: 'door-stay-03-cross', role: 'continuity:ladder' }] });
   const s = validateScene(spec, { checkFiles: true });
-  assert.equal(s.references[0].exists, true, 'the file is there');
-  assert.equal(s.references[0].pending, true, 'but it is not the current brief');
-  assert.deepEqual(pendingReferences(s).map((r) => r.fromScene), [id]);
+  assert.equal(s.references[0].pending, false);
+  assert.deepEqual(pendingReferences(s), []);
 });
 
 test('a pending rung is not a validation error — plan must still run', () => {
@@ -394,12 +375,11 @@ test('the Stay ladder chains in order, each rung off the last', () => {
   });
 });
 
-test('a rung waits on its predecessor exactly while that predecessor is not redrawn', () => {
-  // This asserted that every rung was waiting, "since none are redrawn yet",
-  // which stopped being true the day the ladder was finished — the sixth test in
-  // this repo to fail because the thing it described had succeeded. The
-  // relationship holds at every point on the walk, so that is what it checks.
-  const redrawn = new Set(ledgerKeys(fs.readFileSync(path.join(ROOT, 'css/app.css'), 'utf8')));
+test('every ladder rung resolves, and none of them waits', () => {
+  // This asserted that a rung waited exactly while its predecessor was absent
+  // from the pilot ledger. The ledger is gone and the ladder is drawn, so what
+  // is left worth pinning is that every rung still resolves its predecessor to
+  // a real master and nothing reports itself blocked.
   const chain = {
     'door-stay-03-halfway': 'door-stay-03-onestep',
     'door-stay-03-cross': 'door-stay-03-halfway',
@@ -410,8 +390,11 @@ test('a rung waits on its predecessor exactly while that predecessor is not redr
     'door-stay-cover': 'door-stay-03-conversation',
   };
   for (const [rung, predecessor] of Object.entries(chain)) {
-    const waiting = pendingReferences(loadScene(rung)).map((r) => r.fromScene);
-    assert.deepEqual(waiting, redrawn.has(predecessor) ? [] : [predecessor], rung);
+    const scene = loadScene(rung);
+    const ladder = scene.references.filter((r) => r.role === 'continuity:ladder');
+    assert.deepEqual(ladder.map((r) => r.fromScene), [predecessor], rung);
+    assert.ok(ladder[0].exists, `${predecessor}'s master should be on disk`);
+    assert.deepEqual(pendingReferences(scene), [], rung);
   }
 });
 

@@ -54,57 +54,34 @@ collar violet against the field the art was drawn on, at 7.53:1. The launch
 now opens inside the cool system; the fade to the app is just the paper
 arriving.
 
-### The art grade
+### The art grade, and why it is gone
 
-The illustrations were painted for the tan UI, so in the app they pass
-through one grade: `--art-grade`
-(`saturate(0.78) brightness(1.05) contrast(1.06)` on the `img`) and
-`--art-veil` (an 8% wash of the collar violet, painted by a `::before` on
-each illustration container). The grade cools the art's cream the same
-direction the paper went without touching the source files, and it is two
-tokens — one decision, reversible by setting them to `none` and
-`transparent`.
+For most of this project the illustrations were painted for the tan UI, so in
+the app they passed through one grade: `--art-grade`
+(`saturate(0.78) brightness(1.05) contrast(1.06)` on the `img`) and `--art-veil`
+(an 8% wash of the collar violet, painted by a `::before` on each illustration
+container). It cooled the art's cream the same direction the paper went without
+touching the source files, and it was two tokens — one decision, reversible by
+setting them to `none` and `transparent`.
 
-Three passes to get here, and the middle one is worth keeping on the
-record. It began gentle (`saturate(0.86)`, 7%), was strengthened to
-`saturate(0.62) brightness(0.97)` at 16% because the first pass still read
-warm against the slate — and at 16% the pictures went drab. A flat
-translucent wash does not only tint, it lifts the blacks, and lifted
-blacks are what haze *is*. The fix was not more brightness on top of the
-wash but less wash: 8%, saturation back up to a still-disciplined 0.78,
-and `contrast(1.06)` to cancel what the wash still costs. Measured on the
-hero portrait, that restores the ungraded luminance (value 72.5 against
-72.2 raw) while holding saturation about 30% under it.
+All thirty-seven illustrations have since been redrawn flat and cool, in the
+app's own palette, so there is nothing left to correct: the tokens, the rules
+that applied them and the pilot ledger that let redrawn files opt out were all
+deleted together. The art is the colour it is.
 
-If it moves again, those two numbers and this passage are the whole edit —
-and the lesson is: reach for the veil before the brightness.
+Three passes got the grade to where it ended, and the middle one is worth
+keeping on the record even though the code is gone, because the lesson is about
+translucent washes generally. It began gentle (`saturate(0.86)`, 7%), was
+strengthened to `saturate(0.62) brightness(0.97)` at 16% because the first pass
+still read warm against the slate — and at 16% the pictures went drab. A flat
+translucent wash does not only tint, it lifts the blacks, and lifted blacks are
+what haze *is*. The fix was not more brightness on top of the wash but less
+wash: 8%, saturation back up to a still-disciplined 0.78, and `contrast(1.06)`
+to cancel what the wash still costs. Measured on the hero portrait, that
+restored the ungraded luminance (value 72.5 against 72.2 raw) while holding
+saturation about 30% under it.
 
-The avatars take the filter too — they are painted portraits from the same
-set, on the same warm cream, and ungraded they were the one warm note left
-in the chrome — but not the veil: at avatar size the filter alone carries
-the grade. The one exemption is the splash art, which must stay
-byte-identical to the baked iOS launch images — its gentler grade is baked
-into the source pixels instead, as described above.
-
-The grade is a bridge, not a destination. `art/source/drawing-a-new-scene.md`
-now specifies the destination — flat, vector-like illustration drawn cool, out
-of these same tokens — and when the set is redrawn to it, **delete the grade**
-rather than stacking the two. Art drawn cool and then graded cooler goes grey.
-
-## Token architecture
-
-Three layers, top of `css/app.css`:
-
-1. **Primitives** — raw ramps, named for where they live in the artwork.
-   Nothing outside the token block may reference a primitive.
-2. **Semantic roles** — `--background`, `--primary`, `--caution-text`, and so
-   on. This is the only color vocabulary the rest of the stylesheet uses.
-3. **Components** — the classes themselves (`.btn`, `.badge`, `.meter`, the
-   tab bar), which consume semantic roles only.
-
-To restyle the app, move layer 2's assignments. To retune a color, move
-layer 1 and re-run the checks. Component CSS should never need to change for
-a palette decision.
+**Reach for the veil before the brightness.** That is the part to keep.
 
 ### Primitives
 

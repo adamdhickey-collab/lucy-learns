@@ -1,9 +1,12 @@
 // node --test scripts/lib/*.test.mjs
 //
 // status answers "what is left", which is the question people act on, so the
-// classification is worth pinning: every picture in exactly one state, the
-// blocked ones naming the right predecessor, and the two registers that must
-// agree checked against each other.
+// classification is worth pinning: every picture in exactly one state and the
+// blocked ones naming the right predecessor.
+//
+// It used to cross-check two registers — the worklist's ticks and the pilot
+// ledger's opt-outs — because approve maintained both. The ledger went at the
+// finish line, so those tests went with it: a tick is now simply the truth.
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -13,11 +16,9 @@ import path from 'node:path';
 import { ROOT } from './brief.mjs';
 import { restyleState } from './status.mjs';
 import { worklistRows, worklistTotal, worklistRemaining } from './worklist.mjs';
-import { ledgerKeys } from './ledger.mjs';
-import { WORKLIST, CSS } from './approve.mjs';
+import { WORKLIST } from './approve.mjs';
 
 const md = fs.readFileSync(path.join(ROOT, WORKLIST), 'utf8');
-const css = fs.readFileSync(path.join(ROOT, CSS), 'utf8');
 
 // --- parsing the register ---------------------------------------------------
 
@@ -53,21 +54,14 @@ test('every picture lands in exactly one state, and they sum to the register', (
   for (const r of state) assert.ok(states.includes(r.status), `${r.key}: ${r.status}`);
 });
 
-test('approved means in the pilot ledger, not merely a file on disk', () => {
+test('approved means the worklist says so', () => {
+  // The ledger used to be the authority here and the worklist the cross-check.
+  // With the ledger deleted at the finish line the tick is the record, so what
+  // is worth pinning is that the classification follows it exactly.
   const state = restyleState();
-  const approved = state.filter((r) => r.status === 'approved').map((r) => r.key).sort();
-  assert.deepEqual(approved, [...ledgerKeys(css)].sort());
-  // The trap this exists to avoid: a legacy warm master under the same name.
-  // This named door-sound-03-name until that scene was redrawn, at which point
-  // the example became its own opposite and the test failed for the one reason
-  // it should not — the pipeline working. So it asserts over every legacy
-  // master the ledger has not claimed yet, and names none of them.
-  const ledger = new Set(ledgerKeys(css));
-  const legacyOnly = state.filter(
-    (r) => !ledger.has(r.key) && fs.existsSync(path.join(ROOT, `art/pilot/approved/${r.key}.png`)),
-  );
-  assert.ok(legacyOnly.length > 0, 'no un-redrawn legacy master left to tell the two apart with');
-  for (const r of legacyOnly) assert.notEqual(r.status, 'approved', r.key);
+  for (const row of state) {
+    assert.equal(row.status === 'approved', row.ticked, row.key);
+  }
 });
 
 /**
@@ -127,31 +121,3 @@ test('a picture with no spec reads as unspecced rather than ready', (t) => {
   for (const row of unspecced) assert.match(row.detail, /no spec/, row.key);
 });
 
-// --- the integrity check ----------------------------------------------------
-
-test('the worklist and the ledger currently agree', () => {
-  const drift = restyleState().filter((r) => r.drift);
-  assert.deepEqual(drift.map((r) => r.key), [],
-    'a tick without a ledger entry (or the reverse) means an approve stopped halfway');
-});
-
-test('drift is detected when the two registers disagree', () => {
-  // Tick a row without ledgering it — exactly what a half-finished approve
-  // leaves behind — and check the state notices.
-  const dir = fs.mkdtempSync(path.join(fs.realpathSync('/tmp'), 'drift-'));
-  const write = (rel, data) => {
-    fs.mkdirSync(path.join(dir, path.dirname(rel)), { recursive: true });
-    fs.writeFileSync(path.join(dir, rel), data);
-  };
-  // The key is found at run time rather than named. This said door-place-cover
-  // until that row was ticked, at which point the regex stopped matching, the
-  // replace did nothing, no drift was created and the test failed — the seventh
-  // in this suite to break because the restyle progressed.
-  const untickedRow = /^\|\s*\[ \]\s*\|\s*`([a-z0-9-]+)`/m.exec(md);
-  assert.ok(untickedRow, 'no unticked row left to simulate a half-finished approve with');
-  const key = untickedRow[1];
-  write(WORKLIST, md.replace(untickedRow[0], `| [x] | \`${key}\``));
-  write(CSS, css);
-  const row = restyleState({ root: dir }).find((r) => r.key === key);
-  assert.equal(row.drift, true, `${key} is ticked but not ledgered, which is drift`);
-});

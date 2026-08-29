@@ -17,7 +17,6 @@ import { renditionPlan, ICON_SIZES, ICON_SAFE_ZONE } from './renditions.mjs';
 import { validateScene, assemblePrompt } from './scene.mjs';
 import { cmdApprove, ICON_SOURCE, ICON_OUTPUTS, ICON_BUILD, CSS, WORKLIST } from './approve.mjs';
 import { ROOT } from './brief.mjs';
-import { ledgerKeys } from './ledger.mjs';
 import { worklistRemaining } from './worklist.mjs';
 import { imageSize } from './imagesize.mjs';
 
@@ -233,7 +232,7 @@ test('approving an icon writes the source, runs the build, and touches nothing e
 
   // And the three registers that belong to the thirty-seven are untouched.
   assert.equal(fs.existsSync(path.join(t.dir, 'img')), false, 'an icon is not an img/ picture');
-  assert.equal(t.read(CSS), t.cssBefore, 'an icon takes no art grade, so no ledger row');
+  assert.equal(t.read(CSS), t.cssBefore, 'an icon is not an illustration; the stylesheet is untouched');
   assert.equal(t.read(WORKLIST), t.worklistBefore, 'an icon is not one of the thirty-seven');
 });
 
@@ -242,7 +241,6 @@ test('approving an icon does not move the finish line', async () => {
   const before = worklistRemaining(t.read(WORKLIST)).length;
   await cmdApprove('app-icon', ['--yes'], t.opts);
   assert.equal(worklistRemaining(t.read(WORKLIST)).length, before);
-  assert.equal(ledgerKeys(t.read(CSS)).includes('app-icon'), false);
 });
 
 test('an icon build that writes nothing is an error, not a silent success', async () => {

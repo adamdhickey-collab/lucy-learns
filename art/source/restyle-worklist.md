@@ -117,10 +117,10 @@ Carry these on every scene, all learned from the pilot:
 
 | ✓ | key | notes | scene (the alt text) |
 | --- | --- | --- | --- |
-| [ ] | `plan-fourpaws` | **cover** · square-safe | Lucy stands with all four paws on the floor, looking up at a person who keeps their hands together at their waist. |
-| [ ] | `plan-mat` | **cover** · square-safe | Lucy lies flat on her side asleep on her mat while someone sits quietly nearby. |
-| [ ] | `plan-name` | **cover** · square-safe | Lucy turns her head to meet her crouching handler\u2019s eyes while a squirrel sits ignored on the grass behind her. |
-| [ ] | `plan-walkpeople` | **cover** · square-safe | Lucy walks on a loose leash looking up at her handler as a stranger passes behind them. |
+| [x] | `plan-fourpaws` | **cover** · square-safe | Lucy stands with all four paws on the floor, looking up at a person who keeps their hands together at their waist. |
+| [x] | `plan-mat` | **cover** · square-safe | Lucy lies flat on her side asleep on her mat while someone sits quietly nearby. |
+| [x] | `plan-name` | **cover** · square-safe | Lucy turns her head to meet her crouching handler\u2019s eyes while a squirrel sits ignored on the grass behind her. |
+| [x] | `plan-walkpeople` | **cover** · square-safe | Lucy walks on a loose leash looking up at her handler as a stranger passes behind them. |
 
 ### Outside the list, on purpose
 

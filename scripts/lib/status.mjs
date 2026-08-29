@@ -1,27 +1,30 @@
 // `pilot.mjs status` — where the restyle actually is.
 //
 // Thirty-seven pictures, drawn over weeks, in a chain where some cannot be
-// started until others are finished. The state of any one of them lives in four
-// different places: the worklist says whether it is done, css/app.css says
-// whether it is opted out of the art grade, art/scenes/ says whether it has been
-// written, and art/pilot/restyle/ says whether anything has been drawn. Holding
-// that in your head across a session is how a rung gets skipped.
+// started until others are finished. The state of any one of them lives in three
+// different places: the worklist says whether it is done, art/scenes/ says
+// whether it has been written, and art/pilot/restyle/ says whether anything has
+// been drawn. Holding that in your head across a session is how a rung gets
+// skipped.
 //
-// So this reads all four and prints one line per picture. It writes nothing.
+// So this reads all three and prints one line per picture. It writes nothing.
 //
-// It also cross-checks the two registers that must agree — the worklist's ticks
-// and the ledger's opt-outs — because they are maintained by the same command
-// and a disagreement means an approve went half-finished.
+// It used to read a fourth — the pilot ledger in css/app.css, which listed the
+// files that opted out of the warm-art grade — and cross-check it against the
+// worklist, because both were maintained by `approve` and a disagreement meant
+// an approve had stopped halfway. The ledger went at the finish line, when the
+// last picture was redrawn and there was no warm art left to grade. With one
+// register left there is nothing to cross-check, and a tick is simply the
+// truth.
 
 import fs from 'node:fs';
 import path from 'node:path';
 
 import { ROOT } from './brief.mjs';
 import { loadScene, SCENES_DIR } from './scene.mjs';
-import { ledgerKeys } from './ledger.mjs';
 import { worklistRows } from './worklist.mjs';
 import { RESTYLE_DIR, outputPaths } from './request.mjs';
-import { WORKLIST, CSS } from './approve.mjs';
+import { WORKLIST } from './approve.mjs';
 
 /** Every restyle round that holds a master for a key, highest first. */
 function draftsFor(key) {
@@ -52,7 +55,6 @@ const MARK = {
  */
 export function restyleState({ root = ROOT } = {}) {
   const rows = worklistRows(fs.readFileSync(path.join(root, WORKLIST), 'utf8'));
-  const redrawn = new Set(ledgerKeys(fs.readFileSync(path.join(root, CSS), 'utf8')));
   const specced = new Set(
     fs.existsSync(SCENES_DIR)
       ? fs.readdirSync(SCENES_DIR).filter((f) => f.endsWith('.json')).map((f) => f.replace(/\.json$/, ''))
@@ -63,7 +65,7 @@ export function restyleState({ root = ROOT } = {}) {
     const drafts = draftsFor(row.key);
     let status = 'none';
     let detail = '';
-    if (redrawn.has(row.key)) {
+    if (row.ticked) {
       status = 'approved';
       detail = 'redrawn and shipping';
     } else if (drafts.length) {
@@ -77,7 +79,7 @@ export function restyleState({ root = ROOT } = {}) {
     } else {
       detail = 'no spec yet';
     }
-    return { ...row, status, detail, drift: row.ticked !== redrawn.has(row.key) };
+    return { ...row, status, detail };
   });
 }
 
@@ -107,16 +109,6 @@ export function cmdStatus(argv = []) {
       `${count('ready')} ready · ${count('blocked')} blocked · ${count('none')} unspecced` +
       `   (${state.length} total)`
   );
-
-  // The two registers approve maintains. If they disagree, an approve stopped
-  // halfway and one of them is lying about what is finished.
-  const drift = state.filter((r) => r.drift);
-  if (drift.length) {
-    console.log(`\n  ⚠ the worklist and the pilot ledger disagree about:`);
-    for (const r of drift) {
-      console.log(`    ${r.key} — worklist says ${r.ticked ? 'done' : 'not done'}, ledger says ${!r.ticked ? 'done' : 'not done'}`);
-    }
-  }
 
   const next = state.filter((r) => r.status === 'draft');
   const ready = state.filter((r) => r.status === 'ready');

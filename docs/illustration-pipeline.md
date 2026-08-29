@@ -51,10 +51,10 @@ your head across a session is how a rung gets skipped.
 
     8 approved · 0 awaiting review · 11 ready · 7 blocked · 11 unspecced   (37 total)
 
-It writes nothing. It also cross-checks the two registers `approve` maintains —
-the worklist's ticks and the ledger's opt-outs — and says so if they disagree,
-because they are written by the same command and a disagreement means an approve
-stopped halfway.
+It writes nothing. It used to cross-check two registers — the worklist's ticks
+and the pilot ledger's opt-outs — because `approve` wrote both and a
+disagreement meant one had stopped halfway. The ledger went at the finish line,
+so the worklist is the only register and a tick is simply the truth.
 
 ## A scene, as a file
 
@@ -147,13 +147,19 @@ door-stay-03-crack is waiting on a scene that has not been redrawn yet:
   drawn off the last one, or the ladder stops reading as one walk.
 ```
 
-"Redrawn" is read off the **pilot ledger in `css/app.css`**, not off the
-filesystem — and that distinction is the whole point. For nearly every key there
-is already a file at `art/pilot/approved/<id>.png`: the legacy warm master. A
-rung that attached it would inherit the style the restyle exists to replace, and
-come back looking plausible and wrong. So the question is never "is the file
-there" but "has this scene been drawn against the current brief", and the ledger
-is the only thing that knows.
+While the restyle was running, "redrawn" was read off the **pilot ledger in
+`css/app.css`** rather than off the filesystem, and that distinction was the
+whole point. For nearly every key there was already a file at
+`art/pilot/approved/<id>.png` — the legacy warm master — and a rung that
+attached it would inherit the style the restyle existed to replace and come back
+looking plausible and wrong. So the question was never "is the file there" but
+"has this scene been drawn against the current brief", and only the ledger knew.
+
+**That is over.** The ledger was deleted at the finish line and there is no warm
+art left, so every approved master is current by definition and nothing is
+pending. `pendingReferences` still exists and still returns a list, because the
+shape is useful and a future set may need the refusal again — it just always
+returns nothing now.
 
 ### The likeness warning is not optional
 
@@ -245,7 +251,7 @@ shape is data. `scripts/lib/profiles.mjs` answers four questions and nothing els
 | master | 1448×1086 | 1024×1024 |
 | conversion | proportional downscale | copied — the canvas is the master |
 | renditions | 16:7, 21:9, 5:4, square, 84, 56 | maskable safe zone, 512, 192, 180, 48 |
-| install | `img/` + thumb + ledger + tick | `icons/source.png` + `make-icons.mjs` |
+| install | `img/` + thumb + worklist tick | `icons/source.png` + `make-icons.mjs` |
 
 A spec selects one with a `"profile"` field. **Absent means `scene`**, so all
 thirty-seven existing specs keep working untouched — a migration that edits every
@@ -260,12 +266,12 @@ none of them care about the aspect ratio.
 
 ### What the icon profile deliberately does not do
 
-No `img/` file, no thumbnail, **no ledger row and no worklist tick.** Each absence
-is a decision:
+No `img/` file, no thumbnail and **no worklist tick.** Each absence is a
+decision:
 
-- The ledger opts a file out of the warm-art grade, which only applies to art
-  inside the app's art containers. An icon is not in one, so a ledger row would
-  opt out of nothing.
+- An icon is not an illustration in one of the app's art containers, so none of
+  the illustration install applies to it. (While the warm-art grade existed it
+  also took no ledger row, for the same reason.)
 - The worklist is where the count of thirty-seven comes from, and the finish line
   is defined as its last row going green. A row for the icon would move the
   finish line, which is a release decision and not this pipeline's to make.
@@ -285,7 +291,7 @@ cold start flashes a lavender rectangle before the app paints.
 
 That is precisely the "anything that exists twice drifts" case this pipeline
 exists for, so when the splash profile is added, `approve` should measure the
-edge pixel and write all three, the same way it already writes the ledger.
+edge pixel and write all three in one step, which is what it does.
 
 
 ## The key
@@ -401,27 +407,34 @@ rendered from the master rather than from the shipped JPEG, and both files are
 re-read after writing — a thumb that failed to write is a broken image on every
 card, not a missing file someone notices.
 
-The ledger and the worklist are edited as data by pure functions with their own
-tests. The ledger's container list is **read off the block** rather than
-hardcoded, so a new kind of art container is added once by hand and every later
-key picks it up. Both edits are idempotent, the running count is regenerated from
-the selectors rather than incremented, and the total comes from the worklist, so
-the two cannot disagree about what is left.
+The worklist is edited as data by a pure function with its own tests: the tick is
+idempotent, an unknown key throws rather than silently doing nothing, and the
+total is read from the file rather than counted twice.
+
+Until the finish line there was a second register beside it — the pilot ledger in
+`css/app.css`, listing every redrawn file so it skipped the warm-art grade —
+edited the same way, with its container list read off the block rather than
+hardcoded. It was deleted with the grade.
 
 `approve` does **not** commit and does **not** bump `APP_VERSION`. Both are
 release decisions, and the release here is the finish line.
 
-## The finish line
+## The finish line, which has been crossed
 
-While the set is half redrawn, the app carries two vocabularies at once: the
-warm art is cooled by `--art-grade` and `--art-veil` in `css/app.css`, and every
-redrawn file opts out of both through the pilot ledger. Cool art graded cooler
-goes grey, which is why the ledger exists.
+While the set was half redrawn the app carried two vocabularies at once: the warm
+art was cooled by `--art-grade` and `--art-veil` in `css/app.css`, and every
+redrawn file opted out of both through the pilot ledger. Cool art graded cooler
+goes grey, which is why the ledger existed.
 
-When the last row of the worklist is ticked — `approve` says so, and names this
-— delete `--art-grade`, `--art-veil`, the rules that apply them and the whole
-ledger block **in one commit.** Not one at a time, or the stragglers get graded
-alone. That deletion is the finish line, and it is when the branch merges.
+When the last worklist row was ticked, all of it came out in one commit —
+`--art-grade`, `--art-veil`, the rules that applied them, the whole ledger block,
+the `ledger.mjs` module and every call site. One commit rather than several,
+because deleting the tokens before the ledger would have graded nothing and
+deleting the ledger first would have graded the last few pictures alone.
+
+What that leaves is simpler than what it replaced: the illustrations are drawn in
+the app's own palette, so there is nothing to correct at render time, and
+`approve` no longer touches the stylesheet at all.
 
 ## The code
 
@@ -435,7 +448,6 @@ alone. That deletion is the finish line, and it is when the branch merges.
     scripts/lib/generate.mjs   the run
     scripts/lib/approve.mjs    the install
     scripts/lib/renditions.mjs the crop table and geometry, shared with `check`
-    scripts/lib/ledger.mjs     the pilot ledger in css/app.css, as data
     scripts/lib/splashfield.mjs the splash field colour, measured and written
     scripts/lib/worklist.mjs   the worklist checkboxes, as data
     scripts/lib/sheet.mjs      the review sheet
@@ -445,20 +457,21 @@ alone. That deletion is the finish line, and it is when the branch merges.
 Zero dependencies, as the rest of this repo is. Node's built-in `fetch`,
 `FormData`, `--env-file` and `node --test` do everything a package would.
 
-`ledger.mjs` is temporary by design: it exists only while both styles are in the
-app, and it goes with the ledger at the finish line.
+`ledger.mjs` was temporary by design — it existed only while both styles were in
+the app — and it went with the ledger at the finish line, along with its tests
+and every call site.
 
 ## Running the tests
 
     node --test scripts/lib/*.test.mjs
 
-189 tests, no network, no key, no macOS — `fetch` and `sips` are injected, and
+180 tests, no network, no key, no macOS — `fetch` and `sips` are injected, and
 the whole of `generate` and `approve` runs in a temp directory against images the
 suite builds itself. The directory form (`node --test scripts/lib/`) does not
 work on every Node build; the glob always does.
 
 Covered end to end: refusals, rate limits, a 200 with no image, a wrong canvas, an
-existing round, the ledger and worklist transforms against the real files, and
+existing round, the worklist transform against the real file, and
 that nothing is ever written outside the round directory.
 
 ## Still unverified

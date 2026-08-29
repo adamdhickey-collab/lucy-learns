@@ -11,7 +11,7 @@ need a real origin.
 
 ## Checks
 
-    node --test scripts/lib/*.test.mjs     the illustration pipeline (189 tests)
+    node --test scripts/lib/*.test.mjs     the illustration pipeline (180 tests)
     node scripts/pilot.mjs verify          every image the app references resolves
     node scripts/check-contrast.mjs        every colour pairing against WCAG AA
 
@@ -54,14 +54,13 @@ Read the post-mortems in `docs/pilot-prompts.md` before writing a scene spec for
 an activity. They record which pictures failed, why, and which pairs collide —
 that history is why the specs say what they say.
 
-## The finish line
+## The finish line, crossed
 
-While the set is half redrawn, `css/app.css` cools the warm art with
-`--art-grade` and `--art-veil`, and every redrawn file opts out through the
-pilot ledger. When the last worklist row is ticked, delete both tokens, the
-rules that apply them and the whole ledger block **in one commit** — not one at
-a time, or the stragglers get graded alone. That deletion is when the branch
-merges.
+All thirty-seven illustrations are redrawn. `--art-grade`, `--art-veil`, the
+rules that applied them, the whole pilot ledger block and `scripts/lib/ledger.mjs`
+were deleted together in one commit, which is what the finish line always meant:
+the pictures are drawn in the app's own palette now, so nothing is corrected at
+render time and `approve` no longer touches `css/app.css`.
 
 ## House style
 
@@ -70,5 +69,4 @@ this codebase's comments are the record of something that went wrong once. Crops
 are expressed as ratios and a focal fraction, never pixels, because `sips` pads
 rather than refuses an oversized crop and produces a confident wrong answer.
 Anything that exists twice drifts: prompts are read from markdown, the worklist
-is parsed rather than duplicated, and the ledger's container list is read off
-the block.
+is parsed rather than duplicated.

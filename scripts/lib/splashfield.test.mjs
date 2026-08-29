@@ -34,7 +34,6 @@ import {
 } from './approve.mjs';
 import { PROFILES } from './profiles.mjs';
 import { outputPaths } from './request.mjs';
-import { ledgerKeys } from './ledger.mjs';
 import { worklistRemaining } from './worklist.mjs';
 
 const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
@@ -150,12 +149,11 @@ test('approving a splash writes one measurement into both files and rebuilds', a
   assert.ok(!mark.includes('-Z'), 'the portrait mark must not be sized with -Z');
 });
 
-test('the splash takes no ledger row and no worklist tick', async () => {
+test('the splash takes no worklist tick', async () => {
   const t = splashTree();
   const before = worklistRemaining(t.read(WORKLIST)).length;
   await cmdApprove('app-splash', ['--yes'], t.opts);
   assert.equal(worklistRemaining(t.read(WORKLIST)).length, before);
-  assert.equal(ledgerKeys(t.read(CSS)).includes('app-splash'), false);
 });
 
 test('a stylesheet missing the token stops the install before anything is written', async () => {

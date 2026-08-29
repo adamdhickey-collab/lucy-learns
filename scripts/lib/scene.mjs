@@ -20,7 +20,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, BLOCK_IDS, BRIEF_ID, loadBlocks } from './brief.mjs';
-import { ledgerKeys } from './ledger.mjs';
 import { PROFILE_IDS } from './profiles.mjs';
 
 export const SCENES_DIR = path.join(ROOT, 'art/scenes');
@@ -76,25 +75,24 @@ export const ROLES = {
 };
 
 /**
- * Which scenes have been redrawn against the current brief.
+ * Whether a scene reference is still waiting on a picture that has not been
+ * drawn against the current brief.
  *
- * Read off the pilot ledger in css/app.css, which `approve` maintains, because
- * "is there a file at art/pilot/approved/<key>.png" is the wrong question: for
- * almost every key there already is one, and it is the **warm** master. A
- * ladder rung attaching that would inherit the style the whole restyle exists
- * to replace, and the picture would come back looking plausible and wrong.
+ * This used to be a real question with a real answer. While the restyle was
+ * running, art/pilot/approved/ held a mix: legacy warm masters under the same
+ * keys the cool set would use, and redrawn cool ones. Attaching the wrong one
+ * gave you a picture that looked plausible and was drawn in the style the whole
+ * effort existed to replace — so "redrawn" was read off the pilot ledger in
+ * css/app.css rather than off the filesystem, because the filesystem could not
+ * tell them apart.
  *
- * When the set is finished the ledger is deleted along with the grade. At that
- * point every approved master is current by definition, so a missing ledger
- * means "all of them" rather than "none".
+ * The ledger was deleted at the finish line, along with the grade it controlled,
+ * and that is what makes this simple: every approved master is now current by
+ * definition, because there is no warm art left anywhere. Nothing is pending.
+ * The field stays so `plan` and `generate` keep their shape, and so the ladder's
+ * refusal has somewhere to live if a future set ever needs it again.
  */
-function redrawnKeys(cssPath = path.join(ROOT, 'css/app.css')) {
-  try {
-    return new Set(ledgerKeys(fs.readFileSync(cssPath, 'utf8')));
-  } catch {
-    return null; // no ledger: the restyle is over, everything approved is current
-  }
-}
+const nothingIsPending = () => false;
 
 /**
  * Every reference that is useful for what it shows but wrong about how it is drawn.
@@ -219,7 +217,6 @@ export function validateScene(spec, { checkFiles = true } = {}) {
   if (!Array.isArray(spec.references) || spec.references.length === 0) {
     problems.push('references must be a non-empty ordered array');
   } else {
-    const redrawn = checkFiles ? redrawnKeys() : null;
     const seen = new Set();
     spec.references.forEach((ref, i) => {
       const where = `references[${i}]`;
@@ -249,7 +246,7 @@ export function validateScene(spec, { checkFiles = true } = {}) {
       const exists = fs.existsSync(abs);
       // Pending means "not yet drawn against this brief" — either no file at
       // all, or the legacy warm master still sitting under that name.
-      const pending = hasScene && redrawn !== null && !redrawn.has(ref.scene);
+      const pending = hasScene && nothingIsPending(ref.scene);
       if (checkFiles && !hasScene && !exists) problems.push(`${where}: file not found — ${rel}`);
       // Order is the array's order, recorded explicitly so the plan output and
       // the eventual request cannot disagree about it.
