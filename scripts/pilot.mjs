@@ -483,9 +483,12 @@ const MASTER_MATCH = 8;
 const MASTER_DIFFERS = 18;
 
 /**
- * Shipped images with no master here, legitimately. Both are named in
- * art/README.md: the portrait predates the pilot process, and the splash
- * mark's master is art/source/splash-source.png.
+ * Shipped images with no master here, legitimately. The splash mark's master
+ * is art/source/splash-source.png, as art/README.md says. `lucy-portrait` was
+ * the other one and no longer ships at all — Lucy's picture is dog-01 now —
+ * but the name stays in the set: the master check reads whatever is in img/,
+ * so an entry for a file that is gone costs nothing, while dropping it would
+ * quietly re-arm the warning if the portrait ever came back.
  */
 const NO_MASTER_EXPECTED = new Set(['lucy-portrait', 'splash-mark']);
 

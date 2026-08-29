@@ -354,9 +354,11 @@ function mount(root) {
 
   on('[data-avatar]', 'click', () => {
     const current = getDog().photo;
-    // Lucy's install stores her own painted portrait, which is not one of the
-    // ten and never will be. Without this the picker would open with nothing
-    // selected and no way back to what was there — the first pick would be a
+    // Nothing in the build stores a photo outside the ten any more — Lucy's
+    // own portrait was the last one and is now dog-01 — but a stored path this
+    // code does not recognise is exactly what store.js declines to reset, so it
+    // can still arrive here. Without this the picker would open with nothing
+    // selected and no way back to what was there, making the first pick a
     // one-way door out of a picture the household may well prefer.
     const inSet = DOG_AVATARS.some((o) => o.src === current);
     const options = inSet

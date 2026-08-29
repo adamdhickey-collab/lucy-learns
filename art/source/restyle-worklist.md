@@ -131,14 +131,16 @@ list, and neither is dead:
   for this palette and graded in its own pixels; `css/app.css` and
   `scripts/make-splash.mjs` both depend on the field colour measured off it.
   Leave it alone.
-- **`lucy-portrait.jpg`** — Lucy's own avatar, still shipped and still
-  precached in `sw.js`. `js/config.js` explains why: her stored photo was
-  written at setup, and the picker offers this file back to anyone whose saved
-  photo is not among the ten stock dogs. It is a portrait rather than an
-  instructional scene, so it is a different style problem — the audit files it
-  with the brand marks on a separate track. Redraw it there, not here.
+- **`lucy-portrait.jpg`** — **gone, and not redrawn.** It shipped and was
+  precached for one reason: Lucy's stored photo was written at setup and pointed
+  at it. The redrawn `dog-01` is the same black Labrador in the same palette, so
+  the portrait was a second picture to maintain for no difference on screen. It
+  was deleted, `js/store.js` repoints her stored path at `dog-01`, and
+  `--avatar-grade` — which existed for this file and this file alone by the end —
+  went with it. This was the last un-redrawn picture in the app.
 
 Also outside this list: the ten stock dog avatars in `img/avatars/` and the
-fourteen people avatars beside them. They are small circular portraits, they
-already take the art grade's filter, and none of them is an instructional
-picture.
+fourteen people avatars beside them. None of them is an instructional picture,
+which is why they were never on it. They have since been redrawn anyway, on the
+brand-marks track — flat and cool, in PNG, and taking no filter at all, since
+art already in the palette does not want correcting twice.
