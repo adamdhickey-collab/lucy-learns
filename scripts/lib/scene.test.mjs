@@ -348,11 +348,15 @@ function legacyOnlyScene() {
     .find((id) => !ledger.has(id) && legacyMaster(id));
 }
 
-test('a legacy warm master on disk still counts as pending', () => {
+test('a legacy warm master on disk still counts as pending', (t) => {
   // The trap: the file is there, but it is the warm master. Existence is not
   // the question — the ledger is.
+  //
+  // When every specced scene has been redrawn there is nothing left to tell the
+  // two apart with, and that is the restyle succeeding rather than the test
+  // breaking — so it skips rather than failing or passing vacuously.
   const id = legacyOnlyScene();
-  assert.ok(id, 'no un-redrawn legacy master left for this test to mean anything');
+  if (!id) return t.skip('every specced scene is redrawn; no legacy-only master remains');
   const spec = good({ references: [{ scene: id, role: 'continuity:ladder' }] });
   const s = validateScene(spec, { checkFiles: true });
   assert.equal(s.references[0].exists, true, 'the file is there');

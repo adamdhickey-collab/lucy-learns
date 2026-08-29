@@ -139,8 +139,15 @@ test('drift is detected when the two registers disagree', () => {
     fs.mkdirSync(path.join(dir, path.dirname(rel)), { recursive: true });
     fs.writeFileSync(path.join(dir, rel), data);
   };
-  write(WORKLIST, md.replace(/^\|\s*\[ \]\s*\|\s*`door-place-cover`/m, '| [x] | `door-place-cover`'));
+  // The key is found at run time rather than named. This said door-place-cover
+  // until that row was ticked, at which point the regex stopped matching, the
+  // replace did nothing, no drift was created and the test failed — the seventh
+  // in this suite to break because the restyle progressed.
+  const untickedRow = /^\|\s*\[ \]\s*\|\s*`([a-z0-9-]+)`/m.exec(md);
+  assert.ok(untickedRow, 'no unticked row left to simulate a half-finished approve with');
+  const key = untickedRow[1];
+  write(WORKLIST, md.replace(untickedRow[0], `| [x] | \`${key}\``));
   write(CSS, css);
-  const row = restyleState({ root: dir }).find((r) => r.key === 'door-place-cover');
-  assert.equal(row.drift, true);
+  const row = restyleState({ root: dir }).find((r) => r.key === key);
+  assert.equal(row.drift, true, `${key} is ticked but not ledgered, which is drift`);
 });

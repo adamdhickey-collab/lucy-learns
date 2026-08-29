@@ -81,31 +81,31 @@ Carry these on every scene, all learned from the pilot:
 | [x] | `door-stay-03-handle` | — | A handler rests a hand on the front door handle while Lucy holds her bed across the room. |
 | [x] | `door-stay-03-onestep` | — | A handler stands one step from Lucy’s bed looking down at her, the closed front door still across the room, while Lucy holds her down. |
 | [x] | `door-stay-03-pretend` | used ×3 | A handler stands in the open doorway talking to an empty porch while Lucy stays on her bed. |
-| [ ] | `door-stay-04-pay` | used ×2 | A handler kneels beside Lucy’s bed and feeds her a treat for staying in place. |
-| [ ] | `door-stay-05-release` | used ×2 | Lucy steps off her bed toward her handler’s open hands as she is released from the stay. |
+| [x] | `door-stay-04-pay` | used ×2 | A handler kneels beside Lucy’s bed and feeds her a treat for staying in place. |
+| [x] | `door-stay-05-release` | used ×2 | Lucy steps off her bed toward her handler’s open hands as she is released from the stay. |
 | [x] | `door-stay-cover` | **cover** · square-safe | A handler holds the front door wide open onto daylight while Lucy stays lying on her bed across the room. |
 
 ### Doorbell Means Place
 
 | ✓ | key | notes | scene (the alt text) |
 | --- | --- | --- | --- |
-| [ ] | `door-place-03-send` | used ×5 | Lucy steps onto her bed as her handler points to it from behind her, near the closed front door. |
-| [ ] | `door-place-cover` | **cover** · square-safe | Lucy lies settled on her bed while her handler crouches beside her, well back from the closed front door. |
+| [x] | `door-place-03-send` | used ×5 | Lucy steps onto her bed as her handler points to it from behind her, near the closed front door. |
+| [x] | `door-place-cover` | **cover** · square-safe | Lucy lies settled on her bed while her handler crouches beside her, well back from the closed front door. |
 
 ### Controlled Real Greeting
 
 | ✓ | key | notes | scene (the alt text) |
 | --- | --- | --- | --- |
-| [ ] | `door-greet-01-settle` | — | A handler crouches beside Lucy’s bed clipping the leash to her collar, well back from the closed front door. |
-| [ ] | `door-greet-04-open` | used ×2 | Lucy sits on her bed on a slack leash while her handler stands beside her holding it and a guest waits outside the open door. |
-| [ ] | `door-greet-05-reward` | — | A handler crouches to feed Lucy a treat on her bed while a guest waits at the open door. |
-| [ ] | `door-greet-06-enter` | — | A guest stands just inside the closed front door looking at the handler, while Lucy lies on her bed on a slack leash. |
-| [ ] | `door-greet-06-seated` | — | A guest sits in an armchair and the handler sits on a sofa, neither looking at Lucy, while she lies settled on her bed between them. |
+| [x] | `door-greet-01-settle` | — | A handler crouches beside Lucy’s bed clipping the leash to her collar, well back from the closed front door. |
+| [x] | `door-greet-04-open` | used ×2 | Lucy sits on her bed on a slack leash while her handler stands beside her holding it and a guest waits outside the open door. |
+| [x] | `door-greet-05-reward` | — | A handler crouches to feed Lucy a treat on her bed while a guest waits at the open door. |
+| [x] | `door-greet-06-enter` | — | A guest stands just inside the closed front door looking at the handler, while Lucy lies on her bed on a slack leash. |
+| [x] | `door-greet-06-seated` | — | A guest sits in an armchair and the handler sits on a sofa, neither looking at Lucy, while she lies settled on her bed between them. |
 | [x] | `door-greet-07-approach` | — | A handler walks Lucy toward a waiting guest with the leash short and slack between them. |
 | [x] | `door-greet-08-jumping` | **pair** | Lucy rears up with both front paws on the guest’s chest, mouth open and ears back, while he leans away and the leash pulls tight. |
 | [x] | `door-greet-08-petting` | — | Lucy sits with all four paws on the floor while a crouching guest rests an open palm on her chest and her handler holds the leash slack behind her. |
-| [ ] | `door-greet-09-leaves` | — | A guest steps back out through the open door with a small wave while Lucy stays sitting at her handler’s side on leash. |
-| [ ] | `door-greet-cover` | **cover** · square-safe | Lucy sits at her handler’s side on a slack leash while a guest stands a step away with his hands at his sides, the open front door behind him. |
+| [x] | `door-greet-09-leaves` | — | A guest steps back out through the open door with a small wave while Lucy stays sitting at her handler’s side on leash. |
+| [x] | `door-greet-cover` | **cover** · square-safe | Lucy sits at her handler’s side on a slack leash while a guest stands a step away with his hands at his sides, the open front door behind him. |
 
 ### Program covers
 
