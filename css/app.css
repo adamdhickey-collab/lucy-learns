@@ -170,6 +170,30 @@
   --shadow-card: 0 1px 2px rgba(22, 20, 40, 0.05);
   --shadow-lift: 0 6px 20px rgba(22, 20, 40, 0.1);
 
+  /* --- the avatar grade --------------------------------------------------
+     What is left of the art grade after the finish line, and why it is left.
+
+     The thirty-seven illustrations were redrawn flat and cool in the app's own
+     palette, so the grade that used to cool them at render time was deleted
+     along with its ledger. The avatars were never part of that set — the
+     worklist lists them as outside it — and they are still the tan-era
+     portraits: dog-01.jpg grounds at #fce8d0 and lucy-portrait.jpg at #fdcda5,
+     both warm cream against paper that is #f5f4f9 and cool.
+
+     Deleting the grade left them as the one warm note in the chrome, which is
+     precisely what the original comment said the filter existed to prevent. So
+     the filter survives, scoped to the avatar surfaces and renamed for what it
+     now is. Same numbers as the art grade had, because the problem is the same
+     one: saturation pulled back, the light lifted a little.
+
+     No veil: the avatars never took one. They render as small circles inside
+     rings and pickers whose geometry is their own, and at that size the filter
+     alone carries it.
+
+     This goes when the avatars are redrawn, on the separate track
+     docs/illustration-audit.md files them under with the other brand marks. */
+  --avatar-grade: saturate(0.78) brightness(1.05) contrast(1.06);
+
   --tap: 48px;
   --nav-h: calc(60px + env(safe-area-inset-bottom));
   --page-max: 34rem;
@@ -6211,6 +6235,16 @@ svg.icon--solid {
   border-radius: var(--r-lg);
   color: var(--text-secondary);
   font-size: var(--step--1);
+}
+
+/* Every surface that shows one of the un-redrawn portraits. Kept in step with
+   --avatar-grade; see the token for why this outlived the art grade. */
+.avatar img,
+.avatar-pick img,
+.avatar-choice img,
+.profile img,
+.sheet img {
+  filter: var(--avatar-grade);
 }
 
 /* --- handler avatar -------------------------------------------------------

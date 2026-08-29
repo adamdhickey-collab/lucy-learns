@@ -62,6 +62,11 @@ were deleted together in one commit, which is what the finish line always meant:
 the pictures are drawn in the app's own palette now, so nothing is corrected at
 render time and `approve` no longer touches `css/app.css`.
 
+One scoped remnant survives on purpose: `--avatar-grade`. The avatars and
+`lucy-portrait.jpg` are outside the thirty-seven and still tan-era warm, so
+deleting the grade outright left them as the only warm note in the chrome. It
+goes when they are redrawn on the brand-marks track.
+
 ## House style
 
 Comments explain **why**, not what, and name the failure they prevent — most of

@@ -65,9 +65,19 @@ touching the source files, and it was two tokens — one decision, reversible by
 setting them to `none` and `transparent`.
 
 All thirty-seven illustrations have since been redrawn flat and cool, in the
-app's own palette, so there is nothing left to correct: the tokens, the rules
-that applied them and the pilot ledger that let redrawn files opt out were all
-deleted together. The art is the colour it is.
+app's own palette, so there is nothing left to correct in them: `--art-grade`,
+`--art-veil`, the rules that applied them and the pilot ledger that let redrawn
+files opt out were all deleted together. The illustrations are the colour they
+are.
+
+**One piece of it survives, scoped and renamed.** The avatars were never part of
+the thirty-seven — `art/source/restyle-worklist.md` lists them as outside it —
+and they are still the tan-era portraits: `img/avatars/dog-01.jpg` grounds at
+`#fce8d0` and `img/lucy-portrait.jpg` at `#fdcda5`, both warm cream against paper
+that is `#f5f4f9` and cool. Deleting the grade left them as the one warm note in
+the chrome, which is exactly what the filter existed to prevent, so it is kept as
+`--avatar-grade` on the avatar surfaces only, with the same numbers. It goes when
+the avatars are redrawn on the brand-marks track.
 
 Three passes got the grade to where it ended, and the middle one is worth
 keeping on the record even though the code is gone, because the lesson is about
