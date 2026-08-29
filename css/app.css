@@ -1262,9 +1262,11 @@ a.visually-hidden:focus {
   background: var(--surface-sunken);
 }
 
-/* The thumb's frame. Sizing lives on the span so its ::before veil clips to
-   the same rounded box; the planned cards keep their own .planned-thumb
-   treatment and stay outside both the frame and the grade. */
+/* The thumb's frame. Sizing lives on the span rather than the img so the
+   rounded box is one shape to reason about; the planned cards keep their own
+   .planned-thumb treatment and stay outside the frame. The span also carried
+   the art grade's violet ::before until the grade was deleted at the finish
+   line, which is why the sizing is there and not on the image. */
 .activity-card .card-illo {
   position: relative;
   width: 84px;
@@ -3855,13 +3857,12 @@ details.disclosure .disclosure-body {
      lighter rectangle on paper. Keep in step with FIELD in
      scripts/make-splash.mjs. The fade to the app is where paper arrives.
 
-     The splash was redrawn for the collar palette, then given a gentle
-     version of the art grade baked into the source pixels (saturation 0.85,
-     7% violet blend) so it carries the same finish as the graded set — CSS
-     cannot reach the OS launch images, so the treatment has to live in the
-     file. The field is the graded art's own lavender, and the ungraded
-     original sits beside the source as splash-source-ungraded.png; re-treat
-     from that, never from the already-graded file.
+     The splash has since been redrawn through the pilot pipeline, flat and
+     cool like the rest of the set, so nothing is baked into it any more. It
+     predates that: the earlier version was given a gentle copy of the app's
+     art grade in its own pixels (saturation 0.85, 7% violet blend) because CSS
+     cannot reach the OS launch images and the treatment had to live in the
+     file. Both the grade and that workaround are gone.
 
      Measured, not eyeballed: the mean of a six-pixel ring around the source
      PNG. Re-measure it whenever the art changes — this value drifted a little
