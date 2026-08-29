@@ -319,6 +319,20 @@ test('the sheet states what has to be true and renders thumbs at true size', () 
   assert.match(html, /approval is a human step/);
 });
 
+test('every sheet carries the standing checks, whatever the scene asks', () => {
+  // The scene's own question and the six renditions between them did not ask
+  // whether the person was drawn correctly, and a three-handed picture was
+  // approved. This asks on every sheet regardless of scene.
+  const scene = { id: 's', title: 'T', briefId: 'cool-flat-v1', mustBeTrue: 'something else entirely' };
+  const html = reviewSheet(scene, { round: 1, master: 'm.png' }, []);
+  // The block is wrapped across lines in the template, so match across newlines.
+  const flat = html.replace(/\s+/g, ' ');
+  assert.match(flat, /two arms, two hands and two legs/i);
+  assert.match(flat, /treat pouch hides a spare one/i);
+  assert.match(flat, /four legs and one tail/i);
+  assert.match(html, /something else entirely/, 'the scene question is still there too');
+});
+
 test('the sheet escapes scene text rather than pasting it into markup', () => {
   const nasty = { ...scene, title: 'a <script>alert(1)</script> title', mustBeTrue: 'x & y' };
   const html = reviewSheet(nasty, { round: 1, master: 'm.png' }, []);

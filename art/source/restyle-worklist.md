@@ -65,15 +65,15 @@ Carry these on every scene, all learned from the pilot:
 | [x] | `door-sound-02-self` | used ×2 | A handler knocks on the door frame while standing right beside Lucy with the leash under her foot. |
 | [x] | `door-sound-03-name` | used ×2 | Lucy turns away from the door to look up at her handler, who crouches beside her at her level with both hands empty. |
 | [x] | `door-sound-03-name-distant` | used ×2 | Lucy sits on her bed near the front door and turns her head toward her handler, who is beckoning from the far end of the hallway. |
-| [ ] | `door-sound-04-treats` | — | A flat open palm held out at Lucy’s head height, cropped close, with Lucy sitting and looking up at it. |
-| [ ] | `door-sound-05-settle` | — | Lucy stands relaxed on a slack leash beside her handler in a quiet moment between repetitions, with nothing being asked of her. |
-| [ ] | `door-sound-cover` | **cover** · square-safe | Lucy and her handler close together and face to face, the handler’s hand resting on Lucy’s chest. |
+| [x] | `door-sound-04-treats` | — | A flat open palm held out at Lucy’s head height, cropped close, with Lucy sitting and looking up at it. |
+| [x] | `door-sound-05-settle` | — | Lucy stands relaxed on a slack leash beside her handler in a quiet moment between repetitions, with nothing being asked of her. |
+| [x] | `door-sound-cover` | **cover** · square-safe | Lucy and her handler close together and face to face, the handler’s hand resting on Lucy’s chest. |
 
 ### Stay While the Door Opens
 
 | ✓ | key | notes | scene (the alt text) |
 | --- | --- | --- | --- |
-| [ ] | `door-stay-02-cue` | — | A handler stands beside Lucy’s bed with a flat open palm raised at chest height while Lucy lies on the bed, head up, holding her eye. |
+| [x] | `door-stay-02-cue` | — | A handler stands beside Lucy’s bed with a flat open palm raised at chest height while Lucy lies on the bed, head up, holding her eye. |
 | [x] | `door-stay-03-conversation` | — | A handler leans on the open front door talking to an empty porch while Lucy stays settled on her bed across the room. |
 | [x] | `door-stay-03-crack` | — | A handler holds the front door open a few inches onto daylight while Lucy stays lying on her bed. |
 | [x] | `door-stay-03-cross` | used ×3 | Lucy holds her down on her bed while her handler walks away across the room toward the closed front door. |

@@ -142,6 +142,13 @@ palette is what will let the grade be deleted instead of merely reduced.
 > Recurring props: the flat grey dog bed, a black leash, the mustard treat pouch,
 > the charcoal panelled front door, the woven doormat. Nothing else unless the
 > scene brief names it.
+>
+> **ANATOMY.** Every person has exactly two arms, two hands and two legs, and no
+> more. Each hand is joined to a visible arm and each arm to a shoulder. Lucy has
+> four legs and one tail. Draw nothing that reads as a spare limb — in particular
+> no third hand near the handler's hip, where the mustard treat pouch sits and a
+> stray hand shape can pass for part of it. If a limb is hidden, hide it behind
+> something and leave it out; never resolve it by drawing an extra one.
 
 ---
 

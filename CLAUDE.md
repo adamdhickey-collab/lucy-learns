@@ -11,7 +11,7 @@ need a real origin.
 
 ## Checks
 
-    node --test scripts/lib/*.test.mjs     the illustration pipeline (187 tests)
+    node --test scripts/lib/*.test.mjs     the illustration pipeline (189 tests)
     node scripts/pilot.mjs verify          every image the app references resolves
     node scripts/check-contrast.mjs        every colour pairing against WCAG AA
 

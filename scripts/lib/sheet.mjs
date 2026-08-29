@@ -57,6 +57,15 @@ export function reviewSheet(scene, out, renditions, { generatedAt = '' } = {}) {
           border-radius: 6px; margin: 0 0 28px; max-width: 70ch; }
   .must b { display: block; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
             color: #cbb8e4; margin-bottom: 4px; }
+  /* A standing check, on every sheet regardless of scene. door-stay-03-cross
+     shipped with three hands: the mustBeTrue line asked about the walk, the six
+     renditions asked about crops, and nothing on the page asked whether the
+     person was drawn correctly. Every rendition reproduced the defect faithfully
+     and it was approved. */
+  .always { border-left: 3px solid #45435c; padding: 12px 16px; border-radius: 6px;
+            margin: 0 0 28px; max-width: 70ch; color: #b6b4c0; font-size: 13px; }
+  .always b { display: block; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
+              color: #b6b4c0; margin-bottom: 4px; }
   h2 { font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: #b6b4c0;
        margin: 32px 0 12px; font-weight: 600; }
   img { display: block; max-width: 100%; height: auto; border-radius: 4px; background: #eae7f0; }
@@ -86,6 +95,12 @@ export function reviewSheet(scene, out, renditions, { generatedAt = '' } = {}) {
   }</p>
 
 <div class="must"><b>Must be true</b>${esc(scene.mustBeTrue)}</div>
+
+<div class="always"><b>And always, whatever the scene says</b>
+Exactly two arms, two hands and two legs on every person, each hand joined to a
+visible arm — check the hip, where the treat pouch hides a spare one. Four legs
+and one tail on Lucy. No text, letters, numbers or arrows anywhere. Purple collar
+with the blue tag, and no harness.</div>
 
 <h2>Master</h2>
 <figure class="master">

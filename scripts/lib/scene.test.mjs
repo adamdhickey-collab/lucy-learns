@@ -175,6 +175,16 @@ test('the likeness warning appears only when a likeness sheet is attached', () =
   assert.doesNotMatch(without, /likeness only/i);
 });
 
+test('the cast block carries the anatomy rule, and it reaches the prompt', () => {
+  // door-stay-03-cross shipped with three hands. A per-spec clause would have
+  // caught that one picture; this is in the brief so it reaches all of them.
+  const blocks = loadBlocks();
+  assert.match(blocks.cast, /ANATOMY/);
+  assert.match(blocks.cast, /exactly two arms, two hands and two legs/i);
+  const p = assemblePrompt(validateScene(good(), { checkFiles: false }));
+  assert.match(p, /ANATOMY/, 'a scene using the cast block must carry it');
+});
+
 test('every role has a sentence, so no attachment can go unlabelled', () => {
   for (const [role, text] of Object.entries(ROLES)) {
     assert.ok(typeof text === 'string' && text.length > 10, `${role} needs a description`);
