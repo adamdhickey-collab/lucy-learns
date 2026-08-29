@@ -1301,13 +1301,21 @@ function doneScreen(activity, level) {
   const caution = advice.suggest === 'down';
   const milestone = session.milestone;
 
+  // The verdict mark follows advice.suggest, which already carries the three
+  // outcomes, rather than only asking whether this is a caution. It used to
+  // draw `check` for everything that was not one, so "Ready for the next
+  // step" wore the same mark as the "Level N cleared" seal rendered directly
+  // below it. `check` keeps its one meaning here -- this is finished, stay
+  // where you are -- and advancing gets its own.
+  const markIcon = { up: 'advance', down: 'shield' }[advice.suggest] || 'check';
+
   return html`
     ${topBar('Done', 1, 1)}
     <div class="player-scroll">
       <div class="player-inner">
         <div class="recommend">
-          <div class="mark ${caution ? 'mark--caution' : ''}">
-            ${caution ? icon('shield') : icon('check')}
+          <div class="mark mark--${advice.suggest} ${caution ? 'mark--caution' : ''}">
+            ${icon(markIcon)}
           </div>
           <h1>${advice.title}</h1>
           <p>${advice.body}</p>

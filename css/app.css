@@ -2887,6 +2887,26 @@ details.disclosure .disclosure-body {
   stroke-dashoffset: 60;
 }
 
+/* The advance mark is two chevrons of 14.14 units each, measured the same
+   way. 30 is what makes it finish where the check does: a path completes at
+   (dash - length) / dash through the draw, which is 52.9% for the check at
+   22.63 over 48, and 30 puts these two at the same point. Leaving them on 48
+   would have held both chevrons unfinished until 70% and made the mark feel
+   slower than the one it replaces, at the same duration.
+
+   The lower chevron draws first. The delay is the 0.22s the rule above sets;
+   this pushes the upper one 80ms behind it, so the pair reads upward instead
+   of blinking on together. Small enough that it is motion rather than a
+   sequence to sit through. */
+.recommend .mark--up svg path {
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+}
+
+.recommend .mark--up svg path:first-child {
+  animation-delay: 0.3s;
+}
+
 .recommend h1 {
   animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.14s both;
 }

@@ -199,6 +199,24 @@ export const ICONS = {
     '<path d="M12 8v4"/><path d="M12 16h.01"/>' +
     '</svg>',
 
+  // The third verdict mark, beside `check` and `shield` — `chevrons-up`.
+  // The done screen used to draw a check for every verdict that was not a
+  // caution, which put one directly above the check in the "Level N cleared"
+  // seal: two identical marks, one screen, six centimetres apart. `check`
+  // also means something specific everywhere else in the app — a stage node,
+  // a route node, a cleared seal all use it for "this is finished" — and
+  // "ready for the next step" is not that. It is a door opening.
+  //
+  // Two chevrons rather than one arrow: `arrow-up` is a direction, and the
+  // sentence under this mark is about a level, not a way to move. It stays
+  // clear of `plan-fourpaws`, the only other stacked vertical mark, which
+  // points down to a line.
+  advance:
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="m17 11-5-5-5 5"/>' +
+    '<path d="m17 18-5-5-5 5"/>' +
+    '</svg>',
+
   // --- the four activities of the door program ----------------------------
   // One mark per activity, used wherever that activity appears: the route on
   // the welcome, the strip on Today, and the rail on the program map.
