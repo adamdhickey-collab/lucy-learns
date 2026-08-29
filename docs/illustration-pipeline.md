@@ -245,13 +245,15 @@ installing it is not a copy into `img/` but a source file plus a generator run.
 A second set of hardcoded numbers beside the first is how the two drift, so the
 shape is data. `scripts/lib/profiles.mjs` answers four questions and nothing else:
 
-| | `scene` | `icon` |
-| --- | --- | --- |
-| API canvas | 1472×1104 | 1024×1024 |
-| master | 1448×1086 | 1024×1024 |
-| conversion | proportional downscale | copied — the canvas is the master |
-| renditions | 16:7, 21:9, 5:4, square, 84, 56 | maskable safe zone, 512, 192, 180, 48 |
-| install | `img/` + thumb + worklist tick | `icons/source.png` + `make-icons.mjs` |
+| | `scene` | `icon` | `avatar` |
+| --- | --- | --- | --- |
+| API canvas | 1472×1104 | 1024×1024 | 1024×1024 |
+| master | 1448×1086 | 1024×1024 | 1024×1024 |
+| conversion | proportional downscale | copied — the canvas is the master | copied |
+| renditions | 16:7, 21:9, 5:4, square, 84, 56 | maskable safe zone, 512, 192, 180, 48 | 400, 84, 56 |
+| install | `img/` + thumb + worklist tick | `icons/source.png` + `make-icons.mjs` | one PNG into `img/avatars/` |
+
+(`splash` is a fourth, at 1024×1536.)
 
 A spec selects one with a `"profile"` field. **Absent means `scene`**, so all
 thirty-seven existing specs keep working untouched — a migration that edits every
@@ -263,6 +265,32 @@ Everything a profile does *not* answer is shared on purpose: the brief, the
 reference roles, the attachment-1 rule, the refusals, the round counter, the
 review sheet and the manifest. Those are the parts that were worth building, and
 none of them care about the aspect ratio.
+
+### The avatar profile
+
+The twenty-four portraits a household picks from — ten dogs, fourteen people.
+Square like the icon and copied like it, and different in what it installs: one
+400px PNG into `img/avatars/`, people one directory deeper than dogs, and
+nothing else. No thumbnail, because `js/content.js` derives `thumb-` paths for
+scene assets only and the avatar list is its own. No worklist row, because the
+finish line counts those and these are not part of the thirty-seven.
+
+**PNG, reversing a decision the repo records.** The set moved from PNG to JPEG
+when the art became painted, because JPEG rings around the hard edges flat work
+has and painted work has none. Redrawing them flat puts the edges back. See
+[`../art/source/avatar-worklist.md`](../art/source/avatar-worklist.md), which
+also says to measure the weight rather than assume it — the 8× penalty that
+justified the move was recorded against painted PNGs, not flat ones.
+
+They have **no crops** and their renditions ask only one question. An avatar is
+square already and is drawn inside a circular mask everywhere it appears, so the
+shape is never in doubt; what is in doubt is whether it survives being small.
+And they chain: `dog-01` is the set leader and the only one whose exemplar is a
+scene. The other twenty-three take theirs from `dog-01`'s approved master, so
+`generate` refuses them until it is approved. Twenty-four portraits seen side by
+side in a grid is a far harsher test of shared style than thirty-seven scenes
+seen one at a time, so the field colour, the crop and the line weight are
+settled once and then copied.
 
 ### What the icon profile deliberately does not do
 
@@ -465,7 +493,7 @@ and every call site.
 
     node --test scripts/lib/*.test.mjs
 
-180 tests, no network, no key, no macOS — `fetch` and `sips` are injected, and
+186 tests, no network, no key, no macOS — `fetch` and `sips` are injected, and
 the whole of `generate` and `approve` runs in a temp directory against images the
 suite builds itself. The directory form (`node --test scripts/lib/`) does not
 work on every Node build; the glob always does.

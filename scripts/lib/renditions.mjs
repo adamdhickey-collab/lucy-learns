@@ -128,8 +128,35 @@ export function sipsThumb(src, out, size) {
  */
 export function renditionPlan(masterPath, cropsDir, sceneId, width, height, table = 'scene') {
   if (table === 'icon') return iconPlan(masterPath, cropsDir, sceneId, width, height);
+  if (table === 'avatar') return avatarPlan(masterPath, cropsDir, sceneId);
   if (table === 'splash') return splashPlan(masterPath, cropsDir, sceneId, width, height);
   return scenePlan(masterPath, cropsDir, sceneId, width, height);
+}
+
+/**
+ * An avatar's renditions: only the sizes, because there is nothing to crop.
+ *
+ * It is square already and is drawn inside a circular mask everywhere it
+ * appears, so the shape is never in question — the only thing worth checking is
+ * whether it survives being small. 400 is what ships, 84 is the picker tile and
+ * the level-map placeholder, 56 is the person row and the profile portrait.
+ *
+ * Downscales of the master rather than of a crop, for the icon's reason: the
+ * whole square is what ships, so the whole square is what has to shrink well.
+ */
+export const AVATAR_SIZES = [400, 84, 56];
+
+function avatarPlan(masterPath, cropsDir, sceneId) {
+  return AVATAR_SIZES.map((size) => {
+    const out = `${cropsDir}/${sceneId}-square-${size}.png`;
+    return {
+      name: `square-${size}`,
+      kind: 'thumb',
+      note: size === 400 ? `${size}px, the shipped size` : `${size}px, as the app renders it`,
+      path: out,
+      argv: sipsThumb(masterPath, out, size),
+    };
+  });
 }
 
 /**

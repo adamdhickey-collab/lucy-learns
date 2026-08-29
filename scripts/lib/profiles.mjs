@@ -78,6 +78,32 @@ export const PROFILES = {
    * art is MEASURED from the art's own edges, and it has to be written into three
    * files at once or the launch flashes. See scripts/lib/splashfield.mjs.
    */
+  /**
+   * The twenty-four portraits a household picks from — ten dogs, fourteen
+   * people. Square like the icon and copied like it, but installed like
+   * nothing else: one PNG into img/avatars/, no thumbnail, and a ledger row.
+   *
+   * Ledgered, unlike the icon and the splash, because css/app.css grades
+   * avatars with --art-grade while deliberately sparing them --art-veil. A
+   * redrawn one that is not opted out goes grey beside the ones that are. Not
+   * in the worklist, though: the finish line counts worklist rows and these
+   * are not part of the thirty-seven.
+   *
+   * PNG, reversing a decision js/content.js records. The set moved from PNG to
+   * JPEG when the art became painted, because JPEG rings around the hard edges
+   * flat work has and painted work has none. Redrawing them flat puts the
+   * edges back. See art/source/avatar-worklist.md — and measure the weight
+   * rather than assume it.
+   */
+  avatar: {
+    label: 'a profile portrait, seen only inside a circular mask',
+    source: { width: 1024, height: 1024 },
+    master: { width: 1024, height: 1024 },
+    conversion: 'copied — the canvas is already the master',
+    renditions: 'avatar',
+    install: 'avatar',
+  },
+
   splash: {
     id: 'splash',
     what: 'the launch illustration',
