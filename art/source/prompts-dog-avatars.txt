@@ -10,17 +10,24 @@ near the edge.
 
 *** THE PICKER IS ALREADY BUILT AND ALREADY POINTING AT THOSE PATHS. ***
 
-img/avatars/ currently holds ten PLACEHOLDERS — a flat cream field with a
-coloured disc where the head goes, written by
+HISTORY, AND WHERE THIS STANDS. img/avatars/ has held three sets. The
+placeholders this brief was written against — a flat cream field with a
+coloured disc where the head goes, from
 
     node scripts/make-avatar-placeholders.mjs
 
-They are the right geometry and the wrong picture, on purpose: they let
-the grid, the circular mask and the whole flow be built and tested
-before the art exists. Drop the real ten on top of them at the same
-filenames and nothing in the app needs editing — not the manifest in
-js/content.js, not the service worker precache, not a household's
-already-stored choice.
+— were replaced by a painted set in JPEG, and that set has now been
+replaced in turn by flat cool portraits in the app's own palette, back
+in PNG. The ten shipping today are those. This file is kept for its
+reasoning about which ten breeds and why, which has not changed; treat
+its instructions as the record of how the set was made, not as work
+still to do.
+
+The prediction it makes below held both times: drop a new set on top at
+the same filenames and the app needs nothing but the extension. When
+that changed, four places had to move together — js/content.js,
+js/config.js, the sw.js precache and the migration in js/store.js that
+repoints a household's already-stored choice.
 
 PNG, not JPEG, and not out of habit. These are flat vector-style
 illustrations with crisp edges on a plain field, which is precisely what
@@ -275,12 +282,14 @@ Save each as art/source/avatars/dog-NN.png, then, from the repo root:
 
   for f in art/source/avatars/dog-*.png; do sips -Z 400 -s format png "$f" --out "img/avatars/$(basename "$f")"; done
 
-That overwrites the placeholders in place. 400² because the existing
-brand mark `lucy-portrait` is 400² and nothing shows these larger; the
-placeholders are ~4.5 KB each and the real art will be bigger, so check
-the total against the precache before shipping — every one of the ten is
-precached, since a household opening the picker offline should not meet
-nine broken tiles.
+400² because the brand mark `lucy-portrait` is 400² and nothing shows
+these larger. Check the total against the precache before shipping —
+every one of the ten is precached, since a household opening the picker
+offline should not meet nine broken tiles. That check earned its place:
+the flat set arrived as 1024² RGBA PNGs and came to 3.8 MB, which
+dropping the dead alpha channel and filtering each row adaptively took
+to 2.3 MB with the pixels untouched. Ship the smallest lossless form of
+what was drawn, and say what it costs in js/content.js.
 
 Then two checks, in this order:
 

@@ -437,14 +437,21 @@ export const IMAGES = withThumb({
  * question being answered is "which looks like my dog", not "which breed is
  * mine". The reasoning is in art/source/prompts-dog-avatars.txt.
  *
- * JPEG, having been PNG. The old set was flat vector-style work with crisp
- * edges on a flat field, which is the one case JPEG handles worst. These are
- * painted — soft fur, graded light, no hard edges to ring around — and that
- * reverses the answer: the set weighs 340KB as JPEG against 2MB as PNG, on a
- * shell the service worker precaches in full before the app will open
- * offline. Eight times the weight of the whole app's worth of avatars is not
- * a price worth paying for a format chosen to solve a problem these pictures
- * no longer have.
+ * PNG, having been JPEG, having been PNG. The format has followed the art
+ * both times rather than being argued in the abstract. The painted set was
+ * soft fur and graded light with no hard edges to ring around, so JPEG cost
+ * nothing and saved most of the weight. This set is flat and cool to match
+ * the thirty scenes, and flat colour behind crisp edges is the one case JPEG
+ * handles worst — the ringing lands exactly on the outlines that carry these
+ * drawings.
+ *
+ * The price is real and worth stating: 2.3MB against the painted set's 340KB,
+ * on a shell the service worker precaches in full before the app will open
+ * offline. Two thirds of that is the dogs, at 400px against the handlers'
+ * 300px. What makes it payable is that the pictures are opaque and the alpha
+ * channel is dead weight — dropping it and filtering each row adaptively took
+ * 3.8MB to 2.3MB with the pixels untouched, so what ships is the smallest
+ * lossless form of exactly what was drawn.
  *
  * `label` is the accessible name and is no longer printed on the tile. The
  * question a household is answering here is "which one looks like my dog",
@@ -480,45 +487,45 @@ export const IMAGES = withThumb({
  * name followed the picture, which is the right order for the two to move in.
  */
 export const PERSON_AVATARS = [
-  { id: 'handler', name: 'The Handler', src: 'img/avatars/people/person-01.jpg' },
-  { id: 'pixel', name: 'Pixel Whisperer', src: 'img/avatars/people/person-02.jpg' },
-  { id: 'professor', name: 'Professor Fetch', src: 'img/avatars/people/person-03.jpg' },
-  { id: 'disco', name: 'Disco Dog Coach', src: 'img/avatars/people/person-04.jpg' },
-  { id: 'zen', name: 'Zen Leash Master', src: 'img/avatars/people/person-05.jpg' },
-  { id: 'detective', name: 'Treat Detective', src: 'img/avatars/people/person-06.jpg' },
-  { id: 'barkitect', name: 'Barkitect', src: 'img/avatars/people/person-07.jpg' },
-  { id: 'rockstar', name: 'Agility Rockstar', src: 'img/avatars/people/person-08.jpg' },
-  { id: 'cowboy', name: 'Fetch Cowboy', src: 'img/avatars/people/person-09.jpg' },
-  { id: 'cosmonaut', name: 'Canine Cosmonaut', src: 'img/avatars/people/person-10.jpg' },
-  { id: 'sage', name: 'Woodland Sage', src: 'img/avatars/people/person-11.jpg' },
-  { id: 'aerobics', name: 'Retro Aerobics Ace', src: 'img/avatars/people/person-12.jpg' },
-  { id: 'oracle', name: 'Oracle of Obedience', src: 'img/avatars/people/person-13.jpg' },
-  { id: 'duke', name: 'Duke of Drool', src: 'img/avatars/people/person-14.jpg' },
+  { id: 'handler', name: 'The Handler', src: 'img/avatars/people/person-01.png' },
+  { id: 'pixel', name: 'Pixel Whisperer', src: 'img/avatars/people/person-02.png' },
+  { id: 'professor', name: 'Professor Fetch', src: 'img/avatars/people/person-03.png' },
+  { id: 'disco', name: 'Disco Dog Coach', src: 'img/avatars/people/person-04.png' },
+  { id: 'zen', name: 'Zen Leash Master', src: 'img/avatars/people/person-05.png' },
+  { id: 'detective', name: 'Treat Detective', src: 'img/avatars/people/person-06.png' },
+  { id: 'barkitect', name: 'Barkitect', src: 'img/avatars/people/person-07.png' },
+  { id: 'rockstar', name: 'Agility Rockstar', src: 'img/avatars/people/person-08.png' },
+  { id: 'cowboy', name: 'Fetch Cowboy', src: 'img/avatars/people/person-09.png' },
+  { id: 'cosmonaut', name: 'Canine Cosmonaut', src: 'img/avatars/people/person-10.png' },
+  { id: 'sage', name: 'Woodland Sage', src: 'img/avatars/people/person-11.png' },
+  { id: 'aerobics', name: 'Retro Aerobics Ace', src: 'img/avatars/people/person-12.png' },
+  { id: 'oracle', name: 'Oracle of Obedience', src: 'img/avatars/people/person-13.png' },
+  { id: 'duke', name: 'Duke of Drool', src: 'img/avatars/people/person-14.png' },
 ];
 
 export const personAvatar = (id) =>
   PERSON_AVATARS.find((a) => a.id === id) || PERSON_AVATARS[0];
 
 export const DOG_AVATARS = [
-  { id: 'lab-black', label: 'Black Labrador', short: 'Black Lab', src: 'img/avatars/dog-01.jpg' },
-  { id: 'golden', label: 'Golden Retriever', short: 'Golden', src: 'img/avatars/dog-02.jpg' },
-  { id: 'shepherd', label: 'German Shepherd', short: 'Shepherd', src: 'img/avatars/dog-03.jpg' },
-  { id: 'frenchie', label: 'French Bulldog', short: 'Bulldog', src: 'img/avatars/dog-04.jpg' },
-  { id: 'poodle', label: 'Poodle or doodle', short: 'Poodle', src: 'img/avatars/dog-05.jpg' },
-  { id: 'dachshund', label: 'Dachshund', short: 'Dachshund', src: 'img/avatars/dog-06.jpg' },
-  { id: 'beagle', label: 'Beagle', short: 'Beagle', src: 'img/avatars/dog-07.jpg' },
-  { id: 'collie', label: 'Border Collie', short: 'Collie', src: 'img/avatars/dog-08.jpg' },
+  { id: 'lab-black', label: 'Black Labrador', short: 'Black Lab', src: 'img/avatars/dog-01.png' },
+  { id: 'golden', label: 'Golden Retriever', short: 'Golden', src: 'img/avatars/dog-02.png' },
+  { id: 'shepherd', label: 'German Shepherd', short: 'Shepherd', src: 'img/avatars/dog-03.png' },
+  { id: 'frenchie', label: 'French Bulldog', short: 'Bulldog', src: 'img/avatars/dog-04.png' },
+  { id: 'poodle', label: 'Poodle or doodle', short: 'Poodle', src: 'img/avatars/dog-05.png' },
+  { id: 'dachshund', label: 'Dachshund', short: 'Dachshund', src: 'img/avatars/dog-06.png' },
+  { id: 'beagle', label: 'Beagle', short: 'Beagle', src: 'img/avatars/dog-07.png' },
+  { id: 'collie', label: 'Border Collie', short: 'Collie', src: 'img/avatars/dog-08.png' },
   {
     id: 'staffy',
     label: 'Staffordshire or pit type',
     short: 'Pit type',
-    src: 'img/avatars/dog-09.jpg',
+    src: 'img/avatars/dog-09.png',
   },
   {
     id: 'shihtzu',
     label: 'Shih Tzu or small fluffy',
     short: 'Small fluffy',
-    src: 'img/avatars/dog-10.jpg',
+    src: 'img/avatars/dog-10.png',
   },
 ];
 

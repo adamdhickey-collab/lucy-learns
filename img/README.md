@@ -33,11 +33,20 @@ Keys are prefixed by the activity they belong to, so a listing groups itself:
 Within an activity the number is its step in the ladder, so `door-stay-03-*`
 are all level-3 images and sort together.
 
+The avatars under `avatars/` break both halves of that convention, and are the
+only things here that do: they are PNG, and they have no thumb. PNG because
+they are flat art with crisp edges on flat fields, which is the one case JPEG
+rings around — the full argument, and what the format costs, is in
+`js/content.js`. No thumb because nothing draws them from a card square; the
+picker and the profile both scale the one file, at 83px and 76px.
+
 ## The rest
 
 | File | What it is |
 | --- | --- |
 | `door-cover.jpg` | the program cover, used by the welcome panel |
+| `avatars/dog-NN.png` | the ten pickable dog portraits, 400², flat and cool |
+| `avatars/people/person-NN.png` | the fourteen handler portraits, 300² |
 | `lucy-portrait.jpg` | Lucy's picture on her own tab (`js/config.js`) — a head crop of the app icon, see below |
 | `splash-mark.jpg` | the splash artwork; iOS launch images are baked from it |
 | `icon-*.png`, `apple-*.png` | generated — see `scripts/make-icons.mjs` |

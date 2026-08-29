@@ -112,22 +112,29 @@ function load() {
 /**
  * Bring a stored state up to date with the files that actually exist.
  *
- * The dog portraits were redrawn and moved from PNG to JPEG, and the chosen
- * one is saved by path — so every install that had already picked a picture
- * kept pointing at a file that is no longer in the build, and the profile
- * showed a broken image where their dog had been. A default in config.js only
- * ever reaches a fresh install; anybody who has used the app has their own
- * copy of that string.
+ * The dog portraits are saved by path, so a change of format orphans every
+ * install that had already picked one: the file they point at is no longer in
+ * the build and the profile shows a broken image where their dog had been. A
+ * default in config.js only ever reaches a fresh install; anybody who has used
+ * the app has their own copy of that string.
  *
- * Rewriting the extension is enough because the numbering did not change:
- * dog-01 is still the black Labrador. Anything unrecognised is left exactly
- * as it is rather than reset to the default, since a path this code does not
- * know is more likely to be something later than something broken.
+ * This has now happened twice, in both directions. The placeholders were PNG;
+ * the painted set that replaced them was JPEG, and this rewrote .png to .jpg.
+ * The redrawn flat set is PNG again — hard edges on flat fields are the one
+ * thing JPEG handles worst — so the rewrite runs the other way now, and the
+ * old direction is gone rather than kept: a stored `.png` is once again a file
+ * that exists, and re-pointing it at a `.jpg` would break the very installs
+ * the old rule was written to save.
+ *
+ * Rewriting the extension is enough because the numbering never changed:
+ * dog-01 has been the black Labrador throughout. Anything unrecognised is left
+ * exactly as it is rather than reset to the default, since a path this code
+ * does not know is more likely to be something later than something broken.
  */
 function migrate(next) {
   const photo = next.dog && next.dog.photo;
-  if (typeof photo === 'string' && /^img\/avatars\/dog-\d+\.png$/.test(photo)) {
-    next.dog = { ...next.dog, photo: photo.replace(/\.png$/, '.jpg') };
+  if (typeof photo === 'string' && /^img\/avatars\/dog-\d+\.jpg$/.test(photo)) {
+    next.dog = { ...next.dog, photo: photo.replace(/\.jpg$/, '.png') };
   }
   // People predate having a portrait. Everyone without one gets the handler
   // from the illustrations, which is the same answer a fresh install gives.

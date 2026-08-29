@@ -136,9 +136,13 @@ list, and neither is dead:
   written at setup, and the picker offers this file back to anyone whose saved
   photo is not among the ten stock dogs. It is a portrait rather than an
   instructional scene, so it is a different style problem — the audit files it
-  with the brand marks on a separate track. Redraw it there, not here.
+  with the brand marks on a separate track. Redraw it there, not here. It is
+  now the **last** un-redrawn picture in the app, and the only thing still
+  under `--avatar-grade`, which the stylesheet scopes to this filename alone
+  and which comes out with it.
 
 Also outside this list: the ten stock dog avatars in `img/avatars/` and the
-fourteen people avatars beside them. They are small circular portraits, they
-already take the art grade's filter, and none of them is an instructional
-picture.
+fourteen people avatars beside them. None of them is an instructional picture,
+which is why they were never on it. They have since been redrawn anyway, on the
+brand-marks track — flat and cool, in PNG, and taking no filter at all, since
+art already in the palette does not want correcting twice.

@@ -22,7 +22,7 @@ export const DOG = {
    * exactly that reason, and the picker offers it back to anyone whose stored
    * photo is not in the ten.
    */
-  photo: 'img/avatars/dog-01.jpg',
+  photo: 'img/avatars/dog-01.png',
   about: 'Friendly and affectionate. Gets over-aroused around arrivals and unfamiliar people.',
 };
 
