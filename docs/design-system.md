@@ -72,14 +72,20 @@ app's own palette, so there is nothing left to correct in them: `--art-grade`,
 files opt out were all deleted together. The illustrations are the colour they
 are.
 
-**One piece of it survives, scoped and renamed.** The avatars were never part of
-the thirty-seven — `art/source/restyle-worklist.md` lists them as outside it —
-and they are still the tan-era portraits: `img/avatars/dog-01.jpg` grounds at
-`#fce8d0` and `img/lucy-portrait.jpg` at `#fdcda5`, both warm cream against paper
-that is `#f5f4f9` and cool. Deleting the grade left them as the one warm note in
-the chrome, which is exactly what the filter existed to prevent, so it is kept as
-`--avatar-grade` on the avatar surfaces only, with the same numbers. It goes when
-the avatars are redrawn on the brand-marks track.
+**One piece of it survived for two releases, and is now gone too.** The avatars
+were never part of the thirty-seven — `art/source/restyle-worklist.md` lists them
+as outside it — and they stayed tan-era warm after the scenes were redrawn:
+`img/avatars/dog-01.jpg` grounded at `#fce8d0` and `img/lucy-portrait.jpg` at
+`#fdcda5`, both warm cream against paper that is `#f5f4f9` and cool. Deleting the
+grade outright would have left them as the one warm note in the chrome, which is
+exactly what the filter existed to prevent, so it was kept as `--avatar-grade` on
+the avatar surfaces only, with the same numbers.
+
+The twenty-four have since been redrawn flat and cool — they ground around
+`#e2dce7` now — and `lucy-portrait.jpg` was dropped rather than redrawn, since
+the redrawn `dog-01` is the same dog. With nothing warm left to correct, the
+token and its rule went with it. No filter is applied to any picture in this app
+at render time; what a file contains is what appears.
 
 Three passes got the grade to where it ended, and the middle one is worth
 keeping on the record even though the code is gone, because the lesson is about

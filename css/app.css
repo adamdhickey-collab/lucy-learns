@@ -170,29 +170,6 @@
   --shadow-card: 0 1px 2px rgba(22, 20, 40, 0.05);
   --shadow-lift: 0 6px 20px rgba(22, 20, 40, 0.1);
 
-  /* --- the avatar grade --------------------------------------------------
-     What is left of the art grade after the finish line, and why it is left.
-
-     The thirty-seven illustrations were redrawn flat and cool in the app's own
-     palette, so the grade that used to cool them at render time was deleted
-     along with its ledger. The avatars were outside that set and stayed
-     tan-era warm, which is why this scoped remnant outlived it.
-
-     The twenty-four pickable portraits have now been redrawn flat and cool
-     too, and they are graded by nothing: correcting art that is already in
-     the palette only desaturates it twice. What is left under the filter is
-     one file — lucy-portrait.jpg, which grounds at #fdcda5 against paper that
-     is #f5f4f9 and cool, and which is Lucy's own install's stored picture, so
-     it is on screen every time she opens the app.
-
-     Hence the selector: the one image still needing the correction, matched
-     by the name of the file that needs it. It reads as a hack because it is
-     one, and it is the shape that deletes itself — redraw that portrait and
-     nothing matches, which is the signal to take this and the token out
-     together. Same numbers as the art grade had: saturation pulled back, the
-     light lifted a little. */
-  --avatar-grade: saturate(0.78) brightness(1.05) contrast(1.06);
-
   --tap: 48px;
   --nav-h: calc(60px + env(safe-area-inset-bottom));
   --page-max: 34rem;
@@ -6254,18 +6231,6 @@ svg.icon--solid {
   border-radius: var(--r-lg);
   color: var(--text-secondary);
   font-size: var(--step--1);
-}
-
-/* The one portrait still waiting to be redrawn, wherever it is shown — the
-   profile, the picker, and the sheet's "Current picture" row. Matched on the
-   filename because that is exactly the condition: this correction is for the
-   tan-era file and for nothing else. See --avatar-grade. */
-.avatar img[src$="lucy-portrait.jpg"],
-.avatar-pick img[src$="lucy-portrait.jpg"],
-.avatar-choice img[src$="lucy-portrait.jpg"],
-.profile img[src$="lucy-portrait.jpg"],
-.sheet img[src$="lucy-portrait.jpg"] {
-  filter: var(--avatar-grade);
 }
 
 /* --- handler avatar -------------------------------------------------------

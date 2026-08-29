@@ -47,7 +47,6 @@ picker and the profile both scale the one file, at 83px and 76px.
 | `door-cover.jpg` | the program cover, used by the welcome panel |
 | `avatars/dog-NN.png` | the ten pickable dog portraits, 400², flat and cool |
 | `avatars/people/person-NN.png` | the fourteen handler portraits, 300² |
-| `lucy-portrait.jpg` | Lucy's picture on her own tab (`js/config.js`) — a head crop of the app icon, see below |
 | `splash-mark.jpg` | the splash artwork; iOS launch images are baked from it |
 | `icon-*.png`, `apple-*.png` | generated — see `scripts/make-icons.mjs` |
 
@@ -64,18 +63,11 @@ source in `art/` and re-run:
 the splash out. The splash reports with a plain bar now; the script and its
 sheet stay in `art/` and `scripts/` as process, but nothing ships from them.)
 
-`lucy-portrait.jpg` is also derived, but by hand rather than by a script — it
-is one crop that has been re-cut twice, which is not enough to earn a
-generator. It is a head crop of the icon:
-
-    sips icons/source.png --cropToHeightWidth 880 880 --cropOffset 0 198 --out /tmp/lp.png
-    sips -Z 400 -s format jpeg -s formatOptions 82 /tmp/lp.png --out img/lucy-portrait.jpg
-
-The numbers are measured, not guessed. In the 1254² icon her head spans
-x 228–1048 and y 71–620, with the collar narrowing at y≈610. An 880 square at
-x 198 centers her face horizontally and keeps both ear tips; y 0 takes all 71
-available pixels of headroom, which is the most there is. Anything tighter
-clips an ear — a 740 crop was tried and did. Re-measure if the icon changes.
+(`lucy-portrait.jpg` was also derived by hand — a head crop of the app icon,
+re-cut twice, with the offsets measured off her ears rather than guessed. It no
+longer ships: the redrawn `dog-01` is the same dog in the palette the rest of
+the app uses, so a second Labrador earned nothing. The recipe and the
+measurements are in the history if the crop is ever wanted again.)
 
 ## Adding an image
 
@@ -83,8 +75,9 @@ Don't copy files here by hand — the two sizes, the quality and the thumb's nam
 all have to be right, and nothing checks them afterwards.
 
 **Redrawing an existing key** (the restyle) goes through the pipeline, which
-generates, renders both files, files the master, opts the flat art out of the
-CSS art grade and ticks the worklist:
+generates, renders both files, files the master and ticks the worklist. It no
+longer touches `css/app.css`: every picture is drawn in the palette now, so
+there is no grade left to opt out of.
 
     node scripts/pilot.mjs approve <key> --yes
 

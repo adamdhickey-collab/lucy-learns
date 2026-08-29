@@ -76,12 +76,13 @@ were deleted together in one commit, which is what the finish line always meant:
 the pictures are drawn in the app's own palette now, so nothing is corrected at
 render time and `approve` no longer touches `css/app.css`.
 
-One scoped remnant survives on purpose: `--avatar-grade`. The twenty-four
-pickable avatars have since been redrawn flat and cool and take no filter —
-correcting art already in the palette only desaturates it twice — so the rule
-is now scoped by filename to `lucy-portrait.jpg`, the last picture in the app
-still tan-era warm. Redraw that one and both the rule and the token come out
-together; nothing else matches the selector.
+Nothing survives it. `--avatar-grade` outlived the art grade for as long as the
+avatars were tan-era warm; the twenty-four pickable portraits have since been
+redrawn flat and cool, and `lucy-portrait.jpg` — the last warm picture, and the
+reason the token was kept — was dropped rather than redrawn, because the
+redrawn dog-01 is the same black Labrador in the same palette. Every picture in
+the app is now the colour it was drawn, and no filter is applied to any of them
+at render time.
 
 ## House style
 

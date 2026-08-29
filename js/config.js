@@ -16,11 +16,13 @@ export const DOG = {
    * `dog-01` is the black Labrador, which is both the most common dog this
    * will meet and Lucy's own build.
    *
-   * Lucy's install is untouched by this: her `photo` was written into stored
-   * state at setup and config only supplies defaults to installs that have
-   * none. `img/lucy-portrait.jpg` is still shipped and still precached for
-   * exactly that reason, and the picker offers it back to anyone whose stored
-   * photo is not in the ten.
+   * Lucy's install used to be untouched by this — her `photo` was written into
+   * stored state at setup, and config only supplies defaults to installs that
+   * have none — so `img/lucy-portrait.jpg` shipped and was precached purely to
+   * keep that one household's picture on screen. The redrawn dog-01 is the same
+   * dog in the same palette as everything else, so the portrait was dropped and
+   * js/store.js repoints her stored path here. Lucy and a fresh install now see
+   * the same picture, which is the first time that has been true.
    */
   photo: 'img/avatars/dog-01.png',
   about: 'Friendly and affectionate. Gets over-aroused around arrivals and unfamiliar people.',

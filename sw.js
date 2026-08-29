@@ -44,7 +44,6 @@ const SHELL = [
   './js/views/report.js',
   './js/views/diagnostics.js',
   './js/person.js',
-  './img/lucy-portrait.jpg',
   './img/splash-mark.jpg',
   // The ten dog portraits. All of them, not just the chosen one: the picker
   // shows the full grid, and a household that opens it offline to change their

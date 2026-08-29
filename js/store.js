@@ -136,6 +136,14 @@ function migrate(next) {
   if (typeof photo === 'string' && /^img\/avatars\/dog-\d+\.jpg$/.test(photo)) {
     next.dog = { ...next.dog, photo: photo.replace(/\.jpg$/, '.png') };
   }
+  // Lucy's own portrait is gone from the build: the redrawn dog-01 is the same
+  // dog, drawn in the palette the rest of the app now uses, so keeping a second
+  // black Labrador beside it was one picture to maintain for no difference on
+  // screen. Her install is the only one that stores this path, and it stores it
+  // from setup — without this line she is the one household the deletion breaks.
+  if (next.dog && next.dog.photo === 'img/lucy-portrait.jpg') {
+    next.dog = { ...next.dog, photo: 'img/avatars/dog-01.png' };
+  }
   // People predate having a portrait. Everyone without one gets the handler
   // from the illustrations, which is the same answer a fresh install gives.
   if (Array.isArray(next.people)) {
