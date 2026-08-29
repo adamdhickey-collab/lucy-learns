@@ -1,6 +1,6 @@
 # Lucy Learns
 
-A private, mobile-first training companion for Lucy. It turns The Canine Coach's
+A private, mobile-first training companion for Lucy. It turns her trainer's
 handouts into guided sessions you can run with a leash in one hand, logs the
 result in a few taps, and shows whether jumping, nipping, barking, and recovery
 are actually improving.
@@ -78,7 +78,12 @@ the only copy. The MVP is built for a single handler; sessions still carry a
 `completedByUserId` so a second person can be added later without a migration.
 
 `Lucy → Export progress` writes a CSV of every session and moment, which is the
-thing to send The Canine Coach.
+thing to send her trainer.
+
+The trainer's practice is not named anywhere in the build: `TRAINER.name` in
+`js/config.js` is null and the screens say "your trainer", on the same terms as
+the phone number and website. Put a name back and the two lines that credit one
+return on their own.
 
 Example data is opt-in, chosen at the end of the welcome and toggleable later
 from `Lucy → Starting over`.

@@ -66,9 +66,28 @@ export const HANDLER = {
  * To restore them for a real install, put the values back. Nothing else needs
  * touching — the buttons return on their own, because their absence is what
  * removes them rather than a flag somewhere else.
+ *
+ * `name` is null on the same terms and for the same reason. A named practice
+ * on every screen is an endorsement by a business that has not agreed to
+ * appear in a build being handed around, and the screens read better without
+ * it than a demo pretending to be somebody's client: what is true right now is
+ * that there is a trainer, not who they are. So the copy says "your trainer"
+ * throughout — which is what the player's stuck-sheet has always said — and
+ * the two lines that exist only to credit a name disappear rather than crediting
+ * nobody. Put a name back and they return on their own.
  */
 export const TRAINER = {
-  name: 'The Canine Coach',
+  name: null,
   phone: null,
   url: null,
 };
+
+/**
+ * What the screens call them in a sentence.
+ *
+ * One place, because the phrase appears in eight of them and a wording that
+ * exists eight times drifts. Lower case: every use is mid-sentence, which is
+ * a constraint on the copy rather than on this value — a sentence that would
+ * open with it gets rewritten, not capitalised here.
+ */
+export const trainerName = () => TRAINER.name || 'your trainer';

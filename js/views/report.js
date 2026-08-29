@@ -8,7 +8,7 @@ import {
   LIVE_ACTIVITIES,
   INCIDENT_CONTEXTS,
   PROGRAMS,
-  TRAINER,
+  trainerName,
 } from '../content.js';
 import { programProgress } from '../program.js';
 import { getState, exportSummary, getDog } from '../store.js';
@@ -208,7 +208,7 @@ function render() {
       <div class="screen-head">
         <p class="eyebrow">For your next lesson</p>
         <h1>${getDog().name}’s report</h1>
-        <p>Prepared for ${TRAINER.name} · everything below is from home practice.</p>
+        <p>Prepared for ${trainerName()} · everything below is from home practice.</p>
       </div>
 
       <div class="chips report-range" role="group" aria-label="Report range">

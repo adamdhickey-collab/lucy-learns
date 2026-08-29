@@ -1,6 +1,6 @@
 // Seed content for Lucy Learns.
 // Everything the app teaches lives here as structured data, so a new handout
-// from The Canine Coach becomes a new activity object rather than a new screen.
+// from the trainer becomes a new activity object rather than a new screen.
 
 // Who this install belongs to lives in config.js; re-exported here so views
 // keep a single import point for content and configuration alike.
@@ -9,7 +9,7 @@
 // They are stored state now: import getDog / getPerson from store.js instead.
 // The re-export is gone rather than deprecated so that a missed call site is a
 // module error at load, not a screen quietly rendering the wrong dog.
-export { TRAINER } from './config.js';
+export { TRAINER, trainerName } from './config.js';
 
 // ---------------------------------------------------------------------------
 // Images
@@ -743,7 +743,7 @@ export const PROGRAMS = [
       note: 'Finish all four activities and you have the whole sequence, not one piece of it.',
     },
     source: {
-      label: 'The Canine Coach handout',
+      label: 'Your trainer’s handout',
       note:
         'Practice long before real guests arrive. Start with invisible guests, repeat easy sessions, and build muscle memory.',
     },

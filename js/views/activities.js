@@ -5,7 +5,7 @@ import {
   PLANNED_ACTIVITIES,
   IMAGES,
   PROGRAMS,
-  TRAINER,
+  trainerName,
 } from '../content.js';
 import {
   activityMastery,
@@ -138,7 +138,7 @@ function render() {
         // so the goal says plainly that it is a goal and not a gap.
         : html`<p class="goal-empty">
             Nothing here yet. This one arrives with a later handout from
-            ${TRAINER.name}.
+            ${trainerName()}.
           </p>`;
 
     return html`<section class="goal-group">
@@ -157,7 +157,7 @@ function render() {
       ${body}
       ${items.length && soon.length
         ? html`<div class="planned" style="margin-top: var(--s-3)">
-            <p>Still to come from ${TRAINER.name}.</p>
+            <p>Still to come from ${trainerName()}.</p>
             <ul>${join(soon.map((a) => html`<li>${a.title}</li>`))}</ul>
           </div>`
         : ''}

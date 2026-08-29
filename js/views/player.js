@@ -23,6 +23,7 @@ import {
   ASSISTANCE,
   RECOVERY_BANDS,
   TRAINER,
+  trainerName,
 } from '../content.js';
 import {
   addSession,
@@ -1034,8 +1035,8 @@ function fallbackSheet(activity) {
           Still stuck after making it easier? That is exactly what your trainer is
           for.${TRAINER.phone
             ? html` Bring it to your next lesson, or
-                <a href="tel:${TRAINER.phone}">call ${TRAINER.name}</a>.`
-            : html` Bring it to your next lesson with ${TRAINER.name}.`}
+                <a href="tel:${TRAINER.phone}">call ${trainerName()}</a>.`
+            : html` Bring it to your next lesson.`}
         </p>
         <div class="btn-row" style="margin-top: var(--s-5)">
           <button class="btn btn--quiet" type="button" data-sheet-close>Keep going</button>

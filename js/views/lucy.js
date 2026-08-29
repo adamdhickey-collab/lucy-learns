@@ -1,4 +1,12 @@
-import { ACTIVITIES, PROGRAMS, TRAINER, DOG_AVATARS, PERSON_AVATARS, personAvatar } from '../content.js';
+import {
+  ACTIVITIES,
+  PROGRAMS,
+  TRAINER,
+  trainerName,
+  DOG_AVATARS,
+  PERSON_AVATARS,
+  personAvatar,
+} from '../content.js';
 import { downloadCsv } from './report.js';
 import {
   getState,
@@ -142,8 +150,8 @@ function render() {
       <section class="section">
         <h2>Commands we use</h2>
         <p class="section-note" style="margin-bottom: var(--s-3)">
-          Change these once, and every activity screen updates. Confirm the wording with The
-          Canine Coach first.
+          Change these once, and every activity screen updates. Confirm the wording with
+          ${trainerName()} first.
         </p>
         <div class="card">${join(cues)}</div>
       </section>
@@ -179,8 +187,8 @@ function render() {
         <p class="section-note" style="margin-top: var(--s-3)">
           A ceiling, not a quota.
           ${repsPref > shortestLevel
-            ? html`${TRAINER.name} sets each level's own number, and the shortest ask for
-                ${shortestLevel}.`
+            ? html`Each level carries its own number, set by ${trainerName()}, and the
+                shortest asks for ${shortestLevel}.`
             : html`Every level in the program asks for at least this many, so this is the
                 number you will see throughout.`}
           ${repsPref < MIN_REPS_TO_ADVANCE
@@ -194,7 +202,9 @@ function render() {
         <h2>Your trainer</h2>
         <div class="card">
           <div class="card-body">
-            <strong>${TRAINER.name}</strong>
+            ${/* The heading above already says "Your trainer", so with no name
+                  this line would repeat it back as a fake value. */ ''}
+            ${TRAINER.name ? html`<strong>${TRAINER.name}</strong>` : ''}
             <p class="section-note" style="margin-top: var(--s-2)">
               Every activity, cue, and progression rule in this app comes from their
               program. When something is not working, they are the next step.
@@ -252,7 +262,7 @@ function render() {
           <button class="setting-row" type="button" data-export>
             <span>
               Export progress
-              <small>CSV of every session and moment, for The Canine Coach</small>
+              <small>CSV of every session and moment, for ${trainerName()}</small>
             </span>
             <span class="value">${state.sessions.length + state.incidents.length} records</span>
           </button>
@@ -307,7 +317,7 @@ function render() {
       ${/* Under the version, where the answer to "what version are you on?"
             already lives, and quiet enough not to look like a feature. */ ''}
       <p class="section-note" style="margin-top: var(--s-6); text-align: center">
-        Lucy Learns ${APP_VERSION} · training program by ${TRAINER.name}<br />
+        Lucy Learns ${APP_VERSION}${TRAINER.name ? ` · training program by ${TRAINER.name}` : ''}<br />
         <a href="#/diagnostics">Diagnostics</a>
       </p>
     </div>

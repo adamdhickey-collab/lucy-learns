@@ -4,7 +4,7 @@ import {
   IMAGES,
   programById,
   stepsForLevel,
-  TRAINER,
+  trainerName,
 } from '../content.js';
 import { setLevel, resolveCue, sessionsFor, getDog } from '../store.js';
 import {
@@ -106,7 +106,7 @@ function render({ slug }) {
           <h2>Not in the app yet</h2>
           <p>
             ${activity.levels.length} levels are written for this one. It arrives with the
-            next handout from ${TRAINER.name}.
+            next handout from ${trainerName()}.
           </p>
         </div>
 

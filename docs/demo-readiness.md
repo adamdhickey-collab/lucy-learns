@@ -15,7 +15,7 @@ next to them to explain.**
 There are three outbound points:
 
 - [lucy.js](../js/views/lucy.js) — a **Call** button and a **Website** button
-- [player.js](../js/views/player.js) — "call The Canine Coach" inside the
+- [player.js](../js/views/player.js) — "call your trainer" inside the
   take-the-pressure-off sheet, which is shown at the exact moment someone is
   having a hard session
 

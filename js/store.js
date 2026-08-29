@@ -51,7 +51,7 @@ const emptyState = () => ({
    * How many repetitions a session aims for, 1 to 5.
    *
    * A cap rather than a replacement. Every level in the program carries its
-   * own `reps` — the number The Canine Coach asks for there, 4 or 5 — and this
+   * own `reps` — the number the trainer asks for there, 4 or 5 — and this
    * lowers it without ever raising it above what the program wanted. At 5 the
    * levels keep their own numbers; at 3, which is the default, everything
    * shortens to 3.

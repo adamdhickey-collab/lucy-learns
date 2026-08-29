@@ -48,7 +48,7 @@ const PANELS = [
     image: 'door-cover',
     eyebrow: 'Welcome',
     title: 'Five minutes of practice at a time',
-    body: `This turns The Canine Coach's handouts into short guided sessions, so you both practice the same way and can see whether it is working.`,
+    body: `This turns your trainer's handouts into short guided sessions, so you both practice the same way and can see whether it is working.`,
     note: 'It supports your trainer. It does not replace one.',
   },
   {
@@ -309,7 +309,10 @@ function render() {
           <h1 class="welcome-title">${panel.title}</h1>
           <p class="welcome-body">${panel.body}</p>
           <p class="welcome-note">${panel.note}</p>
-          ${step === 0
+          ${/* Only when there is a name to credit. Without one this line said
+                "Training program by" and then a generic noun, which credits
+                nobody and reads as a missing value. */ ''}
+          ${step === 0 && TRAINER.name
             ? html`<p class="welcome-partner">Training program by ${TRAINER.name}</p>`
             : ''}
         </div>
