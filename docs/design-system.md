@@ -42,14 +42,16 @@ Everything else follows from three rules:
    the activity marks are identity and speak denim. When everything is
    violet, nothing is.
 
-The splash was redrawn *for* this palette, then given a gentle version of
-the art grade baked into the source pixels (saturation ×0.85, 7% violet
-blend — CSS cannot reach the OS launch images, so its treatment lives in
-the file; the ungraded original is kept at
-`art/source/splash-source-ungraded.png`). Its field is the graded art's own
-lavender (`--splash-field: #e4dcec`, measured from a six-pixel ring around
-the source and baked into the iOS launch images by
-`scripts/make-splash.mjs`). The wordmark on it is `--primary-dark` — the
+The splash has been redrawn through the pilot pipeline, flat and cool like
+the rest of the set, with nothing baked into its pixels. An earlier version
+carried a gentle copy of the art grade in the file itself (saturation ×0.85,
+7% violet blend) because CSS cannot reach the OS launch images; both that
+grade and the workaround for it are gone. Its field is the artwork's own
+lavender (`--splash-field: #e6deed`), the mean of a six-pixel ring around the
+source, measured by `scripts/lib/splashfield.mjs` and written into
+`css/app.css` and `manifest.webmanifest` by `pilot.mjs approve` at the same
+time `scripts/make-splash.mjs` bakes it into the iOS launch images — one
+measurement, three files, so they cannot drift. The wordmark on it is `--primary-dark` — the
 collar violet against the field the art was drawn on, at 7.53:1. The launch
 now opens inside the cool system; the fade to the app is just the paper
 arriving.

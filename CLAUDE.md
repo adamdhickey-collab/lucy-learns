@@ -38,9 +38,23 @@ Rules that are not negotiable:
   Do not read or display `.env.local`.
 - **`generate` spends money.** It needs `--yes` and it is the only command that
   costs anything. Look at a result before generating the next one.
-- **Approval is a human step.** Never run `approve` on a picture the user has
-  not looked at, and never hand-copy anything into `img/` or
-  `art/pilot/approved/`.
+- **Approve against `mustBeTrue`, not by asking.** Check the generated picture
+  against every clause of its `mustBeTrue` line, zooming in on the load-bearing
+  details rather than judging at full size — a third hand, an unclipped leash and
+  a head cut off by the Today band all survived a glance. If every clause holds,
+  run `approve` and move to the next picture without stopping. If one fails,
+  amend the spec to name the failure and regenerate; keep iterating. **Stop and
+  ask only when three rounds have not fixed the same fault, or when the call is a
+  genuine judgement** — which picture to ship when each is wrong differently, or
+  whether to relax a claim the art cannot meet. Bring numbers to those, not
+  impressions. Never hand-copy anything into `img/` or `art/pilot/approved/`.
+
+  Approval is still a human step; it just happens once, over the whole set,
+  rather than picture by picture. The point of `mustBeTrue` is that it lets the
+  machine hold the line between those reviews, so what reaches the batch review
+  is a set that already passes its own written questions — and anything a
+  reviewer then rejects is a question that was wrong, not a check that was
+  skipped.
 - **The ladder is generated in order.** Seven Stay scenes are one composition
   sampled at seven points; each needs the previous one approved. `generate`
   refuses out of order — do not work around it.
