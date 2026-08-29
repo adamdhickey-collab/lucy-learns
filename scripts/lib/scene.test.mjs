@@ -345,7 +345,10 @@ function legacyOnlyScene() {
     .readdirSync(SCENES_DIR)
     .filter((f) => f.endsWith('.json'))
     .map((f) => f.replace(/\.json$/, ''))
-    .find((id) => !ledger.has(id) && legacyMaster(id));
+    // .png specifically: a scene reference resolves to
+    // art/pilot/approved/<id>.png, so a scene whose legacy master is a .jpg
+    // would be picked here and then fail the "the file is there" assertion.
+    .find((id) => !ledger.has(id) && legacyMaster(id)?.path.endsWith('.png'));
 }
 
 test('a legacy warm master on disk still counts as pending', (t) => {

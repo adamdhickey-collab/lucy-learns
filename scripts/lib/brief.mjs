@@ -39,19 +39,27 @@ export const BRIEF_ID = 'cool-flat-v1';
 /**
  * The blocks a scene may ask for, keyed by the heading that carries them.
  *
- * `porch` is a sub-block of Block A rather than a peer: it describes the one
- * background the interior palette does not cover, and only the handful of
- * scenes shot from outside the front door need it.
+ * `porch` and `outdoor` are sub-blocks of Block A rather than peers: each
+ * describes a background the interior palette does not cover. `porch` is the few
+ * scenes shot from outside the front door; `outdoor` is the two planned covers
+ * that happen away from the house entirely, on grass or a pavement.
+ *
+ * `outdoor` was added after thirty-three pictures were already approved, and it
+ * needed no BRIEF_ID bump: a block is opt-in, no existing spec asks for it, so
+ * every assembled prompt in the set is byte-for-byte what it was. The rule is to
+ * bump when the brief changes in a way that changes the pictures, and a block
+ * nobody has requested cannot.
  */
 const BLOCK_HEADINGS = {
   style: (l) => /^## Block A/.test(l),
   porch: (l) => /^### The porch/.test(l),
+  outdoor: (l) => /^### The garden and the street/.test(l),
   cast: (l) => /^## Block B/.test(l),
 };
 
 export const BLOCK_IDS = Object.keys(BLOCK_HEADINGS);
 
-/** Read every block once. Returns { style, porch, cast } of trimmed strings. */
+/** Read every block once. Returns { style, porch, outdoor, cast } of trimmed strings. */
 export function loadBlocks(briefPath = BRIEF) {
   if (!fs.existsSync(briefPath)) {
     throw new Error(`brief not found: ${path.relative(ROOT, briefPath)}`);

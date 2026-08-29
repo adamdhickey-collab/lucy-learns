@@ -98,6 +98,32 @@ A picture with no dog in it has no collar, so the "one saturated note" rule
 above cannot apply — say so explicitly in the prompt and hand the job to the
 guest's blue hoodie instead, or the instruction contradicts itself.
 
+### The garden and the street, for the scenes set away from the door
+
+Two of the planned covers happen outdoors and away from the house — a dog
+ignoring a squirrel on the grass, a dog walking past a stranger. The porch block
+above does not cover that, and `docs/illustration-audit.md` calls it out as a
+separate background vocabulary, which is why the pilot left those scenes alone.
+It gets pinned exactly the way the porch is, and it is deliberately just as
+spare: flat fills, no scenery, nothing to look at but the two figures.
+
+> Exterior, away from the house: flat lawn in a muted spruce **#5b8f78** with no
+> blades, no mowing stripes and no texture; where a path or pavement is needed, a
+> plain cool grey **#b8b4b0** in flat slabs with thin joint lines and no kerb;
+> a plain flat band of soft spruce **#34735c** foliage across the background as a
+> silhouette, with no individual trees, trunks or branches; and above it a flat
+> pale wash **#e2eeea** standing in for sky. **No sky detail, no clouds, no sun,
+> no birds, no flowers, no fences, no benches, no bins, no parked cars, no
+> buildings, no house, no road markings and no horizon line drawn as a stroke** —
+> the lawn meets the foliage band directly.
+
+Same rule as everywhere else: one saturated note, and it is Lucy's purple collar.
+Nothing in the outdoor palette competes with it, which is why the greens are
+muted and the sky is a wash rather than a colour.
+
+This block is opt-in. No scene written before it existed asks for it, so adding
+it changed no prompt and no picture, and `BRIEF_ID` did not move.
+
 Those hexes are not decorative precision — they are the app's own tokens. The
 lavender wall is kin to `--slate-100`, the mustard pouch in Block B is literally
 `--gold-400`, the guest's hoodie is `--denim-600`, the foliage is `--spruce-600`,

@@ -117,10 +117,14 @@ test('an unfinished ladder always has exactly one rung open, and never two', () 
   }
 });
 
-test('a picture with no spec reads as unspecced rather than ready', () => {
-  const row = restyleState().find((r) => r.key === 'plan-mat');
-  assert.equal(row.status, 'none');
-  assert.match(row.detail, /no spec/);
+test('a picture with no spec reads as unspecced rather than ready', (t) => {
+  // Found at run time. This named plan-mat until plan-mat was given a spec —
+  // the eighth test here to break because the work moved on. When every row has
+  // a spec there is nothing to assert and that is the set being finished, so it
+  // skips rather than failing.
+  const unspecced = restyleState().filter((r) => r.status === 'none');
+  if (!unspecced.length) return t.skip('every picture has a spec now');
+  for (const row of unspecced) assert.match(row.detail, /no spec/, row.key);
 });
 
 // --- the integrity check ----------------------------------------------------

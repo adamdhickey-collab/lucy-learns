@@ -1,0 +1,28 @@
+{
+  "id": "plan-fourpaws",
+  "briefId": "cool-flat-v1",
+  "title": "Four paws on the floor",
+  "activity": "Planned activities",
+  "step": "Activity cover",
+  "note": "Cover for an activity not built yet; the worklist alt text is the brief. The subject is the ABSENCE of jumping, which a still cannot show directly — so the claim is the two things that are visible: all four of her paws in contact with the floor, and the person's hands held together at their waist, which is the posture that gives a dog nothing to jump at.\n\nIt has to stay clear of door-greet-08-petting, which is also a standing person and an unjumping dog. That one is a greeting with a hand on her chest; this one is nobody touching her at all and the hands held at the waist. Written into both the scene text and the claim.\n\nInterior, so it needs nothing the live brief does not already define. plan-name and plan-walkpeople are outdoors and do not have that luxury.",
+  "blocks": [
+    "style",
+    "cast"
+  ],
+  "references": [
+    {
+      "scene": "door-sound-02-self",
+      "role": "style:exemplar"
+    },
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    }
+  ],
+  "scene": "Interior entry hall, the pale lavender wall and desaturated oak floor, one baseboard line and nothing else in the room — no door, no doormat, no bed, no furniture. Lucy STANDS squarely on the floor facing the handler, and ALL FOUR of her paws are flat on the floor and clearly visible: she is not up on her hind legs, not leaning, not pawing, and no front foot is lifted or resting on the person. Her weight is even, her body relaxed and level, her tail down, and her whole muzzle is tipped up toward the handler's face. The handler stands straight and easy in front of her with BOTH HANDS CLASPED TOGETHER AT HER OWN WAIST, held quietly against her body — she is not reaching out, not bending down, not petting Lucy, and neither hand is touching the dog or extended toward her. There is no treat anywhere in the picture. She looks down at Lucy with a calm, pleased expression. This is not a greeting: nobody is making contact, which is what tells it apart from door-greet-08-petting, where a hand rests on Lucy's chest. No leash. HOW BIG THE PAIR IS DRAWN: draw them SMALLER than the composition wants, grouped close together near the middle rather than spread across the frame. The top of the highest head sits about a QUARTER of the way down from the top edge and no higher; the lowest thing that matters no lower than three quarters of the way down. Above every head leave a clear band of empty lavender wall at least a fifth of the picture height with nothing in it, and below them clear empty floor. Left and right, nothing that matters enters the outer eighth of the width. The app crops this two ways at once — a wide Today band keeping only the middle strip of the HEIGHT, and a centred square keeping only the middle three-quarters of the WIDTH — so a head near the top edge is decapitated on the app largest surface. Empty wall above them is better than a sliced head.",
+  "mustBeTrue": "all four of Lucy's paws are flat on the floor and visible with no foot lifted or resting on the person, the handler's hands are clasped together at her own waist and neither is touching Lucy or reaching toward her, there is no treat in the picture, and the top of the handler's head sits about a quarter of the way down the frame with clear wall above it and nothing that matters in the top fifth, the bottom quarter or the outer eighth of either side."
+}

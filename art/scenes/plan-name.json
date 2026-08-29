@@ -1,0 +1,29 @@
+{
+  "id": "plan-name",
+  "briefId": "cool-flat-v1",
+  "title": "Her name, with a squirrel behind her",
+  "activity": "Planned activities",
+  "step": "Activity cover",
+  "note": "Cover for an activity not built yet; the worklist alt text is the brief. First scene to use the outdoor block, which was added for these last two covers — the porch block covers the doorstep and nothing beyond it.\n\nThe squirrel is the whole point and also the trap: it must be IGNORED. A dog looking at the squirrel is a picture of a dog failing this activity, and a squirrel drawn large or centred pulls the eye to it. So it is small, well behind her, off to one side, and her whole muzzle points the other way at the handler's face — the muzzle formulation the post-mortems insist on, because an adjective like 'attentive' steers nothing.\n\nMutual attention needs a close two-shot: pilot-prompts.md records that asking for eye contact across a room failed five times with sixteen viewers. So the handler crouches close, not at a distance.",
+  "blocks": [
+    "style",
+    "outdoor",
+    "cast"
+  ],
+  "references": [
+    {
+      "scene": "door-sound-02-self",
+      "role": "style:exemplar"
+    },
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    }
+  ],
+  "scene": "Outdoors on flat lawn, away from the house — no building, no porch, no door anywhere in the picture. The handler CROUCHES down on her heels close beside Lucy so her face is level with Lucy's, turned toward her, hands resting easily on her own knees. Lucy SITS square on the grass facing the handler, close enough that the two faces are near each other: HER WHOLE MUZZLE POINTS AT THE HANDLER'S FACE, level, and she is plainly looking at her. BEHIND LUCY and off to the far side, a SMALL grey squirrel sits upright on the grass, drawn small and low and well away from both figures — no bigger than Lucy's head, clearly in the background. Neither Lucy nor the handler is looking at it. Lucy is NOT turned toward it, not watching it, not tense, not straining: she is ignoring it completely, which is the entire subject of the picture. Nothing else is on the grass. Lucy wears her purple collar with the blue tag, no harness, and there is no leash and no treat anywhere. HOW BIG THEY ARE DRAWN: draw the figures SMALLER than the composition wants, grouped close together near the middle rather than spread across the frame. The top of the highest head sits about a QUARTER of the way down from the top edge and no higher; the lowest thing that matters no lower than three quarters of the way down. Above every head leave a clear band of empty background at least a fifth of the picture height with nothing in it, and below them clear empty ground. Left and right, nothing that matters enters the outer eighth of the width. The app crops this two ways at once — a wide Today band keeping only the middle strip of the HEIGHT, and a centred square keeping only the middle three-quarters of the WIDTH — so a head near the top edge is decapitated on the app largest surface. Empty background above them is better than a sliced head.",
+  "mustBeTrue": "Lucy's whole muzzle points at the crouching handler's face and she is plainly ignoring the squirrel — not looking at it, turned toward it or tense — while the squirrel sits small, low and well behind her off to one side; there is no house, porch or door in the picture, no leash and no treat, and the top of the handler's head sits about a quarter of the way down the frame with clear background above it and nothing that matters in the top fifth, the bottom quarter or the outer eighth of either side."
+}
