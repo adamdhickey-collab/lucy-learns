@@ -9,6 +9,37 @@ Serve it with any static server (`python3 -m http.server 3478`) over
 `http://localhost`, never `file://` — the service worker and localStorage both
 need a real origin.
 
+## Git, and what a push to `main` does
+
+`.github/workflows/deploy-pages.yml` uploads the repository root — `path: .` —
+and publishes it on every push to `main`. There is no build step and no gate in
+between, so a merge is live about a minute later. **Work on a branch and never
+push to `main` directly.** That is not ceremony borrowed from a larger project;
+it is the only thing standing between an edit and the published app.
+
+The rule the illustration pipeline states — never commit or push unless asked,
+not after `generate`, not after `approve` — holds everywhere in this repository,
+and the deploy is why.
+
+`.github/workflows/checks.yml` runs the three checks below on every pull
+request, so a change that breaks one fails in the pull request rather than after
+it. Run them locally first anyway; they take seconds and need nothing installed.
+
+## Where your session is running, and what changes
+
+| | Sees | Use it for |
+| --- | --- | --- |
+| **Local** (`claude` on the Mac) | The whole filesystem: this repo, `.env.local`, Downloads, the neighbouring project repos | Anything touching art, the pipeline, or a picture you want to look at |
+| **Remote Control** (`claude --rc`, or `/rc` mid-session) | The same — Claude still runs on the Mac; claude.ai and the phone are windows onto it. A photo attached from either is seen directly in the message; other files are downloaded to the Mac | Steering that same work from away |
+| **Cloud** (`claude --cloud`, or claude.ai/code) | A fresh clone of this repository only | Well-defined batch jobs: a test failure, a refactor, an audit across the app |
+
+A cloud session has no `.env.local` and therefore **cannot run `generate` at
+all**, which is the correct outcome rather than a limitation — the one command
+that spends money is the one command that cannot run where nobody is watching.
+It also cannot see anything on the Mac that is not committed here, so it should
+say so rather than guess. `claude --teleport` pulls a cloud session down to the
+Mac, branch and history intact.
+
 ## Checks
 
     node --test scripts/lib/*.test.mjs     the illustration pipeline (180 tests)
