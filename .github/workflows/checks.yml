@@ -1,0 +1,53 @@
+# The three checks CLAUDE.md asks for before a commit, run by something other
+# than whoever remembers.
+#
+# They already existed and already passed. What did not exist was anything that
+# ran them when a human did not, which is the same as not having them on the day
+# it matters. "Run all three before committing" is a request, not a guarantee.
+#
+# No install step, and that is the point rather than an omission: this app has
+# no package.json and no dependencies, so the checks need nothing but Node. If a
+# step here ever needs `npm install`, something has been added to the app that
+# CLAUDE.md says should not be.
+name: checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # The glob, not the directory. `node --test scripts/lib/` does not work on
+      # every Node build; the glob always does, and CLAUDE.md says so for the
+      # same reason.
+      - name: The illustration pipeline
+        run: node --test scripts/lib/*.test.mjs
+
+      # Every image the app references resolves, exists and is precached. This
+      # is the check that catches a picture approved into art/ but never wired
+      # into the service worker's precache list, which fails only offline and so
+      # fails in front of a user rather than in front of a developer.
+      #
+      # `verify` reads the manifest and the filesystem. It spends nothing and
+      # needs no key -- `generate` is the only command that costs money, and it
+      # is deliberately not run here.
+      - name: Every referenced image resolves
+        run: node scripts/pilot.mjs verify
+
+      # Every colour pairing against WCAG AA. Pure computation against the
+      # stylesheet, no browser, so it costs seconds.
+      - name: Contrast
+        run: node scripts/check-contrast.mjs
