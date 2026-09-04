@@ -1,0 +1,36 @@
+{
+  "id": "door-greet-08-petting",
+  "briefId": "cool-flat-v2",
+  "title": "The guest pets Lucy's chest while she sits",
+  "activity": "Controlled Real Greeting",
+  "step": "Level 2, step 8 — the greeting that goes right",
+  "note": "Written after the fact, on 2026-09-04. This is one of the six pictures drawn by hand through a chat window before the pipeline existed, so it never had a spec; this one reconstructs the shipped picture so that it can be redrawn under cool-flat-v2 with everything but the room unchanged. ",
+  "blocks": [
+    "style",
+    "cast"
+  ],
+  "references": [
+    {
+      "scene": "door-sound-02-self",
+      "role": "style:exemplar"
+    },
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-greet-08-petting.png",
+      "role": "likeness:guest"
+    },
+    {
+      "scene": "door-cover",
+      "role": "continuity:room"
+    }
+  ],
+  "scene": "Interior entry hall, side view, camera at standing eye level, the same room and camera as the attached program cover, framed closer: the edge of the shut charcoal door at the far left of the frame, plaster wall, oak floor. Lucy sits square in the middle of the frame with ALL FOUR PAWS ON THE FLOOR, weight back, head level, calm. The guest crouches on his heels in front of her on the right, facing her, and rests one open palm flat against her chest below the collar — his hand on her chest, not her head, not looming over her; his other forearm rests on his knee. Black cap, glasses, blue hoodie over a white tee, dark trousers, dark shoes. The handler stands behind Lucy on the left, relaxed, holding the black leash that runs from the clip on Lucy's collar to her hand in a slack curve; draw the clip and a thin lighter edge on the leash where it crosses the coat. Nobody is tense. This is the picture of a greeting done right, and its companion shows the same moment done wrong. THE GUEST ATTACHMENT WAS DRAWN IN THE OLD LAVENDER ROOM: take his face, glasses, black cap and blue hoodie from it and nothing else. The wall colour comes from the style block — warm off-white plaster — and nothing in that attachment overrides it. Every person has exactly two arms and two hands, each hand on its own sleeve; the treat pouch at the handler's right hip hides no spare hand. Lucy wears the purple collar with the round blue tag and no harness.",
+  "mustBeTrue": "Lucy is sitting with all four paws on the floor, weight back and head level, not rearing, leaning in or pawing; the guest is crouched on his heels with one open palm flat on her chest below the collar and is not touching her head; the leash runs slack from the clip on Lucy's collar to the handler's hand behind her; every person has exactly two hands; and the guest wears the black cap, glasses and blue hoodie."
+}

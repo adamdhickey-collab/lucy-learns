@@ -16,7 +16,7 @@ import os from 'node:os';
 import path from 'node:path';
 import zlib from 'node:zlib';
 
-import { ROOT, BRIEF_ID } from './brief.mjs';
+import { ROOT, BRIEF_ID, SUPERSEDED_BRIEFS } from './brief.mjs';
 import { PROFILES } from './profiles.mjs';
 import { loadScene, SCENES_DIR } from './scene.mjs';
 import { MASTER, outputPaths } from './request.mjs';
@@ -223,11 +223,15 @@ test('approve installs both files, the master and the tick', async () => {
 
 test('a dry run leaves shippedUnder where it was', async () => {
   const t = tree();
-  const before = JSON.parse(fs.readFileSync(path.join(t.opts.scenesDir, 'door-sound-03-name.json'), 'utf8')).shippedUnder;
+  // Declare the copy's shippedUnder here rather than inheriting the register's:
+  // the register moves as pictures are redrawn, and a test that read it off
+  // broke the day this scene shipped under the new brief.
+  const file = path.join(t.opts.scenesDir, 'door-sound-03-name.json');
+  const spec = JSON.parse(fs.readFileSync(file, 'utf8'));
+  fs.writeFileSync(file, JSON.stringify({ ...spec, shippedUnder: SUPERSEDED_BRIEFS[0] }));
   await cmdApprove('door-sound-03-name', [], t.opts);
-  const after = JSON.parse(fs.readFileSync(path.join(t.opts.scenesDir, 'door-sound-03-name.json'), 'utf8')).shippedUnder;
-  assert.equal(after, before);
-  assert.notEqual(after, BRIEF_ID, 'the register says this one shipped under the first cool brief');
+  const after = JSON.parse(fs.readFileSync(file, 'utf8')).shippedUnder;
+  assert.equal(after, SUPERSEDED_BRIEFS[0], 'a dry run must not stamp');
   assert.ok(t.lines.join('\n').includes(`shippedUnder "${BRIEF_ID}"`), 'the dry run names the stamp it would make');
 });
 

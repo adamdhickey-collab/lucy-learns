@@ -1,11 +1,11 @@
 {
   "id": "door-greet-01-settle",
-  "briefId": "cool-flat-v1",
-  "shippedUnder": "cool-flat-v1",
+  "briefId": "cool-flat-v2",
+  "shippedUnder": "cool-flat-v2",
   "title": "Clip the leash on, well back from the door",
   "activity": "Controlled Real Greeting",
   "step": "Level 1 — settling her before anyone arrives",
-  "note": "No guest in this one: it is the moment before anybody comes. The distance from the door is the instruction.",
+  "note": "No guest in this one: it is the moment before anybody comes. The distance from the door is the instruction. Re-declared for cool-flat-v2 (the plaster wall) on 2026-09-04; nothing about the scene changed.",
   "blocks": [
     "style",
     "cast"

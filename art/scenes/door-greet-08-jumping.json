@@ -1,0 +1,36 @@
+{
+  "id": "door-greet-08-jumping",
+  "briefId": "cool-flat-v2",
+  "title": "Lucy jumps up on the guest — the greeting that goes wrong",
+  "activity": "Controlled Real Greeting",
+  "step": "Level 2, step 8 — the greeting that goes wrong, shown beside the one that goes right",
+  "note": "Written after the fact, on 2026-09-04. This is one of the six pictures drawn by hand through a chat window before the pipeline existed, so it never had a spec; this one reconstructs the shipped picture so that it can be redrawn under cool-flat-v2 with everything but the room unchanged. ",
+  "blocks": [
+    "style",
+    "cast"
+  ],
+  "references": [
+    {
+      "scene": "door-sound-02-self",
+      "role": "style:exemplar"
+    },
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-greet-08-petting.png",
+      "role": "likeness:guest"
+    },
+    {
+      "scene": "door-greet-08-petting",
+      "role": "continuity:pair"
+    }
+  ],
+  "scene": "The companion to the petting picture: the same room, camera, distance and three figures in the same places, and only what Lucy does may differ. Lucy rears up on her hind legs with both front paws planted on the guest's chest, mouth open, ears back, all her weight forward on him. The guest stands — not crouching — and leans away from her with both hands raised open beside his shoulders, off balance, unhappy but not frightened; black cap, glasses, blue hoodie over a white tee, dark trousers. The handler stands behind Lucy on the left holding the leash, which is PULLED TAUT in a straight line from her hand to the clip on Lucy's collar — and this leash is ROSE #c25e79, not black: the one warning colour the set allows, so the picture reads as the wrong half of the pair even at 84 pixels. No symbols, no X marks, nothing drawn in the wall; the body language and the taut rose line carry the whole verdict. THE GUEST ATTACHMENT WAS DRAWN IN THE OLD LAVENDER ROOM: take his face, glasses, black cap and blue hoodie from it and nothing else. The wall colour comes from the style block — warm off-white plaster — and nothing in that attachment overrides it. Every person has exactly two arms and two hands, each hand on its own sleeve; the treat pouch at the handler's right hip hides no spare hand. Lucy wears the purple collar with the round blue tag and no harness.",
+  "mustBeTrue": "Lucy is up on her hind legs with both front paws on the guest's chest and her mouth open; the guest is standing and leaning away with both hands raised open and empty; the leash is taut and straight from the handler's hand to the clip on Lucy's collar and it is rose-coloured, not black; the room, camera and figure positions match the attached petting picture so the two read as a pair; and there is no X, symbol or text anywhere in the picture."
+}

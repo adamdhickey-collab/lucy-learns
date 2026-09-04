@@ -1,11 +1,11 @@
 {
   "id": "plan-name",
-  "briefId": "cool-flat-v1",
-  "shippedUnder": "cool-flat-v1",
+  "briefId": "cool-flat-v2",
+  "shippedUnder": "cool-flat-v2",
   "title": "Her name, with a squirrel behind her",
   "activity": "Planned activities",
   "step": "Activity cover",
-  "note": "Cover for an activity not built yet; the worklist alt text is the brief. First scene to use the outdoor block, which was added for these last two covers — the porch block covers the doorstep and nothing beyond it.\n\nThe squirrel is the whole point and also the trap: it must be IGNORED. A dog looking at the squirrel is a picture of a dog failing this activity, and a squirrel drawn large or centred pulls the eye to it. So it is small, well behind her, off to one side, and her whole muzzle points the other way at the handler's face — the muzzle formulation the post-mortems insist on, because an adjective like 'attentive' steers nothing.\n\nMutual attention needs a close two-shot: pilot-prompts.md records that asking for eye contact across a room failed five times with sixteen viewers. So the handler crouches close, not at a distance.",
+  "note": "Cover for an activity not built yet; the worklist alt text is the brief. First scene to use the outdoor block, which was added for these last two covers — the porch block covers the doorstep and nothing beyond it.\n\nThe squirrel is the whole point and also the trap: it must be IGNORED. A dog looking at the squirrel is a picture of a dog failing this activity, and a squirrel drawn large or centred pulls the eye to it. So it is small, well behind her, off to one side, and her whole muzzle points the other way at the handler's face — the muzzle formulation the post-mortems insist on, because an adjective like 'attentive' steers nothing.\n\nMutual attention needs a close two-shot: pilot-prompts.md records that asking for eye contact across a room failed five times with sixteen viewers. So the handler crouches close, not at a distance. Re-declared for cool-flat-v2 (the plaster wall) on 2026-09-04; nothing about the scene changed.",
   "blocks": [
     "style",
     "outdoor",

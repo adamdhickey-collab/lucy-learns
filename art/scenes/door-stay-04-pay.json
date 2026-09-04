@@ -1,11 +1,11 @@
 {
   "id": "door-stay-04-pay",
-  "briefId": "cool-flat-v1",
-  "shippedUnder": "cool-flat-v1",
+  "briefId": "cool-flat-v2",
+  "shippedUnder": "cool-flat-v2",
   "title": "Pay her on the bed",
   "activity": "Stay While the Door Opens",
   "step": "Level 4 — paying for the stay",
-  "note": "Used twice. She is paid ON the bed and stays lying down — the treat comes to her. A dog drawn standing up to take it has been paid for getting up, which is the opposite of the lesson.",
+  "note": "Used twice. She is paid ON the bed and stays lying down — the treat comes to her. A dog drawn standing up to take it has been paid for getting up, which is the opposite of the lesson. Re-declared for cool-flat-v2 (the plaster wall) on 2026-09-04; nothing about the scene changed.",
   "blocks": [
     "style",
     "cast"

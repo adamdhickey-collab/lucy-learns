@@ -1,11 +1,11 @@
 {
   "id": "door-stay-02-cue",
-  "briefId": "cool-flat-v1",
-  "shippedUnder": "cool-flat-v1",
+  "briefId": "cool-flat-v2",
+  "shippedUnder": "cool-flat-v2",
   "title": "Cue the stay",
   "activity": "Stay While the Door Opens",
   "step": "Level 2 — asking for it",
-  "note": "The cue hand is flat and vertical, palm out at chest height — a stop sign, not the flat upturned palm that means payment in door-sound-04-treats. Two different hands mean two different things and they are three screens apart.\n\nThe open-air clause comes from the tan-era reject list: a raised hand touching a door, wall or surface instead of gesturing in open air, where round 4 put a stay signal flat against the door panel and it read as holding the door shut. This is the stay-signal picture, so the guard belongs here.",
+  "note": "The cue hand is flat and vertical, palm out at chest height — a stop sign, not the flat upturned palm that means payment in door-sound-04-treats. Two different hands mean two different things and they are three screens apart.\n\nThe open-air clause comes from the tan-era reject list: a raised hand touching a door, wall or surface instead of gesturing in open air, where round 4 put a stay signal flat against the door panel and it read as holding the door shut. This is the stay-signal picture, so the guard belongs here. Re-declared for cool-flat-v2 (the plaster wall) on 2026-09-04; nothing about the scene changed.",
   "blocks": [
     "style",
     "cast"

@@ -1,11 +1,11 @@
 {
   "id": "door-sound-03-name",
-  "briefId": "cool-flat-v1",
-  "shippedUnder": "cool-flat-v1",
+  "briefId": "cool-flat-v2",
+  "shippedUnder": "cool-flat-v2",
   "title": "Say her name in a bright, happy voice",
   "activity": "Doorbell Predicts Rewards",
   "step": "Level 1, step 3 of 5",
-  "note": "Used by two steps. The empty hands are load-bearing: paying is step 4, so a treat visible here collapses two steps and teaches luring instead of a voluntary check-in. Round 3 did not fail on a treat — it failed on occlusion: only one hand was in frame, the other lost behind the near thigh on the pouch side, which leaves the viewer unable to tell. A crouch hides a hand that a stand does not, so each hand is now placed by name rather than described as a pair. Round 3 also sat the handler's eyes above Lucy's, so the eye line is stated as a comparison rather than as 'at her level'. The eye-line claim was removed from mustBeTrue after round 4 shipped. Rounds 2, 3 and 4 all drew the handler's head above Lucy's, through three different phrasings including an explicit head-top comparison, so the sentence is not the lever — the post-mortems say the attachment is, and no redrawn scene yet shows a handler crouched to a seated dog's eye line to attach as one. The scene text still asks for it; mustBeTrue no longer claims it, because a review question the shipped picture fails is a false pass on every future round. Restore the claim when there is a reference that can carry it.",
+  "note": "Used by two steps. The empty hands are load-bearing: paying is step 4, so a treat visible here collapses two steps and teaches luring instead of a voluntary check-in. Round 3 did not fail on a treat — it failed on occlusion: only one hand was in frame, the other lost behind the near thigh on the pouch side, which leaves the viewer unable to tell. A crouch hides a hand that a stand does not, so each hand is now placed by name rather than described as a pair. Round 3 also sat the handler's eyes above Lucy's, so the eye line is stated as a comparison rather than as 'at her level'. The eye-line claim was removed from mustBeTrue after round 4 shipped. Rounds 2, 3 and 4 all drew the handler's head above Lucy's, through three different phrasings including an explicit head-top comparison, so the sentence is not the lever — the post-mortems say the attachment is, and no redrawn scene yet shows a handler crouched to a seated dog's eye line to attach as one. The scene text still asks for it; mustBeTrue no longer claims it, because a review question the shipped picture fails is a false pass on every future round. Restore the claim when there is a reference that can carry it. Re-declared for cool-flat-v2 (the plaster wall) on 2026-09-04; nothing about the scene changed.",
   "blocks": [
     "style",
     "cast"
