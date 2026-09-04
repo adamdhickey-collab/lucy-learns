@@ -336,7 +336,7 @@ measured off the artwork's own edge and duplicated in three files —
 `FIELD` in `scripts/make-splash.mjs`, `--splash-field` in `css/app.css`, and
 `background_color` in `manifest.webmanifest`. Both source files carry comments
 saying keep them in step. Redraw the splash without updating all three and every
-cold start flashes a lavender rectangle before the app paints.
+cold start flashes a rectangle of the old field colour before the app paints.
 
 That is precisely the "anything that exists twice drifts" case this pipeline
 exists for, so when the splash profile is added, `approve` should measure the

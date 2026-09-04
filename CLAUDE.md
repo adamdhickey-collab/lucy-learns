@@ -135,6 +135,15 @@ re-declared. The exemplar trap is the one to watch: attachment 1 is a `v1`
 scene until a `v2` one is approved, so Block A carves the wall out by name.
 `door-sound-02-self` goes first, as it did before.
 
+**The second finish line, crossed the same day.** All thirty-seven room scenes,
+the twenty-four avatars, the icon and the splash ship under `cool-flat-v2`;
+`status` reads 37 approved, 0 to redraw, and every spec's `shippedUnder` says
+so. Seventy-one rounds for sixty-three pictures. The faults that needed a
+second round are named in their specs — the exemplar's gaze copied into a
+scene that forbade it, a cover drawn too large for its own crop, a windowless
+door, a dog leading an approach — and the one that needed a third, the program
+cover's framing, was fixed by an attachment rather than by words.
+
 ## House style
 
 Comments explain **why**, not what, and name the failure they prevent — most of
