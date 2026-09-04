@@ -419,6 +419,52 @@ export const IMAGES = withThumb({
   },
 });
 
+/**
+ * The done screen's verdict, as a picture. One per key `recommendation()` in
+ * metrics.js can return: Lucy alone on a flat field whose colour is the
+ * state, so the outcome reads from across the room before the title does.
+ *
+ * Outside IMAGES on purpose. These are 3:1 strips with no thumb, and
+ * `withThumb` would invent a `thumb-` path for each that nothing renders and
+ * `verify` would then demand on disk. They are also not instructional
+ * pictures — nothing in the ladder points at them — so they have no worklist
+ * row and no scene spec; the sources are art/source/verdicts/ and the prompts
+ * are art/source/prompts-done-verdicts.md.
+ *
+ * The alt text says what Lucy is doing, not what the verdict is: the title
+ * directly beneath already says that, and a screen reader would hear it twice.
+ */
+export const VERDICT_ART = {
+  'good-call-stopping': {
+    src: 'img/verdicts/good-call-stopping.jpg',
+    alt: 'Lucy standing with her eyes closed, mid shake-off, ears flung out, on a denim-blue floor.',
+  },
+  'session-logged': {
+    src: 'img/verdicts/session-logged.jpg',
+    alt: 'Lucy curled up asleep on her grey bed, nose to tail.',
+  },
+  'take-the-pressure-off': {
+    src: 'img/verdicts/take-the-pressure-off.jpg',
+    alt: 'Lucy walking calmly away from the closed front door toward her bed at the far side of the room.',
+  },
+  'ready-for-next-step': {
+    src: 'img/verdicts/ready-for-next-step.jpg',
+    alt: 'Lucy trotting to the right with her head high and her tail up, on a gold floor.',
+  },
+  'nice-progress': {
+    src: 'img/verdicts/nice-progress.jpg',
+    alt: 'Lucy sitting tall and facing you with a relaxed open-mouthed pant, on a deep green floor.',
+  },
+  'coming-along': {
+    src: 'img/verdicts/coming-along.jpg',
+    alt: 'Lucy lying chest-down with her forelegs out and her head tilted, listening, on a lilac floor.',
+  },
+  'make-it-easier': {
+    src: 'img/verdicts/make-it-easier.jpg',
+    alt: 'Lucy standing with her weight back, looking over her shoulder toward you, on a rose floor.',
+  },
+};
+
 
 // ---------------------------------------------------------------------------
 // Dog avatars

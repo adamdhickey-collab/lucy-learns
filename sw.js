@@ -45,6 +45,15 @@ const SHELL = [
   './js/views/diagnostics.js',
   './js/person.js',
   './img/splash-mark.jpg',
+  // The seven verdict strips on the done screen. Every session ends on one of
+  // them, so a missing one is a blank at the moment the app is meant to land.
+  './img/verdicts/good-call-stopping.jpg',
+  './img/verdicts/session-logged.jpg',
+  './img/verdicts/take-the-pressure-off.jpg',
+  './img/verdicts/ready-for-next-step.jpg',
+  './img/verdicts/nice-progress.jpg',
+  './img/verdicts/coming-along.jpg',
+  './img/verdicts/make-it-easier.jpg',
   // The ten dog portraits. All of them, not just the chosen one: the picker
   // shows the full grid, and a household that opens it offline to change their
   // mind should not meet nine broken tiles. 1.2 MB for the set — the redrawn

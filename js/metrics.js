@@ -178,7 +178,17 @@ function verdict(pct, arousal) {
   return `${pct}% success.`;
 }
 
-/** Feedback shown on the recommendation screen right after a session. */
+/**
+ * Feedback shown on the recommendation screen right after a session.
+ *
+ * `key` names the picture the done screen draws above the title — one per
+ * verdict, in VERDICT_ART in content.js. It is a field of its own rather than
+ * a slug derived from `title`, because the titles are copy and get reworded;
+ * `suggest` cannot carry it either, since that has three values for seven
+ * verdicts. `pilot.mjs verify` checks that every key returned here has a
+ * picture, so a new branch without one fails there rather than rendering a
+ * broken image on the emotional peak of the app.
+ */
 export function recommendation(activity, level, session) {
   const reps = session.repetitions || 0;
   const rate = reps ? (session.successfulRepetitions || 0) / reps : 0;
@@ -187,6 +197,7 @@ export function recommendation(activity, level, session) {
 
   if (session.arousalLevel >= 4) {
     return {
+      key: 'good-call-stopping',
       title: 'Good call stopping',
       body: 'Ending early is a real training decision, not a failure. Next time start one level easier and finish while she is still winning.',
       suggest: 'down',
@@ -196,6 +207,7 @@ export function recommendation(activity, level, session) {
     // Finished without counting anything — logged, but there is nothing to
     // score, so do not lecture about success rates that do not exist.
     return {
+      key: 'session-logged',
       title: 'Session logged',
       body: 'No repetitions counted this time. Ready whenever you two are.',
       suggest: 'stay',
@@ -203,6 +215,7 @@ export function recommendation(activity, level, session) {
   }
   if (tags.includes('nipped')) {
     return {
+      key: 'take-the-pressure-off',
       title: 'Take the pressure off',
       body: `Nipping usually means she is over threshold. Repeat this level with more distance from the door before adding anything new.`,
       suggest: 'stay',
@@ -211,6 +224,7 @@ export function recommendation(activity, level, session) {
   if (readyToAdvance(activity.id, level.number) && level.number < activity.levels.length) {
     const next = levelOf(activity, level.number + 1);
     return {
+      key: 'ready-for-next-step',
       title: 'Ready for the next step',
       // No preview of the next level's setup here. The done screen states
       // which activity the program is actually pointing at, and that is often
@@ -224,6 +238,7 @@ export function recommendation(activity, level, session) {
   }
   if (rate >= 0.8) {
     return {
+      key: 'nice-progress',
       title: 'Nice progress',
       // Not "this level is done": clearing a level and being ready to leave it
       // are two different bars — 75% once, against 80% twice — and the done
@@ -235,12 +250,14 @@ export function recommendation(activity, level, session) {
   }
   if (rate >= 0.5) {
     return {
+      key: 'coming-along',
       title: 'Coming along',
       body: `${pct}% success. Keep this level and shorten the sessions. Stop while she is still getting it right.`,
       suggest: 'stay',
     };
   }
   return {
+    key: 'make-it-easier',
     title: 'Make it easier',
     body: 'Under half the reps landed. Drop back a level or cut the distance so she can rebuild some wins.',
     suggest: 'down',

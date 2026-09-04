@@ -2814,73 +2814,47 @@ details.disclosure .disclosure-body {
   padding: var(--s-6) 0 var(--s-5);
 }
 
-.recommend .mark {
-  width: 72px;
-  height: 72px;
-  margin: 0 auto var(--s-4);
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--success-wash);
-  color: var(--success);
-}
+/* The verdict, as a picture. Seven strips, one per key `recommendation()`
+   returns: Lucy alone on a flat field whose colour is the state — gold for
+   the level opening, spruce for a good session, rose for the two cautions —
+   with a saturated ground band along the bottom third. The band is what
+   carries the colour, because a black dog on a fully saturated field has no
+   edge to read against; the pale field above her is what she reads against.
 
-.recommend .mark svg {
-  width: 34px;
-  height: 34px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+   This replaces a 72px circle holding a stroke mark. That mark had three
+   glyphs for seven verdicts, and the commonest of them, `check`, sat
+   directly above the identical check in the "Level N cleared" seal.
+
+   Edge to edge on purpose. The negative margins undo `.player-inner`'s
+   padding so the field colour meets the page at a hard edge instead of
+   sitting in a rounded card — the strip should read as the screen itself
+   changing colour, not as a fourth picture in a frame. `.player-inner`
+   already caps the column at `--page-max`, so the strip is capped with it,
+   which is the same lesson `.detail-hero` learned: a 3:1 strip the width of
+   a 1280px window is a 427px wall of colour.
+
+   The width and height attributes on the element reserve the 3:1 box before
+   the JPEG arrives; without them the title sat at the top for a frame and
+   then jumped down. `aspect-ratio` is belt and braces for the same thing. */
+.recommend .verdict-art {
+  display: block;
+  width: calc(100% + 2 * var(--s-4));
+  /* The stylesheet caps every img at 100% of its container. Here that is the
+     column inside the padding, so the strip started at the left screen edge
+     and stopped 32px short of the right one. */
+  max-width: none;
+  height: auto;
+  aspect-ratio: 3 / 1;
+  object-fit: cover;
+  margin: 0 calc(-1 * var(--s-4)) var(--s-5);
 }
 
 /* The emotional peak of the app: the moment a session lands. One considered
-   beat, not a confetti cannon. The ring settles, then the check draws on. */
-.recommend .mark {
-  animation: mark-settle 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-/* The dash has to be at least as long as the longest path it is drawing, or
-   the pattern repeats and the mark finishes with a permanent gap in it —
-   48 units of ink, 48 of nothing, then ink again. The check is 22.6 units and
-   was always fine; the caution shield is 58.8, and 48 sheared a piece out of
-   its lower edge that never filled in.
-
-   Measured with getTotalLength() rather than guessed, and given its own value
-   rather than raising both, because the dash length is also the draw speed:
-   a path finishes at (dash − length) / dash through the animation, so lifting
-   the check to 60 would have it land at 62% and then sit still for the rest. */
-.recommend .mark svg polyline,
-.recommend .mark svg path {
-  stroke-dasharray: 48;
-  stroke-dashoffset: 48;
-  animation: mark-draw 0.45s cubic-bezier(0.65, 0, 0.35, 1) 0.22s forwards;
-}
-
-.recommend .mark--caution svg path {
-  stroke-dasharray: 60;
-  stroke-dashoffset: 60;
-}
-
-/* The advance mark is two chevrons of 14.14 units each, measured the same
-   way. 30 is what makes it finish where the check does: a path completes at
-   (dash - length) / dash through the draw, which is 52.9% for the check at
-   22.63 over 48, and 30 puts these two at the same point. Leaving them on 48
-   would have held both chevrons unfinished until 70% and made the mark feel
-   slower than the one it replaces, at the same duration.
-
-   The lower chevron draws first. The delay is the 0.22s the rule above sets;
-   this pushes the upper one 80ms behind it, so the pair reads upward instead
-   of blinking on together. Small enough that it is motion rather than a
-   sequence to sit through. */
-.recommend .mark--up svg path {
-  stroke-dasharray: 30;
-  stroke-dashoffset: 30;
-}
-
-.recommend .mark--up svg path:first-child {
-  animation-delay: 0.3s;
+   beat, not a confetti cannon. The picture settles, then the words rise. A
+   fade with the barest scale, rather than the 0.7 the old mark grew from — a
+   full-width strip swelling by a third is a lot of movement. */
+.recommend .verdict-art {
+  animation: verdict-settle 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .recommend h1 {
@@ -2895,16 +2869,10 @@ details.disclosure .disclosure-body {
   animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
 }
 
-@keyframes mark-settle {
+@keyframes verdict-settle {
   from {
-    transform: scale(0.7);
+    transform: scale(0.97);
     opacity: 0;
-  }
-}
-
-@keyframes mark-draw {
-  to {
-    stroke-dashoffset: 0;
   }
 }
 
@@ -2913,19 +2881,6 @@ details.disclosure .disclosure-body {
     transform: translateY(8px);
     opacity: 0;
   }
-}
-
-/* Reduced motion still gets the result, just without the choreography. */
-@media (prefers-reduced-motion: reduce) {
-  .recommend .mark svg polyline,
-  .recommend .mark svg path {
-    stroke-dashoffset: 0;
-  }
-}
-
-.recommend .mark--caution {
-  background: var(--caution-wash);
-  color: var(--caution-text);
 }
 
 .recommend h2 {
@@ -6295,9 +6250,7 @@ svg.icon--solid {
 @media (prefers-reduced-motion: reduce) {
   .sheet,
   .toast,
-  .recommend .mark,
-  .recommend .mark svg polyline,
-  .recommend .mark svg path,
+  .recommend .verdict-art,
   .recommend h1,
   .recommend > p,
   .recommend + .stat-row {
