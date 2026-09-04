@@ -325,7 +325,12 @@ test('every avatar but dog-01 is drawn off dog-01', () => {
 test('avatars are outside the thirty-seven, so the finish line does not move', () => {
   const md = fs.readFileSync(path.join(ROOT, WORKLIST), 'utf8');
   assert.equal(worklistTotal(md), 37);
+  // A row, not a mention. This used to grep for the backticked key anywhere in
+  // the file, and the worklist's own notes name `dog-01` in prose — the line
+  // recording that lucy-portrait.jpg was retired in its favour — which is not
+  // a row and does not move the finish line.
+  const keys = new Set(worklistRows(md).map((r) => r.key));
   for (const key of ['dog-01', 'person-01']) {
-    assert.ok(!md.includes(`\`${key}\``), `${key} must not have a worklist row`);
+    assert.ok(!keys.has(key), `${key} must not have a worklist row`);
   }
 });
