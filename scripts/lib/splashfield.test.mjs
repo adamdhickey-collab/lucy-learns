@@ -21,7 +21,8 @@ import {
   cssField,
   manifestBackground,
 } from './splashfield.mjs';
-import { ROOT } from './brief.mjs';
+import { ROOT, BRIEF_ID } from './brief.mjs';
+import { SCENES_DIR } from './scene.mjs';
 import {
   cmdApprove,
   CSS,
@@ -174,6 +175,23 @@ test('without --yes a splash approve writes nothing but still reports the colour
 // --- fixtures ---------------------------------------------------------------
 
 /** A real PNG: `edge` everywhere, with a different colour blotted in the middle. */
+
+/**
+ * The real spec, re-declared for the live brief, in a scenes dir of its own. The specs in art/scenes/ say which brief their shipped picture
+ * was drawn under, and after a brief bump that is a superseded one — true, and
+ * refused by every command that spends, previews or installs. A test of those
+ * commands therefore needs a spec that is current, and this is the honest way
+ * to get one: the real request, with the one word that makes it drawable now.
+ */
+function currentSpec(id) {
+  // Its own temp dir, not the tree's: several tests assert the tree holds
+  // nothing but what the command wrote, and this spec is not the command's.
+  const scenes = fs.mkdtempSync(path.join(os.tmpdir(), 'scenes-'));
+  const spec = JSON.parse(fs.readFileSync(path.join(SCENES_DIR, `${id}.json`), 'utf8'));
+  fs.writeFileSync(path.join(scenes, `${id}.json`), JSON.stringify({ ...spec, briefId: BRIEF_ID }));
+  return scenes;
+}
+
 function pngBytes(w, h, edge, middle) {
   const raw = Buffer.alloc(h * (w * 3 + 1));
   for (let y = 0; y < h; y++) {
@@ -235,7 +253,7 @@ function splashTree({ css = null } = {}) {
   // A master whose edge ring is #204060, so the measurement has a known answer.
   const { width, height } = PROFILES.splash.master;
   write(out.master, pngBytes(width, height, [0x20, 0x40, 0x60], [0xff, 0xff, 0xff]));
-  write(out.manifest, JSON.stringify({ briefId: 'cool-flat-v1', scene: 'app-splash', approved: false }));
+  write(out.manifest, JSON.stringify({ briefId: BRIEF_ID, scene: 'app-splash', approved: false }));
 
   const ran = [];
   const lines = [];
@@ -247,6 +265,7 @@ function splashTree({ css = null } = {}) {
     read: (p) => fs.readFileSync(path.join(dir, p), 'utf8'),
     opts: {
       base: dir,
+      scenesDir: currentSpec('app-splash'),
       log: (...a) => lines.push(a.join(' ')),
       sips: (argv) => {
         ran.push(argv.join(' '));

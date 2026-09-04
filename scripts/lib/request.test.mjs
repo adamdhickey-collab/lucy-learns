@@ -133,7 +133,11 @@ test('the restyle counter starts at 1 and does not inherit the tan-era numbering
 test('the manifest records the brief, the sizes and the conversion', () => {
   const scene = loadScene('door-sound-03-name');
   const m = manifestSkeleton(scene, outputPaths(scene.id, 1));
-  assert.equal(m.briefId, BRIEF_ID);
+  // The manifest records the brief the *scene* declares. For a shipped picture
+  // that is the brief it was drawn under, which after a bump is a superseded
+  // one — and generate refuses such a scene before a manifest is ever written,
+  // so the record and the refusal agree.
+  assert.equal(m.briefId, scene.briefId);
   assert.equal(m.output.rawSize, '1472x1104');
   assert.equal(m.output.masterSize, '1448x1086');
   assert.equal(m.output.conversion, CONVERSION);

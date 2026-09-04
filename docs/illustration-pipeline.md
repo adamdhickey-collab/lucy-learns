@@ -51,7 +51,28 @@ your head across a session is how a rung gets skipped.
 
     8 approved · 0 awaiting review · 11 ready · 7 blocked · 11 unspecced   (37 total)
 
-It writes nothing. It used to cross-check two registers — the worklist's ticks
+It writes nothing.
+
+A sixth state arrived with the second brief. When `BRIEF_ID` moves, every spec
+still declaring the old one is **stale** — `↻ door-stay-03-onestep  shipped
+under cool-flat-v1 — re-declare to redraw` — and the summary counts them as
+*to redraw*. The spec is the one committed record of which brief a shipped
+picture was drawn against (the round manifests know too, but they are
+gitignored), so a stale spec is a true statement about the master in `img/`,
+not an error: `status` reports it, and `generate`, `plan` and `approve` refuse
+it until its `briefId` is re-declared. That one-word edit is the decision. A
+ticked row with a round drawn under the current brief shows as a redraw
+awaiting review rather than as approved, and one re-declared with no round yet
+as *re-declared — ready to redraw*. What separates those from *approved* is
+`shippedUnder` in the spec, which `approve` writes and nobody types: a picture
+is approved under a brief when its spec says it shipped under that brief. The
+ladder reads the same field — a rung re-declared for the new brief is blocked
+until the rung before it has shipped under it, because a rung is drawn off the
+previous rung's master and would otherwise inherit the old room. The style
+exemplar is exempt: every early `v2` scene attaches a `v1` one, and Block A
+carves the wall out of it by name. The avatars, the icon and the splash are
+outside the worklist and so outside `status`; the same refusals still hold for
+them. It used to cross-check two registers — the worklist's ticks
 and the pilot ledger's opt-outs — because `approve` wrote both and a
 disagreement meant one had stopped halfway. The ledger went at the finish line,
 so the worklist is the only register and a tick is simply the truth.
@@ -315,7 +336,7 @@ measured off the artwork's own edge and duplicated in three files —
 `FIELD` in `scripts/make-splash.mjs`, `--splash-field` in `css/app.css`, and
 `background_color` in `manifest.webmanifest`. Both source files carry comments
 saying keep them in step. Redraw the splash without updating all three and every
-cold start flashes a lavender rectangle before the app paints.
+cold start flashes a rectangle of the old field colour before the app paints.
 
 That is precisely the "anything that exists twice drifts" case this pipeline
 exists for, so when the splash profile is added, `approve` should measure the
@@ -351,7 +372,8 @@ written.
 
 | refused | because |
 | --- | --- |
-| a spec with a stale or missing `briefId` | warm prompt, cool set — invisible until the image arrives |
+| a spec with a missing or unknown `briefId` | warm prompt, cool set — invisible until the image arrives |
+| a spec whose `briefId` is superseded | its picture shipped under that brief; re-declaring it is the act of choosing to redraw it |
 | a reference that is not on disk | a silently dropped attachment is a style drift you cannot attribute |
 | a duplicate reference, an unknown role, an unknown block | typos that would otherwise produce a plausible wrong prompt |
 | a ladder rung whose previous rung is not redrawn | out of order the sequence stops reading as one walk, and the attachment would be the legacy warm master |
@@ -423,6 +445,7 @@ project has actually lost time:
 | `art/pilot/approved/<key>.png` | the master, filed under the shipped key |
 | `css/app.css` | seven lines in two blocks, so the flat art skips the warm-art grade |
 | `art/source/restyle-worklist.md` | the tick |
+| `art/scenes/<key>.json` | `shippedUnder`, the brief this master was drawn against — the one committed record of it, read by `status` and by the ladder gate |
 
 Miss the CSS and the picture renders slightly greyer than the one beside it,
 which is the one failure nobody spots. Miss the tick and the list quietly lies
@@ -493,7 +516,7 @@ and every call site.
 
     node --test scripts/lib/*.test.mjs
 
-186 tests, no network, no key, no macOS — `fetch` and `sips` are injected, and
+194 tests, no network, no key, no macOS — `fetch` and `sips` are injected, and
 the whole of `generate` and `approve` runs in a temp directory against images the
 suite builds itself. The directory form (`node --test scripts/lib/`) does not
 work on every Node build; the glob always does.

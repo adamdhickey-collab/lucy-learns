@@ -59,7 +59,7 @@ the rest of the set, with nothing baked into its pixels. An earlier version
 carried a gentle copy of the art grade in the file itself (saturation ×0.85,
 7% violet blend) because CSS cannot reach the OS launch images; both that
 grade and the workaround for it are gone. Its field is the artwork's own
-lavender (`--splash-field: #e6deed`), the mean of a six-pixel ring around the
+plaster (`--splash-field: #f0ebe4`), the mean of a six-pixel ring around the
 source, measured by `scripts/lib/splashfield.mjs` and written into
 `css/app.css` and `manifest.webmanifest` by `pilot.mjs approve` at the same
 time `scripts/make-splash.mjs` bakes it into the iOS launch images — one
@@ -93,8 +93,8 @@ grade outright would have left them as the one warm note in the chrome, which is
 exactly what the filter existed to prevent, so it was kept as `--avatar-grade` on
 the avatar surfaces only, with the same numbers.
 
-The twenty-four have since been redrawn flat and cool — they ground around
-`#e2dce7` now — and `lucy-portrait.jpg` was dropped rather than redrawn, since
+The twenty-four have since been redrawn flat and cool — they ground on the plaster field now (`#e9e5df` as asked for, `#ede5da` or so as
+drawn) — and `lucy-portrait.jpg` was dropped rather than redrawn, since
 the redrawn `dog-01` is the same dog. With nothing warm left to correct, the
 token and its rule went with it. No filter is applied to any picture in this app
 at render time; what a file contains is what appears.
@@ -194,7 +194,7 @@ non-text indicators 3:1 (WCAG 1.4.11).
 | reward-text on wash / paper / card | 4.5 | 5.90 / 6.21 / 6.70 |
 | success on card / wash / paper | 4.5 | 5.60 / 4.70 / 5.18 |
 | caution-text on paper / wash / card | 4.5 | 5.65 / 5.19 / 6.10 |
-| splash wordmark (primary-dark) on `--splash-field` | 4.5 | 7.67 |
+| splash wordmark (primary-dark) on `--splash-field` | 4.5 | 8.47 |
 | denim activity mark on card | 3 | 5.41 |
 | goal mark (secondary-text) on its disc | 3 | 5.92 |
 | practice-frequency bar (spruce) on its card | 3 | 5.60 |

@@ -1,0 +1,37 @@
+{
+  "id": "door-greet-07-approach",
+  "briefId": "cool-flat-v2",
+  "shippedUnder": "cool-flat-v2",
+  "title": "Walking Lucy to the guest on a short slack leash",
+  "activity": "Controlled Real Greeting",
+  "step": "Level 2, step 7 — the approach",
+  "note": "Written after the fact, on 2026-09-04. This is one of the six pictures drawn by hand through a chat window before the pipeline existed, so it never had a spec; this one reconstructs the shipped picture so that it can be redrawn under cool-flat-v2 with everything but the room unchanged.  Round 132 (v2) put Lucy half a body ahead of the handler, as the hand-drawn v1 had; the text now places her nose behind the leading knee and says why.",
+  "blocks": [
+    "style",
+    "cast"
+  ],
+  "references": [
+    {
+      "scene": "door-sound-02-self",
+      "role": "style:exemplar"
+    },
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-greet-08-petting.png",
+      "role": "likeness:guest"
+    },
+    {
+      "scene": "door-cover",
+      "role": "continuity:room"
+    }
+  ],
+  "scene": "Interior entry hall, side view, camera at standing eye level, the same room and camera as the attached program cover. The front door on the right stands open into the room and the guest stands just inside it on the doormat, facing left toward the handler and Lucy, hands relaxed at his sides, black cap, glasses, blue hoodie over a white tee, dark trousers; foliage and daylight beyond the open door. The handler walks toward him from the left, mid-stride but unhurried, and Lucy walks at her side on a SHORT LEASH held low in the handler's near hand — short but visibly slack, hanging in a small curve, never a straight line — clipped to the ring on Lucy's collar; draw the clip, and give the black leash a thin lighter edge where it crosses her black coat. Lucy walks level with the handler's leg, not ahead, all four feet on the floor, head up and calm, looking toward the guest. The handler leads. No bed in this picture. Plaster wall, one baseboard line, oak floor. THE GUEST ATTACHMENT WAS DRAWN IN THE OLD LAVENDER ROOM: take his face, glasses, black cap and blue hoodie from it and nothing else. The wall colour comes from the style block — warm off-white plaster — and nothing in that attachment overrides it. Every person has exactly two arms and two hands, each hand on its own sleeve; the treat pouch at the handler's right hip hides no spare hand. Lucy wears the purple collar with the round blue tag and no harness. THE HANDLER LEADS AND LUCY IS BEHIND HER LEADING LEG: Lucy's head is level with the handler's hip, and her nose is BEHIND the handler's leading knee — the handler's front foot is a full pace ahead of Lucy's front paws. Lucy is at heel, not out in front. If any part of Lucy's head is ahead of the handler's leading foot, the picture is wrong: it would show the dog leading the approach, which is the opposite of what this step teaches.",
+  "mustBeTrue": "the leash is short and visibly slack between the handler's low hand and the clip on Lucy's collar, never taut or straight; Lucy walks beside the handler with all four feet on the floor and her nose no further forward than the handler's leading foot; the guest stands just inside the open door facing them with his hands at his sides, in the black cap, glasses and blue hoodie; and the door's four-pane window is visible in the open leaf."
+}

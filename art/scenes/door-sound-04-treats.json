@@ -1,10 +1,11 @@
 {
   "id": "door-sound-04-treats",
-  "briefId": "cool-flat-v1",
+  "briefId": "cool-flat-v2",
+  "shippedUnder": "cool-flat-v2",
   "title": "Pay her, flat palm at her head height",
   "activity": "Doorbell Predicts Rewards",
   "step": "Level 1, step 4 of 5 — the payment",
-  "note": "The flat palm is the whole instruction. Pinched fingers held above her head is luring — it teaches her to follow the hand rather than to check in — and it is what a generic 'giving a treat a dog' picture draws. Cropped closer than the rest of the set, so the hand and her face need to sit near the middle for the square and 21:9 renditions.",
+  "note": "The flat palm is the whole instruction. Pinched fingers held above her head is luring — it teaches her to follow the hand rather than to check in — and it is what a generic 'giving a treat a dog' picture draws. Cropped closer than the rest of the set, so the hand and her face need to sit near the middle for the square and 21:9 renditions. Re-declared for cool-flat-v2 (the plaster wall) on 2026-09-04; 1 mention(s) of the old room moved to the new hexes and wording.",
   "blocks": [
     "style",
     "cast"
@@ -23,6 +24,6 @@
       "role": "likeness:lucy"
     }
   ],
-  "scene": "A close view, cropped much tighter than the other scenes in this set: the handler's forearm and open hand entering from the left, and Lucy's head and shoulders on the right. Her olive-green hoodie sleeve identifies the arm; no face, no body, no treat pouch in frame. The hand is held out palm up and completely flat — fingers straight and together, thumb flat alongside, one small brown treat resting on the open palm. It is held level with Lucy's muzzle, not above her head, and it is still: it is not moving toward her, and the fingers are not pinching the treat. Lucy sits square and lifts her eyes to the palm without stretching her neck up, jumping, pawing at it or opening her mouth. Keep the palm and her face together near the middle of the frame. Background: the pale lavender wall and one baseboard line, nothing else — no door, no doormat, no bed.",
+  "scene": "A close view, cropped much tighter than the other scenes in this set: the handler's forearm and open hand entering from the left, and Lucy's head and shoulders on the right. Her olive-green hoodie sleeve identifies the arm; no face, no body, no treat pouch in frame. The hand is held out palm up and completely flat — fingers straight and together, thumb flat alongside, one small brown treat resting on the open palm. It is held level with Lucy's muzzle, not above her head, and it is still: it is not moving toward her, and the fingers are not pinching the treat. Lucy sits square and lifts her eyes to the palm without stretching her neck up, jumping, pawing at it or opening her mouth. Keep the palm and her face together near the middle of the frame. Background: the pale plaster wall and one baseboard line, nothing else — no door, no doormat, no bed.",
   "mustBeTrue": "the palm is flat and open with the fingers straight and together and a single treat lying on it, the hand is level with Lucy's muzzle rather than raised above her head, the fingers are not pinching the treat, and Lucy is sitting with all four feet down and not reaching, pawing or mouthing for it."
 }

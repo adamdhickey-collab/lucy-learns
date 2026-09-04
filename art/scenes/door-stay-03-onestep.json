@@ -1,10 +1,11 @@
 {
   "id": "door-stay-03-onestep",
-  "briefId": "cool-flat-v1",
+  "briefId": "cool-flat-v2",
+  "shippedUnder": "cool-flat-v2",
   "title": "One step away",
   "activity": "Stay While the Door Opens",
   "step": "Level 3, rung 1 — the first step",
-  "note": "The tan-era version failed a blind pilot 4/4: every viewer read it as 'walking away toward the door', which is a different picture one activity over. The fix is that a still cannot show 'one step and no more' — an absence is unscoreable — so the claim is how CLOSE she still is to the bed. She is barely away from it. Two things added from the §5 and blind-pilot records in docs/pilot-prompts.md before the first restyle round. First, the winning tan-era formulation of 'barely away' was not an adjective but a geometry — trailing foot level with the bed's edge, bed at her heel, leading foot one pace ahead — because 'very close' is not something a reviewer can score and a foot position is. Second, §5 records that Lucy reads smaller and younger in this picture than anywhere else in the library, so her age and size are stated here specifically. No leash is deliberate and matches the alt text in js/content.js, which does not mention one; the later rungs walk the handler across the room, where a trailing black line would be an unreadable puddle against the floor.",
+  "note": "The tan-era version failed a blind pilot 4/4: every viewer read it as 'walking away toward the door', which is a different picture one activity over. The fix is that a still cannot show 'one step and no more' — an absence is unscoreable — so the claim is how CLOSE she still is to the bed. She is barely away from it. Two things added from the §5 and blind-pilot records in docs/pilot-prompts.md before the first restyle round. First, the winning tan-era formulation of 'barely away' was not an adjective but a geometry — trailing foot level with the bed's edge, bed at her heel, leading foot one pace ahead — because 'very close' is not something a reviewer can score and a foot position is. Second, §5 records that Lucy reads smaller and younger in this picture than anywhere else in the library, so her age and size are stated here specifically. No leash is deliberate and matches the alt text in js/content.js, which does not mention one; the later rungs walk the handler across the room, where a trailing black line would be an unreadable puddle against the floor. Re-declared for cool-flat-v2 (the plaster wall) on 2026-09-04; nothing about the scene changed. Head of the Stay ladder, so it goes before the six rungs that attach it.",
   "blocks": [
     "style",
     "cast"

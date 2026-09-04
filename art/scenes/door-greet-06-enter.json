@@ -1,10 +1,11 @@
 {
   "id": "door-greet-06-enter",
-  "briefId": "cool-flat-v1",
+  "briefId": "cool-flat-v2",
+  "shippedUnder": "cool-flat-v2",
   "title": "The guest comes in and she stays put",
   "activity": "Controlled Real Greeting",
   "step": "Level 6 — inside the door",
-  "note": "The door is CLOSED behind him — he is in, and the entry is over. That is what separates this from the open-door steps either side of it.",
+  "note": "The door is CLOSED behind him — he is in, and the entry is over. That is what separates this from the open-door steps either side of it. Re-declared for cool-flat-v2 (the plaster wall) on 2026-09-04; nothing about the scene changed. The continuity/likeness attachments are v1 source pictures with lavender walls; the scene text now says what to take from them and what not to. Round 118 under v2 held every clause and drew a windowless six-panel door behind the guest — a door the set has never had. The window is now in the scene text and the mustBeTrue.",
   "blocks": [
     "style",
     "cast"
@@ -31,6 +32,6 @@
       "role": "continuity:room"
     }
   ],
-  "scene": "Interior entry hall. The guest stands just inside the front door, which is now CLOSED behind him — no gap, no daylight. He has stopped on the doormat a step in, turned toward the handler and looking at her, not at Lucy. The guest wears the medium-blue zip-up hoodie, black baseball cap and clear-framed glasses from his likeness reference. He is NOT in a plaid or checked shirt — that was an earlier version of this character and is being replaced everywhere. His hands are at his sides; he is not reaching toward the dog. Lucy LIES on her cool-grey dog bed — a proper mattress with real thickness, a padded slab about a hand deep with a soft raised edge, not a flat mat across the room, elbows and hips down, head up, watching calmly without getting up. The black leash runs from her collar ring in a slack curve to the handler, who stands beside the bed holding it loosely. Give the leash a thin lighter outline near her coat and keep it off her back.",
-  "mustBeTrue": "the front door is shut behind the guest with no daylight showing, he is standing just inside it looking at the handler rather than at Lucy, and Lucy is lying down on her bed on a slack leash."
+  "scene": "Interior entry hall. The guest stands just inside the front door, which is now CLOSED behind him — no gap, no daylight. He has stopped on the doormat a step in, turned toward the handler and looking at her, not at Lucy. The guest wears the medium-blue zip-up hoodie, black baseball cap and clear-framed glasses from his likeness reference. He is NOT in a plaid or checked shirt — that was an earlier version of this character and is being replaced everywhere. His hands are at his sides; he is not reaching toward the dog. Lucy LIES on her cool-grey dog bed — a proper mattress with real thickness, a padded slab about a hand deep with a soft raised edge, not a flat mat across the room, elbows and hips down, head up, watching calmly without getting up. The black leash runs from her collar ring in a slack curve to the handler, who stands beside the bed holding it loosely. Give the leash a thin lighter outline near her coat and keep it off her back. THE ROOM AND GUEST ATTACHMENTS WERE DRAWN IN THE OLD LAVENDER ROOM: match them for the camera, the layout of the room and the guest's face, cap and hoodie only. The wall colour comes from the style block above — warm off-white plaster — and nothing in those attachments overrides it. THE DOOR BEHIND THE GUEST IS THE SAME FRONT DOOR AS EVERY OTHER PICTURE: charcoal, panelled, with the four-pane window — two across, two down — in its upper half, visible above and beside his head. It is shut, so the panes show only flat spruce foliage and no daylight stripe. Do not draw a solid panelled door with no window.",
+  "mustBeTrue": "the front door is shut behind the guest with no daylight showing and its four-pane window is visible in its upper half, he is standing just inside it looking at the handler rather than at Lucy, and Lucy is lying down on her bed on a slack leash."
 }

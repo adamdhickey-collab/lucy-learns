@@ -1,0 +1,26 @@
+{
+  "id": "door-sound-02-bell",
+  "briefId": "cool-flat-v2",
+  "shippedUnder": "cool-flat-v2",
+  "title": "A visitor presses the doorbell",
+  "activity": "Doorbell Predicts Rewards",
+  "step": "Level 1, step 2 of 5 — the sound, made by someone else",
+  "note": "Written after the fact, on 2026-09-04. This is one of the six pictures drawn by hand through a chat window before the pipeline existed, so it never had a spec; this one reconstructs the shipped picture so that it can be redrawn under cool-flat-v2 with everything but the room unchanged. ",
+  "blocks": [
+    "style",
+    "porch",
+    "cast"
+  ],
+  "references": [
+    {
+      "scene": "door-sound-02-self",
+      "role": "style:exemplar"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-greet-08-petting.png",
+      "role": "likeness:guest"
+    }
+  ],
+  "scene": "Exterior, on the porch, camera at standing eye level, close in: the charcoal front door with its four-pane window fills the middle and right of the frame, seen from outside, shut, its off-white frame around it and pale grey-green lap siding either side. The guest stands to the left of the door, in three-quarter view facing it, black cap, glasses, blue hoodie over a white tee, dark trousers, dark shoes, and presses the small doorbell button on the door frame at chest height with the index finger of his near hand; his other arm hangs relaxed at his side. He is calm and ordinary, not leaning, not looking at the viewer. A flat spruce shrub silhouette at the right edge. Plain porch floor. No dog is in this picture, so the one saturated note is the guest's blue hoodie, and nothing else competes with it. The glass reads flat green from this side. No sky detail, no furniture, no house number, no mailbox. THE GUEST ATTACHMENT WAS DRAWN IN THE OLD LAVENDER ROOM: take his face, glasses, black cap and blue hoodie from it and nothing else. The wall colour comes from the style block — warm off-white plaster — and nothing in that attachment overrides it. The guest has exactly two arms and two hands, one on the bell and one at his side.",
+  "mustBeTrue": "the guest's finger is on the doorbell button on the door frame at chest height, the door is shut with its four-pane window showing flat green, the guest wears the black cap, glasses and blue zip hoodie and has exactly two hands, and there is no dog, no leash and no person other than him in the picture."
+}

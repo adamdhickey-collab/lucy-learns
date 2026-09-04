@@ -1,10 +1,11 @@
 {
   "id": "door-greet-05-reward",
-  "briefId": "cool-flat-v1",
+  "briefId": "cool-flat-v2",
+  "shippedUnder": "cool-flat-v2",
   "title": "Pay her for holding the bed",
   "activity": "Controlled Real Greeting",
   "step": "Level 5 — paying while the guest waits",
-  "note": "Replaces one that showed no treat at all and had the handler bending from the waist over the dog — the posture the trainer's guidance specifically avoids. So there is a visible treat, and she crouches.",
+  "note": "Replaces one that showed no treat at all and had the handler bending from the waist over the dog — the posture the trainer's guidance specifically avoids. So there is a visible treat, and she crouches. Re-declared for cool-flat-v2 (the plaster wall) on 2026-09-04; nothing about the scene changed. The continuity/likeness attachments are v1 source pictures with lavender walls; the scene text now says what to take from them and what not to.",
   "blocks": [
     "style",
     "cast"
@@ -31,6 +32,6 @@
       "role": "continuity:room"
     }
   ],
-  "scene": "Interior entry hall. The handler CROUCHES down on her heels beside her cool-grey dog bed — a proper mattress with real thickness, a padded slab about a hand deep with a soft raised edge, not a flat mat, knees bent and back straight, her head low near Lucy's — she does NOT bend or hinge from the waist over the dog, and she does not lean across her. Her hand is flat and open, palm up, fingers straight and together, with one small brown treat clearly visible resting on it, brought down to Lucy's muzzle at bed height. Lucy stays lying on the bed to take it — elbows and hips still down, head lifted just enough — she has not stood up or stepped off. Behind them the front door stands open with the guest waiting outside on the porch, still and unhurried, hands at his sides. The guest wears the medium-blue zip-up hoodie, black baseball cap and clear-framed glasses from his likeness reference. He is NOT in a plaid or checked shirt — that was an earlier version of this character and is being replaced everywhere. The black leash is clipped to her collar ring and lies slack.",
+  "scene": "Interior entry hall. The handler CROUCHES down on her heels beside her cool-grey dog bed — a proper mattress with real thickness, a padded slab about a hand deep with a soft raised edge, not a flat mat, knees bent and back straight, her head low near Lucy's — she does NOT bend or hinge from the waist over the dog, and she does not lean across her. Her hand is flat and open, palm up, fingers straight and together, with one small brown treat clearly visible resting on it, brought down to Lucy's muzzle at bed height. Lucy stays lying on the bed to take it — elbows and hips still down, head lifted just enough — she has not stood up or stepped off. Behind them the front door stands open with the guest waiting outside on the porch, still and unhurried, hands at his sides. The guest wears the medium-blue zip-up hoodie, black baseball cap and clear-framed glasses from his likeness reference. He is NOT in a plaid or checked shirt — that was an earlier version of this character and is being replaced everywhere. The black leash is clipped to her collar ring and lies slack. THE ROOM AND GUEST ATTACHMENTS WERE DRAWN IN THE OLD LAVENDER ROOM: match them for the camera, the layout of the room and the guest's face, cap and hoodie only. The wall colour comes from the style block above — warm off-white plaster — and nothing in those attachments overrides it.",
   "mustBeTrue": "a treat is plainly visible on the handler's flat open upturned palm, she is crouched on her heels with a straight back rather than bending from the waist over Lucy, and Lucy is still lying on the bed rather than standing to take it."
 }

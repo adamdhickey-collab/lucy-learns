@@ -14,9 +14,9 @@ import path from 'node:path';
 import { PROFILES, PROFILE_IDS, DEFAULT_PROFILE, profileFor, isDirect } from './profiles.mjs';
 import { SIZE_LIMITS, SOURCE, MASTER, buildForm, manifestSkeleton, outputPaths } from './request.mjs';
 import { renditionPlan, ICON_SIZES, ICON_SAFE_ZONE } from './renditions.mjs';
-import { validateScene, assemblePrompt } from './scene.mjs';
+import { validateScene, assemblePrompt, SCENES_DIR } from './scene.mjs';
 import { cmdApprove, ICON_SOURCE, ICON_OUTPUTS, ICON_BUILD, CSS, WORKLIST } from './approve.mjs';
-import { ROOT } from './brief.mjs';
+import { ROOT, BRIEF_ID } from './brief.mjs';
 import { worklistRemaining } from './worklist.mjs';
 import { imageSize } from './imagesize.mjs';
 
@@ -273,7 +273,7 @@ const BLOCKS = { style: 'STYLE BLOCK', porch: 'PORCH BLOCK', cast: 'CAST BLOCK' 
 /** A spec that passes, which each test then varies in exactly one way. */
 const good = (over = {}) => ({
   id: 'test-scene',
-  briefId: 'cool-flat-v1',
+  briefId: BRIEF_ID,
   blocks: ['style', 'cast'],
   references: [{ path: 'art/source/lucy-reference.jpg', role: 'likeness:lucy' }],
   scene: 'A scene.',
@@ -300,6 +300,23 @@ function png(w, h) {
  * one writes, so the read-back check has something to find; a test can pass a
  * build that writes nothing to prove the check fires.
  */
+
+/**
+ * The real spec, re-declared for the live brief, in a scenes dir of its own. The specs in art/scenes/ say which brief their shipped picture
+ * was drawn under, and after a brief bump that is a superseded one — true, and
+ * refused by every command that spends, previews or installs. A test of those
+ * commands therefore needs a spec that is current, and this is the honest way
+ * to get one: the real request, with the one word that makes it drawable now.
+ */
+function currentSpec(id) {
+  // Its own temp dir, not the tree's: several tests assert the tree holds
+  // nothing but what the command wrote, and this spec is not the command's.
+  const scenes = fs.mkdtempSync(path.join(os.tmpdir(), 'scenes-'));
+  const spec = JSON.parse(fs.readFileSync(path.join(SCENES_DIR, `${id}.json`), 'utf8'));
+  fs.writeFileSync(path.join(scenes, `${id}.json`), JSON.stringify({ ...spec, briefId: BRIEF_ID }));
+  return scenes;
+}
+
 function iconTree({ masterSize = PROFILES.icon.master, round = 1, build = null } = {}) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'icon-approve-'));
   const out = outputPaths('app-icon', round);
@@ -312,7 +329,7 @@ function iconTree({ masterSize = PROFILES.icon.master, round = 1, build = null }
   write(CSS, css);
   write(WORKLIST, worklist);
   write(out.master, png(masterSize.width, masterSize.height));
-  write(out.manifest, JSON.stringify({ briefId: 'cool-flat-v1', scene: 'app-icon', approved: false }));
+  write(out.manifest, JSON.stringify({ briefId: BRIEF_ID, scene: 'app-icon', approved: false }));
 
   const ran = [];
   const defaultBuild = () => {
@@ -333,6 +350,7 @@ function iconTree({ masterSize = PROFILES.icon.master, round = 1, build = null }
     read: (p) => fs.readFileSync(path.join(dir, p), 'utf8'),
     opts: {
       base: dir,
+      scenesDir: currentSpec('app-icon'),
       log: (...a) => lines.push(a.join(' ')),
       sips: (argv) => {
         ran.push(argv.join(' '));

@@ -13,7 +13,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { ROOT } from './brief.mjs';
+import { ROOT, BRIEF_ID } from './brief.mjs';
 import { restyleState } from './status.mjs';
 import { worklistRows, worklistTotal, worklistRemaining } from './worklist.mjs';
 import { WORKLIST } from './approve.mjs';
@@ -47,7 +47,7 @@ test('keys are unique — a duplicated row would double-count the whole set', ()
 
 test('every picture lands in exactly one state, and they sum to the register', () => {
   const state = restyleState();
-  const states = ['approved', 'draft', 'ready', 'blocked', 'none'];
+  const states = ['approved', 'stale', 'draft', 'ready', 'blocked', 'none'];
   const total = states.reduce((n, s) => n + state.filter((r) => r.status === s).length, 0);
   assert.equal(total, state.length);
   assert.equal(state.length, 37);
@@ -60,7 +60,42 @@ test('approved means the worklist says so', () => {
   // is worth pinning is that the classification follows it exactly.
   const state = restyleState();
   for (const row of state) {
-    assert.equal(row.status === 'approved', row.ticked, row.key);
+    if (row.status === 'approved') assert.ok(row.ticked, `${row.key} is approved but unticked`);
+    // A ticked row is shipping, and shipping is never "no spec yet". What
+    // else it can be depends on the redraw: stale, or re-declared and ready,
+    // blocked or drafted — the old master ships while the new one is made.
+    if (row.ticked) assert.notEqual(row.status, 'none', `${row.key} ships but reads as unspecced`);
+  }
+});
+
+test('a re-declared picture is work in progress, not shipping and not stale', (t) => {
+  // Found at run time, like the unspecced test above: which pictures are
+  // mid-redraw changes every session, so this reads the register rather than
+  // naming one. A re-declared spec whose master still shipped under an older
+  // brief must never read as approved (the redraw is not done) and never as
+  // stale (there is nothing left to re-declare).
+  const rows = restyleState().filter((r) => {
+    const file = path.join(ROOT, 'art/scenes', `${r.key}.json`);
+    if (!r.ticked || !fs.existsSync(file)) return false;
+    const spec = JSON.parse(fs.readFileSync(file, 'utf8'));
+    return spec.briefId === BRIEF_ID && spec.shippedUnder !== BRIEF_ID;
+  });
+  if (!rows.length) return t.skip('no picture is mid-redraw right now');
+  for (const row of rows) {
+    assert.ok(['ready', 'draft', 'blocked'].includes(row.status), `${row.key}: ${row.status}`);
+    assert.match(row.detail, /redraw|review it|after /, `${row.key}: ${row.detail}`);
+  }
+});
+
+test('a picture that shipped under a superseded brief is to redraw, spec or no spec', () => {
+  // Two ways to be stale. A spec that still declares the old brief is the
+  // committed record of what its master was drawn under; a ticked row with no
+  // spec at all was drawn by hand before the pipeline existed. Both ship, both
+  // were drawn in the old room, and both say what to do next.
+  const stale = restyleState().filter((r) => r.status === 'stale');
+  for (const row of stale) {
+    assert.ok(row.ticked, `${row.key}: only a shipping picture can be stale`);
+    assert.match(row.detail, /re-declare to redraw|write one to redraw/, row.key);
   }
 });
 
@@ -89,6 +124,9 @@ test('a rung is blocked exactly when the rung before it is not yet approved', ()
   const by = (k) => state.find((r) => r.key === k);
   for (const [rung, predecessor] of Object.entries(LADDER)) {
     const row = by(rung);
+    // A stale rung is paused, not blocked: it ships, and re-declaring its spec
+    // is the next move. The relationship below is about rungs being drawn now.
+    if (row.status === 'stale') continue;
     if (by(predecessor).status === 'approved') {
       assert.notEqual(row.status, 'blocked', `${rung} follows an approved rung, so it is drawable`);
     } else {
@@ -104,9 +142,11 @@ test('an unfinished ladder always has exactly one rung open, and never two', () 
   const state = restyleState();
   const rungs = [LADDER_HEAD, ...Object.keys(LADDER)];
   const statusOf = (k) => state.find((r) => r.key === k).status;
-  const open = rungs.filter((k) => !['approved', 'blocked'].includes(statusOf(k)));
+  const open = rungs.filter((k) => !['approved', 'blocked', 'stale'].includes(statusOf(k)));
   assert.ok(open.length <= 1, `the ladder is sequential, so at most one rung is open: ${open}`);
-  if (rungs.some((k) => statusOf(k) !== 'approved')) {
+  // Stale rungs are a deliberate pause — the next move is a spec edit, not a
+  // generate — so "stuck" only means something once none of them is stale.
+  if (rungs.some((k) => statusOf(k) !== 'approved') && !rungs.some((k) => statusOf(k) === 'stale')) {
     assert.equal(open.length, 1, 'rungs are left but none is open — the ladder is stuck');
   }
 });

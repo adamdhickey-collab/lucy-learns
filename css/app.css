@@ -3896,7 +3896,7 @@ details.disclosure .disclosure-body {
      PNG. Re-measure it whenever the art changes — this value drifted a little
      with each new illustration, and a mismatch shows up as a faint rectangle
      exactly where the two are supposed to be indistinguishable. */
-  --splash-field: #e6deed;
+  --splash-field: #f0ebe4;
   background: var(--splash-field);
   transition: opacity 420ms ease-in;
 

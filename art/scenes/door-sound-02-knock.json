@@ -1,0 +1,30 @@
+{
+  "id": "door-sound-02-knock",
+  "briefId": "cool-flat-v2",
+  "shippedUnder": "cool-flat-v2",
+  "title": "A visitor knocks on the door",
+  "activity": "Doorbell Predicts Rewards",
+  "step": "Level 1, step 2 of 5 — the sound, made by someone else",
+  "note": "Written after the fact, on 2026-09-04. This is one of the six pictures drawn by hand through a chat window before the pipeline existed, so it never had a spec; this one reconstructs the shipped picture so that it can be redrawn under cool-flat-v2 with everything but the room unchanged. ",
+  "blocks": [
+    "style",
+    "porch",
+    "cast"
+  ],
+  "references": [
+    {
+      "scene": "door-sound-02-self",
+      "role": "style:exemplar"
+    },
+    {
+      "path": "art/source/Calm Door Greetings/door-greet-08-petting.png",
+      "role": "likeness:guest"
+    },
+    {
+      "scene": "door-sound-02-bell",
+      "role": "continuity:pair"
+    }
+  ],
+  "scene": "The companion picture to the doorbell scene, and it is the same porch from the same camera at the same distance: the shut charcoal door with its four-pane window filling the middle and right, the off-white frame, pale grey-green lap siding, the spruce shrub at the right edge, the plain porch floor. The guest stands in the same place to the left of the door in the same clothes — black cap, glasses, blue hoodie over a white tee, dark trousers — and this time knocks: his near fist is raised to the door's upper panel below the window, knuckles against the leaf, his other arm relaxed at his side. Nothing else differs from the doorbell picture. No dog; the blue hoodie is the one saturated note. THE GUEST ATTACHMENT WAS DRAWN IN THE OLD LAVENDER ROOM: take his face, glasses, black cap and blue hoodie from it and nothing else. The wall colour comes from the style block — warm off-white plaster — and nothing in that attachment overrides it. Exactly two arms and two hands, one knocking and one at his side.",
+  "mustBeTrue": "the guest's fist is raised against the door leaf, knocking, and no finger is on the doorbell; the door is shut with its four-pane window showing flat green; the porch, door, camera and the guest's clothes match the attached doorbell picture so the two read as a pair; and there is no dog and nobody else in the picture."
+}

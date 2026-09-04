@@ -23,8 +23,8 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { ROOT } from './brief.mjs';
-import { loadScene } from './scene.mjs';
+import { ROOT, BRIEF_ID } from './brief.mjs';
+import { loadScene, refuseStale, stampShippedUnder, SCENES_DIR } from './scene.mjs';
 import { MASTER, RESTYLE_DIR, outputPaths } from './request.mjs';
 import { imageSize } from './imagesize.mjs';
 import { tickWorklist, worklistTotal, worklistRemaining } from './worklist.mjs';
@@ -330,7 +330,7 @@ async function approveSplash({ sceneId, round, out, manifest, yes, run, base, ab
 export async function cmdApprove(
   sceneId,
   argv = [],
-  { sips = runSips, base = ROOT, log = console.log } = {}
+  { sips = runSips, base = ROOT, log = console.log, scenesDir = SCENES_DIR } = {}
 ) {
   const yes = argv.includes('--yes');
   const at = argv.indexOf('--round');
@@ -341,7 +341,8 @@ export async function cmdApprove(
   if (!sceneId) throw new Error('approve <scene-id> [--round N] --yes');
   if (at !== -1 && !Number.isInteger(asked)) throw new Error('--round takes a number');
 
-  const scene = loadScene(sceneId);
+  const scene = loadScene(sceneId, { dir: scenesDir });
+  refuseStale(scene);
   const profile = profileFor(scene);
   const round = asked ?? latestRound(sceneId, fs, base);
   if (round === null) {
@@ -372,14 +373,18 @@ export async function cmdApprove(
     }
   }
 
-  if (profile.install === 'icon') {
-    return approveIcon({ sceneId, round, out, manifest, yes, run: sips, base, abs, say });
-  }
-  if (profile.install === 'avatar') {
-    return approveAvatar({ sceneId, round, out, manifest, yes, run: sips, base, abs, say });
-  }
-  if (profile.install === 'splash') {
-    return approveSplash({ sceneId, round, out, manifest, yes, run: sips, base, abs, say });
+  // The one committed record of which brief a shipped master was drawn under.
+  // Written here and nowhere else, after the install and never on a dry run,
+  // so a spec that says shippedUnder "cool-flat-v2" is a picture that came
+  // through this function under it. status and the ladder gate read nothing
+  // else for that question, because the round manifests are gitignored.
+  const specFile = path.join(scenesDir, `${sceneId}.json`);
+  const stamp = () => fs.writeFileSync(specFile, stampShippedUnder(fs.readFileSync(specFile, 'utf8'), BRIEF_ID));
+  const installers = { icon: approveIcon, avatar: approveAvatar, splash: approveSplash };
+  if (installers[profile.install]) {
+    const result = await installers[profile.install]({ sceneId, round, out, manifest, yes, run: sips, base, abs, say });
+    if (result.approved) stamp();
+    return result;
   }
 
   const shipped = `img/${sceneId}.jpg`;
@@ -393,6 +398,7 @@ export async function cmdApprove(
     say(`    ${thumb}   ← ${THUMB.width}px wide, JPEG q${THUMB.quality}`);
     say(`    ${master}   ← the master, replacing the one shipping today`);
     say(`    ${WORKLIST}   ← tick the row`);
+    say(`    art/scenes/${sceneId}.json   ← shippedUnder "${BRIEF_ID}"`);
     say(`\n  This replaces what the app shows. Re-run with --yes.\n`);
     return { approved: false };
   }
@@ -441,5 +447,6 @@ export async function cmdApprove(
   }
   say('\n  Nothing committed. Review the diff, then commit it yourself.\n');
 
+  stamp();
   return { approved: true, round, shipped, thumb, master, remaining: left.length, total };
 }

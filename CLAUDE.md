@@ -42,7 +42,7 @@ Mac, branch and history intact.
 
 ## Checks
 
-    node --test scripts/lib/*.test.mjs     the illustration pipeline (180 tests)
+    node --test scripts/lib/*.test.mjs     the illustration pipeline
     node scripts/pilot.mjs verify          every image the app references resolves
     node scripts/check-contrast.mjs        every colour pairing against WCAG AA
 
@@ -114,6 +114,35 @@ reason the token was kept — was dropped rather than redrawn, because the
 redrawn dog-01 is the same black Labrador in the same palette. Every picture in
 the app is now the colour it was drawn, and no filter is applied to any of them
 at render time.
+
+## The room, redrawn — `cool-flat-v2`
+
+The finish line above was crossed under `cool-flat-v1`, whose room had a
+lavender wall drawn as kin to `--slate-100` while the slate still ran violet.
+With the paper neutralised, that wall — a third of each picture by pixel count,
+and the first thing on every step screen — was the purple that was left. `v2`
+changes the room and nothing else: walls to a warm plaster, trim to the new
+paper, the violet out of the dog bed, and the same field under the avatars,
+the icon and the splash.
+
+A spec carries two briefs: `briefId`, the one the request is written for, and
+`shippedUnder`, the one the master in `img/` was drawn under — `approve` writes
+the second and nobody types it. Under `v2` every `v1` spec is **stale**:
+`status` marks it `↻`, and `generate`, `plan` and `approve` refuse it until you
+re-declare its `briefId` — per picture, on purpose, as you get to it. A ladder
+rung then waits for the rung before it to *ship* under `v2`, not merely to be
+re-declared. The exemplar trap is the one to watch: attachment 1 is a `v1`
+scene until a `v2` one is approved, so Block A carves the wall out by name.
+`door-sound-02-self` goes first, as it did before.
+
+**The second finish line, crossed the same day.** All thirty-seven room scenes,
+the twenty-four avatars, the icon and the splash ship under `cool-flat-v2`;
+`status` reads 37 approved, 0 to redraw, and every spec's `shippedUnder` says
+so. Seventy-one rounds for sixty-three pictures. The faults that needed a
+second round are named in their specs — the exemplar's gaze copied into a
+scene that forbade it, a cover drawn too large for its own crop, a windowless
+door, a dog leading an approach — and the one that needed a third, the program
+cover's framing, was fixed by an attachment rather than by words.
 
 ## House style
 

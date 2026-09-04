@@ -1,10 +1,11 @@
 {
   "id": "door-stay-05-release",
-  "briefId": "cool-flat-v1",
+  "briefId": "cool-flat-v2",
+  "shippedUnder": "cool-flat-v2",
   "title": "Released off the bed",
   "activity": "Stay While the Door Opens",
   "step": "Level 5 — the release",
-  "note": "Used twice. The only picture in this activity where leaving the bed is correct, so the release has to be legible: she is stepping off, forward and up, toward two open welcoming hands. Everywhere else in the ladder that motion is the failure.",
+  "note": "Used twice. The only picture in this activity where leaving the bed is correct, so the release has to be legible: she is stepping off, forward and up, toward two open welcoming hands. Everywhere else in the ladder that motion is the failure. Re-declared for cool-flat-v2 (the plaster wall) on 2026-09-04; nothing about the scene changed.",
   "blocks": [
     "style",
     "cast"

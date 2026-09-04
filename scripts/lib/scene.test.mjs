@@ -18,8 +18,10 @@ import {
   pendingReferences,
   ROLES,
   SCENES_DIR,
+  refuseStale,
+  stampShippedUnder,
 } from './scene.mjs';
-import { loadBlocks, BLOCK_IDS, BRIEF_ID, ROOT } from './brief.mjs';
+import { loadBlocks, BLOCK_IDS, BRIEF_ID, SUPERSEDED_BRIEFS, ROOT } from './brief.mjs';
 
 const BLOCKS = { style: 'STYLE BLOCK', porch: 'PORCH BLOCK', cast: 'CAST BLOCK' };
 
@@ -60,7 +62,7 @@ test('a spec with no briefId is rejected', () => {
 test('a spec written for a superseded brief is rejected, not silently regenerated', () => {
   assert.throws(
     () => validateScene(good({ briefId: 'warm-instructional-v1' }), { checkFiles: false }),
-    /is not the current brief "cool-flat-v1"/
+    /is not the current brief "cool-flat-v2"/
   );
 });
 
@@ -210,7 +212,10 @@ test('loadScene rejects malformed JSON with the filename in the message', () => 
 
 test('the real pilot scene loads, validates and assembles against the live brief', () => {
   const scene = loadScene('door-sound-03-name');
-  assert.equal(scene.briefId, BRIEF_ID);
+  // Whether it is stale depends on where the redraw has got to, and a test
+  // that pinned that broke the day the picture was re-declared — see the
+  // fixture-based stale test below for the rule itself.
+  assert.ok([BRIEF_ID, ...SUPERSEDED_BRIEFS].includes(scene.briefId), scene.briefId);
   // The flat scene was the room reference; it is now the exemplar, which
   // carries the room instruction with it rather than being attached twice.
   assert.equal(scene.references.length, 3);
@@ -223,12 +228,81 @@ test('the real pilot scene loads, validates and assembles against the live brief
 
   const p = assemblePrompt(scene, loadBlocks());
   // The live brief, not the superseded warm one: these are Block A's own values.
-  assert.match(p, /#eae7f0/, 'must carry the cool wall from the current brief');
+  assert.match(p, /#e9e5df/, 'must carry the plaster wall from the current brief');
   assert.match(p, /#4a216d/, 'must carry the collar violet');
   assert.doesNotMatch(p, /Warm Instructional Vector/);
   assert.match(p, /1\. door-sound-02-self\.png/);
   assert.match(p, /2\. trainer-reference\.jpg/);
   assert.match(p, /ATTACHMENT 1 IS THE STYLE REFERENCE/);
+});
+
+test('a spec still declaring a superseded brief loads as stale; re-declared, it is current', () => {
+  // A copy of a real spec in a dir of its own, so the test says which brief
+  // it declares instead of reading that off a register that keeps moving.
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'scenes-'));
+  const real = JSON.parse(fs.readFileSync(path.join(SCENES_DIR, 'door-sound-02-self.json'), 'utf8'));
+  const write = (briefId) =>
+    fs.writeFileSync(path.join(dir, 'door-sound-02-self.json'), JSON.stringify({ ...real, briefId }));
+
+  write(SUPERSEDED_BRIEFS[0]);
+  const stale = loadScene('door-sound-02-self', { dir });
+  assert.equal(stale.stale, true);
+  assert.throws(() => refuseStale(stale), /shipped under brief "cool-flat-v1"/);
+
+  write(BRIEF_ID);
+  const current = loadScene('door-sound-02-self', { dir });
+  assert.equal(current.stale, false);
+  assert.doesNotThrow(() => refuseStale(current));
+});
+
+test('shippedUnder is optional, must be a known brief, and is kept on the scene', () => {
+  assert.equal(validateScene(good(), { checkFiles: false }).shippedUnder, undefined);
+  assert.equal(validateScene(good({ shippedUnder: SUPERSEDED_BRIEFS[0] }), { checkFiles: false }).shippedUnder, SUPERSEDED_BRIEFS[0]);
+  assert.throws(
+    () => validateScene(good({ shippedUnder: 'warm-instructional-v1' }), { checkFiles: false }),
+    /shippedUnder "warm-instructional-v1" is not a brief this pipeline knows/
+  );
+});
+
+test('stampShippedUnder sets one field beside briefId and touches nothing else', () => {
+  const text = JSON.stringify({ id: 'x', briefId: BRIEF_ID, title: 'T', scene: 's' }, null, 2) + '\n';
+  const stamped = stampShippedUnder(text, BRIEF_ID);
+  assert.deepEqual(Object.keys(JSON.parse(stamped)), ['id', 'briefId', 'shippedUnder', 'title', 'scene']);
+  assert.equal(JSON.parse(stamped).shippedUnder, BRIEF_ID);
+  // Idempotent, and a re-stamp under a newer brief replaces rather than duplicates.
+  assert.equal(stampShippedUnder(stamped, BRIEF_ID), stamped);
+  assert.equal(stamped.split('\n').length, text.split('\n').length + 1, 'one line added');
+});
+
+test('a ladder rung waits for the previous rung to ship under the current brief; the exemplar does not', () => {
+  // A register of one predecessor in a dir of its own, declared as having
+  // shipped under the old brief. The rung re-declared for v2 is blocked on
+  // it, while the same old picture used as a style exemplar is not — Block A
+  // carves the wall out of the exemplar by name, but a ladder is composition.
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'scenes-'));
+  const onestep = JSON.parse(fs.readFileSync(path.join(SCENES_DIR, 'door-stay-03-onestep.json'), 'utf8'));
+  fs.writeFileSync(path.join(dir, 'door-stay-03-onestep.json'), JSON.stringify({ ...onestep, shippedUnder: SUPERSEDED_BRIEFS[0] }));
+  const rung = JSON.parse(fs.readFileSync(path.join(SCENES_DIR, 'door-stay-03-halfway.json'), 'utf8'));
+  const redeclared = validateScene({ ...rung, briefId: BRIEF_ID }, { scenesDir: dir });
+  const byRole = Object.fromEntries(redeclared.references.map((r) => [r.role, r]));
+  assert.equal(byRole['continuity:ladder'].pending, true, 'the predecessor shipped under v1');
+  assert.equal(byRole['style:exemplar'].pending, false, 'the exemplar may be an older picture');
+  assert.deepEqual(pendingReferences(redeclared).map((r) => r.fromScene), ['door-stay-03-onestep']);
+  // Still stale itself, the same rung asks nothing of its references: it is refused first.
+  const stale = validateScene({ ...rung, briefId: SUPERSEDED_BRIEFS[0] }, { scenesDir: dir });
+  assert.equal(pendingReferences(stale).length, 0);
+});
+
+test('a superseded briefId validates and is marked stale; an unknown one is refused', () => {
+  const stale = validateScene(good({ briefId: SUPERSEDED_BRIEFS[0] }), { checkFiles: false });
+  assert.equal(stale.stale, true);
+  assert.throws(() => refuseStale(stale), /shipped under brief "cool-flat-v1"/);
+  assert.throws(() => refuseStale(stale), /set its briefId to "cool-flat-v2"/);
+  assert.throws(
+    () => validateScene(good({ briefId: 'warm-instructional-v1' }), { checkFiles: false }),
+    /or a superseded one \(cool-flat-v1\)/
+  );
+  assert.equal(validateScene(good(), { checkFiles: false }).stale, false);
 });
 
 // --- the legacy warm masters ----------------------------------------------
@@ -322,30 +396,48 @@ test('a scene cannot reference itself', () => {
   assert.throws(() => validateScene(spec, { checkFiles: false }), /cannot reference itself/);
 });
 
-test('a rung whose predecessor is redrawn is not pending', () => {
-  // Nothing is pending any more: the ledger went at the finish line and every
-  // approved master is current by definition, because no warm art is left.
-  const spec = good({ references: [{ scene: 'door-sound-01-setup', role: 'continuity:ladder' }] });
-  const s = validateScene(spec, { checkFiles: true });
-  assert.equal(s.references[0].pending, false);
-  assert.deepEqual(pendingReferences(s), []);
+test('a rung whose predecessor shipped under the current brief is not pending; under an older one it is', () => {
+  // A register of one predecessor, in a dir of its own, so the test can say
+  // which brief it shipped under without touching the real specs.
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'scenes-'));
+  const predecessor = JSON.parse(fs.readFileSync(path.join(SCENES_DIR, 'door-sound-01-setup.json'), 'utf8'));
+  const rung = good({ references: [{ scene: 'door-sound-01-setup', role: 'continuity:ladder' }] });
+  const write = (shippedUnder) =>
+    fs.writeFileSync(path.join(dir, 'door-sound-01-setup.json'), JSON.stringify({ ...predecessor, shippedUnder }));
+
+  write(BRIEF_ID);
+  const done = validateScene(rung, { checkFiles: true, scenesDir: dir });
+  assert.equal(done.references[0].pending, false);
+  assert.deepEqual(pendingReferences(done), []);
+
+  write(SUPERSEDED_BRIEFS[0]);
+  const behind = validateScene(rung, { checkFiles: true, scenesDir: dir });
+  assert.equal(behind.references[0].pending, true);
+  assert.deepEqual(pendingReferences(behind).map((r) => r.fromScene), ['door-sound-01-setup']);
+
+  // No record at all — the hand-drawn pictures — is pending too.
+  fs.unlinkSync(path.join(dir, 'door-sound-01-setup.json'));
+  assert.equal(validateScene(rung, { checkFiles: true, scenesDir: dir }).references[0].pending, true);
 });
 
 /**
- * There is no longer such a thing as a pending reference.
+ * Pending came back with the second brief.
  *
- * While the restyle ran, art/pilot/approved/ held warm masters and cool ones
- * under the same keys, and only the pilot ledger could tell them apart — so a
- * scene reference to a not-yet-redrawn picture was "pending" and `generate`
- * refused it. The ledger was deleted at the finish line and every approved
- * master is current by definition, so this pins the new answer rather than
- * keeping a test for a distinction that no longer exists.
+ * While the first restyle ran, art/pilot/approved/ held warm masters and cool
+ * ones under the same keys, and only the pilot ledger could tell them apart —
+ * so a reference to a not-yet-redrawn picture was "pending" and `generate`
+ * refused it. The ledger went at the finish line, and for a while nothing was
+ * pending because nothing was left to redraw. cool-flat-v2 is the "future set"
+ * that comment allowed for: the question is real again, and the answer now
+ * lives in each spec's `shippedUnder` rather than in a ledger.
  */
-test('no scene reference is pending now that no warm art is left', () => {
+test('a continuity reference is pending until the picture ships under the current brief', () => {
+  // Read off the real register, whichever way it currently points: the rule
+  // is that pending follows shippedUnder, not that any given rung is behind.
   const spec = good({ references: [{ scene: 'door-stay-03-cross', role: 'continuity:ladder' }] });
   const s = validateScene(spec, { checkFiles: true });
-  assert.equal(s.references[0].pending, false);
-  assert.deepEqual(pendingReferences(s), []);
+  const cross = JSON.parse(fs.readFileSync(path.join(SCENES_DIR, 'door-stay-03-cross.json'), 'utf8'));
+  assert.equal(s.references[0].pending, cross.shippedUnder !== BRIEF_ID);
 });
 
 test('a pending rung is not a validation error — plan must still run', () => {

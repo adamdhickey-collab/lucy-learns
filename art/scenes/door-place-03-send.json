@@ -1,10 +1,11 @@
 {
   "id": "door-place-03-send",
-  "briefId": "cool-flat-v1",
+  "briefId": "cool-flat-v2",
+  "shippedUnder": "cool-flat-v2",
   "title": "Send her to her bed",
   "activity": "Doorbell Means Place",
   "step": "Level 3 — the send",
-  "note": "Used five times, the most-reused picture in this activity. It replaces one whose direction was backwards: Lucy already standing ON the bed, facing OFF it, walking toward the pointing hand, on a step that says send her TO it. So the motion has to be unmistakably onto the bed, with the hand behind her. The door goes in frame; the old one never had it. And the bed is a mattress — docs/pilot-prompts.md logs this exact key as drawing it too thin, shipped knowingly at 1.53.0.",
+  "note": "Used five times, the most-reused picture in this activity. It replaces one whose direction was backwards: Lucy already standing ON the bed, facing OFF it, walking toward the pointing hand, on a step that says send her TO it. So the motion has to be unmistakably onto the bed, with the hand behind her. The door goes in frame; the old one never had it. And the bed is a mattress — docs/pilot-prompts.md logs this exact key as drawing it too thin, shipped knowingly at 1.53.0. Re-declared for cool-flat-v2 (the plaster wall) on 2026-09-04; 1 mention(s) of the old room moved to the new hexes and wording.",
   "blocks": [
     "style",
     "cast"
@@ -27,6 +28,6 @@
       "role": "continuity:room"
     }
   ],
-  "scene": "Interior entry hall, side view at standing eye level, with the closed charcoal front door visible in the background — the door must be in frame. Lucy is stepping ONTO her cool-grey dog bed — a proper mattress with real thickness, a padded slab about a hand deep with a soft raised edge, not a flat mat or a thin rug, caught mid-stride: her front feet are already up on the mattress, her back feet still on the floor, her body angled forward and UP onto it and her head facing across the bed. She is moving onto the bed, not off it, and she is not already standing on it. The handler stands BEHIND her, on the floor side, one arm extended low past Lucy's shoulder with the index finger pointing at the bed. Lucy is not looking back at the hand — she is going where it points. Take only the bed's shape, depth and cool grey from the second reference, not its open door or its guest. No leash. Background: the lavender wall, one baseboard line, the closed door, the bed.",
+  "scene": "Interior entry hall, side view at standing eye level, with the closed charcoal front door visible in the background — the door must be in frame. Lucy is stepping ONTO her cool-grey dog bed — a proper mattress with real thickness, a padded slab about a hand deep with a soft raised edge, not a flat mat or a thin rug, caught mid-stride: her front feet are already up on the mattress, her back feet still on the floor, her body angled forward and UP onto it and her head facing across the bed. She is moving onto the bed, not off it, and she is not already standing on it. The handler stands BEHIND her, on the floor side, one arm extended low past Lucy's shoulder with the index finger pointing at the bed. Lucy is not looking back at the hand — she is going where it points. Take only the bed's shape, depth and cool grey from the second reference, not its open door or its guest. No leash. Background: the plaster wall, one baseboard line, the closed door, the bed.",
   "mustBeTrue": "Lucy is unmistakably moving ONTO the bed — front feet up on the mattress, back feet still on the floor, body angled up onto it — with the handler's pointing hand BEHIND her rather than in front of her, the bed drawn as a thick padded mattress, and the closed front door visible in the background."
 }

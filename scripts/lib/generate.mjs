@@ -29,7 +29,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { ROOT } from './brief.mjs';
-import { loadScene, assemblePrompt, legacyMaster, pendingReferences } from './scene.mjs';
+import { loadScene, refuseStale, assemblePrompt, legacyMaster, pendingReferences, SCENES_DIR } from './scene.mjs';
 import {
   REQUEST,
   RESTYLE_DIR,
@@ -76,6 +76,7 @@ export async function cmdGenerate(
     sips = runSips,
     outBase = ROOT,
     restyleDir = path.join(ROOT, RESTYLE_DIR),
+    scenesDir = SCENES_DIR,
     log = console.log,
   } = {}
 ) {
@@ -94,7 +95,8 @@ export async function cmdGenerate(
   // Everything that can fail for free fails here, before the key is read and
   // before anything is spent: a bad spec, a missing reference, a brief that
   // does not match, a round directory already in the way.
-  const scene = loadScene(sceneId);
+  const scene = loadScene(sceneId, { dir: scenesDir });
+  refuseStale(scene);
   const profile = profileFor(scene);
   const prompt = assemblePrompt(scene);
   const round = nextRound(fs, restyleDir);
