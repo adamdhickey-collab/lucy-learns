@@ -1,11 +1,11 @@
 {
   "id": "door-stay-03-halfway",
-  "briefId": "cool-flat-v1",
-  "shippedUnder": "cool-flat-v1",
+  "briefId": "cool-flat-v2",
+  "shippedUnder": "cool-flat-v2",
   "title": "Halfway, and a glance back",
   "activity": "Stay While the Door Opens",
   "step": "Level 3, rung 2 — halfway",
-  "note": "This is the one that collides with door-stay-03-cross. The difference is motion, and it is the whole subject: this is STOPPED and turned round; cross is WALKING, mid-stride, going away. Said twice in the scene text on purpose.\n\nThe continuity:room reference to door-cover.png was removed before the first restyle round. Every rung carried both it and the continuity:ladder reference to the rung before, and their instructions contradict each other on the one thing the ladder cannot get wrong: the ladder role says match the previous rung's camera exactly, and the room role says match door-cover's camera exactly — but door-cover is a different shot, with the door open and the guest in it. Two attachments arguing about the camera is the shape of the round-1 failure. The previous rung is the room reference, and a better one: the tan-era record shows the camera holding to four pixels across four generations when each frame was attached to the last and nothing else competed. door-stay-03-onestep keeps its door-cover reference because it is the head of the ladder and has no previous rung to use instead.",
+  "note": "This is the one that collides with door-stay-03-cross. The difference is motion, and it is the whole subject: this is STOPPED and turned round; cross is WALKING, mid-stride, going away. Said twice in the scene text on purpose.\n\nThe continuity:room reference to door-cover.png was removed before the first restyle round. Every rung carried both it and the continuity:ladder reference to the rung before, and their instructions contradict each other on the one thing the ladder cannot get wrong: the ladder role says match the previous rung's camera exactly, and the room role says match door-cover's camera exactly — but door-cover is a different shot, with the door open and the guest in it. Two attachments arguing about the camera is the shape of the round-1 failure. The previous rung is the room reference, and a better one: the tan-era record shows the camera holding to four pixels across four generations when each frame was attached to the last and nothing else competed. door-stay-03-onestep keeps its door-cover reference because it is the head of the ladder and has no previous rung to use instead. Re-declared for cool-flat-v2 (the plaster wall) on 2026-09-04; nothing about the scene changed. Drawn off the v2 onestep, as the ladder gate requires.",
   "blocks": [
     "style",
     "cast"
