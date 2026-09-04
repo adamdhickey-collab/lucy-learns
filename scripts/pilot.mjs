@@ -656,7 +656,13 @@ const [cmd, ...rest] = process.argv.slice(2);
   verify: () => cmdVerify(),
   masters: () => cmdMasters(),
   sheet: () => cmdSheet(rest[0]),
-  plan: () => cmdPlan(rest[0]),
+  plan: () => {
+    try {
+      cmdPlan(rest[0]);
+    } catch (e) {
+      die(e);
+    }
+  },
   generate: () => cmdGenerate(rest[0], rest.slice(1)).catch(die),
   approve: () => cmdApprove(rest[0], rest.slice(1)).catch(die),
   status: () => cmdStatus(rest),

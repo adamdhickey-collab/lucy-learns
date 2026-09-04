@@ -1,6 +1,7 @@
 {
   "id": "door-stay-cover",
   "briefId": "cool-flat-v1",
+  "shippedUnder": "cool-flat-v1",
   "title": "Stay While the Door Opens — activity cover",
   "activity": "Stay While the Door Opens",
   "step": "the activity cover",

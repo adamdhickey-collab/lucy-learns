@@ -1,6 +1,7 @@
 {
   "id": "door-stay-03-crack",
   "briefId": "cool-flat-v1",
+  "shippedUnder": "cool-flat-v1",
   "title": "A few inches of daylight",
   "activity": "Stay While the Door Opens",
   "step": "Level 3, rung 5 — the door opens",

@@ -1,6 +1,7 @@
 {
   "id": "door-greet-09-leaves",
   "briefId": "cool-flat-v1",
+  "shippedUnder": "cool-flat-v1",
   "title": "The guest goes, and she stays sitting",
   "activity": "Controlled Real Greeting",
   "step": "Level 9 — the ending",

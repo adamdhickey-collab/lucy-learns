@@ -1,6 +1,7 @@
 {
   "id": "door-stay-03-cross",
   "briefId": "cool-flat-v1",
+  "shippedUnder": "cool-flat-v1",
   "title": "All the way to the door",
   "activity": "Stay While the Door Opens",
   "step": "Level 3, rung 3 — the far side of the room",

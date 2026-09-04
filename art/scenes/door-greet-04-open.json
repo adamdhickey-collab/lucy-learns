@@ -1,6 +1,7 @@
 {
   "id": "door-greet-04-open",
   "briefId": "cool-flat-v1",
+  "shippedUnder": "cool-flat-v1",
   "title": "She holds the bed while the door is open",
   "activity": "Controlled Real Greeting",
   "step": "Level 4 — a real person at the open door",

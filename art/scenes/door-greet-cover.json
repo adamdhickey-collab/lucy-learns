@@ -1,6 +1,7 @@
 {
   "id": "door-greet-cover",
   "briefId": "cool-flat-v1",
+  "shippedUnder": "cool-flat-v1",
   "title": "Controlled Real Greeting — activity cover",
   "activity": "Controlled Real Greeting",
   "step": "the activity cover",

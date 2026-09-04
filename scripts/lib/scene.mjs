@@ -19,7 +19,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { ROOT, BLOCK_IDS, BRIEF_ID, loadBlocks } from './brief.mjs';
+import { ROOT, BLOCK_IDS, BRIEF_ID, SUPERSEDED_BRIEFS, loadBlocks } from './brief.mjs';
 import { PROFILE_IDS } from './profiles.mjs';
 
 export const SCENES_DIR = path.join(ROOT, 'art/scenes');
@@ -75,24 +75,60 @@ export const ROLES = {
 };
 
 /**
- * Whether a scene reference is still waiting on a picture that has not been
- * drawn against the current brief.
- *
- * This used to be a real question with a real answer. While the restyle was
- * running, art/pilot/approved/ held a mix: legacy warm masters under the same
- * keys the cool set would use, and redrawn cool ones. Attaching the wrong one
- * gave you a picture that looked plausible and was drawn in the style the whole
- * effort existed to replace — so "redrawn" was read off the pilot ledger in
- * css/app.css rather than off the filesystem, because the filesystem could not
- * tell them apart.
- *
- * The ledger was deleted at the finish line, along with the grade it controlled,
- * and that is what makes this simple: every approved master is now current by
- * definition, because there is no warm art left anywhere. Nothing is pending.
- * The field stays so `plan` and `generate` keep their shape, and so the ladder's
- * refusal has somewhere to live if a future set ever needs it again.
+ * Roles for which the referenced picture must itself have shipped under the
+ * current brief. A ladder rung is drawn off the previous rung's master, a pair
+ * off its companion, an adjacent moment off the room it shares: attach one
+ * drawn in the old room and the new picture inherits that room. The style
+ * exemplar is exempt on purpose — every v2 scene attaches a v1 one until the
+ * first v2 is approved, and Block A carves the wall out of it by name.
  */
-const nothingIsPending = () => false;
+const MUST_SHARE_THE_BRIEF = new Set(['continuity:ladder', 'continuity:room', 'continuity:pair']);
+
+/**
+ * Whether a scene reference is waiting on a picture not yet drawn under the
+ * current brief.
+ *
+ * Between the first finish line and the second brief this was a stub,
+ * `() => false`: with no warm art left, every approved master was current by
+ * definition. cool-flat-v2 made it a real question again — the same one the
+ * pilot ledger used to answer, when art/pilot/approved/ held warm and cool
+ * masters under the same keys — and the answer now lives in the referenced
+ * spec's `shippedUnder`, which approve writes and which is committed, unlike
+ * the round manifests. A missing spec is pending too: the hand-drawn pictures
+ * have no record, so they cannot be attached until one exists and the picture
+ * has been redrawn through it.
+ *
+ * A stale spec asks nothing of its references — it is refused before any of
+ * them would be attached — so the check only runs for a spec that is current.
+ */
+function waitingOnRedraw(refScene, role, briefId, dir = SCENES_DIR) {
+  if (briefId !== BRIEF_ID || !MUST_SHARE_THE_BRIEF.has(role)) return false;
+  const file = path.join(dir, `${refScene}.json`);
+  if (!fs.existsSync(file)) return true;
+  try {
+    return JSON.parse(fs.readFileSync(file, 'utf8')).shippedUnder !== BRIEF_ID;
+  } catch {
+    return true;
+  }
+}
+
+/**
+ * The spec text with `shippedUnder` set and nothing else touched. Key order is
+ * kept and the field lands beside briefId, so the diff approve leaves is one
+ * line. Text in, text out: the caller decides where it is written, which is
+ * what lets the tests stamp a copy instead of the register.
+ */
+export function stampShippedUnder(text, briefId) {
+  const spec = JSON.parse(text);
+  const out = {};
+  for (const [k, v] of Object.entries(spec)) {
+    if (k === 'shippedUnder') continue;
+    out[k] = v;
+    if (k === 'briefId') out.shippedUnder = briefId;
+  }
+  if (!('shippedUnder' in out)) out.shippedUnder = briefId;
+  return JSON.stringify(out, null, 2) + '\n';
+}
 
 /**
  * Every reference that is useful for what it shows but wrong about how it is drawn.
@@ -174,7 +210,7 @@ class SpecError extends Error {
  * `checkFiles` exists for the tests: they need to exercise the shape rules on
  * fixtures without inventing image files on disk.
  */
-export function validateScene(spec, { checkFiles = true } = {}) {
+export function validateScene(spec, { checkFiles = true, scenesDir = SCENES_DIR } = {}) {
   const problems = [];
   const id = typeof spec?.id === 'string' ? spec.id : '(missing id)';
 
@@ -190,12 +226,26 @@ export function validateScene(spec, { checkFiles = true } = {}) {
   }
   // Not cosmetic: a spec written against the warm brief and generated against
   // the cool one comes back looking plausible and wrong.
-  if (spec.briefId !== BRIEF_ID) {
+  //
+  // A superseded brief is accepted here and refused later, on purpose. Loading
+  // is how status finds out a picture shipped under an older brief; spending,
+  // previewing and installing against it are what refuseStale() below stops.
+  // Re-declaring the spec's briefId is the act of saying "this one is being
+  // redrawn now" — a one-word edit, made deliberately, per picture.
+  if (spec.briefId === undefined) {
+    problems.push(`briefId is required — this brief is "${BRIEF_ID}"`);
+  } else if (spec.briefId !== BRIEF_ID && !SUPERSEDED_BRIEFS.includes(spec.briefId)) {
     problems.push(
-      spec.briefId === undefined
-        ? `briefId is required — this brief is "${BRIEF_ID}"`
-        : `briefId "${spec.briefId}" is not the current brief "${BRIEF_ID}"`
+      `briefId "${spec.briefId}" is not the current brief "${BRIEF_ID}"` +
+        (SUPERSEDED_BRIEFS.length ? ` or a superseded one (${SUPERSEDED_BRIEFS.join(', ')})` : '')
     );
+  }
+  // Which brief the master in img/ was drawn under. approve writes it; nobody
+  // types it. It is what status and the ladder gate read, because the round
+  // manifests that also know are gitignored. Absent means no master has come
+  // through this pipeline — the hand-drawn pictures, or a spec not yet drawn.
+  if (spec.shippedUnder !== undefined && ![BRIEF_ID, ...SUPERSEDED_BRIEFS].includes(spec.shippedUnder)) {
+    problems.push(`shippedUnder "${spec.shippedUnder}" is not a brief this pipeline knows`);
   }
 
   // Absent is `scene`, so the thirty-seven existing specs need no edit. A typo
@@ -246,7 +296,7 @@ export function validateScene(spec, { checkFiles = true } = {}) {
       const exists = fs.existsSync(abs);
       // Pending means "not yet drawn against this brief" — either no file at
       // all, or the legacy warm master still sitting under that name.
-      const pending = hasScene && nothingIsPending(ref.scene);
+      const pending = hasScene && waitingOnRedraw(ref.scene, ref.role, spec.briefId, scenesDir);
       if (checkFiles && !hasScene && !exists) problems.push(`${where}: file not found — ${rel}`);
       // Order is the array's order, recorded explicitly so the plan output and
       // the eventual request cannot disagree about it.
@@ -268,7 +318,21 @@ export function validateScene(spec, { checkFiles = true } = {}) {
     );
   }
   if (problems.length) throw new SpecError(id, problems);
-  return { ...spec, references: refs };
+  return { ...spec, references: refs, stale: spec.briefId !== BRIEF_ID };
+}
+
+/**
+ * Stop before spending, previewing or installing against a spec whose picture
+ * shipped under an older brief. The message names the edit, because the edit
+ * is the point: a re-declared briefId is a decision recorded in the spec.
+ */
+export function refuseStale(scene) {
+  if (!scene.stale) return;
+  throw new Error(
+    `${scene.id} shipped under brief "${scene.briefId}"; the current brief is "${BRIEF_ID}".\n` +
+      `  To redraw it, re-read art/scenes/${scene.id}.json against art/source/drawing-a-new-scene.md\n` +
+      `  and set its briefId to "${BRIEF_ID}" — that is the act of saying it is being redrawn now.`
+  );
 }
 
 /** Read `art/scenes/<id>.json`, validate it, and resolve its references. */
@@ -295,7 +359,7 @@ export function loadScene(id, { dir = SCENES_DIR, checkFiles = true } = {}) {
   if (spec.id !== id) {
     throw new SpecError(id, [`id "${spec.id}" does not match filename "${id}.json"`]);
   }
-  return validateScene(spec, { checkFiles });
+  return validateScene(spec, { checkFiles, scenesDir: dir });
 }
 
 /**

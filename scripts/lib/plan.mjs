@@ -11,7 +11,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT } from './brief.mjs';
-import { loadScene, assemblePrompt, ROLES, legacyMaster } from './scene.mjs';
+import { loadScene, refuseStale, assemblePrompt, ROLES, legacyMaster, SCENES_DIR } from './scene.mjs';
 import {
   REQUEST,
   RESTYLE_DIR,
@@ -28,7 +28,7 @@ import { profileFor, isDirect } from './profiles.mjs';
 
 const rule = (label) => `\n${'─'.repeat(4)} ${label} ${'─'.repeat(Math.max(0, 68 - label.length))}`;
 
-export function cmdPlan(sceneId) {
+export function cmdPlan(sceneId, { scenesDir = SCENES_DIR } = {}) {
   if (!sceneId) {
     const dir = path.join(ROOT, 'art/scenes');
     const known = fs.existsSync(dir)
@@ -38,7 +38,8 @@ export function cmdPlan(sceneId) {
     process.exit(1);
   }
 
-  const scene = loadScene(sceneId);
+  const scene = loadScene(sceneId, { dir: scenesDir });
+  refuseStale(scene);
   const profile = profileFor(scene);
   const prompt = assemblePrompt(scene);
   const round = nextRound(fs);

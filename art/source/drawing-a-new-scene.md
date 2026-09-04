@@ -52,14 +52,17 @@ Art drawn cool and then graded cooler goes grey.
 > **Cool palette, and these are the actual colors — match them.** Interior entryway
 > of an ordinary suburban home:
 >
-> - walls a pale lavender-grey **#eae7f0**, flat, no texture
-> - baseboards and door trim off-white **#f5f4f9**
+> - walls a warm off-white plaster **#e9e5df**, flat, no texture. **The wall is
+>   the one thing attachment 1 gets wrong:** every scene drawn before this brief
+>   has a pale lavender wall, so where the wall in the style reference and this
+>   hex disagree, this hex wins. Match the reference for everything else.
+> - baseboards and door trim off-white **#f6f6f7**
 > - floor a desaturated oak that reads as warm grey rather than honey, **#c3b5a8**,
 >   with plank lines as thin flat strokes and no wood grain
 > - the front door a cool charcoal **#3a3a46**, panelled, with a small four-pane
 >   window in its upper half
 > - daylight through that window a pale spruce **#34735c** for foliage, no sky detail
-> - a rectangular dog bed in cool grey **#b6b4c0**
+> - a rectangular dog bed in plain mid grey **#b5b5b9**
 > - a woven doormat in muted taupe **#b0a394**
 >
 > Light is even and ambient. No cast shadows except a single soft contact shadow
@@ -83,7 +86,7 @@ so it gets pinned the same way the interior is. Use these and nothing else:
 > Exterior, on the porch: flat pale grey-green house siding **#c9ccc8** with
 > thin horizontal lap lines and no texture; a plain porch floor in cool grey
 > **#b8b4b0**; the same charcoal **#3a3a46** front door with the same panelling
-> and the same four-pane window; its off-white frame **#f5f4f9**; a small
+> and the same four-pane window; its off-white frame **#f6f6f7**; a small
 > doorbell button on that frame at about chest height; and soft spruce
 > **#34735c** foliage as a flat silhouette at one edge. **No sky detail, no
 > porch furniture, no potted plants, no house numbers, no light fixture, no
@@ -125,10 +128,12 @@ This block is opt-in. No scene written before it existed asks for it, so adding
 it changed no prompt and no picture, and `BRIEF_ID` did not move.
 
 Those hexes are not decorative precision — they are the app's own tokens. The
-lavender wall is kin to `--slate-100`, the mustard pouch in Block B is literally
-`--gold-400`, the guest's hoodie is `--denim-600`, the foliage is `--spruce-600`,
-the warning rose is `--rose-400`. Drawing the pictures out of the interface's own
-palette is what will let the grade be deleted instead of merely reduced.
+trim is `--slate-25`, the mustard pouch in Block B is literally `--gold-400`, the
+guest's hoodie is `--denim-600`, the foliage is `--spruce-600`, the warning rose
+is `--rose-400`. The wall is the one deliberate exception: a warm plaster that is
+nobody's token, chosen so the paper behind the picture can be a neutral grey
+without the room going cold. Drawing the pictures out of the interface's own
+palette is what let the grade be deleted instead of merely reduced.
 
 ## Block B — the cast
 
@@ -213,6 +218,27 @@ The decision after the pilot was **not** to ship it alone. All thirty-seven
 registered scenes get redrawn before any of them go live, so the app changes
 style once instead of carrying two vocabularies at the same time. The list is
 [restyle-worklist.md](restyle-worklist.md).
+
+## cool-flat-v2 — the wall
+
+The v1 room had a lavender wall (`#eae7f0`) because the wall was drawn as kin to
+`--slate-100`, and at the time the slate ran violet. That was consistent and it
+was the problem: a violet-tinted paper, under a picture whose wall was a third
+lavender by pixel count, under a violet button, read as one colour on every
+step screen, and the palette work in the chrome could not be seen through it.
+
+v2 changes the room and nothing else. Walls to a warm plaster, trim to the
+paper's new neutral, the violet out of the dog bed. The floor and doormat were
+already the warm values, so the pilot's finding still holds — the room reads as
+a home because of them — but the wall no longer has to be cool for the paper to
+frame it, because the paper is neutral now.
+
+The trap is the exemplar. Every scene attaches a finished v1 picture as
+attachment 1 and the lead says the image wins on how things are drawn, so a v2
+prompt with a v1 exemplar would come back lavender-walled and correct by its own
+rules. Block A therefore carves the wall out by name. Once one v2 scene is
+approved it becomes the exemplar and the carve-out is belt-and-braces;
+`door-sound-02-self` goes first for that reason, as it did under v1.
 
 ## What the first pilot scene taught
 

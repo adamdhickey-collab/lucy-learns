@@ -1,6 +1,7 @@
 {
   "id": "door-sound-05-settle",
   "briefId": "cool-flat-v1",
+  "shippedUnder": "cool-flat-v1",
   "title": "The quiet moment between repetitions",
   "activity": "Doorbell Predicts Rewards",
   "step": "Level 1, step 5 of 5 — the pause",

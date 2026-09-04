@@ -31,10 +31,29 @@ export const BRIEF = path.join(ROOT, 'art/source/drawing-a-new-scene.md');
  * carries no marker at all, and telling a warm master from a cool one now takes
  * opening it. A scene declares the brief it was written for; a manifest records
  * the brief its image came from; and a spec written for a superseded brief is
- * refused rather than quietly generated against this one. Bump this when the
+* refused rather than quietly generated against this one. Bump this when the
  * brief changes in a way that changes the pictures.
+ *
+ * v2 is the wall. Under v1 the room was lavender (#eae7f0), the paper was a
+ * violet-tinted slate and the buttons were violet, and the app read as one
+ * colour — three purples stacked on every step screen. v2 moves the wall to a
+ * warm plaster, the trim to the paper's new neutral and the violet out of the
+ * dog bed; nothing about the cast, the style or the door changed. Every v1
+ * spec is stale by this rule and stays refused until it is re-declared, which
+ * is the pipeline doing its job: those masters were drawn in a lavender room.
  */
-export const BRIEF_ID = 'cool-flat-v1';
+export const BRIEF_ID = 'cool-flat-v2';
+
+/**
+ * Briefs a spec may still declare. A spec is the one committed record of which
+ * brief its shipped picture was drawn against — the round manifests also know,
+ * but art/pilot/restyle/ is gitignored — so a spec that still says
+ * "cool-flat-v1" is a true statement about the master in img/, not an error.
+ * scene.mjs accepts these and marks the scene `stale`; status reports it, and
+ * generate, plan and approve refuse it until the spec is re-declared. Nothing
+ * older than v1 belongs here: the tan-era brief never had specs.
+ */
+export const SUPERSEDED_BRIEFS = ['cool-flat-v1'];
 
 /**
  * The blocks a scene may ask for, keyed by the heading that carries them.

@@ -1,6 +1,7 @@
 {
   "id": "door-greet-05-reward",
   "briefId": "cool-flat-v1",
+  "shippedUnder": "cool-flat-v1",
   "title": "Pay her for holding the bed",
   "activity": "Controlled Real Greeting",
   "step": "Level 5 — paying while the guest waits",

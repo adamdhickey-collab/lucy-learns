@@ -1,6 +1,7 @@
 {
   "id": "door-sound-03-name",
   "briefId": "cool-flat-v1",
+  "shippedUnder": "cool-flat-v1",
   "title": "Say her name in a bright, happy voice",
   "activity": "Doorbell Predicts Rewards",
   "step": "Level 1, step 3 of 5",

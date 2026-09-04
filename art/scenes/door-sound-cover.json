@@ -1,6 +1,7 @@
 {
   "id": "door-sound-cover",
   "briefId": "cool-flat-v1",
+  "shippedUnder": "cool-flat-v1",
   "title": "Doorbell Predicts Rewards — activity cover",
   "activity": "Doorbell Predicts Rewards",
   "step": "the activity cover",

@@ -29,7 +29,7 @@ test('all three blocks extract and are non-trivial', () => {
 
 test('the blocks carry the current cool palette, not the superseded warm one', () => {
   const { style, porch, cast } = loadBlocks();
-  assert.match(style, /#eae7f0/, 'lavender wall');
+  assert.match(style, /#e9e5df/, 'plaster wall');
   assert.match(style, /#c3b5a8/, 'desaturated floor');
   assert.match(style, /#4a216d/, 'collar violet');
   assert.match(porch, /#c9ccc8/, 'porch siding');
@@ -48,7 +48,7 @@ test('the markdown "> " prefix is stripped from every line', () => {
 
 test("Block A keeps its bulleted colour list, which spans quoted blank lines", () => {
   const { style } = loadBlocks();
-  assert.match(style, /- walls a pale lavender-grey/);
+  assert.match(style, /- walls a warm off-white plaster/);
   assert.match(style, /- a woven doormat in muted taupe/);
 });
 

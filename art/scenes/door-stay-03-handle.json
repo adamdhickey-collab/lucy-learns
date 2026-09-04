@@ -1,6 +1,7 @@
 {
   "id": "door-stay-03-handle",
   "briefId": "cool-flat-v1",
+  "shippedUnder": "cool-flat-v1",
   "title": "A hand on the handle",
   "activity": "Stay While the Door Opens",
   "step": "Level 3, rung 4 — touching the door",

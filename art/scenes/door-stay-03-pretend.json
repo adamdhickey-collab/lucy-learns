@@ -1,6 +1,7 @@
 {
   "id": "door-stay-03-pretend",
   "briefId": "cool-flat-v1",
+  "shippedUnder": "cool-flat-v1",
   "title": "A hello to nobody",
   "activity": "Stay While the Door Opens",
   "step": "Level 3, rung 6 — standing in the doorway",

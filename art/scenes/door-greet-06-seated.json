@@ -1,6 +1,7 @@
 {
   "id": "door-greet-06-seated",
   "briefId": "cool-flat-v1",
+  "shippedUnder": "cool-flat-v1",
   "title": "Everyone sits down and ignores her",
   "activity": "Controlled Real Greeting",
   "step": "Level 6 — the visit settles",

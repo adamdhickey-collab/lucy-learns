@@ -1,6 +1,7 @@
 {
   "id": "door-stay-03-onestep",
   "briefId": "cool-flat-v1",
+  "shippedUnder": "cool-flat-v1",
   "title": "One step away",
   "activity": "Stay While the Door Opens",
   "step": "Level 3, rung 1 — the first step",

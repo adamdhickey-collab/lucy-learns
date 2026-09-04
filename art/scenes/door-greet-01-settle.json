@@ -1,6 +1,7 @@
 {
   "id": "door-greet-01-settle",
   "briefId": "cool-flat-v1",
+  "shippedUnder": "cool-flat-v1",
   "title": "Clip the leash on, well back from the door",
   "activity": "Controlled Real Greeting",
   "step": "Level 1 — settling her before anyone arrives",

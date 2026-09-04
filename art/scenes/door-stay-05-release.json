@@ -1,6 +1,7 @@
 {
   "id": "door-stay-05-release",
   "briefId": "cool-flat-v1",
+  "shippedUnder": "cool-flat-v1",
   "title": "Released off the bed",
   "activity": "Stay While the Door Opens",
   "step": "Level 5 — the release",

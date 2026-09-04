@@ -1,6 +1,7 @@
 {
   "id": "plan-name",
   "briefId": "cool-flat-v1",
+  "shippedUnder": "cool-flat-v1",
   "title": "Her name, with a squirrel behind her",
   "activity": "Planned activities",
   "step": "Activity cover",

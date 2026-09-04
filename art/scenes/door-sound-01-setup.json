@@ -1,6 +1,7 @@
 {
   "id": "door-sound-01-setup",
   "briefId": "cool-flat-v1",
+  "shippedUnder": "cool-flat-v1",
   "title": "Set up by the door",
   "activity": "Doorbell Predicts Rewards",
   "step": "Level 1, step 1 of 5 — the setup",

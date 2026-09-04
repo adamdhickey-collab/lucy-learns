@@ -1,6 +1,7 @@
 {
   "id": "door-stay-04-pay",
   "briefId": "cool-flat-v1",
+  "shippedUnder": "cool-flat-v1",
   "title": "Pay her on the bed",
   "activity": "Stay While the Door Opens",
   "step": "Level 4 — paying for the stay",

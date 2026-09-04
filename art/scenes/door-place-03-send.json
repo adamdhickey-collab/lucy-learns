@@ -1,6 +1,7 @@
 {
   "id": "door-place-03-send",
   "briefId": "cool-flat-v1",
+  "shippedUnder": "cool-flat-v1",
   "title": "Send her to her bed",
   "activity": "Doorbell Means Place",
   "step": "Level 3 — the send",

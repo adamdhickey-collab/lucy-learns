@@ -16,7 +16,7 @@ import os from 'node:os';
 import path from 'node:path';
 import zlib from 'node:zlib';
 
-import { ROOT } from './brief.mjs';
+import { ROOT, BRIEF_ID } from './brief.mjs';
 import { PROFILES } from './profiles.mjs';
 import { loadScene, SCENES_DIR } from './scene.mjs';
 import { MASTER, outputPaths } from './request.mjs';
@@ -153,6 +153,23 @@ function jpeg(w, h) {
   return Buffer.concat([Buffer.from([0xff, 0xd8]), sof, Buffer.from([0xff, 0xd9])]);
 }
 
+
+/**
+ * The real spec, re-declared for the live brief, in a scenes dir of its own. The specs in art/scenes/ say which brief their shipped picture
+ * was drawn under, and after a brief bump that is a superseded one — true, and
+ * refused by every command that spends, previews or installs. A test of those
+ * commands therefore needs a spec that is current, and this is the honest way
+ * to get one: the real request, with the one word that makes it drawable now.
+ */
+function currentSpec(id) {
+  // Its own temp dir, not the tree's: several tests assert the tree holds
+  // nothing but what the command wrote, and this spec is not the command's.
+  const scenes = fs.mkdtempSync(path.join(os.tmpdir(), 'scenes-'));
+  const spec = JSON.parse(fs.readFileSync(path.join(SCENES_DIR, `${id}.json`), 'utf8'));
+  fs.writeFileSync(path.join(scenes, `${id}.json`), JSON.stringify({ ...spec, briefId: BRIEF_ID }));
+  return scenes;
+}
+
 /** A temp tree with just the files approve touches, and a round to promote. */
 function tree({ masterSize = MASTER, round = 1 } = {}) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'approve-'));
@@ -164,7 +181,7 @@ function tree({ masterSize = MASTER, round = 1 } = {}) {
   write(CSS, css);
   write(WORKLIST, worklist);
   write(out.master, png(masterSize.width, masterSize.height));
-  write(out.manifest, JSON.stringify({ briefId: 'cool-flat-v1', scene: 'door-sound-03-name', approved: false }, null, 2));
+  write(out.manifest, JSON.stringify({ briefId: BRIEF_ID, scene: 'door-sound-03-name', approved: false }, null, 2));
   const lines = [];
   return {
     dir,
@@ -173,6 +190,7 @@ function tree({ masterSize = MASTER, round = 1 } = {}) {
     read: (p) => fs.readFileSync(path.join(dir, p), 'utf8'),
     opts: {
       base: dir,
+      scenesDir: currentSpec('door-sound-03-name'),
       log: (...a) => lines.push(a.join(' ')),
       // Stand in for sips: -Z <width> on a 4:3 master, written as a JPEG.
       sips: (argv) => {
@@ -196,6 +214,21 @@ test('approve installs both files, the master and the tick', async () => {
 
   assert.ok(!worklistRemaining(t.read(WORKLIST)).includes('door-sound-03-name'));
   assert.equal(t.read(CSS), css, 'the stylesheet is no longer touched at all');
+  // The spec now says which brief this master shipped under — the copy in the
+  // tree's scenes dir, not the register, which is the point of the copy.
+  const spec = JSON.parse(fs.readFileSync(path.join(t.opts.scenesDir, 'door-sound-03-name.json'), 'utf8'));
+  assert.equal(spec.shippedUnder, BRIEF_ID);
+  assert.equal(spec.briefId, BRIEF_ID);
+});
+
+test('a dry run leaves shippedUnder where it was', async () => {
+  const t = tree();
+  const before = JSON.parse(fs.readFileSync(path.join(t.opts.scenesDir, 'door-sound-03-name.json'), 'utf8')).shippedUnder;
+  await cmdApprove('door-sound-03-name', [], t.opts);
+  const after = JSON.parse(fs.readFileSync(path.join(t.opts.scenesDir, 'door-sound-03-name.json'), 'utf8')).shippedUnder;
+  assert.equal(after, before);
+  assert.notEqual(after, BRIEF_ID, 'the register says this one shipped under the first cool brief');
+  assert.ok(t.lines.join('\n').includes(`shippedUnder "${BRIEF_ID}"`), 'the dry run names the stamp it would make');
 });
 
 test('the promoted master is the round\'s master, byte for byte', async () => {

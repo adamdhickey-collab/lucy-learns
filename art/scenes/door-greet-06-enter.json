@@ -1,6 +1,7 @@
 {
   "id": "door-greet-06-enter",
   "briefId": "cool-flat-v1",
+  "shippedUnder": "cool-flat-v1",
   "title": "The guest comes in and she stays put",
   "activity": "Controlled Real Greeting",
   "step": "Level 6 — inside the door",

@@ -17,7 +17,8 @@ import { apiKey, buildForm, callApi, REQUEST, SOURCE, MASTER } from './request.m
 import { pngSize } from './imagesize.mjs';
 import { CROPS, cropBox, THUMBS, renditionPlan, sipsCrop, sipsThumb } from './renditions.mjs';
 import { reviewSheet } from './sheet.mjs';
-import { loadScene, assemblePrompt } from './scene.mjs';
+import { loadScene, assemblePrompt, SCENES_DIR } from './scene.mjs';
+import { BRIEF_ID } from './brief.mjs';
 import { cmdGenerate } from './generate.mjs';
 
 // --- a real PNG, so the header reader is tested against bytes not a mock ----
@@ -323,7 +324,7 @@ test('every sheet carries the standing checks, whatever the scene asks', () => {
   // The scene's own question and the six renditions between them did not ask
   // whether the person was drawn correctly, and a three-handed picture was
   // approved. This asks on every sheet regardless of scene.
-  const scene = { id: 's', title: 'T', briefId: 'cool-flat-v1', mustBeTrue: 'something else entirely' };
+  const scene = { id: 's', title: 'T', briefId: BRIEF_ID, mustBeTrue: 'something else entirely' };
   const html = reviewSheet(scene, { round: 1, master: 'm.png' }, []);
   // The block is wrapped across lines in the template, so match across newlines.
   const flat = html.replace(/\s+/g, ' ');
@@ -376,6 +377,23 @@ const run = (id, argv, opts, key = 'sk-test') =>
  * size its argv asks for, so the orchestrator's own dimension checks are
  * exercised rather than bypassed.
  */
+
+/**
+ * The real spec, re-declared for the live brief, in a scenes dir of its own. The specs in art/scenes/ say which brief their shipped picture
+ * was drawn under, and after a brief bump that is a superseded one — true, and
+ * refused by every command that spends, previews or installs. A test of those
+ * commands therefore needs a spec that is current, and this is the honest way
+ * to get one: the real request, with the one word that makes it drawable now.
+ */
+function currentSpec(id) {
+  // Its own temp dir, not the tree's: several tests assert the tree holds
+  // nothing but what the command wrote, and this spec is not the command's.
+  const scenes = fs.mkdtempSync(path.join(os.tmpdir(), 'scenes-'));
+  const spec = JSON.parse(fs.readFileSync(path.join(SCENES_DIR, `${id}.json`), 'utf8'));
+  fs.writeFileSync(path.join(scenes, `${id}.json`), JSON.stringify({ ...spec, briefId: BRIEF_ID }));
+  return scenes;
+}
+
 function harness({ returns = png(SOURCE.width, SOURCE.height), status = 200 } = {}) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'gen-'));
   const lines = [];
@@ -387,6 +405,7 @@ function harness({ returns = png(SOURCE.width, SOURCE.height), status = 200 } = 
     opts: {
       outBase: dir,
       restyleDir: path.join(dir, 'art/pilot/restyle'),
+      scenesDir: currentSpec('door-sound-03-name'),
       log: (...a) => lines.push(a.join(' ')),
       fetchImpl: async () => (status === 200 ? ok(returns) : fail(status, { error: { message: 'no' } })),
       sips: (argv) => {
@@ -422,7 +441,7 @@ test('the manifest records the run and is still not approved', async () => {
   const res = await run('door-sound-03-name', ['--yes'], h.opts);
   const m = JSON.parse(fs.readFileSync(path.join(h.dir, res.out.manifest), 'utf8'));
   assert.equal(m.approved, false);
-  assert.equal(m.briefId, 'cool-flat-v1');
+  assert.equal(m.briefId, BRIEF_ID);
   assert.equal(m.output.rawSize, '1472x1104');
   assert.equal(m.generatedAt, res.generatedAt);
   assert.match(m.generatedAt, /^\d{4}-\d{2}-\d{2}T/);

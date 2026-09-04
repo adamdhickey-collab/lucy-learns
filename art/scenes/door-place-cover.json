@@ -1,6 +1,7 @@
 {
   "id": "door-place-cover",
   "briefId": "cool-flat-v1",
+  "shippedUnder": "cool-flat-v1",
   "title": "Doorbell Means Place — activity cover",
   "activity": "Doorbell Means Place",
   "step": "the activity cover",
