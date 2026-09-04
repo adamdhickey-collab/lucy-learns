@@ -17,10 +17,12 @@ import path from 'node:path';
 import zlib from 'node:zlib';
 
 import { ROOT } from './brief.mjs';
+import { PROFILES } from './profiles.mjs';
+import { loadScene, SCENES_DIR } from './scene.mjs';
 import { MASTER, outputPaths } from './request.mjs';
 import { tickWorklist, worklistTotal, worklistRemaining, worklistRows } from './worklist.mjs';
 import { jpegSize, pngSize, imageSize } from './imagesize.mjs';
-import { cmdApprove, sipsShip, latestRound, SHIPPED, THUMB, CSS, WORKLIST } from './approve.mjs';
+import { cmdApprove, sipsShip, latestRound, SHIPPED, THUMB, CSS, WORKLIST , avatarPath } from './approve.mjs';
 
 const css = fs.readFileSync(path.join(ROOT, CSS), 'utf8');
 const worklist = fs.readFileSync(path.join(ROOT, WORKLIST), 'utf8');
@@ -276,4 +278,59 @@ test('the count reported is the worklist\'s, not a second tally', async () => {
   assert.equal(res.total, 37);
   assert.equal(res.remaining, worklistRemaining(t.read(WORKLIST)).length);
 
+});
+
+// --- avatars ----------------------------------------------------------------
+
+test('the avatar profile is square, copied, and inside the API limits', () => {
+  const p = PROFILES.avatar;
+  assert.deepEqual(p.source, p.master, 'no ratio to reconcile, so nothing to resample');
+  assert.equal(p.source.width, p.source.height);
+  for (const e of [p.source.width, p.source.height]) assert.equal(e % 16, 0);
+  const px = p.source.width * p.source.height;
+  assert.ok(px >= 655360 && px <= 8294400, `${px} outside the documented band`);
+});
+
+test('an avatar installs one PNG, dogs flat and people one deeper', () => {
+  assert.equal(avatarPath('dog-04'), 'img/avatars/dog-04.png');
+  assert.equal(avatarPath('person-11'), 'img/avatars/people/person-11.png');
+});
+
+test('a PNG render passes no format or quality flags', () => {
+  const argv = sipsShip('m.png', 'img/avatars/dog-01.png', 400, null);
+  assert.deepEqual(argv, ['sips', '-Z', '400', 'm.png', '--out', 'img/avatars/dog-01.png']);
+  assert.ok(!argv.includes('formatOptions'), 'quality on a PNG is ignored, which reads as if it worked');
+});
+
+test('every avatar spec declares the profile and leads with an exemplar', () => {
+  const ids = fs.readdirSync(SCENES_DIR).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5));
+  const avatars = ids.filter((id) => /^(dog|person)-\d\d$/.test(id));
+  assert.equal(avatars.length, 24, 'ten dogs and fourteen people');
+  for (const id of avatars) {
+    const scene = loadScene(id);
+    assert.equal(scene.profile, 'avatar', id);
+    assert.equal(scene.references[0].role, 'style:exemplar', id);
+  }
+});
+
+test('every avatar but dog-01 is drawn off dog-01', () => {
+  const ids = fs.readdirSync(SCENES_DIR).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5));
+  for (const id of ids.filter((i) => /^(dog|person)-\d\d$/.test(i) && i !== 'dog-01')) {
+    const scene = loadScene(id);
+    assert.equal(scene.references[0].fromScene, 'dog-01',
+      `${id} must take its field, crop and line weight from the set leader`);
+  }
+});
+
+test('avatars are outside the thirty-seven, so the finish line does not move', () => {
+  const md = fs.readFileSync(path.join(ROOT, WORKLIST), 'utf8');
+  assert.equal(worklistTotal(md), 37);
+  // A row, not a mention. This used to grep for the backticked key anywhere in
+  // the file, and the worklist's own notes name `dog-01` in prose — the line
+  // recording that lucy-portrait.jpg was retired in its favour — which is not
+  // a row and does not move the finish line.
+  const keys = new Set(worklistRows(md).map((r) => r.key));
+  for (const key of ['dog-01', 'person-01']) {
+    assert.ok(!keys.has(key), `${key} must not have a worklist row`);
+  }
 });

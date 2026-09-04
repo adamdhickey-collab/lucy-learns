@@ -1,0 +1,20 @@
+{
+  "id": "dog-02",
+  "briefId": "cool-flat-v1",
+  "profile": "avatar",
+  "title": "Golden Retriever",
+  "activity": "Avatars",
+  "step": "dog picker",
+  "note": "Drawn off dog-01, which sets the field, the crop and the line weight for the set.",
+  "blocks": [
+    "style"
+  ],
+  "references": [
+    {
+      "scene": "dog-01",
+      "role": "style:exemplar"
+    }
+  ],
+  "scene": "Flat vector-style portrait: crisp clean edges, flat colour fills, at most two tones per surface — one light, one shadow — with no gradient between them. No airbrushing, no soft blurred shading, no photorealistic fur or fabric texture, no glossy highlights, no drop shadow, no outline heavier than a hairline. Simplified but not childish: the proportions and the anatomy stay accurate. Square 1:1. The background is one flat field of pale lavender-grey #eae7f0, edge to edge, with no gradient, no vignette, no shadow behind the subject and no texture. It is identical in every picture in this set — the twenty-four are seen side by side in a grid, and a field that drifts between them reads as a patchwork. One subject, large and centred, filling most of the frame. It is only ever seen inside a CIRCULAR MASK at small sizes, so everything that identifies the subject must sit inside the centred circle that touches the edges — nothing that matters in the corners, and no part of the head or ears clipped by that circle. Side profile facing right, head and neck only, no body and no collar. The subject is a golden retriever — a warm honey-gold coat, feathered ear and chest, a broad friendly muzzle, gentle dark eye.",
+  "mustBeTrue": "the background is one flat unshaded field of #eae7f0 with no gradient or shadow, the rendering is flat two-tone with no airbrushing or glossy highlights, and the subject is centred and complete inside a circular mask that touches the frame edges"
+}

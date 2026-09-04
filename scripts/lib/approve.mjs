@@ -84,6 +84,10 @@ export const APPROVED_DIR = 'art/pilot/approved';
 
 /** `sips` argv to render a shipped JPEG from the master. */
 export function sipsShip(master, out, width, quality) {
+  // A null quality means PNG: resample only. Passing formatOptions to a PNG is
+  // not an error, it is ignored — which is worse, because it reads as if it
+  // had done something.
+  if (quality === null) return ['sips', '-Z', String(width), master, '--out', out];
   // -Z fits the longest edge, which is the width on a landscape 4:3 and gives
   // an exact 1100×825 and 240×180 from a 1448×1086 master — both integers, no
   // rounding to argue about.
@@ -159,6 +163,64 @@ function runSips(argv, what, cwd) {
  * going green. The manifest still gets stamped, because provenance is the whole
  * reason the brand marks were brought in here.
  */
+/** People live one level deeper than dogs under img/avatars/, and always have. */
+export const avatarPath = (key) =>
+  `img/avatars/${key.startsWith('person-') ? 'people/' : ''}${key}.png`;
+
+/**
+ * An avatar installs one PNG and nothing else.
+ *
+ * No thumbnail: js/content.js derives `thumb-` paths for scene assets only, and
+ * the avatar list is its own.
+ *
+ * No ledger row either, and that is new. The ledger existed to opt flat art out
+ * of the warm-art grade while both styles were in the app; the finish line
+ * deleted the grade, the rules that applied it and the ledger together, so
+ * there is now nothing to opt out of. An avatar arriving after that date is
+ * simply the picture.
+ *
+ * No worklist tick: the finish line counts worklist rows and these are not part
+ * of the thirty-seven.
+ */
+async function approveAvatar({ sceneId, round, out, manifest, yes, run, base, abs, say }) {
+  const shipped = avatarPath(sceneId);
+  const master = `${APPROVED_DIR}/${sceneId}.png`;
+
+  if (!yes) {
+    say(`\n  approve ${sceneId} from round ${round}\n`);
+    say(`    ${shipped}   ← 400px square, PNG`);
+    say(`    ${master}   ← the master`);
+    say('\n    no thumbnail, no ledger row, no worklist tick — an avatar is none');
+    say('    of those things. See profiles.mjs.');
+    say(`\n  This replaces what the picker shows. Re-run with --yes.\n`);
+    return { approved: false };
+  }
+
+  fs.mkdirSync(abs(path.dirname(shipped)), { recursive: true });
+  run(sipsShip(out.master, shipped, 400, null), 'the avatar render', base);
+  const got = imageSize(fs.readFileSync(abs(shipped)));
+  if (got.width !== 400 || got.height !== 400) {
+    throw new Error(`${shipped} came out ${got.width}×${got.height}, not 400×400`);
+  }
+
+  fs.mkdirSync(abs(APPROVED_DIR), { recursive: true });
+  fs.copyFileSync(abs(out.master), abs(master));
+
+  if (manifest) {
+    fs.writeFileSync(
+      abs(out.manifest),
+      JSON.stringify({ ...manifest, approved: true, approvedAt: new Date().toISOString() }, null, 2) + '\n'
+    );
+  }
+
+  const kb = (fs.statSync(abs(shipped)).size / 1024).toFixed(0);
+  say(`\n  ${sceneId} approved from round ${round}\n`);
+  say(`    ${shipped}   400×400  ${kb} KB`);
+  say(`    ${master}`);
+  say('\n  Nothing committed. Review the diff, then commit it yourself.\n');
+  return { approved: true, round, profile: 'avatar', installed: [shipped], master };
+}
+
 async function approveIcon({ sceneId, round, out, manifest, yes, run, base, abs, say }) {
   if (!yes) {
     say(`\n  approve ${sceneId} from round ${round}\n`);
@@ -312,6 +374,9 @@ export async function cmdApprove(
 
   if (profile.install === 'icon') {
     return approveIcon({ sceneId, round, out, manifest, yes, run: sips, base, abs, say });
+  }
+  if (profile.install === 'avatar') {
+    return approveAvatar({ sceneId, round, out, manifest, yes, run: sips, base, abs, say });
   }
   if (profile.install === 'splash') {
     return approveSplash({ sceneId, round, out, manifest, yes, run: sips, base, abs, say });

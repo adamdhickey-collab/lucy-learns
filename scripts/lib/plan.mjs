@@ -122,7 +122,9 @@ export function cmdPlan(sceneId) {
   console.log(`  master     ${out.master}  — ${profile.master.width}×${profile.master.height}`);
   console.log(
     `  crops      ${out.crops}/  — ${
-      profile.renditions === 'icon' ? 'the maskable safe zone, 512, 192, 180, 48' : 'square, 84px, 56px, 21:9'
+      { icon: 'the maskable safe zone, 512, 192, 180, 48', avatar: '400px, 84px, 56px' }[
+        profile.renditions
+      ] ?? 'square, 84px, 56px, 21:9'
     }`
   );
   console.log(`  sheet      ${out.sheet}`);

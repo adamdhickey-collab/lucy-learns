@@ -91,6 +91,12 @@ const pairs = [
   ['secondary', 'surface', NT, 'denim activity mark on card'],
   ['text-on-dark', 'success', AA, 'tick on a cleared disc'],
   ['success', 'surface-sunken', NT, 'spruce meter fill against its track'],
+  ['success', 'surface', NT, 'practice-frequency bar on its card'],
+  ['secondary', 'surface', AA, 'metric value on card'],
+  ['secondary-text', 'secondary-wash', AA, 'almost-there badge on its wash'],
+  ['secondary-text', 'background', AA, 'denim text on paper'],
+  ['secondary-text', 'surface-sunken', NT, 'goal mark on its disc'],
+  ['primary', 'surface', NT, "today's halo against the week card"],
 ];
 /* Not listed on purpose: --reward against its track. The gold meter fill is
    decorative by rule (never text, always beside a label with the value) and
