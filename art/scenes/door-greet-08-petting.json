@@ -1,6 +1,7 @@
 {
   "id": "door-greet-08-petting",
   "briefId": "cool-flat-v2",
+  "shippedUnder": "cool-flat-v2",
   "title": "The guest pets Lucy's chest while she sits",
   "activity": "Controlled Real Greeting",
   "step": "Level 2, step 8 — the greeting that goes right",

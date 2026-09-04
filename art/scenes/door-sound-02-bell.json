@@ -1,6 +1,7 @@
 {
   "id": "door-sound-02-bell",
   "briefId": "cool-flat-v2",
+  "shippedUnder": "cool-flat-v2",
   "title": "A visitor presses the doorbell",
   "activity": "Doorbell Predicts Rewards",
   "step": "Level 1, step 2 of 5 — the sound, made by someone else",
