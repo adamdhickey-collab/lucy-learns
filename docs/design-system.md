@@ -34,13 +34,25 @@ Everything else follows from three rules:
    (The player's cue callout learned this the hard way: it wore gold for a
    while, and a cue is an instruction, not a reward — it speaks violet now.)
 3. **Violet marks what you can tap and where you are; spruce marks what is
-   behind you.** Buttons, links, focus rings, the current tab, the live pip,
-   the level being practiced — violet is a promise of action or presence.
-   Progress already banked — meters, cleared pips and ticks, reached rungs
-   on the mastery ladder — is spruce: green says behind you, violet says you
-   are here. Eyebrows, captions, and counts are metadata and speak slate;
-   the activity marks are identity and speak denim. When everything is
-   violet, nothing is.
+   behind you; denim marks what is merely true.** Buttons, links, focus rings,
+   the current tab, the live pip, the level being practiced — violet is a
+   promise of action or presence. Progress already banked — meters, the
+   practice-frequency bars, cleared pips and ticks, reached rungs on the
+   mastery ladder — is spruce: green says behind you, violet says you are
+   here. Denim is the third claim and the one that was missing: information
+   that is neither, and cannot be acted on — the activity and goal marks, the
+   difficulty pips, the metric values, the rung one short of mastery. Eyebrows,
+   captions and counts are metadata and stay slate. When everything is violet,
+   nothing is.
+
+   That last sentence was written before it was true. Violet held 103 of the
+   colour declarations in `app.css` against denim's two, so denim named a role
+   the stylesheet did not actually staff, and every chart, badge and section
+   mark defaulted to violet for want of anywhere else to go. The redistribution
+   moved the practice-frequency chart to spruce (it is seven days already
+   practiced — the `.meter` rule, applied), and the goal marks, metric values
+   and the "almost there" badge to denim. Violet lost no role it was ever
+   supposed to have.
 
 The splash has been redrawn through the pilot pipeline, flat and cool like
 the rest of the set, with nothing baked into its pixels. An earlier version
@@ -105,15 +117,30 @@ saturation about 30% under it.
 
 | Ramp | From the artwork | Steps |
 | --- | --- | --- |
-| `--violet-*` | Lucy's collar | `50 #efe9f6` · `100 #e0d5f0` · `300 #a98fd0` · `600 #6a3d94` · `700 #55307a` · `800 #452368` (the lit strap) · `900 #34204f` (its shadow) |
+| `--violet-*` | Lucy's collar | `50 #e7e2f3` · `100 #e0d5f0` · `300 #a98fd0` · `600 #6a3d94` · `700 #55307a` · `800 #452368` (the lit strap) · `900 #34204f` (its shadow) |
 | `--slate-*` | neutrals, hue ≈245° at 2–8% saturation | `25 #f5f4f9` · `50 #ededf4` · `100 #e9e8f1` · `200 #dcdbe8` · `300 #c1c0d4` · `500 #5b5977` · `800 #24223a` · `900 #161428` |
-| `--denim-*` | the blue hoodie, Lucy's tag | `600 #4c6b9b` |
+| `--denim-*` | the blue hoodie, Lucy's tag | `100 #e5ecf5` · `600 #4c6b9b` · `700 #3f5c86` |
 | `--gold-*` | the treat pouch | `100 #f9f0d8` · `400 #e3b448` · `800 #755718` |
 | `--spruce-*` | the yard through the open door | `100 #e2eeea` · `600 #34735c` |
 | `--rose-*` | caution; magenta-side kin to the violet | `100 #f8e9ed` · `400 #c25e79` · `600 #a63d5b` · `700 #92344e` |
 
 The slate cast is the quiet load-bearer: enough violet that the grays belong
 to the collar's family, not so much that secondary text reads purple.
+
+**The 50 step is a blend, not a dilution.** `--violet-50` was `#efe9f6`, hue
+268° — the collar's own hue with the saturation taken out, which is a lilac,
+and a screenful of lilac pills is where the palette's one persistent complaint
+came from. A wash is the collar mixed *into the paper*, so its hue belongs
+between the two: the collar is 271°, the slate 252°, and the wash now sits at
+258° and about 3% deeper (`#e7e2f3`). The selected pill separates from its card
+slightly better as a side effect. Nothing else on the violet ramp moved — the
+anchor is a sampled object and does not get retuned for taste.
+
+Denim grew from one step to three for the same reason its role grew: a colour
+with no wash and no text-safe step cannot carry a badge, so it could not take
+work off violet even where the rules said it should. `700` exists because `600`
+lands at 4.54:1 on the new wash — over the floor, but not far enough over to
+survive anyone nudging either value.
 
 ### Semantic roles
 
@@ -129,9 +156,11 @@ to the collar's family, not so much that secondary text reads purple.
 | `--primary` | violet-600 | actions: fills under white text, links, focus rings, the live pip and the practiced level's arrow |
 | `--primary-dark` | violet-700 | hover, current tab, quiet-button labels, the splash wordmark |
 | `--primary-wash` | violet-50 | tints behind current/selected states |
-| `--secondary` | denim-600 | informational accents — the activity marks — and the second series where one accent is not enough |
+| `--secondary` | denim-600 | informational accents: the activity marks, the difficulty pips, the metric values, and the second series where one accent is not enough |
+| `--secondary-text` | denim-700 | denim as text or a stroked mark — the goal marks, the "almost there" badge |
+| `--secondary-wash` | denim-100 | tints behind denim-carried states |
 | `--reward` / `--reward-text` / `--reward-wash` | gold | reward moments only; `--reward` is fills and accents, never text |
-| `--success` / `--success-wash` | spruce | "that held", improvement deltas, and banked progress: meters, cleared pips and ticks, reached rungs |
+| `--success` / `--success-wash` | spruce | "that held", improvement deltas, and banked progress: meters, the practice-frequency bars, cleared pips and ticks, reached rungs |
 | `--caution` / `--caution-text` / `--caution-text-dark` / `--caution-wash` | rose | "too excited", regressions; `--caution` is fills and borders, `--caution-text` is the text-safe step |
 | `--border` / `--border-strong` | slate-200/300 | hairlines and control outlines |
 
@@ -150,13 +179,18 @@ non-text indicators 3:1 (WCAG 1.4.11).
 | secondary text on paper / card / sunken | 4.5 | 6.11 / 6.69 / 5.74 |
 | primary as link on paper / card | 4.5 | 7.09 / 7.75 |
 | white text on primary / primary-dark | 4.5 | 7.75 / 10.05 |
-| primary-dark on card / primary-wash | 4.5 | 10.05 / 8.45 |
+| primary-dark on card / primary-wash | 4.5 | 10.05 / 7.93 |
 | white on secondary (denim) | 4.5 | 5.41 |
+| metric value (denim) on card | 4.5 | 5.41 |
+| secondary-text on paper | 4.5 | 6.22 |
+| secondary-text on secondary-wash | 4.5 | 5.72 |
 | reward-text on wash / paper / card | 4.5 | 5.90 / 6.13 / 6.70 |
 | success on card / wash / paper | 4.5 | 5.60 / 4.70 / 5.11 |
 | caution-text on paper / wash / card | 4.5 | 5.58 / 5.19 / 6.10 |
-| splash wordmark (primary-dark) on `--splash-field` | 4.5 | 7.53 |
+| splash wordmark (primary-dark) on `--splash-field` | 4.5 | 7.67 |
 | denim activity mark on card | 3 | 5.41 |
+| goal mark (secondary-text) on its disc | 3 | 5.84 |
+| practice-frequency bar (spruce) on its card | 3 | 5.60 |
 | tick on a cleared spruce disc | 4.5 | 5.60 |
 | spruce meter fill vs track | 3 | 4.80 |
 | focus ring (primary) vs paper | 3 | 7.09 |
