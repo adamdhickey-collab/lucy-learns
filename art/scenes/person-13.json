@@ -1,12 +1,12 @@
 {
   "id": "person-13",
-  "briefId": "cool-flat-v1",
+  "briefId": "cool-flat-v2",
   "shippedUnder": "cool-flat-v1",
   "profile": "avatar",
   "title": "Oracle of Obedience",
   "activity": "Avatars",
   "step": "person picker",
-  "note": "Drawn off dog-01, which sets the field, the crop and the line weight for the set.",
+  "note": "Drawn off dog-01, which sets the field, the crop and the line weight for the set. Re-declared for cool-flat-v2 on 2026-09-04: the field moved from lavender to the plaster the rooms now have (2 mention(s) rewritten); nothing else changed.",
   "blocks": [
     "style"
   ],
@@ -16,6 +16,6 @@
       "role": "style:exemplar"
     }
   ],
-  "scene": "Flat vector-style portrait: crisp clean edges, flat colour fills, at most two tones per surface — one light, one shadow — with no gradient between them. No airbrushing, no soft blurred shading, no photorealistic fur or fabric texture, no glossy highlights, no drop shadow, no outline heavier than a hairline. Simplified but not childish: the proportions and the anatomy stay accurate. Square 1:1. The background is one flat field of pale lavender-grey #eae7f0, edge to edge, with no gradient, no vignette, no shadow behind the subject and no texture. It is identical in every picture in this set — the twenty-four are seen side by side in a grid, and a field that drifts between them reads as a patchwork. One subject, large and centred, filling most of the frame. It is only ever seen inside a CIRCULAR MASK at small sizes, so everything that identifies the subject must sit inside the centred circle that touches the edges — nothing that matters in the corners, and no part of the head or ears clipped by that circle. Head and shoulders in clean three-quarter view facing right, no hands and no dog. The subject is seventies, silver curls pinned up, small round glasses, a soft spruce-green wrap at the shoulders.",
-  "mustBeTrue": "the background is one flat unshaded field of #eae7f0 with no gradient or shadow, the rendering is flat two-tone with no airbrushing or glossy highlights, and the subject is centred and complete inside a circular mask that touches the frame edges"
+  "scene": "Flat vector-style portrait: crisp clean edges, flat colour fills, at most two tones per surface — one light, one shadow — with no gradient between them. No airbrushing, no soft blurred shading, no photorealistic fur or fabric texture, no glossy highlights, no drop shadow, no outline heavier than a hairline. Simplified but not childish: the proportions and the anatomy stay accurate. Square 1:1. The background is one flat field of warm off-white plaster #e9e5df, edge to edge, with no gradient, no vignette, no shadow behind the subject and no texture. It is identical in every picture in this set — the twenty-four are seen side by side in a grid, and a field that drifts between them reads as a patchwork. One subject, large and centred, filling most of the frame. It is only ever seen inside a CIRCULAR MASK at small sizes, so everything that identifies the subject must sit inside the centred circle that touches the edges — nothing that matters in the corners, and no part of the head or ears clipped by that circle. Head and shoulders in clean three-quarter view facing right, no hands and no dog. The subject is seventies, silver curls pinned up, small round glasses, a soft spruce-green wrap at the shoulders. DO NOT DRAW A CIRCLE, DISC, VIGNETTE OR BORDER OF ANY KIND: the plaster field #e9e5df fills the whole square to all four corners and all four edges, and the corners are the same colour as the middle. The circular mask is applied later by the app and must not appear in the picture; a picture with white or pale corners around a drawn disc is wrong.",
+  "mustBeTrue": "the background is one flat unshaded field of #e9e5df with no gradient or shadow, the rendering is flat two-tone with no airbrushing or glossy highlights, and the subject is centred and complete inside a circular mask that touches the frame edges"
 }
