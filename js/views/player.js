@@ -16,6 +16,7 @@ import {
   activityBySlug,
   isAvailable,
   IMAGES,
+  VERDICT_ART,
   stepsForLevel,
   levelOf,
   AROUSAL,
@@ -1298,25 +1299,27 @@ function doneScreen(activity, level) {
   const advice = session.advice;
   const saved = session.saved;
   const rate = saved.repetitions ? saved.successfulRepetitions / saved.repetitions : 0;
-  const caution = advice.suggest === 'down';
   const milestone = session.milestone;
 
-  // The verdict mark follows advice.suggest, which already carries the three
-  // outcomes, rather than only asking whether this is a caution. It used to
-  // draw `check` for everything that was not one, so "Ready for the next
-  // step" wore the same mark as the "Level N cleared" seal rendered directly
-  // below it. `check` keeps its one meaning here -- this is finished, stay
-  // where you are -- and advancing gets its own.
-  const markIcon = { up: 'advance', down: 'shield' }[advice.suggest] || 'check';
+  // The verdict is a picture of Lucy, keyed by the verdict itself rather than
+  // by advice.suggest. Before the pictures, a stroke mark stood here and
+  // followed `suggest` — but that has three values for seven verdicts, so
+  // "Nice progress" and "Take the pressure off" wore the same check, and it
+  // was the check the "Level N cleared" seal below already uses. Seven
+  // verdicts, seven pictures; the field colour behind Lucy says which.
+  //
+  // No fallback for a key without a picture: `pilot.mjs verify` fails on one
+  // before it ships, which is the check that should catch it. The explicit
+  // width and height are the 1448×482 the file is, so the box exists before
+  // the JPEG does and the title beneath does not jump when it arrives.
+  const art = VERDICT_ART[advice.key];
 
   return html`
     ${topBar('Done', 1, 1)}
     <div class="player-scroll">
       <div class="player-inner">
         <div class="recommend">
-          <div class="mark mark--${advice.suggest} ${caution ? 'mark--caution' : ''}">
-            ${icon(markIcon)}
-          </div>
+          <img class="verdict-art" src="${art.src}" alt="${art.alt}" width="1448" height="482" />
           <h1>${advice.title}</h1>
           <p>${advice.body}</p>
         </div>

@@ -382,6 +382,22 @@ async function cmdVerify() {
     }
   }
 
+  // The done screen's verdict pictures live outside IMAGES (see VERDICT_ART in
+  // content.js for why), so the loop above never sees them. Two checks of
+  // their own: every key `recommendation()` in metrics.js can return has a
+  // picture, and every picture is on disk and precached. The first is a text
+  // sweep of one file rather than a call, because the function's branches
+  // depend on stored sessions and there is no way to make it return all seven.
+  const { VERDICT_ART } = content;
+  const metrics = fs.readFileSync(path.join(ROOT, 'js/metrics.js'), 'utf8');
+  for (const m of metrics.matchAll(/\bkey:\s*'([^']+)'/g))
+    if (!VERDICT_ART[m[1]])
+      problems.push(`js/metrics.js returns verdict "${m[1]}", which has no picture in VERDICT_ART`);
+  for (const [key, v] of Object.entries(VERDICT_ART)) {
+    if (!fs.existsSync(path.join(ROOT, v.src))) problems.push(`verdict ${key}: ${v.src} is not on disk`);
+    if (!sw.includes(`'./${v.src}'`)) problems.push(`verdict ${key}: ${v.src} is not in the sw.js precache`);
+  }
+
   const orphans = Object.keys(IMAGES).filter((k) => !used.has(k));
 
   console.log(`\n  ${Object.keys(IMAGES).length} keys, ${used.size} reached, ${problems.length} problems`);

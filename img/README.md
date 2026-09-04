@@ -48,6 +48,7 @@ picker and the profile both scale the one file, at 83px and 76px.
 | `avatars/dog-NN.png` | the ten pickable dog portraits, 400², flat and cool |
 | `avatars/people/person-NN.png` | the fourteen handler portraits, 300² |
 | `splash-mark.jpg` | the splash artwork; iOS launch images are baked from it |
+| `verdicts/*.jpg` | the seven done-screen strips, one per verdict `recommendation()` returns — see below |
 | `icon-*.png`, `apple-*.png` | generated — see `scripts/make-icons.mjs` |
 
 ## Generated files
@@ -68,6 +69,24 @@ re-cut twice, with the offsets measured off her ears rather than guessed. It no
 longer ships: the redrawn `dog-01` is the same dog in the palette the rest of
 the app uses, so a second Labrador earned nothing. The recipe and the
 measurements are in the history if the crop is ever wanted again.)
+
+## The verdict strips
+
+`verdicts/` holds seven 3:1 pictures of Lucy, one for each key
+`recommendation()` in `js/metrics.js` can return, registered in
+`VERDICT_ART` in `js/content.js` rather than in `IMAGES` — they have no
+thumb, and `withThumb` would demand one. They were drawn from
+[`../art/source/prompts-done-verdicts.md`](../art/source/prompts-done-verdicts.md),
+and the masters are `art/source/verdicts/<key>.png` at 2172×724. Like
+`lucy-portrait.jpg` they are installed by hand, because seven files drawn
+once is not enough to earn a generator:
+
+    sips -s format jpeg -s formatOptions 85 -Z 1448 art/source/verdicts/<key>.png --out img/verdicts/<key>.jpg
+
+1448 wide to match the scene masters; q85 because these are flat fills and
+q85 is indistinguishable at 4× zoom at a fifth of the PNG's size. `verify`
+checks that every key `recommendation()` names has a file here and that the
+file is precached.
 
 ## Adding an image
 
