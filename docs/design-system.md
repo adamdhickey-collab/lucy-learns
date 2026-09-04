@@ -22,9 +22,9 @@ Everything else follows from three rules:
 
 1. **The chrome is cool; the art is warm.** The illustrations carry their own
    warm cream fields, wood floors, and olive greens. The app does not compete
-   with that — it frames it. Paper, borders, and text are slate pulled a few
-   degrees toward the collar's hue; the accents are violet and denim. Warm
-   pictures on a cool field sit forward, the way they do on a gallery wall.
+   with that — it frames it. Paper, borders, and text are a neutral slate;
+   the accents are violet, denim and spruce. Pictures on a quiet field sit
+   forward, the way they do on a gallery wall.
    On the old tan paper the art's cream dissolved into the UI's cream; now
    the picture starts where the warmth starts.
 2. **Warmth in the chrome always means reward.** Gold — the treat pouch's
@@ -118,14 +118,21 @@ saturation about 30% under it.
 | Ramp | From the artwork | Steps |
 | --- | --- | --- |
 | `--violet-*` | Lucy's collar | `50 #e7e2f3` · `100 #e0d5f0` · `300 #a98fd0` · `600 #6a3d94` · `700 #55307a` · `800 #452368` (the lit strap) · `900 #34204f` (its shadow) |
-| `--slate-*` | neutrals, hue ≈245° at 2–8% saturation | `25 #f5f4f9` · `50 #ededf4` · `100 #e9e8f1` · `200 #dcdbe8` · `300 #c1c0d4` · `500 #5b5977` · `800 #24223a` · `900 #161428` |
+| `--slate-*` | neutrals, hue 240° at 6–8% saturation | `25 #f6f6f7` · `50 #efeff1` · `100 #eaeaed` · `200 #dedee3` · `300 #c4c4cc` · `500 #5c5c68` · `800 #26262f` · `900 #17171d` |
 | `--denim-*` | the blue hoodie, Lucy's tag | `100 #e5ecf5` · `600 #4c6b9b` · `700 #3f5c86` |
 | `--gold-*` | the treat pouch | `100 #f9f0d8` · `400 #e3b448` · `800 #755718` |
 | `--spruce-*` | the yard through the open door | `100 #e2eeea` · `600 #34735c` |
 | `--rose-*` | caution; magenta-side kin to the violet | `100 #f8e9ed` · `400 #c25e79` · `600 #a63d5b` · `700 #92344e` |
 
-The slate cast is the quiet load-bearer: enough violet that the grays belong
-to the collar's family, not so much that secondary text reads purple.
+**The slate is neutral now, and it was not always.** It used to run 19–29%
+saturation at the light end, pulled toward the collar so the grays would
+"belong to its family" — a decision made while the art was warm and the paper
+had to read cool against it. Once the illustrations were redrawn cool with
+lavender walls of their own, that cast became a third purple under two others:
+violet-tinted paper, under a violet-walled picture, under a violet button. The
+paper is the largest surface on every screen, so it is the one surface that has
+to carry none of the hue. The ramp sits at hue 240 and 6–8% now, and every
+contrast floor that touches it rose a little when it moved.
 
 **The 50 step is a blend, not a dilution.** `--violet-50` was `#efe9f6`, hue
 268° — the collar's own hue with the saturation taken out, which is a lilac,
@@ -164,8 +171,8 @@ survive anyone nudging either value.
 | `--caution` / `--caution-text` / `--caution-text-dark` / `--caution-wash` | rose | "too excited", regressions; `--caution` is fills and borders, `--caution-text` is the text-safe step |
 | `--border` / `--border-strong` | slate-200/300 | hairlines and control outlines |
 
-Shadow ink is slate-900 (`rgba(22, 20, 40, …)`), so depth cools with
-everything else.
+Shadow ink is slate-900 (`rgba(23, 23, 29, …)`), so depth stays in the ramp's
+family.
 
 ## Contrast
 
@@ -175,21 +182,21 @@ non-text indicators 3:1 (WCAG 1.4.11).
 
 | Pairing | Floor | Measured |
 | --- | --- | --- |
-| body text on paper / card / sunken | 4.5 | 14.06 / 15.39 / 13.20 |
-| secondary text on paper / card / sunken | 4.5 | 6.11 / 6.69 / 5.74 |
-| primary as link on paper / card | 4.5 | 7.09 / 7.75 |
+| body text on paper / card / sunken | 4.5 | 13.88 / 14.99 / 13.06 |
+| secondary text on paper / card / sunken | 4.5 | 6.10 / 6.59 / 5.74 |
+| primary as link on paper / card | 4.5 | 7.18 / 7.75 |
 | white text on primary / primary-dark | 4.5 | 7.75 / 10.05 |
 | primary-dark on card / primary-wash | 4.5 | 10.05 / 7.93 |
 | white on secondary (denim) | 4.5 | 5.41 |
 | metric value (denim) on card | 4.5 | 5.41 |
-| secondary-text on paper | 4.5 | 6.22 |
+| secondary-text on paper | 4.5 | 6.30 |
 | secondary-text on secondary-wash | 4.5 | 5.72 |
-| reward-text on wash / paper / card | 4.5 | 5.90 / 6.13 / 6.70 |
-| success on card / wash / paper | 4.5 | 5.60 / 4.70 / 5.11 |
-| caution-text on paper / wash / card | 4.5 | 5.58 / 5.19 / 6.10 |
+| reward-text on wash / paper / card | 4.5 | 5.90 / 6.21 / 6.70 |
+| success on card / wash / paper | 4.5 | 5.60 / 4.70 / 5.18 |
+| caution-text on paper / wash / card | 4.5 | 5.65 / 5.19 / 6.10 |
 | splash wordmark (primary-dark) on `--splash-field` | 4.5 | 7.67 |
 | denim activity mark on card | 3 | 5.41 |
-| goal mark (secondary-text) on its disc | 3 | 5.84 |
+| goal mark (secondary-text) on its disc | 3 | 5.92 |
 | practice-frequency bar (spruce) on its card | 3 | 5.60 |
 | tick on a cleared spruce disc | 4.5 | 5.60 |
 | spruce meter fill vs track | 3 | 4.80 |
@@ -219,7 +226,7 @@ radii `--r-sm/md/lg/pill`; two motion curves only (`--spring` to arrive,
    checks what shipped, not what this document remembers.
 3. If `--background` moved: update `theme_color` in both `index.html` and
    `manifest.webmanifest`, and the two transparent gradient stops
-   (`rgba(245, 244, 249, 0)`) that fade the sticky action bar into the paper.
+   (`rgba(246, 246, 247, 0)`) that fade the sticky action bar into the paper.
 4. If the splash field moved (it belongs to the art, not to this palette):
    `scripts/make-splash.mjs` and `manifest.webmanifest`'s `background_color`
    carry the same value, and the launch images need regenerating.

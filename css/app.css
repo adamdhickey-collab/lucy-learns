@@ -71,16 +71,22 @@
   --violet-800: #452368;
   --violet-900: #34204f;
 
-  /* slate: the neutrals, hue ≈245 at 2–8% saturation. Enough cast to read
-     cool beside the warm art, not so much that gray text turns purple. */
-  --slate-25: #f5f4f9;
-  --slate-50: #ededf4;
-  --slate-100: #e9e8f1;
-  --slate-200: #dcdbe8;
-  --slate-300: #c1c0d4;
-  --slate-500: #5b5977;
-  --slate-800: #24223a;
-  --slate-900: #161428;
+  /* slate: the neutrals, and neutral now means neutral — hue 240 at 6–8%
+     saturation across the ramp, where it used to run 19–29% at the light end.
+     The cast was put there so the grays would "belong to the collar's family"
+     while the art was warm; once the art was redrawn cool with lavender walls
+     of its own, a violet-tinted paper under a violet-walled picture under a
+     violet button was three purples stacked, and the app read as one colour.
+     The paper is the largest surface on every screen, so it is the one that
+     has to carry none of the hue. Every contrast floor rose when it moved. */
+  --slate-25: #f6f6f7;
+  --slate-50: #efeff1;
+  --slate-100: #eaeaed;
+  --slate-200: #dedee3;
+  --slate-300: #c4c4cc;
+  --slate-500: #5c5c68;
+  --slate-800: #26262f;
+  --slate-900: #17171d;
 
   /* denim: the blue hoodie and Lucy's tag. Three steps now rather than one.
      Denim was defined for informational accents and then used twice in six
@@ -116,9 +122,9 @@
   --field: var(--slate-100);
   --surface: #ffffff;
   --surface-sunken: var(--slate-50);
-  --text-primary: var(--slate-800);       /* 14.06:1 on --background */
+  --text-primary: var(--slate-800);       /* 14.19:1 on --background */
   --text-primary-dark: var(--slate-900);  /* hover only */
-  --text-secondary: var(--slate-500);     /* 6.11:1 on --background */
+  --text-secondary: var(--slate-500);     /* 6.02:1 on --background */
   --text-on-dark: #ffffff;
 
   --primary: var(--violet-600);           /* 7.09:1 on --background, 7.75:1 on white,
@@ -182,9 +188,9 @@
   --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* Shadow ink is --slate-900, so shadows cool with everything else. */
-  --shadow-card: 0 1px 2px rgba(22, 20, 40, 0.05);
-  --shadow-lift: 0 6px 20px rgba(22, 20, 40, 0.1);
+  /* Shadow ink is --slate-900, so shadows stay in the ramp's family. */
+  --shadow-card: 0 1px 2px rgba(23, 23, 29, 0.05);
+  --shadow-lift: 0 6px 20px rgba(23, 23, 29, 0.1);
 
   --tap: 48px;
   --nav-h: calc(60px + env(safe-area-inset-bottom));
@@ -1571,7 +1577,7 @@ a.visually-hidden:focus {
   background: linear-gradient(
     to top,
     var(--background) 55%,
-    rgba(245, 244, 249, 0)
+    rgba(246, 246, 247, 0)
   );
 }
 
@@ -1598,7 +1604,7 @@ a.visually-hidden:focus {
   bottom: 100%;
   height: var(--s-6);
   pointer-events: none;
-  background: linear-gradient(to top, var(--background), rgba(245, 244, 249, 0));
+  background: linear-gradient(to top, var(--background), rgba(246, 246, 247, 0));
 }
 
 .sticky-hint {
