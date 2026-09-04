@@ -13,7 +13,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { ROOT } from './brief.mjs';
+import { ROOT, BRIEF_ID } from './brief.mjs';
 import { restyleState } from './status.mjs';
 import { worklistRows, worklistTotal, worklistRemaining } from './worklist.mjs';
 import { WORKLIST } from './approve.mjs';
@@ -61,22 +61,30 @@ test('approved means the worklist says so', () => {
   const state = restyleState();
   for (const row of state) {
     if (row.status === 'approved') assert.ok(row.ticked, `${row.key} is approved but unticked`);
-    // A ticked row is shipping: approved under the live brief, stale under a
-    // superseded one, or a redraw of it awaiting review. Never ready or blocked.
-    if (row.ticked) assert.ok(['approved', 'stale', 'draft'].includes(row.status), `${row.key}: ${row.status}`);
+    // A ticked row is shipping, and shipping is never "no spec yet". What
+    // else it can be depends on the redraw: stale, or re-declared and ready,
+    // blocked or drafted — the old master ships while the new one is made.
+    if (row.ticked) assert.notEqual(row.status, 'none', `${row.key} ships but reads as unspecced`);
   }
 });
 
-test('a re-declared picture is work in progress, not shipping and not stale', () => {
-  // door-sound-02-self went first under v2: its spec says the request is v2
-  // and the master shipped under v1. Locally a round may exist (gitignored),
-  // in a fresh clone none does, so the state is either — but never approved,
-  // which would claim the redraw is done, and never stale, which would tell
-  // someone to re-declare a spec that already is.
-  const row = restyleState().find((r) => r.key === 'door-sound-02-self');
-  assert.ok(row.ticked);
-  assert.ok(['ready', 'draft', 'blocked'].includes(row.status), row.status);
-  assert.match(row.detail, /redraw|review it|after /, row.detail);
+test('a re-declared picture is work in progress, not shipping and not stale', (t) => {
+  // Found at run time, like the unspecced test above: which pictures are
+  // mid-redraw changes every session, so this reads the register rather than
+  // naming one. A re-declared spec whose master still shipped under an older
+  // brief must never read as approved (the redraw is not done) and never as
+  // stale (there is nothing left to re-declare).
+  const rows = restyleState().filter((r) => {
+    const file = path.join(ROOT, 'art/scenes', `${r.key}.json`);
+    if (!r.ticked || !fs.existsSync(file)) return false;
+    const spec = JSON.parse(fs.readFileSync(file, 'utf8'));
+    return spec.briefId === BRIEF_ID && spec.shippedUnder !== BRIEF_ID;
+  });
+  if (!rows.length) return t.skip('no picture is mid-redraw right now');
+  for (const row of rows) {
+    assert.ok(['ready', 'draft', 'blocked'].includes(row.status), `${row.key}: ${row.status}`);
+    assert.match(row.detail, /redraw|review it|after /, `${row.key}: ${row.detail}`);
+  }
 });
 
 test('a picture that shipped under a superseded brief is to redraw, spec or no spec', () => {
