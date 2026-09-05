@@ -2320,8 +2320,8 @@ details.disclosure .disclosure-body {
   stroke-linejoin: round;
 }
 
-/* Tabular figures, so "Next in 9s" and "Next in 10s" take the same room and
-   nothing beside the count shuffles once a second. */
+/* Tabular figures, so "Next step in 9s" and "Next step in 10s" take the same
+   room and nothing beside the count shuffles once a second. */
 .pace-count {
   font-variant-numeric: tabular-nums;
   white-space: nowrap;

@@ -293,7 +293,16 @@ function speakStep(steps) {
   if (!step) return;
   const isLast = session.stepIndex === steps.length - 1;
   const rep = session.repLog.length + 1;
-  const lead = session.stepIndex === 0 ? `Rep ${rep}. ` : '';
+  // The step's number before its instruction, as the screen already has it,
+  // and the rep's before that at step one. Two reasons, and the second is
+  // the one that matters. A step that opens straight on its instruction
+  // sounds rushed — the phone starts giving the order before the handler
+  // knows a new step has begun. And after the pace clock's silent countdown
+  // the audio route has gone idle, and its first few hundred milliseconds
+  // back come out clipped; that was the start of the instruction being cut
+  // off. The number is the beat and the cushion: if anything is still lost,
+  // it is "step" and not the order.
+  const lead = `${session.stepIndex === 0 ? `Rep ${rep}. ` : ''}Step ${session.stepIndex + 1}. `;
   // The instruction, never the cue. The cue is a word the dog has been
   // trained on and the handler is meant to say it — a phone saying it out
   // loud cues the dog itself, from the wrong place at a moment nobody chose.
@@ -465,7 +474,7 @@ function paintPaceClock(left, total) {
   if (seconds === pace.shown) return;
   pace.shown = seconds;
   const count = document.querySelector('[data-pace-count]');
-  if (count) count.textContent = seconds > 0 ? `Next in ${seconds}s` : 'Next';
+  if (count) count.textContent = seconds > 0 ? `Next step in ${seconds}s` : 'Next step';
 }
 
 /** The strip's words for a clock that is not running. */
@@ -475,9 +484,14 @@ function paintPaceStrip() {
   if (!count) return;
   const fill = document.querySelector('[data-next] .btn-fill');
   if (fill) fill.style.transform = 'scaleX(0)';
-  if (pace.paused) count.textContent = 'Paused';
-  else if (speechBusy()) count.textContent = 'After the voice';
-  else count.textContent = 'Waiting';
+  if (pace.paused) count.textContent = 'Timer paused';
+  else if (speechBusy()) count.textContent = 'Starts after the voice';
+  else {
+    // The one other reason the clock holds on a step screen is the drawer:
+    // say so, or the strip claims to be ready while visibly doing nothing.
+    const drawer = document.querySelector('[data-why]');
+    count.textContent = drawer && drawer.open ? 'Waits while you read' : 'Timer ready';
+  }
 }
 
 /**
@@ -571,9 +585,16 @@ function topBar(label, value, max, valueText = label) {
  * it is the same number — there is one setting, and this is merely the
  * first place it is offered.
  *
- * Two switches, not one. Reading aloud and moving on by itself are useful
- * apart: a handler who wants the steps said but wants to turn them at their
- * own speed should not have to take both.
+ * Two switches, not one. Reading aloud and the step timer are useful apart:
+ * a handler who wants the steps said but wants to turn them at their own
+ * speed should not have to take both.
+ *
+ * The words are the ones a stranger would use. "Move on by itself" named the
+ * mechanism from the app's side and was met with "move what on?" — a switch
+ * whose label needs the note under it to be understood is a switch that was
+ * tapped to find out. So the chip says what happens, the timer's length sits
+ * directly under its own switch rather than below the voice picker, and the
+ * note repeats the number it is about to count.
  */
 function handsFreeGroup() {
   // Belt as well as braces. Everything inside is defensive already, but this
@@ -617,9 +638,31 @@ function handsFreeGroupInner() {
           data-pace-auto
           aria-pressed="${String(pacePref.auto)}"
         >
-          Move on by itself
+          Move to the next step on a timer
         </button>
       </div>
+
+      ${/* The length is set here, under its own switch, in the same control
+            the step screen uses — so the number is met before it starts
+            counting and the stepper is already familiar when it appears
+            mid-rep. The note says the one thing the switch's label cannot:
+            that the rep question is never turned over for them. */ ''}
+      ${pacePref.auto
+        ? html`<div class="voice-note pace-note">
+            <div class="rep-counter pace-counter">
+              <span class="label">
+                Each step lasts
+                <small>You can change this on the step screen too</small>
+              </span>
+              ${paceStepper()}
+            </div>
+            <p class="section-note">
+              After <span data-pace-secs>${pacePref.seconds} seconds</span> the next step
+              comes up by itself. Tap Next, or the picture, to move sooner. The question at
+              the end of each rep always waits for you.
+            </p>
+          </div>`
+        : ''}
 
       ${/* A speaker that says nothing looks exactly like a speaker that is
             off, so this says which voice is in use and offers to prove it.
@@ -661,28 +704,6 @@ function handsFreeGroupInner() {
                   : 'Using this device’s default voice.'}</span
               >
               <button class="btn btn--ghost" type="button" data-voice-test>Test voice</button>
-            </p>
-          </div>`
-        : ''}
-
-      ${/* The length is set here in the same control the step screen uses,
-            so the number is met before it starts counting and the stepper
-            is already familiar when it appears mid-rep. The note says the
-            one thing the switch's label cannot: that the rep question is
-            never turned over for them. */ ''}
-      ${pacePref.auto
-        ? html`<div class="voice-note pace-note">
-            <div class="rep-counter pace-counter">
-              <span class="label">
-                Seconds on each step
-                <small>Change it mid-practice from the step screen</small>
-              </span>
-              ${paceStepper()}
-            </div>
-            <p class="section-note">
-              Each step stays up for that long, then the next one comes on its own. Tap
-              the picture or Next to move sooner. The question at the end of every rep
-              waits for you: that one is yours to answer.
             </p>
           </div>`
         : ''}
@@ -788,6 +809,13 @@ function readyScreen(activity, level) {
  * Not rendered on the last step, where there is nothing to count down to:
  * the rep question is answered by a thumb or not at all.
  *
+ * Every word in the strip says "timer" or "step", because the first draft
+ * did not. "Waiting", "After the voice" and a bare "5s" beside "Each step"
+ * each assumed the reader already knew a clock was running; read cold, on a
+ * screen that had just changed by itself, they were three riddles. The count
+ * now says what is about to happen and to what — "Next step in 5s" — and the
+ * idle states say what the timer is doing and why.
+ *
  * The count is hidden from assistive tech on purpose. A number changing once
  * a second is noise to a screen reader, and the fact it carries — the step
  * turned over — is announced by the new step taking focus, the same way a
@@ -796,15 +824,15 @@ function readyScreen(activity, level) {
  */
 function paceStrip(isLast) {
   if (!getPace().auto || isLast) return '';
-  return html`<div class="pace-strip" role="group" aria-label="Moving on by itself">
+  return html`<div class="pace-strip" role="group" aria-label="Step timer">
     <button type="button" class="pace-toggle" data-pace-pause>
       <span class="pace-mark" aria-hidden="true">${icon(pace.paused ? 'play' : 'pause')}</span>
       <span>${pace.paused ? 'Resume' : 'Pause'}</span>
     </button>
     <span class="pace-count" data-pace-count aria-hidden="true">
-      ${pace.paused ? 'Paused' : 'Waiting'}
+      ${pace.paused ? 'Timer paused' : 'Timer ready'}
     </span>
-    <span class="pace-step-label">Each step</span>
+    <span class="pace-step-label">Each step lasts</span>
     ${paceStepper()}
   </div>`;
 }
@@ -1646,6 +1674,9 @@ function paintPaceSetting(root) {
   const { seconds } = getPace();
   const at = PACE_LADDER.indexOf(seconds);
   root.querySelectorAll('[data-pace-out]').forEach((o) => (o.textContent = `${seconds}s`));
+  root
+    .querySelectorAll('[data-pace-secs]')
+    .forEach((o) => (o.textContent = `${seconds} seconds`));
   root.querySelectorAll('[data-pace="-1"]').forEach((b) => (b.disabled = at <= 0));
   root
     .querySelectorAll('[data-pace="1"]')

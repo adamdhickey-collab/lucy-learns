@@ -491,16 +491,23 @@ export const PACE_LADDER = [5, 8, 10, 15, 20, 30, 45, 60, 90];
 /** The nearest rung to any number, so a stored value is always one of them. */
 const snapPace = (n) => {
   const value = Number(n);
-  if (!Number.isFinite(value)) return 10;
+  if (!Number.isFinite(value)) return 5;
   return PACE_LADDER.reduce((best, rung) =>
     Math.abs(rung - value) < Math.abs(best - value) ? rung : best
   );
 };
 
-/** Auto-advance preferences. Defaulted here so installs saved before it exist. */
+/**
+ * Step-timer preferences. Defaulted here so installs saved before it exist.
+ *
+ * Five seconds to start, the bottom rung. The first number somebody sees is
+ * the one they judge the feature by, and ten felt like the phone had
+ * stopped: a step read aloud in two seconds then sat for eight. Five is
+ * short enough to be obviously a timer, and the plus is right beside it.
+ */
 export const getPace = () => {
   const stored = state.pace || {};
-  return { auto: Boolean(stored.auto), seconds: snapPace(stored.seconds ?? 10) };
+  return { auto: Boolean(stored.auto), seconds: snapPace(stored.seconds ?? 5) };
 };
 
 export function setPace(patch) {
