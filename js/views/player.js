@@ -578,20 +578,20 @@ function topBar(label, value, max, valueText = label) {
  * apart: a handler who wants the steps said but wants to turn them at their
  * own speed should not have to take both.
  */
-function handsFreeGroup() {
+function handsFreeGroup({ heading = true } = {}) {
   // Belt as well as braces. Everything inside is defensive already, but this
   // whole block is an optional convenience sitting on the screen that starts
   // a session — and the cost of it throwing is not a missing switch, it is a
   // household that cannot practice at all. Anything unexpected in here costs
   // the feature, never the session.
   try {
-    return handsFreeGroupInner();
+    return handsFreeGroupInner({ heading });
   } catch {
     return '';
   }
 }
 
-function handsFreeGroupInner() {
+function handsFreeGroupInner({ heading = true } = {}) {
   const voice = getVoice();
   const pacePref = getPace();
   const voices = voice.speak ? listVoices() : [];
@@ -599,7 +599,9 @@ function handsFreeGroupInner() {
 
   return html`
     <div class="result-group voice-group">
-      <h2>Hands free</h2>
+      ${/* Dropped when the disclosure already carries the name, or the
+            first-run screen reads "Hands free" twice in a row. */ ''}
+      ${heading ? html`<h2>Hands free</h2>` : ''}
       <p class="section-note" style="margin-top: 0">
         For when the leash is in one hand and the treats are in the other.
       </p>
@@ -778,7 +780,7 @@ function readyScreen(activity, level) {
           ? handsFreeGroup()
           : html`<details class="disclosure">
               <summary>Hands free</summary>
-              <div class="disclosure-body">${handsFreeGroup()}</div>
+              <div class="disclosure-body">${handsFreeGroup({ heading: false })}</div>
             </details>`}
 
         ${/* No cue list here. Every cue in the level shown together under one
