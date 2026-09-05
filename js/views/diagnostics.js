@@ -2,7 +2,8 @@
 //
 // Everything in the hands-free work went wrong in ways that only exist on
 // somebody else's phone: speech that never starts and never errors, a voice
-// list that comes back empty, a microphone that will not restart. None of
+// list that comes back empty, and — while it existed — a microphone that
+// would not restart. None of
 // that reaches a console anybody can read — the browser is on a phone in a
 // hallway — so each one cost a round of guessing from symptoms.
 //
@@ -13,17 +14,8 @@
 // something, and it replaces an argument with a fact.
 
 import { APP_VERSION, APP_UPDATED } from '../version.js';
-import { getState, isStorageOk } from '../store.js';
-import {
-  availableCommands,
-  canListen,
-  canSpeak,
-  cueCollisions,
-  currentVoiceName,
-  listVoices,
-  speak,
-  speechStatus,
-} from '../voice.js';
+import { getPace, getState, isStorageOk } from '../store.js';
+import { canSpeak, currentVoiceName, listVoices, speak, speechStatus } from '../voice.js';
 import { html, join, toast, focusHeading } from '../ui.js';
 
 /**
@@ -63,11 +55,6 @@ const supports = () => {
   return [
     ['speechSynthesis', test(() => typeof speechSynthesis !== 'undefined')],
     ['SpeechSynthesisUtterance', test(() => typeof SpeechSynthesisUtterance !== 'undefined')],
-    [
-      'SpeechRecognition',
-      test(() => window.SpeechRecognition || window.webkitSpeechRecognition),
-    ],
-    ['getUserMedia', test(() => navigator.mediaDevices && navigator.mediaDevices.getUserMedia)],
     ['wakeLock', test(() => 'wakeLock' in navigator)],
     ['viewTransitions', test(() => typeof document.startViewTransition === 'function')],
     ['serviceWorker', test(() => 'serviceWorker' in navigator)],
@@ -93,8 +80,8 @@ const displayMode = () => {
 function facts() {
   const state = getState();
   const voice = state.voice || {};
+  const pace = getPace();
   const last = speechStatus();
-  const collisions = cueCollisions();
 
   return [
     ['App version', `${APP_VERSION} (${APP_UPDATED.year}-${APP_UPDATED.month}-${APP_UPDATED.day})`],
@@ -106,15 +93,13 @@ function facts() {
     ['Storage working', isStorageOk() ? 'yes' : 'NO — nothing is being saved'],
     ['Sessions logged', String((state.sessions || []).length)],
     ['Read aloud', voice.speak ? 'on' : 'off'],
-    ['Listen', voice.listen ? 'on' : 'off'],
+    ['Move on by itself', pace.auto ? `on, ${pace.seconds}s a step` : 'off'],
     ['Voice chosen by hand', voice.voiceURI || '(none — picked automatically)'],
     ['Voice in use', currentVoiceName() || '(engine default)'],
     ['Voices reported', String(rawVoices().length)],
     ['Voices offered', String(listVoices().length)],
     ['Last speech', `${last.state}${last.error ? ` (${last.error})` : ''}`],
     ['Last spoken text', last.text || '(nothing yet)'],
-    ['Commands usable', availableCommands().map((c) => c.phrase).join(', ') || '(none)'],
-    ['Cue collisions', collisions.length ? collisions.map((c) => c.cue).join(', ') : 'none'],
   ];
 }
 

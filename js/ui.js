@@ -141,14 +141,18 @@ export const ICONS = {
     '<circle cx="12" cy="7" r="4"/>' +
     '</svg>',
 
-  // Voice commands, on the controls that answer to one — `mic`. Small and
-  // quiet: it marks a button that can also be spoken, so it has to read as a
-  // note about the control rather than as a second thing to press.
-  mic:
+  // The pace timer's one control — `pause`, and `play` for the way back.
+  // Lucide draws both as outlines, which keeps them in the stroke family every
+  // other mark here lives in; a solid triangle would have been the only filled
+  // shape on the step screen, and the eye goes to the odd one out.
+  pause:
     '<svg viewBox="0 0 24 24">' +
-    '<path d="M12 19v3"/>' +
-    '<path d="M19 10v2a7 7 0 0 1-14 0v-2"/>' +
-    '<rect x="9" y="2" width="6" height="13" rx="3"/>' +
+    '<rect x="14" y="4" width="4" height="16" rx="1"/>' +
+    '<rect x="6" y="4" width="4" height="16" rx="1"/>' +
+    '</svg>',
+  play:
+    '<svg viewBox="0 0 24 24">' +
+    '<path d="M6 3 20 12 6 21z"/>' +
     '</svg>',
 
   // The end of the route — `star`. Solid is the point: the marks before it are
