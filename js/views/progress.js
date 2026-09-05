@@ -16,6 +16,7 @@ import {
   restoreIncident,
 } from '../store.js';
 import {
+  MIN_REPS_TO_ADVANCE,
   weekSummary,
   practiceByDay,
   headlineInsight,
@@ -318,9 +319,11 @@ function render() {
                 <div class="card-body">${join(mastery)}</div>
               </div>
               <p class="section-note">
-                A level counts as cleared at 75% success, or once you have moved past it.
-                Reliable is higher still. 90% across three sessions, on three different
-                days, without heavy help.
+                The badge is where the level stands: Learning under half the reps,
+                Improving under three quarters, Almost there from three quarters, and
+                Reliable at 90% across three sessions on three different days without
+                heavy help. A level counts as cleared at Almost there over at least
+                ${MIN_REPS_TO_ADVANCE} reps, or once you have moved past it.
               </p>
               <a class="btn btn--quiet btn--block" href="#/program/${prog.program.id}"
                 style="margin-top: var(--s-4)">

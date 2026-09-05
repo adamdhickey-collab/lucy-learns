@@ -25,6 +25,10 @@ export const DOG = {
    * the same picture, which is the first time that has been true.
    */
   photo: 'img/avatars/dog-01.png',
+  // 'she', 'he' or 'they'. Every sentence in the app that refers to the dog
+  // by pronoun is written with a token and filled from this — see fillDog in
+  // js/store.js. Setup asks for it on the same screen as the name.
+  pronoun: 'she',
   about: 'Friendly and affectionate. Gets over-aroused around arrivals and unfamiliar people.',
 };
 

@@ -1,4 +1,5 @@
 import { personAvatar } from './content.js';
+import { fillDog, PRONOUN_CHOICES } from './store.js';
 // Small rendering helpers. No framework: template strings plus event delegation.
 
 /** Escape anything the household typed before it goes back into the DOM. */
@@ -19,9 +20,15 @@ export function raw(value) {
 
 const isRaw = (value) => Boolean(value && value.__raw);
 
+// Tokens are filled here, on the way in, and only in plain interpolations:
+// the template's own literal text is never touched, and neither is anything
+// already marked raw. So "{dog}" belongs in a content string that a view
+// interpolates, never in the view's markup. One place rather than a fill call
+// at every site, because the sites that forget are exactly the ones that end
+// up saying "Lucy" to somebody else's dog.
 const renderValue = (value) => {
   if (Array.isArray(value)) return value.map(renderValue).join('');
-  return isRaw(value) ? String(value) : esc(value);
+  return isRaw(value) ? String(value) : esc(fillDog(value));
 };
 
 /**
@@ -581,7 +588,7 @@ export function confirmSheet({
  * @param {string}   opts.name
  * @param {Function} opts.onSave   ({ name }) => void — only when changed
  */
-export function dogSheet({ name, onSave }) {
+export function dogSheet({ name, pronoun = 'she', onSave }) {
   const backdrop = document.createElement('div');
   backdrop.className = 'sheet-backdrop';
 
@@ -594,6 +601,15 @@ export function dogSheet({ name, onSave }) {
           <input id="dog-sheet-name" type="text" data-name value="${esc(name)}"
                  maxlength="24" autocapitalize="words" autocomplete="off"
                  enterkeyhint="done" required />
+        </div>
+        <div class="field" style="margin-top: var(--s-4)">
+          <span class="label" id="dog-sheet-pronoun">And you call them…</span>
+          <div class="chips" role="group" aria-labelledby="dog-sheet-pronoun">
+            ${PRONOUN_CHOICES.map(
+              (p) => `<button type="button" class="chip" data-pronoun="${p.id}"
+                aria-pressed="${String(p.id === pronoun)}">${p.label}</button>`
+            ).join('')}
+          </div>
         </div>
 
 
@@ -622,6 +638,16 @@ export function dogSheet({ name, onSave }) {
   nameInput.addEventListener('input', sync);
   sync();
 
+  let chosen = pronoun;
+  backdrop.querySelectorAll('[data-pronoun]').forEach((b) => {
+    b.addEventListener('click', () => {
+      chosen = b.dataset.pronoun;
+      backdrop.querySelectorAll('[data-pronoun]').forEach((x) => {
+        x.setAttribute('aria-pressed', String(x.dataset.pronoun === chosen));
+      });
+    });
+  });
+
   backdrop.addEventListener('click', (e) => {
     if (e.target === backdrop) close();
   });
@@ -629,12 +655,12 @@ export function dogSheet({ name, onSave }) {
 
   backdrop.querySelector('[data-form]').addEventListener('submit', (e) => {
     e.preventDefault();
-    const next = { name: nameInput.value.trim() };
+    const next = { name: nameInput.value.trim(), pronoun: chosen };
     if (!next.name) return;
     close();
     // Silence on no change: saving identical values would still fire a toast
     // and a re-render, which reads as though something happened.
-    if (next.name !== name) onSave(next);
+    if (next.name !== name || next.pronoun !== pronoun) onSave(next);
   });
 
   document.body.appendChild(backdrop);

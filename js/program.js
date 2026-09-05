@@ -10,7 +10,14 @@
 // number in the lesson report.
 
 import { ACTIVITIES, isAvailable, programById } from './content.js';
-import { MASTERY, masteryFor, currentLevel, sessionsAt } from './metrics.js';
+import {
+  MASTERY,
+  MIN_REPS_TO_ADVANCE,
+  masteryFor,
+  currentLevel,
+  sessionsAt,
+  repCount,
+} from './metrics.js';
 import { getState } from './store.js';
 
 /** Stage states, ordered the way they read on the map. */
@@ -33,7 +40,18 @@ export const STAGE = {
  * a plan, not an achievement, and four free levels would make the map lie.
  */
 export function levelCleared(activity, levelNumber) {
-  if (masteryFor(activity.id, levelNumber).rank >= MASTERY.almost.rank) return true;
+  // The same floor readyToAdvance keeps. Without it a first session of one
+  // rep marked "went well" is a 100% level — "Almost there" on the ladder,
+  // cleared on the map, and Today rotating to the next activity — while the
+  // level picker, which asks for three reps, stays exactly where it was. A
+  // household's very first result was a milestone the app then took back.
+  const sessions = sessionsAt(activity.id, levelNumber);
+  if (
+    repCount(sessions) >= MIN_REPS_TO_ADVANCE &&
+    masteryFor(activity.id, levelNumber).rank >= MASTERY.almost.rank
+  ) {
+    return true;
+  }
   return (
     levelNumber < currentLevel(activity).number &&
     sessionsAt(activity.id, levelNumber).length > 0

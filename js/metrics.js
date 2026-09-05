@@ -173,7 +173,7 @@ function verdict(pct, arousal) {
   if (arousal === 1) return `${pct}% success, calm throughout.`;
   if (arousal === 2) return `${pct}% success, wiggly but with you the whole way.`;
   if (arousal === 3) {
-    return `${pct}% success, though she was wired for it — no harm in repeating this level once more.`;
+    return `${pct}% success, though {dog} was wired for it — no harm in repeating this level once more.`;
   }
   return `${pct}% success.`;
 }
@@ -199,7 +199,7 @@ export function recommendation(activity, level, session) {
     return {
       key: 'good-call-stopping',
       title: 'Good call stopping',
-      body: 'Ending early is a real training decision, not a failure. Next time start one level easier and finish while she is still winning.',
+      body: 'Ending early is a real training decision, not a failure. Next time start one level easier and finish while {dog} is still winning.',
       suggest: 'down',
     };
   }
@@ -217,7 +217,7 @@ export function recommendation(activity, level, session) {
     return {
       key: 'take-the-pressure-off',
       title: 'Take the pressure off',
-      body: `Nipping usually means she is over threshold. Repeat this level with more distance from the door before adding anything new.`,
+      body: `Nipping usually means {dog} is over threshold. Repeat this level with more distance from the door before adding anything new.`,
       suggest: 'stay',
     };
   }
@@ -244,7 +244,16 @@ export function recommendation(activity, level, session) {
       // are two different bars — 75% once, against 80% twice — and the done
       // screen can show both at the same time. Saying "done" next to a "Level
       // 4 cleared" stamp made one of them look wrong.
-      body: `${session.successfulRepetitions} of ${reps} reps went well. Keep her calm through a whole session and the next level opens.`,
+      // Reached only when readyToAdvance said no, and past the arousal and
+      // nipping branches above the only thing left for it to have said no to
+      // is the rep floor. Say that, then. "Keep her calm through a whole
+      // session" was the sentence here before, and after a one-rep session it
+      // sat beside a "Level 1 cleared" card promising something the same
+      // screen had just withheld.
+      body:
+        reps < MIN_REPS_TO_ADVANCE
+          ? `${session.successfulRepetitions} of ${reps} reps went well. A session needs at least ${MIN_REPS_TO_ADVANCE} reps to open the next level, so count a few more next time.`
+          : `${session.successfulRepetitions} of ${reps} reps went well. Keep {her} calm through a whole session and the next level opens.`,
       suggest: 'stay',
     };
   }
@@ -252,14 +261,14 @@ export function recommendation(activity, level, session) {
     return {
       key: 'coming-along',
       title: 'Coming along',
-      body: `${pct}% success. Keep this level and shorten the sessions. Stop while she is still getting it right.`,
+      body: `${pct}% success. Keep this level and shorten the sessions. Stop while {dog} is still getting it right.`,
       suggest: 'stay',
     };
   }
   return {
     key: 'make-it-easier',
     title: 'Make it easier',
-    body: 'Under half the reps landed. Drop back a level or cut the distance so she can rebuild some wins.',
+    body: 'Under half the reps landed. Drop back a level or cut the distance so {dog} can rebuild some wins.',
     suggest: 'down',
   };
 }

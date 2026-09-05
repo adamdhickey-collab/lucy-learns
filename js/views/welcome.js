@@ -8,6 +8,7 @@
 
 import { IMAGES, PROGRAMS, TRAINER, PERSON_AVATARS, personAvatar } from '../content.js';
 import {
+  PRONOUN_CHOICES,
   completeOnboarding,
   seedDemoSessions,
   setDog,
@@ -35,11 +36,11 @@ let step = 0;
  * abandoning the welcome half way leaves no trace — the same promise the demo
  * choice already made.
  */
-let draft = { person: '', dog: '', avatar: 'handler' };
+let draft = { person: '', dog: '', avatar: 'handler', pronoun: 'she' };
 
 export const restart = () => {
   step = 0;
-  draft = { person: '', dog: '', avatar: 'handler' };
+  draft = { person: '', dog: '', avatar: 'handler', pronoun: 'she' };
 };
 
 
@@ -191,6 +192,29 @@ function render() {
           />
         </div>
 
+        ${/* Asked here, on the same screen as the name, because the two are
+              answered in the same breath and the copy needs both: every
+              "reward her" and "her bed" in the program is written with a
+              token, and this is what fills it. Defaulted rather than blank so
+              the screen never blocks on it. */ ''}
+        <div class="field setup-field">
+          <span class="label" id="setup-pronoun-label">And you call ${draft.dog.trim() || 'them'}…</span>
+          <div class="chips" role="group" aria-labelledby="setup-pronoun-label">
+            ${join(
+              PRONOUN_CHOICES.map(
+                (p) => html`<button
+                  type="button"
+                  class="chip"
+                  data-pronoun="${p.id}"
+                  aria-pressed="${String(draft.pronoun === p.id)}"
+                >
+                  ${p.label}
+                </button>`
+              )
+            )}
+          </div>
+        </div>
+
 
         ${/* Said once, here, on the screen where somebody has just typed their
               own dog's name — which is the moment the mismatch is about to
@@ -246,10 +270,9 @@ function render() {
                       So the recommendation is stated rather than implied, and
                       the reason is given, because the reader knows which of
                       those two people they are and the app does not. */ ''}
-                If you are looking around, start with the example data — an
-                empty app has nothing in Progress or the report yet. If this is
-                your own dog and you are here to train, start empty. Either way
-                you can switch later from the profile tab.
+                Example data fills Progress and the report so there is something
+                to look around; start empty if this is your own dog. Either can
+                be changed later from the Profile tab.
               </p>
 
               <button class="choice choice--recommended" type="button" data-choice="demo">
@@ -321,7 +344,7 @@ function render() {
             ? html`<button class="btn btn--quiet" type="button" data-back>Back</button>`
             : ''}
           <button class="btn btn--lg" type="button" data-next>
-            ${step === PANELS.length - 1 ? 'Almost there' : 'Next'}
+            ${step === PANELS.length - 1 ? 'Set up' : 'Next'}
           </button>
         </div>
       </div>
@@ -349,7 +372,7 @@ function finish(withDemo) {
     // about one specific dog, and setup never asks for it. Better an empty
     // line on the profile than a description somebody else's app wrote about
     // a dog it has never met. The profile renders it only when present.
-    setDog({ name: dog, about: '' });
+    setDog({ name: dog, about: '', pronoun: draft.pronoun });
     setPersonAvatar(draft.avatar);
   }
   if (withDemo) seedDemoSessions({ force: true });
@@ -420,6 +443,15 @@ function mount(root) {
 
   field('[data-person]', 'person');
   field('[data-dog]', 'dog');
+
+  on('[data-pronoun]', 'click', (e) => {
+    draft.pronoun = e.currentTarget.dataset.pronoun;
+    // In place, for the same reason the avatar is: a re-render would take
+    // the caret out of the name field.
+    root.querySelectorAll('[data-pronoun]').forEach((b) => {
+      b.setAttribute('aria-pressed', String(b.dataset.pronoun === draft.pronoun));
+    });
+  });
 
   on('[data-choice]', 'click', (e) => {
     finish(e.currentTarget.dataset.choice === 'demo');

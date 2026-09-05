@@ -124,7 +124,7 @@ function composeShareText(days) {
  */
 function trendNote(rate, priorRate, days) {
   if (rate === null) return null;
-  if (priorRate === null) return `nothing logged the previous ${days} days`;
+  if (priorRate === null) return `nothing from the ${days} days before to compare with`;
   if (rate - priorRate >= 0.03) return `up from ${pct(priorRate)} the previous ${days} days`;
   if (priorRate - rate >= 0.03) return `down from ${pct(priorRate)} the previous ${days} days`;
   return `steady against the previous ${days} days`;
