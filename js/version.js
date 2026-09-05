@@ -22,3 +22,23 @@ export const APP_VERSION = '1.149.0';
  * of Greenwich — including here.
  */
 export const APP_UPDATED = { year: 2026, month: 9, day: 5 };
+
+/**
+ * The build date as a sentence, for wherever the version is shown.
+ *
+ * Labeled, because a bare date under a version number is ambiguous — it could
+ * as easily be today's date or an expiry as the build date. Written once here
+ * rather than by each screen that shows it: the splash and the Lucy tab
+ * footer both say when the app was last updated, and two copies of the
+ * formatting would be two dates that disagree about their own wording.
+ */
+export function updatedLabel() {
+  const { year, month, day } = APP_UPDATED;
+  const stamp = new Date(year, month - 1, day).toLocaleDateString(undefined, {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+  return `Last updated ${stamp}`;
+}

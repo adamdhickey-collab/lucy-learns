@@ -1,5 +1,5 @@
 import { isStorageOk, isOnboarded, onStorageChange } from './store.js';
-import { APP_VERSION, APP_UPDATED } from './version.js';
+import { APP_VERSION, updatedLabel } from './version.js';
 import { studyMode, applyStudyMode, STUDY_SPLASH_HOLD_MS } from './study.js';
 import { ICONS, announceScreen, esc, markNavigated, withTransition } from './ui.js';
 import today from './views/today.js';
@@ -275,18 +275,7 @@ const SPLASH_FADE_MS = 420;
 const splash = document.getElementById('splash');
 if (splash) {
   const dateSlot = splash.querySelector('#splash-date');
-  if (dateSlot) {
-    const { year, month, day } = APP_UPDATED;
-    // Labeled, because a bare date under a version number is ambiguous —
-    // it could as easily be today's date or an expiry as the build date.
-    const stamp = new Date(year, month - 1, day).toLocaleDateString(undefined, {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
-    dateSlot.textContent = `Last updated ${stamp}`;
-  }
+  if (dateSlot) dateSlot.textContent = updatedLabel();
 
   // The version is stated, not performed. An earlier pass counted it up from
   // zero, which animated a number that was never in doubt and had to be

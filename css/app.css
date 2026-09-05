@@ -2466,6 +2466,20 @@ details.disclosure .disclosure-body {
   color: var(--caution-text);
 }
 
+/* The Lucy tab's last lines. Centred and set off from the cards above by a
+   section's worth of space, because it is about the app rather than about
+   the dog. The version is the one bold thing in it: the line somebody
+   reads aloud down the phone. */
+.colophon {
+  margin-top: var(--s-6);
+  text-align: center;
+}
+
+.colophon b {
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
 /* --- diagnostics -----------------------------------------------------------
    Plainer than the rest of the app on purpose. This screen is read once, by
    somebody trying to work out why something is broken, and every value on it
