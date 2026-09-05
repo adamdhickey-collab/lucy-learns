@@ -2251,95 +2251,157 @@ details.disclosure .disclosure-body {
 }
 
 /* --- hands free ------------------------------------------------------------
-   The microphone's state, kept on screen the whole time it is on. A mic with
-   no visible state is a feature people cannot tell has stopped: they say
-   "next step" into a session that quit listening two reps ago and conclude
-   the app ignored them. So the chip shows what it is doing and the last
-   thing it actually heard, which doubles as the only way to discover that
-   this kitchen reliably turns "next step" into "next up". */
+   The clock, kept on screen the whole time it is running. A timer with no
+   visible state is a button that presses itself with no warning, so the
+   strip shows the count and holds the pause and the length beside it. It
+   takes the shape of the rep strip below it — same sunken field, same type
+   — because it is the same kind of thing: a fact about the session with
+   its corrections attached.
 
-.voice-chip {
-  width: 100%;
-  min-height: var(--tap);
+   Two rows by design, not by wrapping. The pause, the count and the stepper
+   want 360px in a row and a phone gives the strip 327, and a flex row that
+   wrapped put the stepper alone on a second line with nothing to say why.
+   So the grid says why: the clock's state on the first row, the clock's
+   length on the second, each with its name on the left and its control on
+   the right. */
+
+.pace-strip {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--s-2) var(--s-3);
   margin-top: var(--s-4);
   padding: var(--s-2) var(--s-3);
-  display: flex;
-  align-items: center;
-  gap: var(--s-2);
-  flex-wrap: wrap;
-  border: 0;
   border-radius: var(--r-md);
   background: var(--surface-sunken);
   color: var(--text-secondary);
-  font: inherit;
   font-size: var(--step--1);
-  text-align: left;
+}
+
+/* Set in from the row's edge by the toggle's own inner padding, so the two
+   names on the left start on the same line. */
+.pace-step-label {
+  padding-left: var(--s-2);
+}
+
+/* Text weight, like the strip's other corrections: pausing is a thing to
+   reach for, not the way forward. --tap tall all the same, because it is
+   reached for with a leash in the other hand. */
+.pace-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: var(--tap);
+  padding: 0 var(--s-3) 0 var(--s-2);
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  font-weight: 650;
   cursor: pointer;
 }
 
-.voice-dot {
-  width: 9px;
-  height: 9px;
-  flex: none;
-  border-radius: 50%;
-  background: var(--border-strong);
+.pace-toggle:hover {
+  background: var(--surface);
 }
 
-.voice-chip.is-live .voice-dot {
-  background: var(--success);
-  animation: voice-pulse 1.6s ease-in-out infinite;
+.pace-mark {
+  display: inline-flex;
 }
 
-.voice-chip-label {
-  font-weight: 650;
-  color: var(--text-primary);
+.pace-mark svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-/* What was heard, quoted. Matched turns it green, which is the fastest way
-   to see whether a phrase this room mangles is landing or not. */
-.voice-heard {
-  margin-left: auto;
-  font-style: italic;
-  opacity: 0.9;
+/* Tabular figures, so "Next in 9s" and "Next in 10s" take the same room and
+   nothing beside the count shuffles once a second. */
+.pace-count {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  justify-self: end;
+  padding-right: var(--s-2);
 }
 
-.voice-heard.is-matched {
-  color: var(--success);
-  font-style: normal;
-  font-weight: 600;
+/* The same stepper the counts use, with a smaller number. "10s" is a setting
+   rather than a score, and at the score's display size it outweighed the
+   instruction above it. */
+.stepper--pace {
+  gap: var(--s-2);
 }
 
-@keyframes voice-pulse {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.45;
-    transform: scale(0.82);
-  }
+.stepper--pace output {
+  font-size: var(--step-2);
+  min-width: 3ch;
 }
 
-/* The dot is the one thing here carrying information no text repeats, so
-   reduced motion keeps the color and drops only the beat. */
-@media (prefers-reduced-motion: reduce) {
-  .voice-chip.is-live .voice-dot {
-    animation: none;
-  }
+.stepper--pace button[disabled] {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* On get-ready the stepper sits in a counter row, like the count corrections
+   on the detail screen, so the number has a name beside it. The row's own top
+   margin is dropped because the note wrapper already spaces it from the
+   chips above. */
+.pace-counter {
+  margin-top: 0;
+}
+
+.pace-note > .section-note {
+  margin-top: var(--s-3);
+}
+
+/* The Next button, filling as the clock runs.
+   ---------------------------------------------------------------------------
+   The fill is the darker violet the button already turns on hover, swept
+   left to right beneath the label, so the button reads as charging up to
+   press itself. It is reinforcement rather than the record: the count in the
+   strip carries the same fact as text, which is what lets a 1.4:1 step
+   between two violets stand where a lone indicator would need 3:1. The
+   label is positioned so it paints above the sweep; a static span would sit
+   under an absolutely placed one whatever the source order. */
+.btn--pace {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hover would paint the whole button the fill's colour and hide the clock,
+   so on this button the fill is the hover state. */
+.btn--pace:hover {
+  background: var(--primary);
+}
+
+.btn-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--primary-dark);
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.btn-pace-label {
+  position: relative;
 }
 
 /* These follow a row of chips, which carries no bottom margin of its own, so
-   the vocabulary list sat directly against the switch that reveals it and
-   read as part of the control rather than as a note about it. A chip is a
+   the notes sat directly against the switch that reveals them and read as
+   part of the control rather than as a note about it. A chip is a
    tap target with its own visual weight; text needs room to stop being an
    extension of it.
 
    Scoped under .voice-group deliberately: these carry .section-note too, and
    a bare class ties with it on specificity, so whichever rule sits later in
    the file wins — which is how this block ended up with a negative top
-   margin pulling the vocabulary into the switch above it. */
-.voice-group .voice-vocab,
+   margin pulling the notes into the switch above them. */
 .voice-group .voice-warn,
 .voice-group .voice-note {
   margin-top: var(--s-4);
@@ -2400,59 +2462,8 @@ details.disclosure .disclosure-body {
   padding-inline: var(--s-3);
 }
 
-.voice-vocab em {
-  font-style: normal;
-  font-weight: 650;
-  color: var(--text-primary);
-}
-
 .voice-warn {
   color: var(--caution-text);
-}
-
-/* A control that answers to a spoken phrase says so with a small mic, set
-   before its own words. Not the treatment cues get — those are quoted under
-   "Say" because they are words for the dog, and blurring the two is the one
-   confusion this app cannot afford, since a cue reaching the microphone logs
-   a rep nobody did. This is a footnote on a button; that is an instruction. */
-.btn-voice {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--s-2);
-  justify-content: center;
-}
-
-/* Deliberately not the 20px a button icon takes elsewhere. Those are a
-   control's own mark, set before its label and equal to it in weight; this is
-   a footnote about the label, so it matches the text's size and reads as part
-   of the phrase rather than as a second thing.
-
-   Lightened with stroke weight rather than opacity, which is the lever the
-   icon set already uses to vary emphasis by context — the tab bar runs 1.75
-   and thickens to 2.25 when current. Fading it instead would have cost
-   contrast on the filled answer button, where the mark is white on teal and
-   has none to spare. */
-.btn-voice-mark {
-  display: inline-flex;
-  flex: none;
-}
-
-/* Self-contained, which it was not.
-   ---------------------------------------------------------------------------
-   Stroke, fill and joins used to be inherited from `.btn svg`, on the
-   assumption the mark only ever sits inside a button. It has a second home
-   now — the "Why this matters" summary, which is voice-capable and says so
-   the same way — and outside a `.btn` those declarations simply were not
-   there: no `fill: none` renders the mic as a solid blob. A mark that can
-   appear next to any label carries its own presentation. */
-.btn-voice svg {
-  width: 1em;
-  height: 1em;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 1.75;
-  stroke-linecap: round;
-  stroke-linejoin: round;
 }
 
 /* --- diagnostics -----------------------------------------------------------

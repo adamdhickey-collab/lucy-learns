@@ -28,32 +28,30 @@ import {
 import {
   addSession,
   getDog,
+  getPace,
   getVoice,
   hintSeen,
   isStorageOk,
   markHintSeen,
+  PACE_LADDER,
   repTarget,
   resolveCue,
   setLevel,
+  setPace,
   setVoice,
+  stepPace,
   updateSession,
 } from '../store.js';
 import {
-  availableCommands,
-  commandLabel,
-  canListen,
   canSpeak,
-  cueCollisions,
   currentVoiceName,
   currentVoiceURI,
   listVoices,
   onSpeechChange,
   onVoicesReady,
-  probeMicrophone,
   setPreferredVoice,
   speak,
   speechStatus,
-  startListening,
   stopSpeaking,
 } from '../voice.js';
 import { currentLevel, masteryFor, recommendation } from '../metrics.js';
@@ -111,6 +109,12 @@ function begin(activity, level) {
     sheetOpen: false,
     releaseTrap: null,
   };
+  // The pause on the pace timer belongs to a session, not to the household:
+  // it is "give me a moment", and the moment does not carry over to tomorrow.
+  // The hold is cleared for the same reason, so no dialog from a previous
+  // session can leave the next one waiting.
+  pace.paused = false;
+  pace.held = false;
 }
 
 async function keepAwake() {
@@ -207,6 +211,7 @@ function armExitGuard() {
     // otherwise stack another copy of it behind the first.
     if (confirmClose) return;
 
+    holdPace(true);
     confirmClose = confirmSheet({
       title: 'Leave practice?',
       body: 'Nothing from this session is saved yet.',
@@ -218,6 +223,7 @@ function armExitGuard() {
       },
       onDismiss: () => {
         confirmClose = null;
+        holdPace(false);
       },
     });
   };
@@ -251,22 +257,17 @@ function disarmExitGuard(consume = false) {
 // Hands-free
 // ---------------------------------------------------------------------------
 //
-// Both halves live at module scope alongside the session rather than inside a
-// render: a microphone that restarted on every re-render would spend the
-// session being torn down and rebuilt, and the step cycle re-renders on every
-// tap.
+// Two halves, both at module scope alongside the session rather than inside a
+// render: the step cycle re-renders on every tap, and anything rebuilt per
+// render would spend the session being torn down.
+//
+// Reading aloud says each step; the pace timer turns them. Between the two
+// the phone can sit on the counter for a whole rep. Hands-free used to have
+// a third half — listening for spoken commands — and it is gone on purpose:
+// a handler saying "next step" brightly at a phone is a handler saying words
+// in that voice at a dog who is being taught that words in that voice are
+// hers. The commands avoided every cue and still shared the room with them.
 
-/**
- * What the browser said when last asked for the microphone: 'unknown',
- * 'granted', 'blocked', 'no-microphone', 'unsupported' or 'error'. Kept so
- * the get-ready screen can say so plainly instead of letting the answer
- * surface two screens later as a chip offering advice that cannot work.
- */
-let micState = 'unknown';
-
-let listenStop = null;
-/** What the chip on screen is showing. Never inferred, always reported. */
-let listenState = { listening: false, heard: '', matched: false, error: null };
 /** The step last read aloud, so a re-render does not say it again. */
 let spokenKey = '';
 
@@ -280,7 +281,7 @@ let spokenKey = '';
  *
  * Keyed by rep and step so the same instruction is never read twice for one
  * position — a chip toggle or an undo re-renders the screen without moving
- * it, and the fallback in syncVoice would otherwise say it again.
+ * it, and the fallback in syncHandsFree would otherwise say it again.
  */
 function speakStep(steps) {
   if (!getVoice().speak || !canSpeak() || !session || session.phase !== 'step') return;
@@ -302,55 +303,196 @@ function speakStep(steps) {
   speak(`${lead}${step.instruction}${tail}`);
 }
 
-function stopListening() {
-  if (listenStop) listenStop();
-  listenStop = null;
-  listenState = { listening: false, heard: '', matched: false, error: null };
+/**
+ * The pace timer.
+ *
+ * `frame` is the animation frame the clock is running on, and doubles as
+ * "is it running". `deadline` is when the step turns over. `paused` is the
+ * household's own choice, from the strip's button, and the one thing here
+ * that survives a step change: a pause that quietly ended the moment they
+ * tapped Next would be a pause that only pauses one step, which is not what
+ * the word means. `held` is the app's own hold — a dialog is up — and lifts
+ * itself. Everything else is read fresh off the screen each time.
+ */
+const pace = { frame: 0, deadline: 0, paused: false, held: false, stall: 0, shown: -1 };
+
+/**
+ * How long a queued utterance is given to start before the clock stops
+ * waiting for it. On iOS a failed utterance is not an error, it is a queue
+ * entry that never starts, and a timer that waited for it would wait for
+ * the rest of the session.
+ */
+const SPEECH_STALL_MS = 4000;
+let speechQueuedAt = 0;
+
+const currentSteps = () => {
+  const activity = activityBySlug(session.slug);
+  return stepsForLevel(activity, levelOf(activity, session.levelNumber));
+};
+
+/**
+ * Whether the clock should be running for the screen that is up right now.
+ *
+ * Not on the last step, ever. The rep question is the one observation in the
+ * session and the log is built from it; a timer that answered it would be
+ * the reflex "went well" the criteria block exists to prevent, made
+ * automatic. The steps turn; the judgement waits for a thumb.
+ *
+ * Not with "Why this matters" open either. A drawer open is somebody reading,
+ * and a screen that turns over under a paragraph loses them the paragraph.
+ */
+function paceWanted() {
+  if (!session || session.phase !== 'step' || session.sheetOpen) return false;
+  if (!getPace().auto || pace.paused || pace.held) return false;
+  if (session.stepIndex >= currentSteps().length - 1) return false;
+  if (document.visibilityState === 'hidden') return false;
+  const drawer = document.querySelector('[data-why]');
+  if (drawer && drawer.open) return false;
+  return true;
 }
 
 /**
- * Listening and speaking cannot both hold the audio session, so they take
- * turns.
+ * Whether the phone is mid-sentence, as far as the clock is concerned.
  *
- * This is why commands stopped working the moment the steps found their
- * voice: every spoken instruction seized the session and knocked the
- * recognizer over, the recognizer came back immediately and empty, and three
- * of those in a row is exactly the signature this code reads as a platform
- * refusing to listen. The feature was diagnosing itself as broken while
- * working correctly.
- *
- * So the microphone stands down while the phone talks and comes back when it
- * stops. Where a restart needs a tap — iOS — it will not come back on its
- * own, and the chip says so rather than pretending.
+ * With reading aloud on, a ten-second step whose instruction takes six to
+ * say would leave four to do it, so the clock starts when the voice stops.
+ * A queued utterance counts as speaking for a few seconds and then does not:
+ * see SPEECH_STALL_MS.
  */
-onSpeechChange((status) => {
-  const speaking = status.state === 'queued' || status.state === 'speaking';
-  if (speaking) {
-    if (listenStop) {
-      stopListening();
-      paintVoiceChip();
+function speechBusy() {
+  if (!getVoice().speak || !canSpeak()) return false;
+  const { state } = speechStatus();
+  if (state === 'speaking') return true;
+  if (state === 'queued') return performance.now() - speechQueuedAt < SPEECH_STALL_MS;
+  return false;
+}
+
+function stopPaceFrame() {
+  if (pace.frame) cancelAnimationFrame(pace.frame);
+  pace.frame = 0;
+  if (pace.stall) clearTimeout(pace.stall);
+  pace.stall = 0;
+  pace.shown = -1;
+}
+
+/**
+ * Run the clock for one step. Every start is a full step: a hold that lifts,
+ * a resume, a change of length — each begins the step again rather than
+ * picking up a remainder, because the reason the clock stopped was that
+ * somebody needed the time.
+ */
+function startPace() {
+  stopPaceFrame();
+  const total = getPace().seconds * 1000;
+  pace.deadline = performance.now() + total;
+  const tick = () => {
+    const left = pace.deadline - performance.now();
+    if (left <= 0) {
+      pace.frame = 0;
+      paintPaceClock(0, total);
+      firePace();
+      return;
     }
+    paintPaceClock(left, total);
+    pace.frame = requestAnimationFrame(tick);
+  };
+  pace.frame = requestAnimationFrame(tick);
+}
+
+/**
+ * Turn the step over, through the real Next button.
+ *
+ * Clicking the control rather than calling the handler keeps every guard
+ * already written — the last step has no Next, the hint is spent by moving
+ * on — holding for the clock exactly as it holds for a thumb.
+ */
+function firePace() {
+  const button = document.querySelector('[data-next]');
+  if (button && !button.disabled) button.click();
+}
+
+/**
+ * Bring the clock into line with the screen. Idempotent, and the only entry
+ * point: every reason to stop or start goes through here, so nothing can
+ * disagree about whether the button is about to press itself.
+ */
+function syncPace() {
+  if (!paceWanted()) {
+    stopPaceFrame();
+    paintPaceStrip();
     return;
   }
-  // Finished, so the session is free. Started from what should be true now
-  // rather than from what was interrupted: with both halves on, the first
-  // spoken step arrives before the microphone has ever run, so a resume that
-  // only undoes a pause would leave it never started at all.
-  if (!session || session.phase !== 'step' || session.sheetOpen) return;
-  if (!getVoice().listen || !canListen() || listenStop) return;
-  startListeningNow();
+  if (speechBusy()) {
+    stopPaceFrame();
+    // Told again when the voice stops, by onSpeechChange — unless it never
+    // starts, in which case this is what tells it.
+    if (speechStatus().state === 'queued') {
+      const wait = SPEECH_STALL_MS - (performance.now() - speechQueuedAt) + 20;
+      pace.stall = setTimeout(syncPace, Math.max(wait, 0));
+    }
+    paintPaceStrip();
+    return;
+  }
+  if (!pace.frame) startPace();
+  paintPaceStrip();
+}
+
+/** The app's own hold, for a dialog over the step. */
+function holdPace(on) {
+  pace.held = on;
+  stopPaceFrame();
+  syncPace();
+}
+
+const reduceMotion = () =>
+  typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/**
+ * Paint one frame of the clock: the fill in the Next button and the count
+ * in the strip. In place, never a re-render — sixty a second, under a thumb.
+ *
+ * Reduced motion keeps the clock and drops the sweep: the fill moves once a
+ * second in steps, which is the information without the motion, the same
+ * bargain the progress bar makes.
+ */
+function paintPaceClock(left, total) {
+  const seconds = Math.ceil(left / 1000);
+  const fill = document.querySelector('[data-next] .btn-fill');
+  if (fill) {
+    const elapsed = reduceMotion() ? total - seconds * 1000 : total - left;
+    fill.style.transform = `scaleX(${Math.min(Math.max(elapsed / total, 0), 1).toFixed(4)})`;
+  }
+  if (seconds === pace.shown) return;
+  pace.shown = seconds;
+  const count = document.querySelector('[data-pace-count]');
+  if (count) count.textContent = seconds > 0 ? `Next in ${seconds}s` : 'Next';
+}
+
+/** The strip's words for a clock that is not running. */
+function paintPaceStrip() {
+  if (pace.frame) return;
+  const count = document.querySelector('[data-pace-count]');
+  if (!count) return;
+  const fill = document.querySelector('[data-next] .btn-fill');
+  if (fill) fill.style.transform = 'scaleX(0)';
+  if (pace.paused) count.textContent = 'Paused';
+  else if (speechBusy()) count.textContent = 'After the voice';
+  else count.textContent = 'Waiting';
+}
+
+/**
+ * Speech starting or stopping is a reason to hold or start the clock, and
+ * nothing else here cares which.
+ */
+onSpeechChange((status) => {
+  if (status.state === 'queued') speechQueuedAt = performance.now();
+  if (session) syncPace();
 });
 
 /**
- * Let go of the microphone the moment this app stops being the thing on
- * screen.
- *
- * Nothing here was releasing it on the way out: the teardown hung off
- * navigating between screens, and switching apps or locking the phone is
- * neither. So the recording indicator stayed lit over a session that had
- * ended, on a device the app had been put away on — which is alarming in
- * exactly the way it looks, and worse in a house where the phone is left
- * lying about between reps.
+ * Stop talking, and stop the clock, the moment this app stops being the thing
+ * on screen. A step that turned over while the phone was in a pocket is a
+ * step nobody saw. Coming back starts the step again from the top.
  *
  * `pagehide` rather than `beforeunload`, which iOS does not reliably fire,
  * and `visibilitychange` for the ordinary case of switching away. Registered
@@ -359,31 +501,26 @@ onSpeechChange((status) => {
  */
 if (typeof document !== 'undefined') {
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState !== 'hidden') return;
-    stopListening();
-    stopSpeaking();
-    // Coming back does not restart it: on iOS a microphone may only be
-    // started by a tap, and resuming silently is the trick this whole
-    // feature is not allowed to do. So the chip is repainted to say what is
-    // true — that it stopped, and that a tap starts it again.
-    paintVoiceChip();
+    if (document.visibilityState === 'hidden') stopSpeaking();
+    if (session) syncPace();
   });
   window.addEventListener('pagehide', () => {
-    stopListening();
     stopSpeaking();
+    stopPaceFrame();
   });
 }
 
-function endVoice() {
-  stopListening();
+function endHandsFree() {
   stopSpeaking();
+  stopPaceFrame();
+  pace.held = false;
   spokenKey = '';
 }
 
 /** Leave a live session for the activity it belongs to, guard and all. */
 function leavePlayer() {
   disarmExitGuard();
-  endVoice();
+  endHandsFree();
   releaseAwake();
   const slug = session ? session.slug : null;
   session = null;
@@ -428,15 +565,15 @@ function topBar(label, value, max, valueText = label) {
 /**
  * The hands-free offer, made before practice rather than during it.
  *
- * Here because this is the screen where the leash is not yet in the hand.
- * Asking for a microphone in the middle of a rep means a permission dialog
- * over a dog mid-stay, and a prompt that arrives at the worst possible moment
- * gets denied on reflex.
+ * Here because this is the screen where the leash is not yet in the hand:
+ * a decision about how the session will run belongs before it runs. The
+ * pace can still be changed mid-rep, from the strip on the step screen, and
+ * it is the same number — there is one setting, and this is merely the
+ * first place it is offered.
  *
- * Two switches, not one. Reading the steps aloud runs on the device and works
- * with no signal; listening ships audio to a server and needs a microphone.
- * Somebody who wants their hands free of the phone but not a microphone in
- * the room should not have to take both.
+ * Two switches, not one. Reading aloud and moving on by itself are useful
+ * apart: a handler who wants the steps said but wants to turn them at their
+ * own speed should not have to take both.
  */
 function handsFreeGroup() {
   // Belt as well as braces. Everything inside is defensive already, but this
@@ -452,10 +589,8 @@ function handsFreeGroup() {
 }
 
 function handsFreeGroupInner() {
-  if (!canSpeak() && !canListen()) return '';
   const voice = getVoice();
-  const collisions = cueCollisions();
-  const usable = availableCommands();
+  const pacePref = getPace();
   const voices = voice.speak ? listVoices() : [];
   const activeVoiceUri = currentVoiceURI();
 
@@ -476,16 +611,14 @@ function handsFreeGroupInner() {
               Read the steps aloud
             </button>`
           : ''}
-        ${canListen()
-          ? html`<button
-              type="button"
-              class="chip"
-              data-voice-listen
-              aria-pressed="${String(voice.listen)}"
-            >
-              Listen for commands
-            </button>`
-          : ''}
+        <button
+          type="button"
+          class="chip"
+          data-pace-auto
+          aria-pressed="${String(pacePref.auto)}"
+        >
+          Move on by itself
+        </button>
       </div>
 
       ${/* A speaker that says nothing looks exactly like a speaker that is
@@ -532,64 +665,62 @@ function handsFreeGroupInner() {
           </div>`
         : ''}
 
-      ${voice.listen && usable.length
-        ? html`<p class="section-note voice-vocab">
-            Say
-            ${join(
-              usable.map(
-                (c, i) => html`${i ? ', ' : ''}<em>“${c.phrase}”</em>`
-              )
-            )}.
-          </p>`
-        : ''}
-
-      ${/* Cues are editable, so this cannot be settled by choosing careful
-            wording once: a household can rename the release cue to "next
-            step" tonight. Saying which command went and why beats a
-            microphone that quietly stops answering to one of them. */ ''}
-      ${voice.listen && collisions.length
-        ? html`<p class="section-note voice-warn">
-            ${collisions.length === 1 ? 'One command is' : `${collisions.length} commands are`}
-            switched off because ${getDog().name}'s cues use the same words.
-            Change the cue on the ${getDog().name} tab to get
-            ${collisions.length === 1 ? 'it' : 'them'} back.
-          </p>`
-        : ''}
-      ${voice.listen && !canListen()
-        ? html`<p class="section-note voice-warn">
-            This browser cannot listen. The steps can still be read aloud.
-          </p>`
-        : ''}
-      ${/* Said here, on the switch, and said as a fact rather than as a
-            suggestion to try again. A browser that has refused the
-            microphone will go on refusing it until somebody changes a
-            setting, and the chip's "tap to listen again" is advice that
-            cannot work — which is what happened when Chrome on iOS, where
-            this is the default, blocked it and the app said nothing at
-            all. */ ''}
-      ${voice.listen && micState === 'blocked'
-        ? html`<p class="section-note voice-warn">
-            <strong>The microphone is blocked.</strong> Allow it for this site
-            in your browser's settings — in Chrome, the ⋯ menu, then Settings,
-            then Microphone — and switch this on again. Reading the steps
-            aloud works either way.
-          </p>`
-        : ''}
-      ${voice.listen && micState === 'no-microphone'
-        ? html`<p class="section-note voice-warn">
-            No microphone was found on this device.
-          </p>`
-        : ''}
-      ${voice.listen && micState === 'granted'
-        ? html`<p class="section-note voice-note">Microphone ready.</p>`
-        : ''}
-      ${voice.listen
-        ? html`<p class="section-note voice-note">
-            Listening needs a signal, unlike the rest of the app.
-          </p>`
+      ${/* The length is set here in the same control the step screen uses,
+            so the number is met before it starts counting and the stepper
+            is already familiar when it appears mid-rep. The note says the
+            one thing the switch's label cannot: that the rep question is
+            never turned over for them. */ ''}
+      ${pacePref.auto
+        ? html`<div class="voice-note pace-note">
+            <div class="rep-counter pace-counter">
+              <span class="label">
+                Seconds on each step
+                <small>Change it mid-practice from the step screen</small>
+              </span>
+              ${paceStepper()}
+            </div>
+            <p class="section-note">
+              Each step stays up for that long, then the next one comes on its own. Tap
+              the picture or Next to move sooner. The question at the end of every rep
+              waits for you: that one is yours to answer.
+            </p>
+          </div>`
         : ''}
     </div>
   `;
+}
+
+/**
+ * The seconds-per-step control, shared by the get-ready screen and the strip
+ * on the step screen. One control, one handler, one stored number: what the
+ * strip changes is what the get-ready screen shows next time, and there is
+ * no settings page to go and check.
+ *
+ * The ends are disabled rather than wrapping. A stepper that jumps from
+ * ninety to five is a stepper that just cost somebody a rep.
+ */
+function paceStepper() {
+  const { seconds } = getPace();
+  const at = PACE_LADDER.indexOf(seconds);
+  return html`<div class="stepper stepper--pace">
+    <button
+      type="button"
+      data-pace="-1"
+      aria-label="Less time on each step"
+      ${at <= 0 ? 'disabled' : ''}
+    >
+      −
+    </button>
+    <output data-pace-out aria-live="polite">${seconds}s</output>
+    <button
+      type="button"
+      data-pace="1"
+      aria-label="More time on each step"
+      ${at >= PACE_LADDER.length - 1 ? 'disabled' : ''}
+    >
+      +
+    </button>
+  </div>`;
 }
 
 function readyScreen(activity, level) {
@@ -646,89 +777,36 @@ function readyScreen(activity, level) {
 }
 
 /**
- * What the microphone is doing, on screen, while it is doing it.
+ * The clock, on screen, the whole time it is running.
  *
- * A microphone with no visible state is a feature people cannot tell is
- * broken — they say "next step" into a session that stopped listening two
- * reps ago and conclude the app ignored them. So this shows the live state
- * and the last thing actually heard, which is also the only way to find out
- * that the recognizer reliably hears "next up" for "next step" in a
- * particular kitchen.
+ * A timer with no visible state is a button that presses itself with no
+ * warning. So the strip shows the count and holds the two things a handler
+ * mid-rep might want from it: a pause, and more or less time. The control to
+ * stop a clock belongs next to the evidence it is running, and the length
+ * belongs where it is felt to be wrong — on the step that was too short.
  *
- * Tapping it stops listening, because the control to turn a microphone off
- * belongs next to the evidence it is on.
+ * Not rendered on the last step, where there is nothing to count down to:
+ * the rep question is answered by a thumb or not at all.
+ *
+ * The count is hidden from assistive tech on purpose. A number changing once
+ * a second is noise to a screen reader, and the fact it carries — the step
+ * turned over — is announced by the new step taking focus, the same way a
+ * tap on Next announces itself. The pause button's own label says which
+ * state the clock is in.
  */
-/**
- * `gesture` is iOS Safari refusing to start a microphone that nobody asked
- * for out loud. Every start there has to come from a tap, so an unattended
- * restart is declined — which is why listening worked for exactly one command
- * and then went quiet. The chip becomes the tap, since a control that says
- * what is wrong and fixes it in the same place beats an explanation.
- */
-function voiceChipLabel(listening, error) {
-  // A known block outranks everything else the chip could say. Offering a tap
-  // that the browser has already decided against is worse than saying nothing.
-  if (error === 'blocked' || micState === 'blocked') return 'Microphone blocked';
-  if (error === 'network') return 'No signal for listening';
-  if (error === 'gesture') return 'Tap to listen again';
-  return listening ? 'Listening' : 'Tap to listen again';
-}
-
-function voiceChip() {
-  if (!getVoice().listen || !canListen()) return '';
-  const { listening, heard, matched, error } = listenState;
-  const label = voiceChipLabel(listening, error);
-  // A blocked microphone is not live whatever the recogniser last reported:
-  // the label and the offer it makes have to agree, or the chip says the
-  // thing is blocked while inviting a tap to stop it.
-  const live = listening && !error && micState !== 'blocked';
-
-  // One hook, not one per state: the listener is bound to the element at wire
-  // time, so swapping the attribute later would leave yesterday's handler on
-  // it and a stopped microphone would still offer to stop.
-  return html`<button
-    type="button"
-    class="voice-chip ${live ? 'is-live' : ''}"
-    data-voice-toggle
-    aria-label="${label}.${live ? ' Tap to stop listening.' : ''}"
-  >
-    <span class="voice-dot" aria-hidden="true"></span>
-    <span class="voice-chip-label">${label}</span>
-    ${heard
-      ? html`<span class="voice-heard ${matched ? 'is-matched' : ''}">“${heard}”</span>`
-      : ''}
-  </button>`;
-}
-
-/**
- * A control's words, and whether it can also be spoken.
- *
- * The label comes from the command itself, so the button and the microphone
- * cannot disagree about the wording — they did, and a screen that says "Next"
- * while only answering to "next step" teaches the wrong phrase to the person
- * reading it.
- *
- * The mark is deliberately not the treatment cues get. A cue is printed in
- * quotes under "Say" because it is a word for the dog, and the one thing this
- * app cannot afford to blur is which words are aimed at the dog and which at
- * the phone — they share a room, and a cue reaching the microphone is a rep
- * logged by mistake. So voice-capable controls take a small mic instead, and
- * only while the microphone is actually on: a hint about a feature nobody
- * switched on is decoration.
- */
-function commandButtonLabel(id) {
-  const label = commandLabel(id);
-  const voiceOn = getVoice().listen && canListen() && micState !== 'blocked';
-  if (!voiceOn) return html`${label}`;
-  // The mark is hidden from assistive tech, as every decorative icon in this
-  // app is. It is not withholding anything: the button's name is the command
-  // word for word, so a screen reader already reads out exactly what to say,
-  // and the get-ready screen announces the vocabulary before practice starts.
-  // Announcing "microphone" before each of five buttons would be noise.
-  return html`<span class="btn-voice"
-    ><span class="btn-voice-mark" aria-hidden="true">${icon('mic')}</span
-    ><span>${label}</span></span
-  >`;
+function paceStrip(isLast) {
+  if (!getPace().auto || isLast) return '';
+  return html`<div class="pace-strip" role="group" aria-label="Moving on by itself">
+    <button type="button" class="pace-toggle" data-pace-pause>
+      <span class="pace-mark" aria-hidden="true">${icon(pace.paused ? 'play' : 'pause')}</span>
+      <span>${pace.paused ? 'Resume' : 'Pause'}</span>
+    </button>
+    <span class="pace-count" data-pace-count aria-hidden="true">
+      ${pace.paused ? 'Paused' : 'Waiting'}
+    </span>
+    <span class="pace-step-label">Each step</span>
+    ${paceStepper()}
+  </div>`;
 }
 
 function stepScreen(activity, level) {
@@ -745,8 +823,14 @@ function stepScreen(activity, level) {
   const target = repTarget(level);
   const rep = count + 1;
   const met = count >= target;
+  // Not while the steps turn by themselves: a shortcut for moving on is a
+  // strange thing to teach somebody who has just asked not to have to.
   const showAdvanceHint =
-    !isLast && count === 1 && session.stepIndex === 0 && !hintSeen('tap-to-advance');
+    !isLast &&
+    !getPace().auto &&
+    count === 1 &&
+    session.stepIndex === 0 &&
+    !hintSeen('tap-to-advance');
 
   return html`
     ${topBar(
@@ -817,7 +901,7 @@ function stepScreen(activity, level) {
               is wanted. */ ''}
         ${step.helper
           ? html`<details class="disclosure" data-why>
-              <summary>${commandButtonLabel('why')}</summary>
+              <summary>Why this matters</summary>
               <div class="disclosure-body">${step.helper}</div>
             </details>`
           : ''}
@@ -899,10 +983,10 @@ function stepScreen(activity, level) {
                     at half width. */ ''}
               <div class="tally-answers">
                 <button class="btn btn--quiet tally-miss" type="button" data-rep="0">
-                  ${commandButtonLabel('miss')}
+                  Not that one
                 </button>
                 <button class="btn btn--lg tally-good" type="button" data-rep="1">
-                  ${commandButtonLabel('good')}
+                  Went well
                 </button>
               </div>
             </div>`
@@ -922,7 +1006,7 @@ function stepScreen(activity, level) {
               The strip therefore appears whenever either half has something to
               offer: mid-pass (log this one as a miss) or after a rep (undo
               it). */ ''}
-        ${voiceChip()}
+        ${paceStrip(isLast)}
         ${count > 0 || !isLast
           ? html`<div class="rep-strip ${session.celebrate ? 'rep-strip--celebrate' : ''}">
               <p class="rep-strip-count">
@@ -963,7 +1047,7 @@ function stepScreen(activity, level) {
               type="button"
               data-finish-practice
             >
-              ${commandButtonLabel('finish')}
+              Finish session
             </button>`
           : ''}
 
@@ -1000,15 +1084,22 @@ function stepScreen(activity, level) {
           data-prev
           ${session.stepIndex === 0 ? 'disabled' : ''}
         >
-          ${commandButtonLabel('prev')}
+          Previous step
         </button>
         ${/* On the last step the rep question is the way on, so there is no
               Next to offer and Previous takes the row alone. */ ''}
+        ${/* When the steps turn by themselves the button fills as the clock
+              runs, so from arm's length it can be seen to be about to press
+              itself. The fill is a span rather than a background so the
+              label stays put above it. */ ''}
         ${isLast
           ? ''
-          : html`<button class="btn" type="button" data-next>
-              ${commandButtonLabel('next')}
-            </button>`}
+          : getPace().auto
+            ? html`<button class="btn btn--pace" type="button" data-next>
+                <span class="btn-fill" aria-hidden="true"></span>
+                <span class="btn-pace-label">Next step</span>
+              </button>`
+            : html`<button class="btn" type="button" data-next>Next step</button>`}
       </div>
     </div>
   `;
@@ -1519,12 +1610,11 @@ function animateProgramBand(root) {
 }
 
 /**
- * Bring the microphone and the voice into line with the screen that just
+ * Bring the voice and the clock into line with the screen that just
  * rendered. Called at the end of every wire, and idempotent on purpose: the
- * step cycle re-renders on every tap, and a microphone rebuilt that often
- * would spend the session restarting instead of listening.
+ * step cycle re-renders on every tap.
  */
-function syncVoice(root, level, steps) {
+function syncHandsFree(steps) {
   const voice = getVoice();
   const onStepScreen = session.phase === 'step' && !session.sheetOpen;
 
@@ -1541,107 +1631,25 @@ function syncVoice(root, level, steps) {
   if (voice.speak && canSpeak() && onStepScreen) speakStep(steps);
   else if (!voice.speak) spokenKey = '';
 
-  // Listening ---------------------------------------------------------------
-  // Not while the phone is mid-sentence: the speech that is about to start
-  // would knock the recognizer over the moment it did.
-  const speaking = ['queued', 'speaking'].includes(speechStatus().state);
-  const shouldListen = voice.listen && canListen() && onStepScreen && !speaking;
-  if (shouldListen && !listenStop) startListeningNow();
-  else if (!shouldListen && listenStop && !speaking) stopListening();
-  paintVoiceChip();
-}
-
-function startListeningNow() {
-  if (listenStop) return;
-  listenStop = startListening({
-    onCommand: (id) => runVoiceCommand(id),
-    onState: (patch) => {
-      listenState = { ...listenState, ...patch };
-      paintVoiceChip();
-    },
-  });
-  if (!listenStop) listenState = { ...listenState, listening: false, error: 'ended' };
-  paintVoiceChip();
+  // The clock ---------------------------------------------------------------
+  // After the speech, so a step that is being read is seen as busy and the
+  // clock waits for the voice rather than racing it.
+  syncPace();
 }
 
 /**
- * Update the chip in place. A full refresh would be the obvious thing and is
- * wrong here: recognition results arrive while a thumb may be on a button,
- * and re-rendering the screen underneath a tap loses it.
+ * Redraw every copy of the seconds control after a change, without a
+ * re-render. There are two on the step screen at most — the strip's — and
+ * one on get-ready; whichever screen is up, all of them have to agree.
  */
-function paintVoiceChip() {
-  const chip = document.querySelector('.voice-chip');
-  if (!chip) return;
-  const { listening, heard, matched, error } = listenState;
-  const label = voiceChipLabel(listening, error);
-  const live = Boolean(listening) && !error && micState !== 'blocked';
-  chip.classList.toggle('is-live', live);
-  const labelEl = chip.querySelector('.voice-chip-label');
-  if (labelEl) labelEl.textContent = label;
-  let heardEl = chip.querySelector('.voice-heard');
-  if (heard) {
-    if (!heardEl) {
-      heardEl = document.createElement('span');
-      heardEl.className = 'voice-heard';
-      chip.appendChild(heardEl);
-    }
-    heardEl.textContent = `“${heard}”`;
-    heardEl.classList.toggle('is-matched', Boolean(matched));
-  } else if (heardEl) {
-    heardEl.remove();
-  }
-  chip.setAttribute('aria-label', `${label}.${live ? ' Tap to stop listening.' : ''}`);
-}
-
-/**
- * Run a heard command through the button it corresponds to.
- *
- * Clicking the real control rather than calling the handler directly is the
- * whole trick: every guard already written — the last step having no Next,
- * Finish only existing once something is counted, the disabled Back on step
- * one — keeps holding, and a command for a button that is not on screen
- * simply does nothing instead of driving the session into a state the taps
- * could never reach.
- */
-function runVoiceCommand(id) {
-  // The one command that is a question, so it does not go through a button.
-  // Clicking the summary would be the consistent move and is the wrong one
-  // twice over: `<summary>` toggles, so a second "why this matters" would shut
-  // the drawer on somebody asking to hear it again, and a drawer that opens
-  // silently answers nothing to a handler who is not looking at the phone.
-  if (id === 'why') return answerWhy();
-  const selector = {
-    next: '[data-next]',
-    prev: '[data-prev]',
-    good: '[data-rep="1"]',
-    miss: '[data-rep="0"]',
-    finish: '[data-finish-practice]',
-  }[id];
-  if (!selector) return;
-  const button = document.querySelector(selector);
-  if (button && !button.disabled) button.click();
-}
-
-/**
- * Open the drawer and read what is in it.
- *
- * Read only when it was asked for out loud. Tapping the summary opens it in
- * silence, as it always has: a thumb on the drawer is attached to eyes on the
- * screen, and reading a paragraph at somebody already halfway through it is
- * the app talking over itself. Saying the words is the case where the answer
- * has nowhere else to go.
- *
- * Taken from the rendered text rather than from `step.helper`, so whatever is
- * on the screen is what gets said — there is no second copy to fall out of
- * step with the first.
- */
-function answerWhy() {
-  const drawer = document.querySelector('[data-why]');
-  if (!drawer) return;
-  drawer.open = true;
-  const body = drawer.querySelector('.disclosure-body');
-  const text = body ? body.textContent.trim() : '';
-  if (text && getVoice().speak && canSpeak()) speak(text);
+function paintPaceSetting(root) {
+  const { seconds } = getPace();
+  const at = PACE_LADDER.indexOf(seconds);
+  root.querySelectorAll('[data-pace-out]').forEach((o) => (o.textContent = `${seconds}s`));
+  root.querySelectorAll('[data-pace="-1"]').forEach((b) => (b.disabled = at <= 0));
+  root
+    .querySelectorAll('[data-pace="1"]')
+    .forEach((b) => (b.disabled = at >= PACE_LADDER.length - 1));
 }
 
 function wire(root) {
@@ -1657,6 +1665,11 @@ function wire(root) {
     else set.add(value);
   };
 
+  // A fresh screen is a fresh step, as far as the clock is concerned. Stopped
+  // here and started again at the end of this function, once the buttons it
+  // paints into exist.
+  stopPaceFrame();
+
   // The guard belongs to the session, not to a screen, so it is armed from
   // whichever render first has something to lose and stays armed across every
   // re-render until the session is saved or abandoned.
@@ -1668,12 +1681,16 @@ function wire(root) {
       leavePlayer();
       return;
     }
+    // A step that turned over behind the question would be answered about a
+    // screen nobody was looking at.
+    holdPace(true);
     confirmSheet({
       title: 'Leave practice?',
       body: 'Nothing from this session is saved yet.',
       confirmLabel: 'Leave',
       cancelLabel: 'Keep going',
       onConfirm: leavePlayer,
+      onDismiss: () => holdPace(false),
     });
   });
 
@@ -1746,35 +1763,32 @@ function wire(root) {
     }, 1400);
   });
 
-  on('[data-voice-listen]', 'click', () => {
-    const next = !getVoice().listen;
-    setVoice({ listen: next });
-    if (!next) {
-      stopListening();
-      micState = 'unknown';
-      refresh();
-      return;
-    }
-    // Ask now rather than at the first rep. The permission sheet belongs on
-    // the screen where somebody still has both hands, not over a dog in a
-    // stay — and if the answer is no, this is where there is room to say so.
+  // The clock -----------------------------------------------------------------
+  on('[data-pace-auto]', 'click', () => {
+    setPace({ auto: !getPace().auto });
+    pace.paused = false;
     refresh();
-    probeMicrophone().then((result) => {
-      micState = result;
-      if (session && session.phase === 'ready') refresh();
-    });
   });
 
-  // Stop when live, restart when not. The restart matters more than it looks:
-  // on iOS every microphone start has to come from a tap, and this tap is
-  // that gesture — syncVoice starts recognition synchronously inside the
-  // refresh below, still inside this click.
-  on('[data-voice-toggle]', 'click', () => {
-    const live = listenState.listening && !listenState.error;
-    stopListening();
-    setVoice({ listen: !live });
+  // In place, not a re-render: this is the control most likely to be tapped
+  // with the clock running and a dog waiting, and the whole screen redrawing
+  // under the thumb is what a second tap would land on. The new length
+  // starts now — a step that was too short is given the longer one, whole.
+  on('[data-pace]', 'click', (e) => {
+    stepPace(Number(e.currentTarget.dataset.pace));
+    paintPaceSetting(root);
+    stopPaceFrame();
+    syncPace();
+  });
+
+  on('[data-pace-pause]', 'click', () => {
+    pace.paused = !pace.paused;
     refresh();
   });
+
+  // Reading is a reason to wait, and closing the drawer is a reason to stop
+  // waiting. Both go through the one sync so the rules stay in one place.
+  on('[data-why]', 'toggle', () => syncPace());
 
   on('[data-start]', 'click', () => {
     session.phase = 'step';
@@ -2057,7 +2071,7 @@ function wire(root) {
 
   if (session.phase === 'step') preloadUpcoming(activity, level);
 
-  syncVoice(root, level, steps);
+  syncHandsFree(steps);
 
   // The target-met sweep runs on the progress bar itself. Consumed here: the
   // flag belongs to the render it was set for, and leaving it on would replay
@@ -2130,9 +2144,9 @@ export function cancelSession() {
   // the ones that never touched the guard. Left armed, its popstate listener
   // would outlive the session and answer for a screen that is no longer here.
   disarmExitGuard();
-  // A microphone that outlives the screen that opened it is the worst bug
-  // this feature could have.
-  endVoice();
+  // A clock that outlives the screen that started it would press a button on
+  // whatever screen came next.
+  endHandsFree();
   releaseAwake();
   if (session && session.releaseTrap) session.releaseTrap({ restoreFocus: false });
   session = null;

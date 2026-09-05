@@ -69,15 +69,18 @@ const emptyState = () => ({
   // hint so adding the next one needs no migration: an install saved before a
   // hint existed simply does not list it, and sees it once.
   hintsSeen: [],
+  /** Reading the steps aloud, off until asked for. */
+  voice: { speak: false, voiceURI: '' },
   /**
-   * Hands-free practice, off until asked for.
+   * The steps turning by themselves, off until asked for.
    *
-   * Two flags rather than one, because the halves are not equally cheap.
-   * Speaking runs on the device and works offline; listening needs a network
-   * and a microphone permission. Tying them together would mean somebody who
-   * only wanted the steps read aloud had to grant a microphone to get it.
+   * `seconds` is how long each step stays up before the next one comes. It
+   * is one number for every step rather than one per step, because the
+   * household changes it mid-session from the step screen — the same number
+   * this stores — and a value that is easy to nudge beats a table of guesses
+   * that would be wrong for their dog anyway.
    */
-  voice: { speak: false, listen: false, voiceURI: '' },
+  pace: { auto: false, seconds: 10 },
   notes: '',
 });
 
@@ -148,6 +151,13 @@ function migrate(next) {
   // from the illustrations, which is the same answer a fresh install gives.
   if (Array.isArray(next.people)) {
     next.people = next.people.map((p) => (p && p.avatar ? p : { ...p, avatar: 'handler' }));
+  }
+  // Listening for spoken commands is gone. An install that had it on keeps
+  // the flag in storage forever otherwise, and a flag nothing reads is the
+  // kind of thing that gets read again by accident two refactors later.
+  if (next.voice && 'listen' in next.voice) {
+    const { listen: _dropped, ...voice } = next.voice;
+    next.voice = voice;
   }
   return next;
 }
@@ -455,10 +465,9 @@ export function completeOnboarding() {
   persist();
 }
 
-/** Hands-free preferences. Defaulted here so installs saved before it exist. */
+/** Read-aloud preferences. Defaulted here so installs saved before it exist. */
 export const getVoice = () => ({
   speak: false,
-  listen: false,
   voiceURI: '',
   ...(state.voice || {}),
 });
@@ -466,6 +475,51 @@ export const getVoice = () => ({
 export function setVoice(patch) {
   state.voice = { ...getVoice(), ...patch };
   persist();
+}
+
+/**
+ * The seconds a step may stay up for, in the order the stepper walks them.
+ *
+ * A ladder rather than a linear step. Five seconds is "ring or knock once";
+ * ninety is a stay that is meant to be long. Walking that range five seconds
+ * at a time takes seventeen taps, and the taps happen with a dog waiting, so
+ * the rungs widen as they climb — each is a different length of step, not a
+ * different decimal.
+ */
+export const PACE_LADDER = [5, 8, 10, 15, 20, 30, 45, 60, 90];
+
+/** The nearest rung to any number, so a stored value is always one of them. */
+const snapPace = (n) => {
+  const value = Number(n);
+  if (!Number.isFinite(value)) return 10;
+  return PACE_LADDER.reduce((best, rung) =>
+    Math.abs(rung - value) < Math.abs(best - value) ? rung : best
+  );
+};
+
+/** Auto-advance preferences. Defaulted here so installs saved before it exist. */
+export const getPace = () => {
+  const stored = state.pace || {};
+  return { auto: Boolean(stored.auto), seconds: snapPace(stored.seconds ?? 10) };
+};
+
+export function setPace(patch) {
+  state.pace = { ...getPace(), ...patch };
+  state.pace.seconds = snapPace(state.pace.seconds);
+  persist();
+}
+
+/**
+ * One rung up or down. Returns the new value, and stays put at either end
+ * rather than wrapping — a stepper that jumps from ninety to five is a
+ * stepper that just cost somebody a rep.
+ */
+export function stepPace(direction) {
+  const { seconds } = getPace();
+  const at = PACE_LADDER.indexOf(seconds);
+  const next = PACE_LADDER[Math.min(Math.max(at + Math.sign(direction), 0), PACE_LADDER.length - 1)];
+  if (next !== seconds) setPace({ seconds: next });
+  return next;
 }
 
 /** Whether a one-time hint has already had its turn. */
