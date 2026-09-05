@@ -20,7 +20,7 @@ import {
 import { MIN_REPS_TO_ADVANCE } from '../metrics.js';
 import { restart as restartWelcome } from './welcome.js';
 import { openPersonSwitcher } from '../person.js';
-import { APP_VERSION } from '../version.js';
+import { APP_VERSION, updatedLabel } from '../version.js';
 import {
   html,
   join,
@@ -304,10 +304,17 @@ function render() {
         </div>
       </div>
 
-      ${/* Under the version, where the answer to "what version are you on?"
-            already lives, and quiet enough not to look like a feature. */ ''}
-      <p class="section-note" style="margin-top: var(--s-6); text-align: center">
-        Lucy Learns ${APP_VERSION} · training program by ${TRAINER.name}<br />
+      ${/* The colophon. The version is the line that matters here: "which
+            version are you on?" is the first question asked about anything
+            that looks wrong on a phone, and the number used to sit inside the
+            app's name, where it read as part of the name and was missed. So
+            it is stated the way the splash states it, with the build date
+            beside it, on a line of its own. Diagnostics sits under that,
+            where the answer to the question already lives, and quiet enough
+            not to look like a feature. */ ''}
+      <p class="section-note colophon">
+        Lucy Learns · training program by ${TRAINER.name}<br />
+        <b>Version ${APP_VERSION}</b> · ${updatedLabel()}<br />
         <a href="#/diagnostics">Diagnostics</a>
       </p>
     </div>
