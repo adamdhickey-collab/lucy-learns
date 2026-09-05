@@ -93,7 +93,7 @@ function facts() {
     ['Storage working', isStorageOk() ? 'yes' : 'NO — nothing is being saved'],
     ['Sessions logged', String((state.sessions || []).length)],
     ['Read aloud', voice.speak ? 'on' : 'off'],
-    ['Move on by itself', pace.auto ? `on, ${pace.seconds}s a step` : 'off'],
+    ['Step timer', pace.auto ? `on, ${pace.seconds}s a step` : 'off'],
     ['Voice chosen by hand', voice.voiceURI || '(none — picked automatically)'],
     ['Voice in use', currentVoiceName() || '(engine default)'],
     ['Voices reported', String(rawVoices().length)],
