@@ -648,7 +648,7 @@ export const PLANNED_ACTIVITIES = [
     goalId: 'settle-recovery',
     coverImage: 'plan-mat',
     title: 'Settle on a Mat',
-    shortPurpose: 'Lucy lies down and stays down while the room carries on without her.',
+    shortPurpose: '{dog} lies down and stays down while the room carries on without {her}.',
     note: 'The skill underneath the bed work, taken away from the door.',
   },
   {
@@ -657,7 +657,7 @@ export const PLANNED_ACTIVITIES = [
     goalId: 'walks-public',
     coverImage: 'plan-walkpeople',
     title: 'People Passing on Walks',
-    shortPurpose: 'Someone walks by and Lucy keeps walking with you.',
+    shortPurpose: 'Someone walks by and {dog} keeps walking with you.',
     note: 'The same arousal as a doorbell, somewhere you cannot close the door.',
   },
   {
@@ -666,7 +666,7 @@ export const PLANNED_ACTIVITIES = [
     goalId: 'foundation',
     coverImage: 'plan-name',
     title: 'Name Response Around Distractions',
-    shortPurpose: 'Her name turns her head no matter what else is happening.',
+    shortPurpose: '{Their} name turns {their} head no matter what else is happening.',
     note: 'Every other activity leans on this one.',
   },
 ];
@@ -738,7 +738,7 @@ export const INCIDENT_CONTEXTS = [
   { id: 'guest_arrived', label: 'Guest arrived' },
   { id: 'walk_person', label: 'Met someone on a walk' },
   { id: 'family_gathering', label: 'Family gathering' },
-  { id: 'person_approached', label: 'Person approached Lucy' },
+  { id: 'person_approached', label: 'Person approached {dog}' },
   { id: 'unexpected_doorbell', label: 'Unexpected doorbell' },
   { id: 'other', label: 'Something else' },
 ];
@@ -757,7 +757,7 @@ export const INCIDENT_HELPERS = [
   { id: 'place', label: 'Place' },
   { id: 'distance', label: 'Distance' },
   { id: 'leash', label: 'Leash' },
-  { id: 'ignored', label: 'Person ignored Lucy' },
+  { id: 'ignored', label: 'Person ignored {dog}' },
   { id: 'left', label: 'Left the situation' },
   { id: 'nothing', label: 'Nothing yet' },
 ];
@@ -785,7 +785,7 @@ export const PROGRAMS = [
       title: 'A calm hello, every time',
       eyebrow: 'What finishing looks like',
       body:
-        'Someone knocks. Lucy looks at you, goes to her bed, and stays there while you open the door. She greets the guest when you say so, with four paws on the floor.',
+        'Someone knocks. {dog} looks at you, goes to {their} bed, and stays there while you open the door. {dog} greets the guest when you say so, with four paws on the floor.',
       note: 'Finish all four activities and you have the whole sequence, not one piece of it.',
     },
     source: {
@@ -803,7 +803,7 @@ export const PROGRAMS = [
      * easier mid-rep, not how to answer an actual door.
      */
     management: {
-      title: 'Before she is reliable',
+      title: 'Before {dog} is reliable',
       intro:
         'A real guest is at the door and the routine is not finished yet. Do not test it. Manage it.',
       branches: [
@@ -811,18 +811,18 @@ export const PROGRAMS = [
           when: 'If someone else is home',
           steps: [
             'They answer the door.',
-            'You stay next to Lucy and hold the “Back” or “Stay”.',
-            'Reward her for holding it while the door is busy.',
+            'You stay next to {dog} and hold the “Back” or “Stay”.',
+            'Reward {her} for holding it while the door is busy.',
           ],
         },
         {
           when: 'If you are on your own',
           steps: [
-            'Call Lucy, then take her with you calmly, on leash or with a hand in her collar.',
+            'Call {dog}, then take {her} with you calmly, on leash or with a hand in {their} collar.',
             'Unlatch the door and say “Just a minute!” through it.',
-            'Walk her to her spot and hold the stay.',
+            'Walk {her} to {their} spot and hold the stay.',
             'Now say “Come in!”',
-            'Stay with her until she is calm, then escort the guest over for a controlled greeting.',
+            'Stay with {her} until {dog} is calm, then escort the guest over for a controlled greeting.',
           ],
         },
       ],
@@ -832,12 +832,12 @@ export const PROGRAMS = [
 
 // Shared safety guidance shown behind the "Lucy is too excited" button.
 const FALLBACK_STEPS = [
-  'Move Lucy farther from the door.',
-  'Keep her on leash and stay beside her.',
+  'Move {dog} farther from the door.',
+  'Keep {her} on leash and stay beside {her}.',
   'Ask the guest to wait, or let someone else answer.',
   'Drop back one level and make it easy again.',
-  'Feed her on her bed for staying there.',
-  'Skip the greeting entirely if she cannot settle.',
+  'Feed {her} on {their} bed for staying there.',
+  'Skip the greeting entirely if {dog} cannot settle.',
 ];
 
 export const ACTIVITIES = [
@@ -851,31 +851,31 @@ export const ACTIVITIES = [
     shortTitle: 'Sound',
     // The mark this activity carries everywhere it appears. See ICONS.
     icon: 'act-sound',
-    shortPurpose: 'Lucy hears the doorbell and looks to you instead of the door.',
+    shortPurpose: '{dog} hears the doorbell and looks to you instead of the door.',
     coverImage: 'door-sound-cover',
     estimatedMinutes: 5,
     difficulty: 'beginner',
-    equipment: ['Lucy on leash', 'Small high-value treats', 'Doorbell or a door to knock on'],
+    equipment: ['{dog} on leash', 'Small high-value treats', 'Doorbell or a door to knock on'],
     safetyNotes: [
-      'Stop while Lucy is still succeeding, not after she fails.',
+      'Stop while {dog} is still succeeding, not after a miss.',
       'One sound per repetition. Never repeat the bell to get a reaction.',
-      'Talk to her calmly through this if you want to. Keep it low key, nothing exciting.',
+      'Talk to {her} calmly through this if you want to. Keep it low key, nothing exciting.',
     ],
     fallbackImage: 'door-sound-cover',
     fallbackSteps: FALLBACK_STEPS,
     steps: [
       {
-        instruction: 'Stand near the door with Lucy on leash.',
+        instruction: 'Stand near the door with {dog} on leash.',
         image: 'door-sound-01-setup',
         helper: 'Step lightly on the leash so both hands stay free.',
       },
       {
         instruction: 'Ring or knock once.',
         image: 'door-sound-02-self',
-        helper: 'One sound only, then wait. Let her hear it before you say anything.',
+        helper: 'One sound only, then wait. Let {her} hear it before you say anything.',
       },
       {
-        instruction: 'Say her name in a bright, happy voice.',
+        instruction: 'Say {their} name in a bright, happy voice.',
         cue: '{dog}!',
         image: 'door-sound-03-name',
       },
@@ -883,19 +883,19 @@ export const ACTIVITIES = [
         instruction: 'Give two treats right away.',
         image: 'door-sound-04-treats',
         helper:
-          'You are paying for the sound, not for good behavior. Feed even if she barked, so the bell starts to mean food instead of alarm.',
+          'You are paying for the sound, not for good behavior. Feed even after a bark, so the bell starts to mean food instead of alarm.',
       },
       {
-        instruction: 'Let her settle, then go again.',
+        instruction: 'Let {her} settle, then go again.',
         image: 'door-sound-05-settle',
-        helper: 'A few quiet seconds between reps keeps her under threshold.',
+        helper: 'A few quiet seconds between reps keeps {her} under threshold.',
       },
     ],
     levels: [
       {
         number: 1,
         title: 'You make the sound',
-        setup: 'You knock or ring while standing right next to Lucy.',
+        setup: 'You knock or ring while standing right next to {dog}.',
         // The base step draws dg-20 now, which is this level's picture exactly.
         reps: 5,
         successCriteria: ['No barking on 4 of 5 sounds', 'Turns toward you', 'Takes treats easily'],
@@ -903,7 +903,7 @@ export const ACTIVITIES = [
       {
         number: 2,
         title: 'Helper makes the sound',
-        setup: 'A helper knocks nearby while you stay with Lucy.',
+        setup: 'A helper knocks nearby while you stay with {dog}.',
         reps: 5,
         successCriteria: ['No barking on 4 of 5 sounds', 'Turns toward you before the treat'],
         overrides: { 1: { instruction: 'Have your helper knock nearby.', image: 'door-sound-02-knock' } },
@@ -919,21 +919,21 @@ export const ACTIVITIES = [
       {
         number: 4,
         title: 'Call from a few feet away',
-        setup: 'After the sound, call Lucy from several feet back.',
+        setup: 'After the sound, call {dog} from several feet back.',
         reps: 5,
         successCriteria: ['Comes to you after the sound', 'No charging the door'],
         overrides: {
-          2: { instruction: 'Call her name from a few feet away.', cue: '{dog}!', image: 'door-sound-03-name-distant' },
+          2: { instruction: 'Call {their} name from a few feet away.', cue: '{dog}!', image: 'door-sound-03-name-distant' },
         },
       },
       {
         number: 5,
         title: 'Call from another room',
-        setup: 'Call Lucy from the kitchen, bedroom, or living room.',
+        setup: 'Call {dog} from the kitchen, bedroom, or living room.',
         reps: 5,
         successCriteria: ['Leaves the door and finds you', 'Arrives without barking'],
         overrides: {
-          2: { instruction: 'Call her name from another room.', cue: '{dog}!', image: 'door-sound-03-name-distant' },
+          2: { instruction: 'Call {their} name from another room.', cue: '{dog}!', image: 'door-sound-03-name-distant' },
         },
       },
     ],
@@ -949,22 +949,22 @@ export const ACTIVITIES = [
     shortTitle: 'Stay',
     // The mark this activity carries everywhere it appears. See ICONS.
     icon: 'act-stay',
-    shortPurpose: 'Lucy holds her bed while you walk over and open the door.',
+    shortPurpose: '{dog} holds {their} bed while you walk over and open the door.',
     coverImage: 'door-stay-cover',
     estimatedMinutes: 7,
     difficulty: 'intermediate',
-    equipment: ['Lucy on leash', 'Her bed or a marked boundary', 'Small treats'],
+    equipment: ['{dog} on leash', '{Their} bed or a marked boundary', 'Small treats'],
     safetyNotes: [
-      'Go back to her to reward. Never call her off the bed to get the treat.',
-      'If she breaks position twice in a row, drop back a level.',
+      'Go back to {her} to reward. Never call {her} off the bed to get the treat.',
+      'If {dog} breaks position twice in a row, drop back a level.',
       'A boundary works as well as a bed. If you use one, cue “Back” instead of “Go to bed”.',
     ],
     fallbackImage: 'door-stay-04-pay',
     fallbackSteps: FALLBACK_STEPS,
     steps: [
-      { instruction: 'Send Lucy to her bed.', cue: 'Go to bed', image: 'door-place-03-send' },
+      { instruction: 'Send {dog} to {their} bed.', cue: 'Go to bed', image: 'door-place-03-send' },
       {
-        instruction: 'Cue the stay and hold her eye for one beat.',
+        instruction: 'Cue the stay and hold {their} eye for one beat.',
         cue: 'Stay',
         image: 'door-stay-02-cue',
       },
@@ -972,9 +972,9 @@ export const ACTIVITIES = [
       {
         // dg-07 showed the handler walking away with nothing in her hands on a
         // step about coming back and paying. dg-25 is that payment, drawn.
-        instruction: 'Walk back and reward her on the bed.',
+        instruction: 'Walk back and reward {her} on the bed.',
         image: 'door-stay-04-pay',
-        helper: 'Deliver the treat between her paws so the bed becomes the paying spot.',
+        helper: 'Deliver the treat between {their} paws so the bed becomes the paying spot.',
       },
       { instruction: 'Release, then reset for the next rep.', cue: 'Okay', image: 'door-stay-05-release' },
     ],
@@ -1046,12 +1046,12 @@ export const ACTIVITIES = [
       {
         number: 8,
         title: 'Familiar person outside',
-        setup: 'Someone Lucy knows stands outside while you open the door.',
+        setup: 'Someone {dog} knows stands outside while you open the door.',
         reps: 4,
         successCriteria: ['Holds the bed while a real person is visible'],
         overrides: {
           2: { instruction: 'Open the door to a familiar person waiting outside.', image: 'door-greet-04-open' },
-          4: { instruction: 'Release her, and your helper steps back outside.', image: 'door-greet-09-leaves' },
+          4: { instruction: 'Release {her}, and your helper steps back outside.', image: 'door-greet-09-leaves' },
         },
       },
     ],
@@ -1067,26 +1067,26 @@ export const ACTIVITIES = [
     shortTitle: 'Place',
     // The mark this activity carries everywhere it appears. See ICONS.
     icon: 'act-place',
-    shortPurpose: 'The doorbell becomes her cue to move away from the door.',
+    shortPurpose: 'The doorbell becomes {their} cue to move away from the door.',
     coverImage: 'door-place-cover',
     estimatedMinutes: 7,
     difficulty: 'intermediate',
-    equipment: ['Lucy on leash', 'Her bed', 'Small treats', 'Doorbell or a door to knock on'],
+    equipment: ['{dog} on leash', '{Their} bed', 'Small treats', 'Doorbell or a door to knock on'],
     safetyNotes: [
       'Keep the whole sequence smooth before you add a pretend visitor.',
-      'If she needs the lure three reps in a row, stay at this level.',
+      'If {dog} needs the lure three reps in a row, stay at this level.',
     ],
     fallbackImage: 'door-stay-04-pay',
     fallbackSteps: FALLBACK_STEPS,
     steps: [
       { instruction: 'Ring or knock once.', image: 'door-sound-02-self' },
-      { instruction: 'Say her name brightly.', cue: '{dog}!', image: 'door-sound-03-name' },
-      { instruction: 'Send her to her bed.', cue: 'Go to bed', image: 'door-place-03-send' },
-      { instruction: 'Reward her twice on the bed.', image: 'door-stay-04-pay' },
+      { instruction: 'Say {their} name brightly.', cue: '{dog}!', image: 'door-sound-03-name' },
+      { instruction: 'Send {her} to {their} bed.', cue: 'Go to bed', image: 'door-place-03-send' },
+      { instruction: 'Reward {her} twice on the bed.', image: 'door-stay-04-pay' },
       {
         instruction: 'Walk toward the door, then come back.',
         image: 'door-stay-03-cross',
-        helper: 'Walking away right after she lands teaches her the bed is where the job happens.',
+        helper: 'Walking away right after {dog} lands teaches {her} the bed is where the job happens.',
       },
       { instruction: 'Release and reset.', cue: 'Okay', image: 'door-stay-05-release' },
     ],
@@ -1094,18 +1094,18 @@ export const ACTIVITIES = [
       {
         number: 1,
         title: 'Lure to the bed',
-        setup: 'Lead her to the bed with a treat in your hand.',
+        setup: 'Lead {her} to the bed with a treat in your hand.',
         reps: 5,
-        successCriteria: ['Follows to the bed', 'Settles once she arrives'],
-        overrides: { 2: { instruction: 'Lead her to the bed with a treat.', image: 'door-place-03-send' } },
+        successCriteria: ['Follows to the bed', 'Settles on arrival'],
+        overrides: { 2: { instruction: 'Lead {her} to the bed with a treat.', image: 'door-place-03-send' } },
       },
       {
         number: 2,
         title: 'Point, then pay',
-        setup: 'Point to the bed and treat only after she arrives.',
+        setup: 'Point to the bed and treat only after {dog} arrives.',
         reps: 5,
-        successCriteria: ['Goes to the bed on a point', 'No hand in front of her nose'],
-        overrides: { 2: { instruction: 'Point to the bed. Treat after she lands.', image: 'door-place-03-send' } },
+        successCriteria: ['Goes to the bed on a point', 'No hand in front of {their} nose'],
+        overrides: { 2: { instruction: 'Point to the bed. Treat after {dog} lands.', image: 'door-place-03-send' } },
       },
       {
         number: 3,
@@ -1117,7 +1117,7 @@ export const ACTIVITIES = [
       {
         number: 4,
         title: 'Straight to the door',
-        setup: 'After she lands, walk all the way to the door without hesitating.',
+        setup: 'After {dog} lands, walk all the way to the door without hesitating.',
         reps: 5,
         successCriteria: ['Holds the bed while you cross the room', 'Sequence feels fluid'],
         overrides: { 4: { instruction: 'Walk all the way to the door, then return.', image: 'door-stay-03-cross' } },
@@ -1132,7 +1132,7 @@ export const ACTIVITIES = [
           4: {
             instruction: 'Open the door and greet an imaginary guest.',
             image: 'door-stay-03-pretend',
-            helper: 'Then close the door, walk back, and pay her for staying.',
+            helper: 'Then close the door, walk back, and pay {her} for staying.',
           },
         },
       },
@@ -1149,27 +1149,27 @@ export const ACTIVITIES = [
     shortTitle: 'Greet',
     // The mark this activity carries everywhere it appears. See ICONS.
     icon: 'act-greet',
-    shortPurpose: 'A real guest arrives and Lucy greets on your terms.',
+    shortPurpose: 'A real guest arrives and {dog} greets on your terms.',
     coverImage: 'door-greet-cover',
     estimatedMinutes: 10,
     difficulty: 'advanced',
-    equipment: ['Lucy on leash', 'Her bed', 'Small treats', 'A patient familiar guest'],
+    equipment: ['{dog} on leash', '{Their} bed', 'Small treats', 'A patient familiar guest'],
     safetyNotes: [
       'Brief your guest first. No eye contact, no reaching, no high voices.',
-      'If Lucy cannot settle, end the greeting. That is a real result, not a failure.',
+      'If {dog} cannot settle, end the greeting. That is a real result, not a failure.',
       'Pet the chest, never the top of the head.',
-      'If she pulls ahead on the way over, step on the leash or put gentle downward pressure on her collar.',
+      'If {dog} pulls ahead on the way over, step on the leash or put gentle downward pressure on {their} collar.',
     ],
     fallbackImage: 'door-sound-cover',
     fallbackSteps: FALLBACK_STEPS,
     steps: [
-      { instruction: 'Leash Lucy and settle her on her bed.', image: 'door-greet-01-settle' },
+      { instruction: 'Leash {dog} and settle {her} on {their} bed.', image: 'door-greet-01-settle' },
       { instruction: 'Your guest rings the bell.', image: 'door-sound-02-bell' },
-      { instruction: 'Send her to her bed.', cue: 'Go to bed', image: 'door-place-03-send' },
+      { instruction: 'Send {her} to {their} bed.', cue: 'Go to bed', image: 'door-place-03-send' },
       { instruction: 'Open the door. The guest stays put.', image: 'door-greet-04-open' },
-      { instruction: 'Reward her for holding the bed.', image: 'door-greet-05-reward' },
-      { instruction: 'Bring the guest in and let Lucy settle.', image: 'door-greet-06-enter' },
-      { instruction: 'Walk her over on a loose leash.', cue: 'Go say hi', image: 'door-greet-07-approach' },
+      { instruction: 'Reward {her} for holding the bed.', image: 'door-greet-05-reward' },
+      { instruction: 'Bring the guest in and let {dog} settle.', image: 'door-greet-06-enter' },
+      { instruction: 'Walk {her} over on a loose leash.', cue: 'Go say hi', image: 'door-greet-07-approach' },
       {
         instruction: 'Ask for a sit, then allow calm petting.',
         cue: 'Sit',
@@ -1181,7 +1181,7 @@ export const ACTIVITIES = [
         // leave the floor" — and a household reading that mid-session should
         // not have to picture it.
         avoid: 'door-greet-08-jumping',
-        helper: 'If her front feet leave the floor, the guest stands up and turns away. Reset and try again.',
+        helper: 'If {their} front feet leave the floor, the guest stands up and turns away. Reset and try again.',
       },
     ],
     levels: [
@@ -1206,23 +1206,23 @@ export const ACTIVITIES = [
       {
         number: 3,
         title: 'Guest sits down',
-        setup: 'The guest walks in, sits, and ignores Lucy completely.',
+        setup: 'The guest walks in, sits, and ignores {dog} completely.',
         reps: 3,
         endAfterStep: 6,
         successCriteria: ['Holds the bed while the guest moves through the room'],
-        overrides: { 5: { instruction: 'Guest walks in, sits down, and ignores her.', image: 'door-greet-06-seated' } },
+        overrides: { 5: { instruction: 'Guest walks in, sits down, and ignores {her}.', image: 'door-greet-06-seated' } },
       },
       {
         number: 4,
         title: 'Calm hello',
-        setup: 'Escort Lucy over for a sit and gentle petting.',
+        setup: 'Escort {dog} over for a sit and gentle petting.',
         reps: 3,
         successCriteria: ['Four paws down the whole time', 'Sits before being touched', 'No nipping'],
       },
       {
         number: 5,
         title: 'Less familiar visitor',
-        setup: 'Repeat the whole routine with someone Lucy knows less well.',
+        setup: 'Repeat the whole routine with someone {dog} knows less well.',
         reps: 2,
         successCriteria: ['Same routine holds with a newer person', 'Recovers within a minute'],
       },

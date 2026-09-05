@@ -27,7 +27,9 @@ import {
 } from '../content.js';
 import {
   addSession,
+  fillDog,
   getDog,
+  getState,
   getVoice,
   hintSeen,
   isStorageOk,
@@ -299,7 +301,8 @@ function speakStep(steps) {
   // Same reason the rep question is read but its criteria are not: those are
   // for the handler's eyes, mid-judgment.
   const tail = isLast ? ` That was rep ${rep}. How did it go?` : '';
-  speak(`${lead}${step.instruction}${tail}`);
+  // Filled here because speech never passes through the html tag.
+  speak(fillDog(`${lead}${step.instruction}${tail}`));
 }
 
 function stopListening() {
@@ -551,7 +554,7 @@ function handsFreeGroupInner() {
         ? html`<p class="section-note voice-warn">
             ${collisions.length === 1 ? 'One command is' : `${collisions.length} commands are`}
             switched off because ${getDog().name}'s cues use the same words.
-            Change the cue on the ${getDog().name} tab to get
+            Change the cue on the Profile tab to get
             ${collisions.length === 1 ? 'it' : 'them'} back.
           </p>`
         : ''}
@@ -605,6 +608,18 @@ function readyScreen(activity, level) {
         <p class="step-count">Level ${level.number} · ${level.title}</p>
         <h1 class="step-instruction">${level.setup}</h1>
 
+        ${/* Says the one thing the flow itself only reveals at the last
+              picture: walking the steps IS the rep. It sat at the foot of this
+              screen, under the checklist and the hands-free panel, which on a
+              first run is below the fold — and a first-timer tapped Next five
+              times waiting for the counting to start. Directly under the
+              instruction, it is the first sentence read. */ ''}
+        <p class="section-note" style="margin-top: var(--s-3)">
+          About ${activity.estimatedMinutes} minutes. Walking the ${stepsForLevel(activity, level).length} steps
+          once is one rep; aim for ${repTarget(level)} and stop early if ${getDog().name} is
+          still doing well.
+        </p>
+
         <div class="result-group">
           <h2>Before you start</h2>
           <div class="chips">
@@ -623,20 +638,22 @@ function readyScreen(activity, level) {
           </div>
         </div>
 
-        ${handsFreeGroup()}
+        ${/* Folded away until the household has finished a session of its
+              own. Two switches and a voice picker on the screen that starts
+              the very first session is a decision about how sessions run
+              being asked of someone who has not yet seen one. After that it
+              is open, where the pace can be set before the leash is in hand. */ ''}
+        ${getState().sessions.some((s) => !s.demo)
+          ? handsFreeGroup()
+          : html`<details class="disclosure">
+              <summary>Hands free</summary>
+              <div class="disclosure-body">${handsFreeGroup()}</div>
+            </details>`}
 
         ${/* No cue list here. Every cue in the level shown together under one
               "Say" heading read as a line to deliver before starting, when they
               belong to four separate moments — the bed, the stay, the door, the
               release. Each one appears on the step that needs it. */ ''}
-        ${/* Says the one thing the flow itself only reveals at the last
-              picture: walking the steps IS the rep. Without it the count
-              appearing at the end of the first pass reads as a surprise. */ ''}
-        <p class="section-note" style="margin-top: var(--s-5)">
-          About ${activity.estimatedMinutes} minutes. Your first time through the steps
-          counts as rep one; aim for ${repTarget(level)} and stop early if she is still doing
-          well.
-        </p>
       </div>
     </div>
     <div class="player-foot">
@@ -930,7 +947,9 @@ function stepScreen(activity, level) {
                   ? html`<b>${count}</b> counted · <b>${good}</b> went well${met
                       ? html` · <em>target met — finish on a win</em>`
                       : ''}`
-                  : html`Rep ${rep} in progress`}
+                  : rep === 1
+                    ? html`Rep 1 in progress · you say how it went after step ${steps.length}`
+                    : html`Rep ${rep} in progress`}
               </p>
               ${/* Both, when both apply. Undo has to survive mid-pass: the
                     likeliest moment to want it is the tap straight after a

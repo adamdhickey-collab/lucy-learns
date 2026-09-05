@@ -260,12 +260,57 @@ export function updateCommand(id, cue) {
 }
 
 /**
- * Fill the dog-name token. The token only survives in an install that never
- * went through setup with a name — a demo seeded straight into state, say —
- * but it must never reach a screen, because "{dog}!" is not something anyone
- * would say to a dog.
+ * The three pronoun forms the content needs, by the household's answer.
+ *
+ * `{she}` is the subject, `{her}` the object ("reward her"), `{their}` the
+ * possessive determiner ("her bed"). The possessive is named after the
+ * they-form on purpose: "{her} bed" and "{her} eye" would read fine in the
+ * source and then come out as "him bed" for a male dog, and a token that
+ * reads wrong in the source is one nobody types by mistake.
+ *
+ * Verbs are not tokenised. "{she} is" comes out as "they is", so any sentence
+ * that conjugates after the pronoun is written around the name instead —
+ * "after {dog} lands", not "after {she} lands".
  */
-const fillToken = (cue) => String(cue || '').replace('{dog}', state.dog.name);
+const PRONOUNS = {
+  she: { she: 'she', her: 'her', their: 'her' },
+  he: { she: 'he', her: 'him', their: 'his' },
+  they: { she: 'they', her: 'them', their: 'their' },
+};
+export const PRONOUN_CHOICES = [
+  { id: 'she', label: 'She' },
+  { id: 'he', label: 'He' },
+  { id: 'they', label: 'They' },
+];
+
+const TOKEN = /\{(dog|she|her|their|She|Her|Their)\}/g;
+
+/**
+ * Fill the dog tokens — `{dog}` and the pronoun forms above — in one string.
+ *
+ * Applied by the html`` tag in js/ui.js to every interpolated string, so a
+ * content string only has to carry the token and every screen that shows it
+ * gets the household's own dog. Before this, twenty-nine sentences in
+ * content.js said "Lucy" outright: the first step of the first session read
+ * "Stand near the door with Lucy on leash" directly above a button reading
+ * "Biscuit is too excited", on an install that had just been asked the dog's
+ * name. A capitalised token capitalises its answer, for sentence starts.
+ *
+ * The cue case is the one that must never fail: "{dog}!" is not something
+ * anyone would say to a dog, and a demo seeded straight into state can carry
+ * it. An install with no stored pronoun — one from before the field existed —
+ * reads as "she", which is what every sentence said until then.
+ */
+export function fillDog(text) {
+  const forms = PRONOUNS[state.dog.pronoun] || PRONOUNS.she;
+  return String(text ?? '').replace(TOKEN, (_, key) => {
+    const lower = key.toLowerCase();
+    const word = lower === 'dog' ? state.dog.name : forms[lower];
+    return key === lower ? word : word[0].toUpperCase() + word.slice(1);
+  });
+}
+
+const fillToken = fillDog;
 
 export const cueFor = (id) => {
   const command = state.commands.find((c) => c.id === id);

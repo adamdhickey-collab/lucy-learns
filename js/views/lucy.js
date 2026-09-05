@@ -327,9 +327,10 @@ function mount(root) {
     const before = getDog();
     dogSheet({
       name: before.name,
-      onSave: ({ name }) => {
+      pronoun: before.pronoun || 'she',
+      onSave: ({ name, pronoun }) => {
         const renamed = name !== before.name;
-        setDog({ name });
+        setDog({ name, pronoun });
         refreshApp();
         // Named specifically when the name changed, because renaming the dog
         // also rewrites the attention cue — "Lucy!" becomes "Rufus!" — and

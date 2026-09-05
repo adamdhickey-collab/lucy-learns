@@ -185,7 +185,9 @@ function render() {
               <div class="insight insight--${insight.tone}">${icon('spark')}<p>${insight.text}</p></div>
               <div class="week-row">
                 <span>
-                  ${week.count} of ${state.weeklyGoal} sessions${streak
+                  ${week.count > state.weeklyGoal
+                    ? `${week.count} sessions, goal of ${state.weeklyGoal} met`
+                    : `${week.count} of ${state.weeklyGoal} sessions`}${streak
                     ? ` · ${streak} day${streak === 1 ? '' : 's'} in a row`
                     : ''}
                 </span>

@@ -58,7 +58,7 @@ Nothing is seeded until you answer the last question:
   has something to show. Removable in one tap.
 
 To hand the app to someone else and have them see it exactly as a new user
-would: **Lucy → Starting over → Reset to a brand new app**. That wipes
+would: **Profile → Starting over → Reset to a brand new app**. That wipes
 sessions, moments, cue wording, and the weekly goal, then drops you back on the
 welcome screen. It offers to export a copy first.
 
@@ -68,7 +68,7 @@ The same section has two narrower options:
   your real ones.
 - **Delete all logs** — clears sessions and moments but keeps your cue wording.
 
-**Lucy → Settings → How this works** replays the three intro panels any time.
+**Profile → Settings → How this works** replays the three intro panels any time.
 
 ## Where the data lives
 
@@ -77,11 +77,11 @@ Nothing leaves the phone. There is no account and no sync, so this device holds
 the only copy. The MVP is built for a single handler; sessions still carry a
 `completedByUserId` so a second person can be added later without a migration.
 
-`Lucy → Export progress` writes a CSV of every session and moment, which is the
+`Profile → Export progress` writes a CSV of every session and moment, which is the
 thing to send The Canine Coach.
 
 Example data is opt-in, chosen at the end of the welcome and toggleable later
-from `Lucy → Starting over`.
+from `Profile → Starting over`.
 
 ## What is in here
 

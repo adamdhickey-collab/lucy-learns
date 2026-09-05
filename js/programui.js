@@ -131,7 +131,7 @@ function setupNode() {
         <span class="stage-top"><strong>Before you start</strong></span>
         <span class="stage-purpose">
           ${cues} cue words are set and ready to use. Change any of the wording on the
-          ${getDog().name} tab and every activity updates.
+          Profile tab and every activity updates.
         </span>
       </span>
     </div>
@@ -350,9 +350,14 @@ export function programStrip(prog, { stage = null } = {}) {
     href="#/program/${prog.program.id}"
   >
     <span class="program-strip-body">
+      ${/* Not "Activity 3 of 4". The focus rotates — see programProgress —
+            so the stage the strip points at is whichever has waited longest,
+            and a household with the second activity half done read "3 of 4"
+            as the second being finished. The state and the name say what the
+            caret is actually pointing at. */ ''}
       ${stage
         ? html`<span class="program-strip-where">
-            Activity ${stage.number} of ${prog.stages.length}
+            ${stage.state === STAGE.active ? 'In progress' : 'Up next'} · ${stage.activity.shortTitle}
           </span>`
         : ''}
       <span class="program-strip-top">

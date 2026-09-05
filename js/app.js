@@ -497,6 +497,19 @@ if (installHint) {
     hintTimer = setTimeout(maybeShow, delay);
   };
 
+  // Shown once, but not left up. The gate above keeps it from *appearing*
+  // over a session; nothing took it down when a session began under it, so
+  // it sat over the get-ready checklist and the rep tally for the whole
+  // practice. Hidden on the way into a full-screen view and, because it was
+  // never answered, allowed back on the next tab screen after the usual gap.
+  const ON_TAB_SCREEN = /^#\/(today|activities|progress|profile)/;
+  window.addEventListener('hashchange', () => {
+    if (installHint.hidden) return;
+    if (ON_TAB_SCREEN.test(location.hash || '#/today')) return;
+    installHint.hidden = true;
+    settled = false;
+  });
+
   scheduleHint(SPLASH_HOLD_MS + HINT_DELAY_MS);
   window.addEventListener('hashchange', () => scheduleHint(HINT_DELAY_MS));
 
