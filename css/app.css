@@ -2636,6 +2636,28 @@ details.disclosure .disclosure-body {
   object-fit: cover;
 }
 
+/* Every portrait faces into the app, not off its edge.
+   ---------------------------------------------------------------------------
+   All twenty-four avatars were drawn looking to the right, and on Today and
+   the profile card the portrait sits at the right-hand edge — so every face
+   was looking out of the screen, away from the greeting, the name and the
+   week beside it. Mirrored, they look at the thing they belong to.
+
+   A transform rather than a redraw, on purpose. The pictures are right in
+   every other respect and a redraw is a round of generation per portrait
+   with the usual chance of a new fault; the flip is free, exact and undone
+   by deleting one rule. Nothing in the set carries text or an asymmetric
+   mark that a mirror would betray. The four selectors are every place a
+   portrait is drawn: the badge on Today and in the person rows, the picker
+   tiles for people and dogs, the setup preview and the dog on the profile
+   card. The edit badge lives on the wrapper, so it stays lower-right. */
+.avatar.avatar--photo img,
+.avatar-choice img,
+.avatar-pick img,
+.profile-photo img {
+  transform: scaleX(-1);
+}
+
 /* Framing the handler portraits.
    ---------------------------------------------------------------------------
    Done to the files, not in CSS. They arrived as busts on a square field and
