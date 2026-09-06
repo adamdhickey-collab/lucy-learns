@@ -2636,25 +2636,31 @@ details.disclosure .disclosure-body {
   object-fit: cover;
 }
 
-/* Every portrait faces into the app, not off its edge.
+/* Every person faces into the app, not off its edge. The dogs face as drawn.
    ---------------------------------------------------------------------------
-   All twenty-four avatars were drawn looking to the right, and on Today and
-   the profile card the portrait sits at the right-hand edge — so every face
-   was looking out of the screen, away from the greeting, the name and the
-   week beside it. Mirrored, they look at the thing they belong to.
+   All twenty-four avatars were drawn looking to the right, and on Today the
+   handler's portrait sits at the right-hand edge — so every face was
+   looking out of the screen, away from the greeting beside it. Mirrored,
+   the people look at the thing they belong to.
+
+   The dogs are left as drawn. They were mirrored too for one release, and
+   on the profile card — the one place a dog is shown large — the dog sits
+   at the left edge with its name to the right, so the flip turned it away
+   from its own name. Facing right is the direction that looks into that
+   card, and the picker tiles follow the card so the picture chosen is the
+   picture shown.
 
    A transform rather than a redraw, on purpose. The pictures are right in
    every other respect and a redraw is a round of generation per portrait
    with the usual chance of a new fault; the flip is free, exact and undone
    by deleting one rule. Nothing in the set carries text or an asymmetric
-   mark that a mirror would betray. The four selectors are every place a
-   portrait is drawn: the badge on Today and in the person rows, the picker
-   tiles for people and dogs, the setup preview and the dog on the profile
-   card. The edit badge lives on the wrapper, so it stays lower-right. */
+   mark that a mirror would betray. The three selectors are every place a
+   person is drawn: the badge on Today and in the person rows, the people
+   picker's tiles, and the setup preview. The edit badge lives on the
+   wrapper, so it stays lower-right. */
 .avatar.avatar--photo img,
-.avatar-choice img,
-.avatar-pick img,
-.profile-photo img {
+.avatar-grid--people .avatar-choice img,
+.avatar-pick img {
   transform: scaleX(-1);
 }
 
