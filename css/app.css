@@ -2284,8 +2284,11 @@ details.disclosure .disclosure-body {
   padding-left: var(--s-2);
 }
 
-/* Text weight, like the strip's other corrections: pausing is a thing to
-   reach for, not the way forward. --tap tall all the same, because it is
+/* Drawn as the stepper buttons beside it are — white on the sunken field,
+   with their border — so it reads as a control at rest. It used to be bare
+   text that only turned white under the pointer, which on a phone is never:
+   there is no hover on the screen that this strip is for, so the pause looked
+   like a caption with an icon until it was pressed. --tap tall because it is
    reached for with a leash in the other hand. */
 .pace-toggle {
   display: inline-flex;
@@ -2293,9 +2296,9 @@ details.disclosure .disclosure-body {
   gap: var(--s-2);
   min-height: var(--tap);
   padding: 0 var(--s-3) 0 var(--s-2);
-  border: 0;
+  border: 1.5px solid var(--border-strong);
   border-radius: var(--r-pill);
-  background: transparent;
+  background: var(--surface);
   color: var(--text-primary);
   font: inherit;
   font-weight: 650;
@@ -2303,7 +2306,7 @@ details.disclosure .disclosure-body {
 }
 
 .pace-toggle:hover {
-  background: var(--surface);
+  background: var(--primary-wash);
 }
 
 .pace-mark {
