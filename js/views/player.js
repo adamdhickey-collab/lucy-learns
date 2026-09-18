@@ -56,8 +56,8 @@ import {
   speechStatus,
   stopSpeaking,
 } from '../voice.js';
-import { currentLevel, masteryFor, recommendation } from '../metrics.js';
-import { programProgress, programGain } from '../program.js';
+import { clearsOnEffort, currentLevel, masteryFor, recommendation } from '../metrics.js';
+import { levelCleared, programProgress, programGain } from '../program.js';
 import { levelPips, masteryLadder } from '../programui.js';
 import {
   html,
@@ -773,6 +773,21 @@ function readyScreen(activity, level) {
           once is one rep; aim for ${repTarget(level)} and stop early if ${getDog().name} is
           still doing well.
         </p>
+
+        ${/* What it takes, said before it is asked for, on the one level where
+              the answer is surprisingly small. Shown only while the level is
+              still unearned: afterwards it is a fact about the past, and the
+              cleared seal on the map already carries that. The wording is the
+              rule exactly -- one rep that goes well -- because a household
+              that reads this and then gets a different answer on the done
+              screen has been told two things, and will believe the meaner
+              one. */ ''}
+        ${clearsOnEffort(level.number) && !levelCleared(activity, level.number)
+          ? html`<p class="section-note first-level-note">
+              ${icon('check')}
+              <span>One rep that goes well clears this level and opens the next.</span>
+            </p>`
+          : ''}
 
         <div class="result-group">
           <h2>Before you start</h2>
@@ -1621,7 +1636,21 @@ function refresh(direction) {
     // the top, because that is a new screen rather than the same one changed.
     const scroller = direction ? null : root.querySelector('.player-scroll');
     const top = scroller ? scroller.scrollTop : 0;
+    // The same for anything folded open. Every disclosure is rendered shut,
+    // so a chip toggled inside "Hands free" on the get-ready screen redrew
+    // the panel closed around it -- the switch vanished under the thumb, the
+    // screen got shorter, and the scroll position kept above landed at the
+    // top. Remembered by summary text rather than position, because the
+    // redraw is what may add or remove a panel.
+    const open = direction
+      ? []
+      : [...root.querySelectorAll('details[open] > summary')].map((s) => s.textContent.trim());
     root.innerHTML = String(render({ slug: session.slug }));
+    if (open.length) {
+      root.querySelectorAll('details > summary').forEach((s) => {
+        if (open.includes(s.textContent.trim())) s.parentElement.open = true;
+      });
+    }
     if (top) {
       const next = root.querySelector('.player-scroll');
       if (next) next.scrollTop = top;
