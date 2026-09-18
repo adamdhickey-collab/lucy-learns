@@ -2438,11 +2438,27 @@ details.disclosure .disclosure-body {
   width: 100%;
   min-height: 52px;
   padding: 0 var(--s-4);
-  /* Room for the platform's own chevron, which is drawn inside the box. */
-  padding-inline-end: var(--s-6);
+  /* The platform's chevron is drawn tight to the right edge, a thinner
+     stroke and a different grey from the one on every disclosure in the app,
+     so the only two down-arrows a household sees did not match and this one
+     sat closer to its border than the text did to the other. Ours instead:
+     the disclosure's chevron exactly -- same 16px box, same 2.5 stroke, same
+     primary -- inset by --s-4 so it balances the text on the far side.
+     appearance: none is what stops the platform drawing its own beside it,
+     and the two prefixes are still load-bearing on iOS Safari. */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* The chevron's box plus its inset plus a gap, so a long voice name is cut
+     before it reaches the arrow rather than running under it. */
+  padding-inline-end: calc(var(--s-4) * 2 + 16px);
   border: 1.5px solid var(--border-strong);
   border-radius: var(--r-md);
-  background: var(--surface);
+  /* One declaration, mark and ground together. Written as two -- the longhands
+     above a `background: var(--surface)` -- the shorthand reset background-image
+     to none and the select rendered with no arrow at all. */
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2355307a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")
+    right var(--s-4) center / 16px 16px no-repeat var(--surface);
   color: var(--text-primary);
   font: inherit;
   /* 16px is a threshold, not a preference: iOS zooms the whole page in when a
@@ -2450,6 +2466,28 @@ details.disclosure .disclosure-body {
      zoomed. Every other note in this block is --step--1; this one cannot be. */
   font-size: 1rem;
   line-height: 1.2;
+}
+
+/* The one line on the get-ready screen that says what clears the intro level.
+   A note, not a banner: it is the rule stated early, not a reward, and a card
+   here would outrank the instruction it sits under. The check is the same
+   mark the cleared seal uses, so the sentence and the thing it promises are
+   drawn with one glyph. align-items: flex-start keeps the mark on the first
+   line when the sentence wraps on a narrow phone. */
+.first-level-note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-2);
+  margin-top: var(--s-2);
+  color: var(--primary);
+}
+.first-level-note svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  /* Optical: the cap height of the note's own size, so the mark sits on the
+     text's shoulder rather than above it. */
+  margin-top: 0.15em;
 }
 
 .voice-speech-status {
@@ -2893,6 +2931,16 @@ details.disclosure .disclosure-body {
 .field label {
   display: block;
   font-weight: 600;
+  margin-bottom: var(--s-2);
+}
+/* The pronoun row's label is a span, not a label element -- three buttons
+   have nothing for a `for` to point at, so the group is named by
+   aria-labelledby instead -- and it fell through this rule: "And you call
+   them…" sat welded to the chips under it while "Their name" kept its step
+   over its input. Same step, so the two questions on the setup screen line
+   up. The weight stays as it was. */
+.field .label {
+  display: block;
   margin-bottom: var(--s-2);
 }
 

@@ -323,7 +323,8 @@ function render() {
                 Improving under three quarters, Almost there from three quarters, and
                 Reliable at 90% across three sessions on three different days without
                 heavy help. A level counts as cleared at Almost there over at least
-                ${MIN_REPS_TO_ADVANCE} reps, or once you have moved past it.
+                ${MIN_REPS_TO_ADVANCE} reps, or once you have moved past it. Level 1 of
+                each activity is the exception: one rep that goes well clears it.
               </p>
               <a class="btn btn--quiet btn--block" href="#/program/${prog.program.id}"
                 style="margin-top: var(--s-4)">

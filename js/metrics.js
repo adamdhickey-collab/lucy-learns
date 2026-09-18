@@ -34,6 +34,30 @@ const WATCH = ['barked', 'jumped', 'nipped', 'pulled', 'broke_position'];
 export const MIN_REPS_TO_ADVANCE = 3;
 
 /**
+ * The level that clears for turning up, and the test for it.
+ *
+ * Level 1 of every activity is the easy one by design -- the doorbell rings
+ * and nothing is asked of the dog yet -- and it is the level a household
+ * meets the app on. Holding it to the same bar as level 6 meant a real first
+ * session could be run, counted and logged and still leave every number on
+ * the screen exactly where it started: nothing cleared, nothing opened, no
+ * sign the app had noticed. That is the session that decides whether there is
+ * a second one, and it was the one session guaranteed to look like nothing.
+ *
+ * So level 1 asks what a first level can honestly ask: that they ran it, and
+ * that something went well. One repetition is enough. Nothing above level 1
+ * moves -- the bar that protects the training is still there, one level up,
+ * by which point the household has watched the app work once.
+ *
+ * This is not a participation trophy in the sense that worries me, because
+ * the claim stays true: level 1 IS cleared once a dog has done it once. What
+ * changed is that the app stopped asking the first level to prove the same
+ * thing as the last.
+ */
+export const INTRO_LEVEL = 1;
+export const clearsOnEffort = (levelNumber) => levelNumber === INTRO_LEVEL;
+
+/**
  * Total repetitions behind a set of sessions — the denominator under every
  * percentage this app prints.
  *
@@ -138,6 +162,15 @@ export function readyToAdvance(activityId, levelNumber) {
   if (!sessions.length) return false;
   return sessions.every((s) => {
     const reps = s.repetitions || 0;
+    const tags = s.behaviorsObserved || [];
+    // The intro level opens the next one on a single repetition that went
+    // well. Nipping still holds it, and deliberately: a dog over threshold on
+    // the easiest level in the program is the one case where moving up is the
+    // wrong answer, and the branch above this sends that session to the
+    // fallback advice instead.
+    if (clearsOnEffort(levelNumber)) {
+      return (s.successfulRepetitions || 0) >= 1 && !tags.includes('nipped');
+    }
     // A rate needs something under it. Reps per session is a setting now, and
     // at its floor a single good repetition is a 100% session — enough, on the
     // rule below, to move the household up a level on one lucky pass. Three is
@@ -146,7 +179,6 @@ export function readyToAdvance(activityId, levelNumber) {
     // and simply do not decide the next level on their own.
     if (reps < MIN_REPS_TO_ADVANCE) return false;
     const rate = reps ? (s.successfulRepetitions || 0) / reps : 0;
-    const tags = s.behaviorsObserved || [];
     return rate >= 0.8 && !tags.includes('nipped') && (s.arousalLevel || 4) <= 3;
   });
 }
@@ -251,7 +283,7 @@ export function recommendation(activity, level, session) {
       // sat beside a "Level 1 cleared" card promising something the same
       // screen had just withheld.
       body:
-        reps < MIN_REPS_TO_ADVANCE
+        reps < MIN_REPS_TO_ADVANCE && !clearsOnEffort(level.number)
           ? `${session.successfulRepetitions} of ${reps} reps went well. A session needs at least ${MIN_REPS_TO_ADVANCE} reps to open the next level, so count a few more next time.`
           : `${session.successfulRepetitions} of ${reps} reps went well. Keep {her} calm through a whole session and the next level opens.`,
       suggest: 'stay',

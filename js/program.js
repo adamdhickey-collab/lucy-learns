@@ -13,6 +13,7 @@ import { ACTIVITIES, isAvailable, programById } from './content.js';
 import {
   MASTERY,
   MIN_REPS_TO_ADVANCE,
+  clearsOnEffort,
   masteryFor,
   currentLevel,
   sessionsAt,
@@ -40,22 +41,25 @@ export const STAGE = {
  * a plan, not an achievement, and four free levels would make the map lie.
  */
 export function levelCleared(activity, levelNumber) {
-  // The same floor readyToAdvance keeps. Without it a first session of one
-  // rep marked "went well" is a 100% level — "Almost there" on the ladder,
-  // cleared on the map, and Today rotating to the next activity — while the
-  // level picker, which asks for three reps, stays exactly where it was. A
-  // household's very first result was a milestone the app then took back.
   const sessions = sessionsAt(activity.id, levelNumber);
-  if (
+  // The intro level clears on effort, on the same terms readyToAdvance uses
+  // for it, so the map and the level picker cannot disagree about the first
+  // session a household ever runs. See clearsOnEffort in metrics.js for why
+  // the first level is not asked to prove what the last one is.
+  if (clearsOnEffort(levelNumber)) {
+    if (sessions.some((s) => (s.successfulRepetitions || 0) >= 1)) return true;
+  } else if (
+    // The same floor readyToAdvance keeps. Without it a first session of one
+    // rep marked "went well" is a 100% level — "Almost there" on the ladder,
+    // cleared on the map, and Today rotating to the next activity — while the
+    // level picker, which asks for three reps, stays exactly where it was. A
+    // household's very first result was a milestone the app then took back.
     repCount(sessions) >= MIN_REPS_TO_ADVANCE &&
     masteryFor(activity.id, levelNumber).rank >= MASTERY.almost.rank
   ) {
     return true;
   }
-  return (
-    levelNumber < currentLevel(activity).number &&
-    sessionsAt(activity.id, levelNumber).length > 0
-  );
+  return levelNumber < currentLevel(activity).number && sessions.length > 0;
 }
 
 /** One activity's standing: which levels are behind it, which one is live. */
