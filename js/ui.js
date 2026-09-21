@@ -368,6 +368,43 @@ const COUNT_WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven'
 
 export const countWord = (n) => COUNT_WORDS[n] ?? String(n);
 
+/**
+ * A cadence as the handout says it: "Daily", "Once or twice a week".
+ *
+ * The words are the trainer's, not a rendering of a data structure. "1-2x
+ * weekly" is the same fact and nobody speaks it, and this text sits on the
+ * get-ready screen directly under a sentence written in the trainer's voice.
+ */
+const TIMES = ['no times', 'once', 'twice', 'three times', 'four times'];
+
+export function cadenceWords(cadence) {
+  if (!cadence) return '';
+  const { min, max, per } = cadence;
+  const unit = per === 'day' ? 'day' : 'week';
+  if (min === 1 && max === 1) return per === 'day' ? 'Daily' : 'Once a week';
+  const range = min === max ? TIMES[min] : `${TIMES[min]} or ${TIMES[max]}`;
+  return `${range[0].toUpperCase()}${range.slice(1)} a ${unit}`;
+}
+
+/**
+ * The same cadence, answered against what has actually been logged.
+ *
+ * Says whether it is wanted now, which is the thing a household opens Today to
+ * find out. Takes the object cadenceFor() returns rather than computing
+ * anything itself, so the words and the ranking cannot disagree about whether
+ * something is due.
+ */
+export function cadenceStatus(status) {
+  if (!status) return '';
+  const { min, max, per, done, due, ahead } = status;
+  if (due) return per === 'day' ? 'Due today' : 'Due this week';
+  if (per === 'day') return ahead ? 'Done for today' : 'Done today';
+  if (ahead) return 'Done this week';
+  const left = max - done;
+  const word = TIMES[done] || String(done);
+  return `${word[0].toUpperCase()}${word.slice(1)} this week, ${countWord(left)} more if you like`;
+}
+
 export const difficultyDots = (difficulty) => {
   const level = { beginner: 1, intermediate: 2, advanced: 3 }[difficulty] || 1;
   const pips = [1, 2, 3].map((n) => `<i class="${n <= level ? 'on' : ''}"></i>`).join('');

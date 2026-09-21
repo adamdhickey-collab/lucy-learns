@@ -64,6 +64,7 @@ import {
   join,
   icon,
   countWord,
+  cadenceWords,
   toast,
   pct,
   focusOnNavigate,
@@ -760,7 +761,9 @@ function readyScreen(activity, level) {
         <figure class="step-figure">
           <img src="${cover.src}" alt="${cover.alt}" />
         </figure>
-        <p class="step-count">Level ${level.number} · ${level.title}</p>
+        <p class="step-count">
+          Level ${level.number} · ${level.title}${level.cadence ? ` · ${cadenceWords(level.cadence)}` : ''}
+        </p>
         <h1 class="step-instruction">${level.setup}</h1>
 
         ${/* Says the one thing the flow itself only reveals at the last

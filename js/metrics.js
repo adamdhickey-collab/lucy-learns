@@ -470,8 +470,28 @@ export function suggestedActivity() {
       ? Math.max(...sessions.map((s) => new Date(s.startedAt).getTime()))
       : 0;
     const mastery = masteryFor(activity.id, level.number);
-    return { activity, level, last, mastery, sessions };
+    return { activity, level, last, mastery, sessions, cadence: cadenceFor(activity, level) };
   });
+
+  // What the handout asks for today outranks everything below.
+  //
+  // A curriculum written as frequencies has an answer to "what now" that
+  // mastery cannot see: an exercise due daily and not done today is wanted
+  // more than one due weekly that was practiced this morning, however much
+  // less far along it is. Ordered by how overdue rather than by how new —
+  // a daily one missed is more pressing than a weekly one missed, because
+  // the window closes sooner.
+  //
+  // Only packs that declare a cadence reach this. Every level in the door
+  // pack returns null from cadenceFor, `dueNow` is empty, and the two rules
+  // below decide exactly as they always have.
+  const dueNow = scored
+    .filter((s) => s.cadence && s.cadence.due)
+    .sort((a, b) => {
+      const window = (c) => (c.per === 'day' ? 0 : 1);
+      return window(a.cadence) - window(b.cadence) || a.last - b.last;
+    });
+  if (dueNow.length) return dueNow[0];
 
   // Anything untouched at the earliest point in the program comes first.
   const untouched = scored.find((s) => s.mastery === MASTERY.untouched);
@@ -483,6 +503,51 @@ export function suggestedActivity() {
     return inProgress;
   }
   return inProgress || untouched || scored[0];
+}
+
+// ---------------------------------------------------------------------------
+// Cadence
+// ---------------------------------------------------------------------------
+
+/**
+ * How often a level asks to be practiced, and whether it has been.
+ *
+ * The handout this pack came from is written as frequencies rather than as
+ * repetitions -- "DO THIS daily", "once or twice a week" -- and that is the
+ * spine of it: the same Stay exercise is weekly at step one and daily at step
+ * two, and a household that runs everything once a week is not doing the
+ * program. Those sentences used to live in prose inside each level's `setup`,
+ * where they could be read and nothing could act on them.
+ *
+ * Absent means no opinion, which is what every level in the door pack has. A
+ * level with no `cadence` returns null and every caller falls back to what it
+ * did before, so nothing about that app changes.
+ *
+ * Counted per activity rather than per level. The frequency belongs to the
+ * exercise -- the handout says how often to practice Stay, not how often to
+ * practice Stay at step three -- and a level change mid-week would otherwise
+ * reset the count and mark a household late for work they had just done.
+ *
+ * The week is the rolling seven days ending today, which is what weekSummary
+ * and the streak already mean by a week. A second definition of "this week"
+ * living in this file would be a second answer to "did we do it".
+ *
+ * `sessions` is a test seam, the same shape approve.mjs uses for its
+ * filesystem. What is being computed here is date arithmetic against a rolling
+ * window, which is the kind that is wrong by one day for a week before anybody
+ * notices, and it cannot be pinned by a test that has to stand up a whole
+ * store first. Nothing in the app passes it.
+ */
+export function cadenceFor(activity, level, sessions = null) {
+  const cadence = level && level.cadence;
+  if (!cadence) return null;
+  const { min, max, per } = cadence;
+  const from = per === 'day' ? daysAgo(0) : daysAgo(6);
+  const log = sessions || getState().sessions;
+  const done = log.filter(
+    (s) => s.activityId === activity.id && new Date(s.startedAt) >= from
+  ).length;
+  return { min, max, per, done, due: done < min, met: done >= min, ahead: done >= max };
 }
 
 export function lastPracticed(activityId) {
