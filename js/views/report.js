@@ -6,10 +6,11 @@
 import {
   ACTIVITIES,
   LIVE_ACTIVITIES,
+  isPractice,
   INCIDENT_CONTEXTS,
   TRAINER,
 } from '../content.js';
-import { primaryProgram, programProgress } from '../program.js';
+import { programsProgress } from '../program.js';
 import { getState, exportSummary, getDog } from '../store.js';
 import {
   activityMastery,
@@ -18,7 +19,7 @@ import {
   successRate,
   relativeDay,
 } from '../metrics.js';
-import { html, join, badge, pct, reps, toast, focusHeading } from '../ui.js';
+import { html, join, badge, countWord, pct, reps, toast, focusHeading } from '../ui.js';
 
 // Filename-safe version of the dog's name. The CSV used to be named from a
 // hardcoded `DOG.id`, which was the literal string "lucy" for every install.
@@ -134,7 +135,7 @@ function render() {
   const prior = priorRange(rangeDays);
   // The trainer set the program; the report should say how far through it the
   // household actually is, in the same unit the handout uses.
-  const prog = programProgress(primaryProgram().id);
+  const progs = programsProgress();
   const rate = successRate(sessions);
   const priorRate = successRate(prior);
   const totalReps = repCount(sessions);
@@ -162,9 +163,18 @@ function render() {
     return html`<div class="mastery-row">
       <strong>${activity.title}</strong>
       <div class="under">
+        ${/* A practice has one pass per session, so the rate is a percentage
+              of one and the count is the session count said twice. "100% of 1
+              rep went well" is arithmetic about a number the app invented, on
+              the page a trainer reads to find out what actually happened. How
+              many of the sessions went well is the fact worth carrying. */ ''}
         <small>
           Level ${level.number} · ${mine.length} session${mine.length === 1 ? '' : 's'}${
-            myRate !== null ? ` · ${pct(myRate)} of ${reps(repCount(mine))} went well` : ''
+            isPractice(activity)
+              ? ` · ${mine.filter((x) => (x.successfulRepetitions || 0) > 0).length} went well`
+              : myRate !== null
+                ? ` · ${pct(myRate)} of ${reps(repCount(mine))} went well`
+                : ''
           }
         </small>
         ${badge(activityMastery(activity.id))}
@@ -260,15 +270,36 @@ function render() {
                     the denominator told the trainer "0 of 4 activities
                     finished" for a program where three were never available,
                     which reads as a household that has barely started. */ ''}
+              ${/* Every program, because this is the one screen that is handed
+                    to somebody else as the whole account. With a single program
+                    it reads exactly as it did -- naming it, because there is
+                    one and the trainer set it. With four it gives the totals
+                    first and then says where the work actually went, which is
+                    the question a trainer opens this to answer and which a
+                    single summed pair of numbers hides. */ ''}
               <p class="section-note" style="margin-bottom: var(--s-3)">
-                ${prog.cleared} of ${prog.total} levels cleared across ${prog.program.title},
-                ${prog.finished} of ${prog.live.length}
-                ${prog.live.length === 1 ? 'activity' : 'activities'} finished.${prog.soon
-                  ? ` The other ${prog.soon} ${
-                      prog.soon === 1 ? 'activity is' : 'activities are'
+                ${progs.cleared} of ${progs.total} levels cleared
+                ${progs.each.length === 1
+                  ? html`across ${progs.each[0].program.title},`
+                  : html`across ${countWord(progs.each.length)} programs,`}
+                ${progs.finished} of ${progs.live}
+                ${progs.live === 1 ? 'activity' : 'activities'} finished.${progs.soon
+                  ? ` The other ${progs.soon} ${
+                      progs.soon === 1 ? 'activity is' : 'activities are'
                     } not in the app yet.`
                   : ''}
               </p>
+              ${progs.each.length > 1
+                ? html`<p class="section-note" style="margin-bottom: var(--s-3)">
+                    ${join(
+                      progs.each.map(
+                        (p, i) =>
+                          html`${i ? ' · ' : ''}${p.program.title}
+                          ${p.cleared} of ${p.total}`
+                      )
+                    )}
+                  </p>`
+                : ''}
               <div class="card">
                 <div class="card-body">${join(skills)}</div>
               </div>

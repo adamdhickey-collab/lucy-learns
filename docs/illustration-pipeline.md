@@ -516,7 +516,7 @@ and every call site.
 
     node --test scripts/lib/*.test.mjs
 
-209 tests, no network, no key, no macOS — `fetch` and `sips` are injected, and
+211 tests, no network, no key, no macOS — `fetch` and `sips` are injected, and
 the whole of `generate` and `approve` runs in a temp directory against images the
 suite builds itself. The directory form (`node --test scripts/lib/`) does not
 work on every Node build; the glob always does.
