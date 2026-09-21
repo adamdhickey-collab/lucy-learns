@@ -35,7 +35,11 @@ test('the worklist accounts for every picture, done or not', () => {
   // The ledger is gone; the worklist is the only register now, so what is left
   // to pin is that it adds up.
   const total = worklistTotal(worklist);
-  assert.equal(total, 37);
+  // 37 for the restyle, plus the three drawn for the boot camp pack. A literal
+  // rather than a derived number on purpose: this is the canary that catches a
+  // row deleted by a bad edit, and a count computed from the file it is meant
+  // to be checking cannot do that.
+  assert.equal(total, 40);
   const rows = worklistRows(worklist);
   const remaining = worklistRemaining(worklist);
   assert.equal(rows.filter((r) => !r.ticked).length, remaining.length);
@@ -291,7 +295,11 @@ test('approving twice is safe — no lost row, no double tick', async () => {
   const after = t.read(WORKLIST);
   await cmdApprove('door-sound-03-name', ['--yes'], t.opts);
   assert.equal(t.read(WORKLIST), after);
-  assert.equal(worklistTotal(t.read(WORKLIST)), 37);
+  // Before and after, rather than a literal. What this test is about is that a
+  // second approve neither drops a row nor adds one; the size of the register
+  // on the day it runs is beside the point, and pinning it here meant this
+  // test failed when three rows were added and nothing was broken.
+  assert.equal(worklistTotal(t.read(WORKLIST)), worklistTotal(after));
 });
 
 test('--round picks that round, and latestRound finds the newest', async () => {
@@ -312,7 +320,10 @@ test('a missing round names the command that would make one', async () => {
 test('the count reported is the worklist\'s, not a second tally', async () => {
   const t = tree();
   const res = await cmdApprove('door-sound-03-name', ['--yes'], t.opts);
-  assert.equal(res.total, 37);
+  // Read from the worklist, which is the whole claim in this test's name. It
+  // used to assert a literal 37 — a second tally, which is exactly the thing
+  // it exists to rule out, and which went stale the moment the register grew.
+  assert.equal(res.total, worklistTotal(t.read(WORKLIST)));
   assert.equal(res.remaining, worklistRemaining(t.read(WORKLIST)).length);
 
 });
@@ -359,9 +370,13 @@ test('every avatar but dog-01 is drawn off dog-01', () => {
   }
 });
 
-test('avatars are outside the thirty-seven, so the finish line does not move', () => {
+test('avatars are outside the register, so the finish line does not move', () => {
   const md = fs.readFileSync(path.join(ROOT, WORKLIST), 'utf8');
-  assert.equal(worklistTotal(md), 37);
+  // Was "the thirty-seven" when that was the whole register. It is forty now —
+  // the restyle's thirty-seven plus three drawn for the boot camp pack — and
+  // the claim is unchanged: an avatar is not a row, so approving one cannot
+  // move the finish line.
+  assert.equal(worklistTotal(md), 40);
   // A row, not a mention. This used to grep for the backticked key anywhere in
   // the file, and the worklist's own notes name `dog-01` in prose — the line
   // recording that lucy-portrait.jpg was retired in its favour — which is not

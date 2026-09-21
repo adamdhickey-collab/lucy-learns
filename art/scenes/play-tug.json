@@ -1,0 +1,29 @@
+{
+  "id": "play-tug",
+  "briefId": "cool-flat-v2",
+  "shippedUnder": "cool-flat-v2",
+  "title": "Tug — activity cover",
+  "activity": "Tug",
+  "step": "the activity cover",
+  "note": "New art rather than a redraw: the library is entirely door-greeting scenes and the boot camp pack has three exercises nothing in it depicts. This is the first of the three.\n\nCover, so the subject has to survive a centred square crop that keeps only the middle 75% of the width. That is harder here than on a single-figure cover, because the readable action is two figures joined by a toy and the toy is the widest thing in the frame — if either end leaves the square the picture stops being about tug. The edge instruction is the one that finally worked on door-stay-cover after three rounds: state what OCCUPIES the outer eighth rather than what must avoid it.\n\nTwo things the brief says are worth regenerating over both apply to this scene, so mustBeTrue names them: a handler bending over the dog, and a taut line. Tug is played low and level, and a toy lifted above the dog's head is both bad training and the pose a generator reaches for. The rope is muted taupe — the doormat colour — so nothing out-saturates the purple collar.\n\nDRAWN THROUGH A CHAT WINDOW, not through `generate`. The API account had no credits the day these three were made, so the picture came from chatgpt.com in a browser, from the prompt `plan play-tug` assembles and the same three references in the same order. Recorded here because the round manifest that normally holds this is under a gitignored path and does not survive the machine it was made on.\n\nThree rounds, and the fault was the same one every time: the rendering came back airbrushed, because the likeness sheets are painted in the old style and a generator asked to match a face matches the brushwork with it. Round 3 was kept. It is still softer than Block A's literal two-tone wording — and so is every picture already shipping, which is what settled the judgement.",
+  "blocks": [
+    "style",
+    "cast"
+  ],
+  "references": [
+    {
+      "role": "style:exemplar",
+      "scene": "door-sound-02-self"
+    },
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    }
+  ],
+  "scene": "Interior entry hall of an ordinary suburban home, side view at standing eye level, the same room, wall, floor and palette as the rest of this set, with the front door out of frame — THE LEFTMOST EIGHTH AND THE RIGHTMOST EIGHTH OF THIS PICTURE ARE EMPTY. Down the left-hand edge, for a full eighth of the picture's width, there is nothing but bare plaster wall above the baseboard and bare oak floor below it — no figure, no bed, no object of any kind enters that strip. The same is true of the right-hand edge. Everything that matters is arranged inside the middle three-quarters of the width, with those two empty strips left clear around it like a margin. This is because the app crops this picture to a centred square and throws those two strips away. Compose it as though the picture were only the middle three-quarters wide and the strips were the mount around it. The handler stands on the right with her knees slightly bent and her weight settled back, holding one end of a long plain rope tug toy in muted taupe #b0a394 with both hands at about hip height. Lucy has the other end of that same toy in her mouth on the left, shoulders low, front legs braced, all four paws flat on the oak floor, leaning back into the pull. The toy runs roughly level between them and is never raised above Lucy's head. They are looking at each other and clearly playing together; the handler is upright and delighted rather than bent over the dog, and her face is calm and unhurried. No leash and no harness. Background: the plaster wall, one baseboard line, and generous empty oak floor.",
+  "mustBeTrue": "The handler and Lucy are each holding one end of the same long rope toy, and the toy runs roughly level between them and is not raised above Lucy's head. All four of Lucy's paws are on the floor. She wears the flat purple collar with the round blue tag, and there is no leash and no harness anywhere in the picture. The handler has exactly two arms and two hands, both of them on the toy, and she stands upright rather than leaning over the dog. Both figures and the whole length of the toy sit inside the middle 75% of the width, so a centred square crop keeps both faces and both ends of the toy. The rendering is flat two-tone with crisp edges and no gloss on Lucy's coat."
+}

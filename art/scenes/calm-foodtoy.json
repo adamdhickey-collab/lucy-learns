@@ -1,0 +1,29 @@
+{
+  "id": "calm-foodtoy",
+  "briefId": "cool-flat-v2",
+  "shippedUnder": "cool-flat-v2",
+  "title": "Interactive Toys — activity cover",
+  "activity": "Interactive Toys",
+  "step": "the activity cover",
+  "note": "New art rather than a redraw. The third of the three the boot camp pack has no picture for.\n\nThe only scene in this set with nobody in it, and deliberately so. The exercise is a dog occupying herself while the household gets on with something, so a handler in frame would be teaching the opposite — and on a cover cropped to a centred square, a second figure is the thing that gets cut in half. One readable action, one subject, centred.\n\nThat is also why the handler likeness sheet is not attached, against the brief's standing instruction to attach both to every request. The sheet exists to hold her face steady across forty pictures; in a picture she is not in, it is an invitation to add her. Lucy's sheet is attached as always. If a round comes back with a person in it, attaching the handler sheet is not the fix — the scene text is.\n\ndoor-place-cover is the room reference rather than another rung: it is the same bed in the same room at the same eye level, which is the whole of what this scene needs to match. The toy is charcoal — the front door's colour — because every other desaturated neutral in the palette is already the bed or the floor it sits on, and it has to read as a separate object at thumbnail size without out-saturating the collar.\n\nDRAWN THROUGH A CHAT WINDOW, not through `generate` — see the note on play-tug for why. Kept on the first round, with both lessons from the two before it front-loaded: the flatness correction, and an explicit restatement that there is no person in this picture.\n\nThe handler likeness sheet was not attached, against the brief's standing instruction to attach both to every request. Nothing had to be corrected and no person appeared, which is the evidence that a sheet for someone who is not in the picture is an invitation rather than an anchor.",
+  "blocks": [
+    "style",
+    "cast"
+  ],
+  "references": [
+    {
+      "role": "style:exemplar",
+      "scene": "door-sound-02-self"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    },
+    {
+      "scene": "door-place-cover",
+      "role": "continuity:room"
+    }
+  ],
+  "scene": "Interior entry hall of an ordinary suburban home, side view at standing eye level, the same room, bed, wall, floor and palette as the rest of this set, with the front door out of frame — THE LEFTMOST EIGHTH AND THE RIGHTMOST EIGHTH OF THIS PICTURE ARE EMPTY. Down the left-hand edge, for a full eighth of the picture's width, there is nothing but bare plaster wall above the baseboard and bare oak floor below it — no figure, no bed, no object of any kind enters that strip. The same is true of the right-hand edge. Everything that matters is arranged inside the middle three-quarters of the width, with those two empty strips left clear around it like a margin. This is because the app crops this picture to a centred square and throws those two strips away. Compose it as though the picture were only the middle three-quarters wide and the strips were the mount around it. Lucy lies settled on her rectangular cool-grey dog bed in the middle of the frame, elbows and hips down, hind legs folded beside her, entirely relaxed. A plain charcoal #3a3a46 rubber food toy, roughly the size of her muzzle and rounded rather than detailed, stands upright on the bed between her two front paws, held steady by them. Her head is lowered and her nose is at the opening of that toy, working at it, ears soft and eyes calm. She is lying down and occupied, not standing and not looking at the viewer. There is no person anywhere in this picture and no part of a person at any edge. No leash and no harness. Background: the plaster wall, one baseboard line, the bed, and generous empty oak floor.",
+  "mustBeTrue": "Lucy is lying settled on her grey bed with a dark rubber food toy standing between her two front paws and her nose lowered to it; she is down rather than standing, and not looking at the viewer. There is no person and no part of a person anywhere in the picture. She has exactly four legs and one tail, wears the flat purple collar with the round blue tag, and there is no leash and no harness. Lucy, the toy and the whole bed sit inside the middle 75% of the width, so a centred square crop keeps her whole head, chest, front paws and the toy. The rendering is flat two-tone with crisp edges and no gloss on her coat."
+}

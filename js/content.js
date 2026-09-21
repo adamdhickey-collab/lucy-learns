@@ -421,6 +421,30 @@ export const IMAGES = withThumb({
     src: 'img/plan-name.jpg',
     alt: 'Lucy turns her head to meet her crouching handler\u2019s eyes while a squirrel sits ignored on the grass behind her.',
   },
+
+  // --- drawn for the boot camp pack ---------------------------------------
+  //
+  // The first picture added to this library rather than redrawn into it. The
+  // door set has thirty-seven scenes and not one of them shows a toy, a trick
+  // or a dog occupying herself, which is most of what the second curriculum
+  // teaches. It lives here rather than with the pack, because the library is
+  // the app's artwork: a picture of Lucy playing tug is no more owned by one
+  // curriculum than a picture of her on her bed is.
+  'play-tug': {
+    src: 'img/play-tug.jpg',
+    alt:
+      'Lucy and her handler each hold one end of a long rope toy, pulling level with each other while all four of Lucy’s paws stay on the floor.',
+  },
+  'play-weave': {
+    src: 'img/play-weave.jpg',
+    alt:
+      'Lucy walks between her handler’s planted feet, her head and chest out one side of the near leg while her tail is still on the other.',
+  },
+  'calm-foodtoy': {
+    src: 'img/calm-foodtoy.jpg',
+    alt:
+      'Lucy lies on her bed with a dark rubber food toy held upright between her front paws, nose lowered to it, nobody else in the room.',
+  },
 });
 
 /**

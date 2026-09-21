@@ -122,6 +122,21 @@ Carry these on every scene, all learned from the pilot:
 | [x] | `plan-name` | **cover** · square-safe | Lucy turns her head to meet her crouching handler\u2019s eyes while a squirrel sits ignored on the grass behind her. |
 | [x] | `plan-walkpeople` | **cover** · square-safe | Lucy walks on a loose leash looking up at her handler as a stranger passes behind them. |
 
+### The boot camp exercises
+
+Three pictures the set has never had, added when the app grew a second
+curriculum. They are not restyles — nothing exists to redraw — but they are
+registered here for the same reason everything else is: `approve` ticks a row
+and refuses a key that has none, and the register is the one place that answers
+"what is shipped". The finish line above was about the thirty-seven; these three
+extend the list rather than reopening it.
+
+| ✓ | key | notes | scene (the alt text) |
+| --- | --- | --- | --- |
+| [x] | `play-tug` | **cover** · square-safe · new | Lucy and her handler each hold one end of a long rope toy, pulling level with each other while all four of Lucy's paws stay on the floor. |
+| [x] | `play-weave` | **cover** · square-safe · new | Lucy walks between her handler's separated legs, her head and front legs out one side while her tail is still on the other. |
+| [x] | `calm-foodtoy` | **cover** · square-safe · new · nobody in frame | Lucy lies on her bed with a dark rubber food toy held between her front paws, nose down and working at it. |
+
 ### Outside the list, on purpose
 
 Two files in `img/` carry no key in the `IMAGES` map. Neither belongs on the
