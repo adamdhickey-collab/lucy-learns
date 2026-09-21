@@ -1,4 +1,5 @@
-import { ACTIVITIES, PROGRAMS, TRAINER, DOG_AVATARS, PERSON_AVATARS, personAvatar } from '../content.js';
+import { ACTIVITIES, TRAINER, DOG_AVATARS, PERSON_AVATARS, personAvatar } from '../content.js';
+import { primaryProgram } from '../program.js';
 import { downloadCsv } from './report.js';
 import {
   getState,
@@ -41,7 +42,7 @@ function render() {
   const state = getState();
   const person = getPerson();
   const people = getPeople();
-  const program = PROGRAMS[0];
+  const program = primaryProgram();
   const repsPref = getRepsPerSession();
   // The program is not uniform — its levels ask for anywhere between 2 and 5 —
   // so the sentence about levels that ask for fewer is only true above the

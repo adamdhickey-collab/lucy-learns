@@ -9,7 +9,7 @@
 // is the same unit the trainer talks in, so the number on the map is the same
 // number in the lesson report.
 
-import { ACTIVITIES, isAvailable, programById } from './content.js';
+import { ACTIVITIES, PROGRAMS, isAvailable, programById } from './content.js';
 import {
   MASTERY,
   MIN_REPS_TO_ADVANCE,
@@ -18,6 +18,7 @@ import {
   currentLevel,
   sessionsAt,
   repCount,
+  suggestedActivity,
 } from './metrics.js';
 import { getState } from './store.js';
 
@@ -198,6 +199,27 @@ export function programProgress(programId) {
   };
 }
 
+/**
+ * The one program to show where a screen has room for exactly one.
+ *
+ * Progress, the trainer report and the Profile tab each summarise "the
+ * program", which was `PROGRAMS[0]` for as long as there was only ever one.
+ * A pack with four made that silently wrong: those three screens would have
+ * reported on whichever program happened to be written first, and called it
+ * the household's progress.
+ *
+ * The answer is the program the household is actually working in, which is
+ * the one the suggested activity belongs to — the same activity Today leads
+ * with, so the three screens agree with the one the household just came from.
+ * With a single program this returns that program, so the door app is
+ * untouched by its existence.
+ */
+export function primaryProgram() {
+  if (PROGRAMS.length <= 1) return PROGRAMS[0];
+  const { activity } = suggestedActivity();
+  return programById(activity.programId) || PROGRAMS[0];
+}
+
 /** The program an activity belongs to, already scored. */
 export const progressForActivity = (activity) => programProgress(activity.programId);
 
@@ -221,11 +243,15 @@ export function programPitch(prog) {
   const { cleared, total, finished, live, soon, focus } = prog;
 
   if (prog.complete) {
-    return soon
-      ? `Everything in the app so far is done. ${soon} more ${
-          soon === 1 ? 'activity' : 'activities'
-        } to come.`
-      : 'All four finished. This is the whole arrival sequence.';
+    if (soon) {
+      return `Everything in the app so far is done. ${soon} more ${
+        soon === 1 ? 'activity' : 'activities'
+      } to come.`;
+    }
+    return (
+      prog.program.finishedLine ||
+      `All ${live.length} finished. That is the whole program.`
+    );
   }
   if (!cleared) {
     // Deliberately no count. `total` here is the levels that are actually
@@ -233,7 +259,17 @@ export function programPitch(prog) {
     // one screen earlier showed 23 across four. "5 levels to work through"
     // right after that reads as a contradiction rather than a smaller scope.
     // Before anything is practiced there is nothing to count anyway.
-    return 'Four activities, from the first doorbell to a calm hello.';
+    //
+    // The words belong to the program rather than to this function. They used
+    // to be two literals here, written about the door: a second curriculum
+    // loaded them unchanged and greeted its first screen with "Four
+    // activities, from the first doorbell to a calm hello" above a stay
+    // exercise. A program that says nothing gets a plain count instead, which
+    // is duller than a written line and never wrong.
+    return (
+      prog.program.openingLine ||
+      `${live.length} ${live.length === 1 ? 'activity' : 'activities'} to work through.`
+    );
   }
 
   const left = total - cleared;

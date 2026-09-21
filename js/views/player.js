@@ -63,6 +63,7 @@ import {
   html,
   join,
   icon,
+  countWord,
   toast,
   pct,
   focusOnNavigate,
@@ -1393,7 +1394,9 @@ function stageCelebration(gain) {
     const outcome = prog.program.outcome;
     return html`<div class="finale finale--program">
       ${icon('spark')}
-      <p class="eyebrow">All four finished</p>
+      ${/* Counted, not written. A pack whose programs hold two or three
+            activities was still being told it had finished four. */ ''}
+      <p class="eyebrow">All ${countWord(prog.live.length)} finished</p>
       <h2>${outcome.title}</h2>
       <p>${outcome.note}</p>
       <a class="btn btn--block" href="#/progress" style="margin-top: var(--s-4)"

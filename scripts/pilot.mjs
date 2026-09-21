@@ -334,8 +334,20 @@ function cmdCheck(dir) {
  */
 async function cmdVerify() {
   const content = await import(`file://${path.join(ROOT, 'js/content.js')}`);
-  const { IMAGES, ACTIVITIES, PROGRAMS, PLANNED_ACTIVITIES, stepsForLevel } = content;
+  const { IMAGES, stepsForLevel } = content;
   const sw = fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8');
+
+  // Every pack, not just the one a browser would have chosen. content.js
+  // re-exports a single curriculum, so importing it here would check the door
+  // program and leave the boot camp pack's covers unverified — which is the
+  // half of the app whose only artwork *is* its covers.
+  const { PACKS } = await import(`file://${path.join(ROOT, 'js/pack.js')}`);
+  const packs = await Promise.all(
+    PACKS.map(async (name) => [
+      name,
+      await import(`file://${path.join(ROOT, `js/content/${name}.js`)}`),
+    ])
+  );
   const problems = [];
   const used = new Set();
 
@@ -345,20 +357,22 @@ async function cmdVerify() {
     if (!IMAGES[key]) problems.push(`${where} wants "${key}", which is not in IMAGES`);
   };
 
-  for (const p of PROGRAMS) need(p.coverImage, `program ${p.id}`);
-  for (const a of PLANNED_ACTIVITIES) need(a.coverImage, `planned ${a.id}`);
-  for (const a of ACTIVITIES) {
-    need(a.coverImage, `${a.id} cover`);
-    need(a.fallbackImage, `${a.id} fallback`);
-    a.steps.forEach((s, i) => {
-      need(s.image, `${a.id} step ${i + 1}`);
-      need(s.avoid, `${a.id} step ${i + 1} (avoid)`);
-    });
-    for (const l of a.levels)
-      for (const s of stepsForLevel(a, l)) {
-        need(s.image, `${a.id} L${l.number} step ${s.position}`);
-        need(s.avoid, `${a.id} L${l.number} step ${s.position} (avoid)`);
-      }
+  for (const [pack, { ACTIVITIES, PROGRAMS, PLANNED_ACTIVITIES }] of packs) {
+    for (const p of PROGRAMS) need(p.coverImage, `[${pack}] program ${p.id}`);
+    for (const a of PLANNED_ACTIVITIES) need(a.coverImage, `[${pack}] planned ${a.id}`);
+    for (const a of ACTIVITIES) {
+      need(a.coverImage, `[${pack}] ${a.id} cover`);
+      need(a.fallbackImage, `[${pack}] ${a.id} fallback`);
+      a.steps.forEach((s, i) => {
+        need(s.image, `[${pack}] ${a.id} step ${i + 1}`);
+        need(s.avoid, `[${pack}] ${a.id} step ${i + 1} (avoid)`);
+      });
+      for (const l of a.levels)
+        for (const s of stepsForLevel(a, l)) {
+          need(s.image, `[${pack}] ${a.id} L${l.number} step ${s.position}`);
+          need(s.avoid, `[${pack}] ${a.id} L${l.number} step ${s.position} (avoid)`);
+        }
+    }
   }
 
   // The text sweep. Anything naming an image outside the structures above.
@@ -369,9 +383,12 @@ async function cmdVerify() {
     });
   for (const file of walk(path.join(ROOT, 'js'))) {
     const src = fs.readFileSync(file, 'utf8');
-    // `image:` and `avoid:` both name a key. Any third field that ever does
-    // needs adding here, which is the cost of the sweep being a sweep.
-    for (const m of src.matchAll(/\b(?:image|avoid):\s*'([^']+)'/g))
+    // `image:`, `avoid:`, `coverImage:` and `fallbackImage:` all name a key.
+    // Any fifth field that ever does needs adding here, which is the cost of
+    // the sweep being a sweep. The two cover fields joined when a pack arrived
+    // whose steps carry no pictures at all — for that half of the app, a cover
+    // is the only image there is, and the sweep was blind to it.
+    for (const m of src.matchAll(/\b(?:image|avoid|coverImage|fallbackImage):\s*'([^']+)'/g))
       need(m[1], path.relative(ROOT, file));
   }
 
