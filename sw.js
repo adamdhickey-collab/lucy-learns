@@ -29,6 +29,7 @@ const SHELL = [
   './js/store.js',
   './js/content.js',
   './js/pack.js',
+  './js/kinds.js',
   './js/content/door.js',
   './js/content/excited.js',
   './js/version.js',

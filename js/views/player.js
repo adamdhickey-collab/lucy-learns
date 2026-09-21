@@ -15,6 +15,7 @@
 import {
   activityBySlug,
   isAvailable,
+  isPractice,
   IMAGES,
   VERDICT_ART,
   stepsForLevel,
@@ -306,13 +307,17 @@ function speakStep(steps) {
   // back come out clipped; that was the start of the instruction being cut
   // off. The number is the beat and the cushion: if anything is still lost,
   // it is "step" and not the order.
-  const lead = `${session.stepIndex === 0 ? `Rep ${rep}. ` : ''}Step ${session.stepIndex + 1}. `;
+  // A practice is one pass, so there is no rep number to announce and saying
+  // "Rep 1" out loud would be the app counting to one at somebody who is
+  // playing tug.
+  const practice = isPractice(activityBySlug(session.slug));
+  const lead = `${session.stepIndex === 0 && !practice ? `Rep ${rep}. ` : ''}Step ${session.stepIndex + 1}. `;
   // The instruction, never the cue. The cue is a word the dog has been
   // trained on and the handler is meant to say it — a phone saying it out
   // loud cues the dog itself, from the wrong place at a moment nobody chose.
   // Same reason the rep question is read but its criteria are not: those are
   // for the handler's eyes, mid-judgment.
-  const tail = isLast ? ` That was rep ${rep}. How did it go?` : '';
+  const tail = isLast ? (practice ? ' How did that go?' : ` That was rep ${rep}. How did it go?`) : '';
   // Filled here because speech never passes through the html tag.
   speak(fillDog(`${lead}${step.instruction}${tail}`));
 }
@@ -772,10 +777,19 @@ function readyScreen(activity, level) {
               first run is below the fold — and a first-timer tapped Next five
               times waiting for the counting to start. Directly under the
               instruction, it is the first sentence read. */ ''}
+        ${/* A practice is walked once, so the sentence that exists to say
+              "the walk IS the rep" has nothing to explain and the number it
+              ends on would be a target of one. It says what happens instead:
+              go through it, then say how it went. */ ''}
         <p class="section-note" style="margin-top: var(--s-3)">
-          About ${activity.estimatedMinutes} minutes. Walking the ${stepsForLevel(activity, level).length} steps
-          once is one rep; aim for ${repTarget(level)} and stop early if ${getDog().name} is
-          still doing well.
+          ${isPractice(activity)
+            ? html`About ${activity.estimatedMinutes} minutes. Walk through the
+                ${stepsForLevel(activity, level).length} steps once, then say how it
+                went — there is nothing to count here.`
+            : html`About ${activity.estimatedMinutes} minutes. Walking the
+                ${stepsForLevel(activity, level).length} steps once is one rep; aim for
+                ${repTarget(level)} and stop early if ${getDog().name} is still doing
+                well.`}
         </p>
 
         ${/* What it takes, said before it is asked for, on the one level where
@@ -789,7 +803,11 @@ function readyScreen(activity, level) {
         ${clearsOnEffort(level.number) && !levelCleared(activity, level.number)
           ? html`<p class="section-note first-level-note">
               ${icon('check')}
-              <span>One rep that goes well clears this level and opens the next.</span>
+              <span>
+                ${isPractice(activity)
+                  ? 'One time through that goes well clears this.'
+                  : 'One rep that goes well clears this level and opens the next.'}
+              </span>
             </p>`
           : ''}
 
@@ -887,6 +905,7 @@ function stepScreen(activity, level) {
   const count = session.repLog.length;
   const good = session.repLog.filter(Boolean).length;
   const target = repTarget(level);
+  const practice = isPractice(activity);
   const rep = count + 1;
   const met = count >= target;
   // Not while the steps turn by themselves: a shortcut for moving on is a
@@ -899,11 +918,22 @@ function stepScreen(activity, level) {
     !hintSeen('tap-to-advance');
 
   return html`
+    ${/* A practice counts steps, not passes. "Rep 1 of 1" is the app counting
+          to one in front of somebody who was never going to do it twice, and
+          the progress bar underneath it would sit empty for the whole session
+          and then fill at the last tap. Stepping it is the honest reading of
+          how far through you are. */ ''}
     ${topBar(
-      rep <= target ? `Rep ${rep} of ${target}` : `Rep ${rep}`,
-      count + session.stepIndex / steps.length,
-      target,
-      `Rep ${rep}${rep <= target ? ` of ${target}` : ''}, step ${session.stepIndex + 1} of ${steps.length}`
+      practice
+        ? `Step ${session.stepIndex + 1} of ${steps.length}`
+        : rep <= target
+          ? `Rep ${rep} of ${target}`
+          : `Rep ${rep}`,
+      practice ? session.stepIndex / steps.length : count + session.stepIndex / steps.length,
+      practice ? 1 : target,
+      practice
+        ? `Step ${session.stepIndex + 1} of ${steps.length}`
+        : `Rep ${rep}${rep <= target ? ` of ${target}` : ''}, step ${session.stepIndex + 1} of ${steps.length}`
     )}
     <div class="player-scroll">
       <div class="player-inner">
@@ -987,7 +1017,7 @@ function stepScreen(activity, level) {
               aria-labelledby="rep-question"
             >
               <p class="step-count" id="rep-question" style="margin-bottom: var(--s-2)">
-                That was rep ${rep}. How did it go?
+                ${practice ? 'How did that go?' : `That was rep ${rep}. How did it go?`}
               </p>
               ${/* The yardstick, at the moment of judgment.
                     ---------------------------------------------------------
@@ -1080,9 +1110,11 @@ function stepScreen(activity, level) {
                   ? html`<b>${count}</b> counted · <b>${good}</b> went well${met
                       ? html` · <em>target met — finish on a win</em>`
                       : ''}`
-                  : rep === 1
-                    ? html`Rep 1 in progress · you say how it went after step ${steps.length}`
-                    : html`Rep ${rep} in progress`}
+                  : practice
+                    ? html`You say how it went after step ${steps.length}`
+                    : rep === 1
+                      ? html`Rep 1 in progress · you say how it went after step ${steps.length}`
+                      : html`Rep ${rep} in progress`}
               </p>
               ${/* Both, when both apply. Undo has to survive mid-pass: the
                     likeliest moment to want it is the tap straight after a
@@ -1242,8 +1274,11 @@ function resultScreen(activity, level) {
       </div>
     </div>
     <div class="player-foot">
+      ${/* "Back to counting" is the way back into a drill, where a count is
+            what is being returned to. A practice has none, so it names the
+            steps instead. */ ''}
       <button class="btn btn--ghost btn--block" type="button" data-back-practice>
-        Back to counting
+        ${isPractice(activity) ? 'Back to the steps' : 'Back to counting'}
       </button>
     </div>
   `;
@@ -1934,6 +1969,19 @@ function wire(root) {
     syncTotals();
     session.celebrate = !wasMet && session.repLog.length >= goal;
     session.stepIndex = 0;
+
+    // A practice is one pass, so answering the question ends the session.
+    //
+    // The drill loop wraps back to step one, which is right when there are
+    // four more passes to walk and wrong here: it offers a second go at a
+    // thing this kind exists to say has no second go, with a strip above it
+    // reading "1 counted · target met" about a target of one. Straight to the
+    // result, which is where the Finish button would have sent them anyway.
+    if (isPractice(activity)) {
+      session.phase = 'result';
+      refresh('forward');
+      return;
+    }
     // Only the one that carries news the screen does not. Every rep already
     // announces itself twice — the new step takes focus and the strip updates
     // — so a per-rep toast was a third telling of the same thing. Crossing

@@ -31,6 +31,8 @@
 // who they are, so it skips the welcome. store.js seeds Fabiola and Lucy from
 // config.js, which is what a fresh install has always started from; the only
 // thing this changes is that nobody is asked to confirm it.
+import { PRACTICE } from '../kinds.js';
+
 export const SKIP_SETUP = true;
 
 // ---------------------------------------------------------------------------
@@ -918,6 +920,8 @@ export const ACTIVITIES = [
   // game with no off switch is one the household will stop playing.
   {
     id: 'ex-tug',
+    // A game, not a drill. You start it, you end it, and once is the whole of it.
+    kind: PRACTICE,
     slug: 'tug',
     title: 'Tug',
     programId: 'play-and-tricks',
@@ -961,7 +965,7 @@ export const ACTIVITIES = [
         setup:
           'Play and fun are the keys to engagement. Teach {dog} to love tug.',
         cadence: { min: 1, max: 1, per: 'day' },
-        reps: 3,
+        reps: 1,
         successCriteria: [
           'Takes the toy when invited',
           'Lets go when asked',
@@ -1142,6 +1146,8 @@ export const ACTIVITIES = [
   // reps rather than five, because five would be an afternoon.
   {
     id: 'ex-invisible-dog',
+    // A stretch of ordinary time with the dog attached to you and ignored, not something repeated five times.
+    kind: PRACTICE,
     slug: 'invisible-dog',
     title: 'Invisible Dog',
     programId: 'switch-off',
@@ -1187,7 +1193,7 @@ export const ACTIVITIES = [
         setup:
           'Keep {dog} with you as you go about your day, or while prepping to work somewhere distracting.',
         cadence: { min: 1, max: 2, per: 'week' },
-        reps: 2,
+        reps: 1,
         successCriteria: [
           'Settles without being asked',
           'Stops trying to get your attention',
@@ -1205,6 +1211,8 @@ export const ACTIVITIES = [
   // one rep because one rep is what it is.
   {
     id: 'ex-interactive-toys',
+    // A toy loaded and given. There is nothing here to do twice.
+    kind: PRACTICE,
     slug: 'interactive-toys',
     title: 'Interactive Toys',
     programId: 'switch-off',

@@ -1,6 +1,7 @@
 // node --test scripts/lib/*.test.mjs
 //
-// The handout's frequencies, and the arithmetic that answers "is it due".
+// The two things the boot camp pack added to the content model: how often an
+// exercise wants doing, and whether it is repeated at all.
 //
 // The first test in this directory that is about the app rather than the
 // illustration pipeline, and it is here rather than beside js/ for one
@@ -17,9 +18,11 @@
 // The `sessions` argument is the seam that makes this testable without a store.
 
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
 import { cadenceFor } from '../../js/metrics.js';
+import { PRACTICE, isPractice } from '../../js/content.js';
 import { cadenceWords, cadenceStatus } from '../../js/ui.js';
 import * as excited from '../../js/content/excited.js';
 import * as door from '../../js/content/door.js';
@@ -152,4 +155,59 @@ test('the door pack declares no cadence, so nothing about that app changes', () 
       assert.equal(l.cadence, undefined, `${a.id} L${l.number} unexpectedly has a cadence`);
     }
   }
+});
+
+// --- the second activity kind -----------------------------------------------
+//
+// Three exercises in this pack are done once rather than repeated. What is
+// worth pinning is not that they are labelled, but the two things that would
+// otherwise be wrong without anyone noticing: a practice whose level asks for
+// more than one pass, and a practice that can never clear the level it is on.
+
+test('a practice asks for exactly one pass, whatever the household setting', () => {
+  // `repTarget` is min(level.reps, the setting), so a practice level carrying
+  // reps: 2 would ask for two games of tug in a row on any install where the
+  // setting is 3. The kind and the number have to agree, and only one of them
+  // is visible on screen.
+  for (const a of excited.ACTIVITIES.filter(isPractice)) {
+    for (const l of a.levels) {
+      assert.equal(l.reps, 1, `${a.id} L${l.number} is a practice asking for ${l.reps} passes`);
+    }
+  }
+});
+
+test('the three practices are the three the handout does not repeat', () => {
+  assert.deepEqual(
+    excited.ACTIVITIES.filter(isPractice).map((a) => a.id).sort(),
+    ['ex-interactive-toys', 'ex-invisible-dog', 'ex-tug']
+  );
+});
+
+test('everything else is still a drill, and the door pack is entirely drills', () => {
+  const drills = excited.ACTIVITIES.filter((a) => !isPractice(a));
+  assert.equal(drills.length, 10);
+  for (const a of drills) assert.equal(a.kind, undefined, `${a.id} has a kind`);
+  for (const a of door.ACTIVITIES) {
+    assert.equal(isPractice(a), false, `${a.id} is a practice`);
+    assert.equal(a.kind, undefined, `${a.id} has a kind`);
+  }
+});
+
+test('isPractice survives the things screens actually pass it', () => {
+  assert.equal(isPractice(null), false);
+  assert.equal(isPractice(undefined), false);
+  assert.equal(isPractice({}), false);
+  assert.equal(isPractice({ kind: 'drill' }), false);
+  assert.equal(isPractice({ kind: PRACTICE }), true);
+});
+
+test('the kind constant lives where a pack can import it without a cycle', async () => {
+  // content.js imports the packs. A pack importing the constant back from
+  // content.js closes a loop that ES modules resolve by evaluating the pack
+  // first, while the constant is still in its temporal dead zone -- which
+  // takes the whole app down on load. This asserts the leaf module stays a
+  // leaf, because the failure it prevents is a blank screen.
+  const src = await readFile(new URL('../../js/kinds.js', import.meta.url), 'utf8');
+  assert.doesNotMatch(src, /^\s*import\s/m, 'js/kinds.js must import nothing');
+  assert.equal((await import('../../js/kinds.js')).PRACTICE, PRACTICE);
 });

@@ -516,7 +516,7 @@ and every call site.
 
     node --test scripts/lib/*.test.mjs
 
-204 tests, no network, no key, no macOS — `fetch` and `sips` are injected, and
+209 tests, no network, no key, no macOS — `fetch` and `sips` are injected, and
 the whole of `generate` and `approve` runs in a temp directory against images the
 suite builds itself. The directory form (`node --test scripts/lib/`) does not
 work on every Node build; the glob always does.
@@ -525,9 +525,10 @@ Covered end to end: refusals, rate limits, a 200 with no image, a wrong canvas, 
 existing round, the worklist transform against the real file, and
 that nothing is ever written outside the round directory.
 
-Ten of those are not about the pipeline at all. `cadence.test.mjs` pins the
-app's own frequency arithmetic — the rolling seven-day window that decides
-whether an exercise is due — and it lives here because this glob is the only
+Fifteen of those are not about the pipeline at all. `content-model.test.mjs`
+pins what the boot camp pack added to the app's content model: the rolling
+seven-day window that decides whether an exercise is due, and the kind flag
+that says whether it is repeated. It lives here because this glob is the only
 one the checks workflow runs. A test file beside `js/` would be a test nobody
 runs, which is the failure that workflow was written to fix.
 

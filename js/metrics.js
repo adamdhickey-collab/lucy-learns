@@ -1,6 +1,6 @@
 // Mastery, progression, and weekly summary calculations.
 
-import { LIVE_ACTIVITIES, activityById, levelOf } from './content.js';
+import { LIVE_ACTIVITIES, activityById, isPractice, levelOf } from './content.js';
 import { getState, chosenLevel, getDog } from './store.js';
 
 export const MASTERY = {
@@ -168,7 +168,15 @@ export function readyToAdvance(activityId, levelNumber) {
     // the easiest level in the program is the one case where moving up is the
     // wrong answer, and the branch above this sends that session to the
     // fallback advice instead.
-    if (clearsOnEffort(levelNumber)) {
+    //
+    // A practice takes the same branch at every level, not just the first.
+    // The rule below divides successes by repetitions, and a practice has one
+    // of each by definition -- one pass, one observation -- so it would be
+    // held at reps < 3 forever and never open the level after it. Today all
+    // three practices have a single level and nothing would notice; the fourth
+    // one written with two levels would, silently, which is the kind of trap
+    // worth closing while the reason is still on screen.
+    if (clearsOnEffort(levelNumber) || isPractice(activityById(activityId))) {
       return (s.successfulRepetitions || 0) >= 1 && !tags.includes('nipped');
     }
     // A rate needs something under it. Reps per session is a setting now, and
@@ -282,8 +290,13 @@ export function recommendation(activity, level, session) {
       // session" was the sentence here before, and after a one-rep session it
       // sat beside a "Level 1 cleared" card promising something the same
       // screen had just withheld.
-      body:
-        reps < MIN_REPS_TO_ADVANCE && !clearsOnEffort(level.number)
+      // A practice has one pass and no count, so "1 of 1 reps went well" is
+      // the app reporting a statistic about a number it invented. It is also
+      // never short of the rep floor, because that floor does not apply to it
+      // -- see readyToAdvance -- so only the second sentence can be true here.
+      body: isPractice(activity)
+        ? `That went well. Do it again tomorrow and it starts to stick.`
+        : reps < MIN_REPS_TO_ADVANCE && !clearsOnEffort(level.number)
           ? `${session.successfulRepetitions} of ${reps} reps went well. A session needs at least ${MIN_REPS_TO_ADVANCE} reps to open the next level, so count a few more next time.`
           : `${session.successfulRepetitions} of ${reps} reps went well. Keep {her} calm through a whole session and the next level opens.`,
       suggest: 'stay',
