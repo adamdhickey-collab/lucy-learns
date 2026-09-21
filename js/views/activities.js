@@ -12,14 +12,16 @@ import {
   relativeDay,
   lastPracticed,
   currentLevel,
+  cadenceFor,
 } from '../metrics.js';
 import { programProgress, stageFor } from '../program.js';
 import { programStrip, levelPips } from '../programui.js';
-import { html, join, badge, icon, difficultyDots, focusHeading } from '../ui.js';
+import { html, join, badge, icon, difficultyDots, cadenceStatus, focusHeading } from '../ui.js';
 
 function activityCard(activity) {
   const img = IMAGES[activity.coverImage];
   const level = currentLevel(activity);
+  const cadence = cadenceFor(activity, level);
   // The card carries its own standing in the program, so the library and the
   // map never disagree about how far along something is.
   const { stage } = stageFor(activity);
@@ -68,6 +70,10 @@ function activityCard(activity) {
           ${difficultyDots(activity.difficulty)}
           <span>${relativeDay(lastPracticed(activity.id))}</span>
         </div>
+        ${/* Only where a curriculum has an opinion about frequency. The door
+              pack declares none, so this renders nothing and the card keeps
+              the two rows it has always had. */ ''}
+        ${cadence ? html`<div class="meta"><span class="cadence${cadence.due ? ' cadence--due' : ''}">${cadenceStatus(cadence)}</span></div>` : ''}
         <div class="card-progress">
           ${levelPips(stage)}
           <span class="stage-count">

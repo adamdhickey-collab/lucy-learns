@@ -885,6 +885,26 @@ a.visually-hidden:focus {
   color: var(--border-strong);
 }
 
+/* What the handout asks for, and whether it has happened.
+   ---------------------------------------------------------------------------
+   Text weight by default, because "Done today" is a receipt and a receipt that
+   shouts is noise on a screen the household opens every morning. Only the due
+   state gets colour, and it gets the program's own violet rather than a
+   warning rose: a weekly exercise not yet done on a Tuesday is the normal
+   state of the app, not a problem, and painting it as one would make five of
+   thirteen cards look wrong all week.
+
+   No interpunct before it when it leads its own row — `.meta`'s rule targets
+   `:not(:first-child)`, and this is the first child wherever it appears. */
+.cadence {
+  font-variant-numeric: tabular-nums;
+}
+
+.cadence--due {
+  color: var(--primary);
+  font-weight: 650;
+}
+
 .badge {
   display: inline-flex;
   align-items: center;

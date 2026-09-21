@@ -9,6 +9,7 @@ import {
   currentStreak,
   masteryFor,
   currentLevel,
+  cadenceFor,
 } from '../metrics.js';
 // Today shows the strip, not the map. The map lives on the program screen one
 // tap away, and rendering it here too made this screen 3.2 viewports tall to
@@ -22,6 +23,7 @@ import {
   join,
   icon,
   badge,
+  cadenceStatus,
   personPortrait,
   firstNameOf,
   focusHeading,
@@ -57,8 +59,30 @@ function render() {
   // activity belongs to no program.
   const suggestion = suggestedActivity();
   const focusProg = programProgress(suggestion.activity.programId);
-  const focusActivity =
+  const programFocus =
     focusProg && !focusProg.complete ? focusProg.focus.activity : suggestion.activity;
+
+  // Program order holds until the thing it points at has already been done.
+  //
+  // The rule above is "finish what is underway before opening more", and it is
+  // right until a curriculum starts saying how often. Then it can send a
+  // household back to a Stay they did on Monday, which the handout wants once
+  // a week, while the Back it wants daily goes untouched — the program's ladder
+  // and the trainer's frequency pulling in different directions on the one
+  // screen that is supposed to answer "what now".
+  //
+  // So the ladder still wins whenever its own focus is wanted. It is only when
+  // that focus is already satisfied for its period that the ranking's answer
+  // is used instead, and the ranking has already put anything due at the top.
+  // A fresh install is unaffected: nothing has been practiced, so the focus is
+  // due like everything else and program order decides, which is why Today
+  // opens on Stay rather than on whichever daily exercise sorts first.
+  //
+  // Packs that declare no cadence never reach the second branch. cadenceFor
+  // returns null for every level in the door pack, the focus is treated as
+  // wanted, and this is the same two lines it has always been.
+  const focusCadence = cadenceFor(programFocus, currentLevel(programFocus));
+  const focusActivity = focusCadence && !focusCadence.due ? suggestion.activity : programFocus;
   const next =
     focusActivity.id === suggestion.activity.id
       ? suggestion
@@ -70,6 +94,7 @@ function render() {
   const days = practiceByDay();
   const streak = currentStreak();
   const mastery = masteryFor(activity.id, level.number);
+  const cadence = cadenceFor(activity, level);
   const prog = programProgress(program.id);
   const stage = prog.stages.find((s) => s.activity.id === activity.id);
 
@@ -154,6 +179,13 @@ function render() {
           <h2 id="today-next">${activity.title}</h2>
           <p>${level.setup}</p>
           <div class="meta">
+            ${/* What the handout asks for, answered against what has been
+                  logged. It leads the row because it is the reason this
+                  activity is the one on screen: the ranking puts anything due
+                  above everything else, and a card that says "Due today"
+                  without saying so reads as an arbitrary pick. Packs with no
+                  cadence render the row exactly as before. */ ''}
+            ${cadence ? html`<span class="cadence${cadence.due ? ' cadence--due' : ''}">${cadenceStatus(cadence)}</span>` : ''}
             ${badge(mastery)}
             ${/* Not "Level 1 of 5". This sits directly under a card headed
                   "Activity 1 of 4" and directly beside "5 min", so the of-5

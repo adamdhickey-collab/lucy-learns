@@ -270,7 +270,8 @@ export const ACTIVITIES = [
         number: 1,
         title: 'Up to 30 seconds',
         setup:
-          'Calm sit stay, up to 30 seconds, with you standing right there. Once or twice a week.',
+          'Calm sit stay, up to 30 seconds, with you standing right there.',
+        cadence: { min: 1, max: 2, per: 'week' },
         reps: 5,
         successCriteria: [
           'Holds the sit for the full count',
@@ -282,7 +283,8 @@ export const ACTIVITIES = [
         number: 2,
         title: 'A minute, sitting or lying down',
         setup:
-          'Sit-stay and down-stay, a minute or longer, while you stay nearby. Once or twice a day.',
+          'Sit-stay and down-stay, a minute or longer, while you stay nearby.',
+        cadence: { min: 1, max: 2, per: 'day' },
         reps: 4,
         successCriteria: ['Holds a minute in either position', 'Waits for the release word'],
         overrides: { 0: { instruction: 'Ask {dog} to sit, or to lie down.', cue: 'Sit' } },
@@ -291,7 +293,8 @@ export const ACTIVITIES = [
         number: 3,
         title: 'Two to three minutes, while you get on with something',
         setup:
-          'Two to three minutes while you do something ordinary nearby — your phone, a grocery list. Once or twice a week.',
+          'Two to three minutes while you do something ordinary nearby — your phone, a grocery list.',
+        cadence: { min: 1, max: 2, per: 'week' },
         reps: 3,
         successCriteria: [
           'Holds while you stop paying attention',
@@ -309,7 +312,8 @@ export const ACTIVITIES = [
         number: 4,
         title: 'Three to four minutes, and a step out of the room',
         setup:
-          'Three to four minutes nearby, then thirty seconds while you walk briefly out of the room. Once or twice a week.',
+          'Three to four minutes nearby, then thirty seconds while you walk briefly out of the room.',
+        cadence: { min: 1, max: 2, per: 'week' },
         reps: 3,
         successCriteria: ['Holds while you are out of sight', 'Still there when you come back'],
         overrides: {
@@ -324,7 +328,8 @@ export const ACTIVITIES = [
         number: 5,
         title: 'Four to five minutes, with something exciting happening',
         setup:
-          'Four to five minutes, and a stay held while you answer the door, throw a toy or make yourself a snack. Once or twice a week.',
+          'Four to five minutes, and a stay held while you answer the door, throw a toy or make yourself a snack.',
+        cadence: { min: 1, max: 2, per: 'week' },
         reps: 3,
         successCriteria: [
           'Holds through the exciting thing',
@@ -390,7 +395,8 @@ export const ACTIVITIES = [
         number: 1,
         title: 'Five minutes while you work',
         setup:
-          'Ask for “Back” for at least five minutes while you unload the dishwasher, make the bed, put your shoes on or eat dinner. Daily.',
+          'Ask for “Back” for at least five minutes while you unload the dishwasher, make the bed, put your shoes on or eat dinner.',
+        cadence: { min: 1, max: 1, per: 'day' },
         reps: 2,
         successCriteria: [
           'Stays on {their} side for the whole job',
@@ -402,7 +408,8 @@ export const ACTIVITIES = [
         number: 2,
         title: 'While something is happening',
         setup:
-          'Ask for “Back” while you answer the door, make and eat dinner, or play a game with the family. Daily.',
+          'Ask for “Back” while you answer the door, make and eat dinner, or play a game with the family.',
+        cadence: { min: 1, max: 1, per: 'day' },
         reps: 2,
         successCriteria: [
           'Holds the line with people moving around',
@@ -467,7 +474,8 @@ export const ACTIVITIES = [
         number: 1,
         title: 'Dropped food in the kitchen',
         setup:
-          'Cold trials. Drop a piece of food on the kitchen floor as if by accident. Once or twice a week.',
+          'Cold trials. Drop a piece of food on the kitchen floor as if by accident.',
+        cadence: { min: 1, max: 2, per: 'week' },
         reps: 5,
         successCriteria: [
           'Looks away without a second cue',
@@ -479,7 +487,8 @@ export const ACTIVITIES = [
         number: 2,
         title: 'Walking up to it and past it',
         setup:
-          'Set something on the ground and walk up to and past it, holding the “Leave it” until you are past. Once or twice a week.',
+          'Set something on the ground and walk up to and past it, holding the “Leave it” until you are past.',
+        cadence: { min: 1, max: 2, per: 'week' },
         reps: 5,
         successCriteria: ['Walks past without pulling', 'Holds it until you are clear of the thing'],
         overrides: {
@@ -490,7 +499,8 @@ export const ACTIVITIES = [
         number: 3,
         title: 'On a walk, past another dog',
         setup:
-          'Practice on your daily walk, on real distractions — another dog, a squirrel, something on the pavement. Once or twice a week.',
+          'Practice on your daily walk, on real distractions — another dog, a squirrel, something on the pavement.',
+        cadence: { min: 1, max: 2, per: 'week' },
         reps: 4,
         successCriteria: [
           'Leaves a real distraction outdoors',
@@ -552,7 +562,8 @@ export const ACTIVITIES = [
       {
         number: 1,
         title: 'Thirty seconds, every day',
-        setup: 'A fast, silly thirty seconds. Daily.',
+        setup: 'A fast, silly thirty seconds.',
+        cadence: { min: 1, max: 1, per: 'day' },
         reps: 5,
         successCriteria: [
           'Sits without the cue being repeated',
@@ -614,7 +625,8 @@ export const ACTIVITIES = [
         number: 1,
         title: 'One second, nothing else happening',
         setup:
-          'Start with a one second watch and build from there, in a quiet room. Once or twice a week.',
+          'Start with a one second watch and build from there, in a quiet room.',
+        cadence: { min: 1, max: 2, per: 'week' },
         reps: 5,
         successCriteria: [
           'Meets your eyes within a second or two',
@@ -626,7 +638,8 @@ export const ACTIVITIES = [
         number: 2,
         title: 'Five to ten seconds, with a distraction',
         setup:
-          'Five to ten second increments while somebody shakes a bag of treats nearby. Once or twice a week.',
+          'Five to ten second increments while somebody shakes a bag of treats nearby.',
+        cadence: { min: 1, max: 2, per: 'week' },
         reps: 5,
         successCriteria: ['Holds five seconds or more', 'Looks back at you after the noise'],
         overrides: {
@@ -640,7 +653,8 @@ export const ACTIVITIES = [
         number: 3,
         title: 'Ten to twenty seconds',
         setup:
-          'Ten to twenty second increments, with harder distractions — a bag of treats, then out on a walk. Once or twice a week.',
+          'Ten to twenty second increments, with harder distractions — a bag of treats, then out on a walk.',
+        cadence: { min: 1, max: 2, per: 'week' },
         reps: 4,
         successCriteria: ['Holds ten seconds or more', 'Works outside as well as inside'],
         overrides: {
@@ -651,7 +665,8 @@ export const ACTIVITIES = [
         number: 4,
         title: 'Twenty seconds, out in the world',
         setup:
-          'Twenty second increments, out on a walk, with increasingly difficult distractions. Once or twice a week.',
+          'Twenty second increments, out on a walk, with increasingly difficult distractions.',
+        cadence: { min: 1, max: 2, per: 'week' },
         reps: 4,
         successCriteria: ['Holds twenty seconds outdoors', 'Does not break at the first movement'],
         overrides: {
@@ -669,7 +684,8 @@ export const ACTIVITIES = [
         // setup line says so, so nobody reads it as a typo.
         title: 'Ten to fifteen seconds, past a dog or a squirrel',
         setup:
-          'Ten to fifteen second increments while passing a dog, or a squirrel, out on a walk. Shorter than level four on purpose — the distraction is doing the work now. Once or twice a week.',
+          'Ten to fifteen second increments while passing a dog, or a squirrel, out on a walk. Shorter than level four on purpose — the distraction is doing the work now.',
+        cadence: { min: 1, max: 2, per: 'week' },
         reps: 4,
         successCriteria: [
           'Holds your eyes while the other dog passes',
@@ -745,7 +761,8 @@ export const ACTIVITIES = [
         number: 1,
         title: 'At the window, or on the porch',
         setup:
-          'Somewhere moderately distracting: in front of a window, on the front porch. Once or twice a week.',
+          'Somewhere moderately distracting: in front of a window, on the front porch.',
+        cadence: { min: 1, max: 2, per: 'week' },
         reps: 4,
         successCriteria: [
           'Looks away from the distraction when marked',
@@ -801,14 +818,16 @@ export const ACTIVITIES = [
       {
         number: 1,
         title: 'Touch',
-        setup: 'A nose boop to your open hand. The easiest of the three, so it goes first. Once or twice a week.',
+        setup: 'A nose boop to your open hand. The easiest of the three, so it goes first.',
+        cadence: { min: 1, max: 2, per: 'week' },
         reps: 5,
         successCriteria: ['Touches your palm with {their} nose', 'Comes back for another go'],
       },
       {
         number: 2,
         title: 'Spin',
-        setup: 'A clockwise turn, lured at first and then on the word. Once or twice a week.',
+        setup: 'A clockwise turn, lured at first and then on the word.',
+        cadence: { min: 1, max: 2, per: 'week' },
         reps: 5,
         successCriteria: ['Completes the circle', 'Follows the hand without the food in it'],
         overrides: {
@@ -820,7 +839,8 @@ export const ACTIVITIES = [
         number: 3,
         title: 'Turn',
         setup:
-          'A counterclockwise turn. Harder than it sounds once {she} has learned to spin the other way. Once or twice a week.',
+          'A counterclockwise turn. Harder than it sounds once {she} has learned to spin the other way.',
+        cadence: { min: 1, max: 2, per: 'week' },
         reps: 5,
         successCriteria: ['Turns the other way', 'Does not default to the clockwise spin'],
         overrides: {
@@ -867,7 +887,8 @@ export const ACTIVITIES = [
         number: 1,
         title: 'Leg weaves',
         setup:
-          'Stand still with your legs hip distance apart while {dog} weaves a figure eight between them. Once or twice a week.',
+          'Stand still with your legs hip distance apart while {dog} weaves a figure eight between them.',
+        cadence: { min: 1, max: 2, per: 'week' },
         reps: 4,
         successCriteria: ['Goes through without stopping', 'Comes back round for the second loop'],
         overrides: { 2: { instruction: 'Name it as {she} weaves through.', cue: 'Weave' } },
@@ -875,7 +896,8 @@ export const ACTIVITIES = [
       {
         number: 2,
         title: 'Crawl',
-        setup: '{dog} is in a down, and crawls along the ground. Once or twice a week.',
+        setup: '{dog} is in a down, and crawls along the ground.',
+        cadence: { min: 1, max: 2, per: 'week' },
         reps: 4,
         successCriteria: ['Stays down while moving', 'Crawls a body length or more'],
         overrides: {
@@ -937,7 +959,8 @@ export const ACTIVITIES = [
         number: 1,
         title: 'A game a day',
         setup:
-          'Play and fun are the keys to engagement. Teach {dog} to love tug. Daily.',
+          'Play and fun are the keys to engagement. Teach {dog} to love tug.',
+        cadence: { min: 1, max: 1, per: 'day' },
         reps: 3,
         successCriteria: [
           'Takes the toy when invited',
@@ -999,7 +1022,8 @@ export const ACTIVITIES = [
         number: 1,
         title: 'Go there, and be paid for it',
         setup:
-          'Ask {dog} to go to {their} bed and reward {her} lavishly. Give {her} a special toy or chew {she} only gets there. Once or twice a day.',
+          'Ask {dog} to go to {their} bed and reward {her} lavishly. Give {her} a special toy or chew {she} only gets there.',
+        cadence: { min: 1, max: 2, per: 'day' },
         reps: 5,
         successCriteria: [
           'Gets on the bed when asked',
@@ -1011,7 +1035,8 @@ export const ACTIVITIES = [
         number: 2,
         title: 'A minute, while you do something else',
         setup:
-          'Up to a minute on the bed while you work on something else — get a glass of water, look at your phone. Once or twice a day.',
+          'Up to a minute on the bed while you work on something else — get a glass of water, look at your phone.',
+        cadence: { min: 1, max: 2, per: 'day' },
         reps: 4,
         successCriteria: ['Holds a minute', 'Stays put while you move about the room'],
         overrides: {
@@ -1026,7 +1051,8 @@ export const ACTIVITIES = [
         number: 3,
         title: 'Three to five minutes, with the door going',
         setup:
-          'Three to five minutes on the bed while you do something distracting, like opening the front door and pretending to welcome a guest. Once or twice a day.',
+          'Three to five minutes on the bed while you do something distracting, like opening the front door and pretending to welcome a guest.',
+        cadence: { min: 1, max: 2, per: 'day' },
         reps: 3,
         successCriteria: [
           'Holds three minutes or more',
@@ -1098,7 +1124,8 @@ export const ACTIVITIES = [
       {
         number: 1,
         title: 'On the leash, on the bed',
-        setup: 'Step on the leash and wait {her} out, starting on {their} bed. Once a day.',
+        setup: 'Step on the leash and wait {her} out, starting on {their} bed.',
+        cadence: { min: 1, max: 1, per: 'day' },
         reps: 2,
         successCriteria: [
           'Lies down without being made to',
@@ -1158,7 +1185,8 @@ export const ACTIVITIES = [
         number: 1,
         title: 'Attached, and ignored',
         setup:
-          'Keep {dog} with you as you go about your day, or while prepping to work somewhere distracting. Once or twice a week.',
+          'Keep {dog} with you as you go about your day, or while prepping to work somewhere distracting.',
+        cadence: { min: 1, max: 2, per: 'week' },
         reps: 2,
         successCriteria: [
           'Settles without being asked',
@@ -1220,7 +1248,8 @@ export const ACTIVITIES = [
         number: 1,
         title: 'Part of dinner, in a toy',
         setup:
-          'Interactive toys give {their} physical and mental energy somewhere to go. A life saver for young or high energy dogs. Daily.',
+          'Interactive toys give {their} physical and mental energy somewhere to go. A life saver for young or high energy dogs.',
+        cadence: { min: 1, max: 1, per: 'day' },
         reps: 1,
         successCriteria: [
           'Works at the toy rather than giving up',
