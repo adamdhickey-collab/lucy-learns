@@ -10,10 +10,12 @@
 // The re-export is gone rather than deprecated so that a missed call site is a
 // module error at load, not a screen quietly rendering the wrong dog.
 export { TRAINER } from './config.js';
+export { PRACTICE } from './kinds.js';
 
 import * as doorPack from './content/door.js';
 import * as excitedPack from './content/excited.js';
 import { PACK } from './pack.js';
+import { PRACTICE } from './kinds.js';
 
 // ---------------------------------------------------------------------------
 // Images
@@ -738,6 +740,28 @@ export const INCIDENT_HELPERS = [
 export const LIVE_ACTIVITIES = ACTIVITIES.filter((a) => a.available !== false);
 
 export const isAvailable = (activity) => Boolean(activity) && activity.available !== false;
+
+/**
+ * Some exercises are not repeated, and saying so is the whole of this flag.
+ *
+ * Almost everything in both curricula is a drill: a short thing you do, watch,
+ * and do again, five times in five minutes, where the count is what makes the
+ * observation worth anything. Three exercises in the boot camp pack are not.
+ * Tug is a game. Invisible Dog is an hour with a leash on and the dog ignored.
+ * Interactive Toys is dinner in a puzzle and then leaving the room. You do
+ * each of them once and you are done, and the handout asks for them daily
+ * rather than five times over.
+ *
+ * Written as `kind` rather than as `reps: 1` because those are different
+ * claims. A level with one repetition is a drill you only have time to do
+ * once; a practice has no repetitions to count, and the difference shows on
+ * screen -- "Rep 1 of 1" is the app counting to one in front of somebody who
+ * was never going to do it twice.
+ *
+ * Absent means drill, so every level of the door pack and most of the boot
+ * camp is untouched by this existing.
+ */
+export const isPractice = (activity) => Boolean(activity) && activity.kind === PRACTICE;
 
 export const activityBySlug = (slug) => ACTIVITIES.find((a) => a.slug === slug);
 export const activityById = (id) => ACTIVITIES.find((a) => a.id === id);
