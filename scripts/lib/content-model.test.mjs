@@ -211,3 +211,43 @@ test('the kind constant lives where a pack can import it without a cycle', async
   assert.doesNotMatch(src, /^\s*import\s/m, 'js/kinds.js must import nothing');
   assert.equal((await import('../../js/kinds.js')).PRACTICE, PRACTICE);
 });
+
+// --- every program, for the one screen handed to somebody else ---------------
+
+test('programsProgress covers every program and its totals are the sum of them', async () => {
+  // The report said "11 of 11 levels cleared across Wait" while three other
+  // programs went unmentioned: true about a quarter of the work, and wrong as
+  // the summary it is presented as. What matters is that nothing is dropped,
+  // whichever pack is loaded, so this asserts against the shape rather than
+  // against a number that moves when content is written.
+  const { programsProgress } = await import('../../js/program.js');
+  const { PROGRAMS } = await import('../../js/content.js');
+  const all = programsProgress();
+
+  assert.equal(all.each.length, PROGRAMS.length, 'a program is missing from the report');
+  assert.deepEqual(
+    all.each.map((p) => p.program.id).sort(),
+    PROGRAMS.map((p) => p.id).sort()
+  );
+
+  const sum = (f) => all.each.reduce((n, p) => n + f(p), 0);
+  assert.equal(all.cleared, sum((p) => p.cleared), 'cleared is not the sum');
+  assert.equal(all.total, sum((p) => p.total), 'total is not the sum');
+  assert.equal(all.finished, sum((p) => p.finished), 'finished is not the sum');
+  assert.equal(all.live, sum((p) => p.live.length), 'live is not the sum');
+  assert.equal(all.soon, sum((p) => p.soon), 'soon is not the sum');
+
+  // Totals count only what can be practiced. A denominator nobody can move is
+  // a promise someone else has to keep, and the report is where that reads as
+  // the household's failure.
+  assert.ok(all.live <= all.each.reduce((n, p) => n + p.stages.length, 0));
+});
+
+test('an empty history is zero cleared and not complete', async () => {
+  const { programsProgress } = await import('../../js/program.js');
+  const all = programsProgress();
+  assert.equal(all.cleared, 0);
+  assert.equal(all.finished, 0);
+  assert.equal(all.complete, false);
+  assert.ok(all.total > 0, 'there should be levels to clear');
+});

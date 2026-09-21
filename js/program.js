@@ -220,6 +220,39 @@ export function primaryProgram() {
   return programById(activity.programId) || PROGRAMS[0];
 }
 
+/**
+ * Every program at once, and the totals across them.
+ *
+ * `primaryProgram` answers "the one you are working in", which is the right
+ * question for Today and for Progress: those screens are about the next five
+ * minutes and about where you are, and four route strips stacked up would be
+ * noise on both.
+ *
+ * The lesson report is a different question. It is handed to a trainer as an
+ * account of what happened at home, and there it said "11 of 11 levels cleared
+ * across Wait" while three other programs went unmentioned -- true about a
+ * quarter of the work and, read as the summary it is presented as, wrong. A
+ * report that omits three quarters of the program is worse than one that says
+ * nothing, because the trainer has no way to tell which they are reading.
+ *
+ * Totals count only what can be practiced, the same as programProgress: a
+ * denominator the household has no way to move is a promise someone else has
+ * to keep, and the report is exactly where that would be read as failure.
+ */
+export function programsProgress() {
+  const each = PROGRAMS.map((p) => programProgress(p.id));
+  const sum = (f) => each.reduce((n, p) => n + f(p), 0);
+  return {
+    each,
+    cleared: sum((p) => p.cleared),
+    total: sum((p) => p.total),
+    finished: sum((p) => p.finished),
+    live: sum((p) => p.live.length),
+    soon: sum((p) => p.soon),
+    complete: each.length > 0 && each.every((p) => p.complete),
+  };
+}
+
 /** The program an activity belongs to, already scored. */
 export const progressForActivity = (activity) => programProgress(activity.programId);
 
