@@ -1,13 +1,19 @@
 <!doctype html>
-<html lang="en" data-pack="door">
+<html lang="en" data-pack="excited">
   <head>
+  <!-- The boot camp curriculum, in the same app.
+       `data-pack` on <html> is what chooses it; see js/pack.js. Everything
+       below is index.html's shell unchanged, because it is the same app —
+       only the content pack, the name and the manifest differ. The iOS launch
+       images are shared on purpose: they are the app's mark, and the two
+       curricula are the same app wearing two hats. -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
-    <title>Lucy Learns</title>
+    <title>I’m So Excited!</title>
     <meta
       name="description"
-      content="A private training companion for Lucy. Practice what the trainer assigned, log it in seconds, and see what is actually improving."
+      content="The I’m So Excited! Boot Camp homework, as a guided companion. Practice each exercise, log it in seconds, and see what is actually improving."
     />
     <meta name="theme-color" content="#f6f6f7" />
     <!-- Light by design. Declaring it stops native controls the app does not
@@ -15,8 +21,8 @@
     <meta name="color-scheme" content="light" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="Lucy Learns" />
-    <link rel="manifest" href="manifest.webmanifest" />
+    <meta name="apple-mobile-web-app-title" content="Boot Camp" />
+    <link rel="manifest" href="manifest-excited.webmanifest" />
     <link rel="apple-touch-icon" href="icons/icon-180.png" />
     <link rel="icon" href="icons/icon-192.png" />
     <!-- iOS shows one of these while a Home Screen launch boots, matched on
@@ -113,7 +119,7 @@
              through it from below. One element cannot do both: whatever
              clips has to hold still while the thing being clipped travels. -->
         <p class="splash-title">
-          <span><span>Lucy</span></span><span><span>Learns</span></span>
+          <span><span>Boot</span></span><span><span>Camp</span></span>
         </p>
       </div>
       <!-- The slot holds the position the launch image baked in; the img
@@ -171,7 +177,7 @@
 
     <noscript>
       <div style="padding: 2rem; max-width: 34rem; margin: 0 auto">
-        <h1>Lucy Learns</h1>
+        <h1>I’m So Excited! Boot Camp</h1>
         <p>This app needs JavaScript to run the guided sessions.</p>
       </div>
     </noscript>

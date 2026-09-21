@@ -354,6 +354,20 @@ export const icon = (name) => raw(ICONS[name] || '');
 export const badge = (mastery) =>
   raw(`<span class="badge badge--${mastery.id}">${esc(mastery.label)}</span>`);
 
+/**
+ * Small counts as words, for sentences that used to hard-code "four".
+ *
+ * Two screens say how many activities a program holds, and both said "four"
+ * outright for as long as there was one program and it had four of them. A
+ * second content pack arrived with programs of two and three and neither
+ * screen noticed. Words rather than numerals because these land mid-sentence;
+ * past eight it falls back to the numeral rather than inventing a rule for
+ * programs nobody is going to write.
+ */
+const COUNT_WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight'];
+
+export const countWord = (n) => COUNT_WORDS[n] ?? String(n);
+
 export const difficultyDots = (difficulty) => {
   const level = { beginner: 1, intermediate: 2, advanced: 3 }[difficulty] || 1;
   const pips = [1, 2, 3].map((n) => `<i class="${n <= level ? 'on' : ''}"></i>`).join('');

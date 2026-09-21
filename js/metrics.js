@@ -249,7 +249,7 @@ export function recommendation(activity, level, session) {
     return {
       key: 'take-the-pressure-off',
       title: 'Take the pressure off',
-      body: `Nipping usually means {dog} is over threshold. Repeat this level with more distance from the door before adding anything new.`,
+      body: `Nipping usually means {dog} is over threshold. Repeat this level with more distance from whatever set {her} off before adding anything new.`,
       suggest: 'stay',
     };
   }

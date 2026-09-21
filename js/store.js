@@ -11,13 +11,26 @@ import {
   INCIDENT_HELPERS,
   INCIDENT_RESPONSES,
   RECOVERY_BANDS,
+  SKIP_SETUP,
 } from './content.js';
+import { PACK } from './pack.js';
 // Imported as defaults, not as truth. Who the dog and the household are is
 // stored state now — see emptyState below — and config.js only supplies what a
 // brand new install starts from. Nothing outside this module reads them.
 import { DOG as DOG_DEFAULT, HANDLER as HANDLER_DEFAULT } from './config.js';
 
-const KEY = 'lucy-learns/v1';
+/**
+ * Where this pack's history lives.
+ *
+ * One key per curriculum, because the two apps share an origin and their
+ * histories are not interchangeable: a session logged against `ex-stay` means
+ * nothing to the door program, and the level overrides, the streak and the
+ * weekly goal are all counted per curriculum too.
+ *
+ * The door pack keeps the original key exactly. It holds a real household's
+ * training record, and renaming it would orphan every session ever logged.
+ */
+const KEY = PACK === 'door' ? 'lucy-learns/v1' : `lucy-learns-${PACK}/v1`;
 
 const emptyState = () => ({
   version: 1,
@@ -64,7 +77,10 @@ const emptyState = () => ({
   seeded: false,
   // Has the household been through the welcome? Nothing is seeded until they
   // choose, so the app can be handed to someone genuinely empty.
-  onboarded: false,
+  // Packs that carry their own household skip the welcome. See SKIP_SETUP in
+  // js/content/excited.js; the dog and the handler above are seeded from
+  // config.js either way, so what this skips is the asking, not the answers.
+  onboarded: SKIP_SETUP,
   // One-time hints already shown, by id. A set of ids rather than a flag per
   // hint so adding the next one needs no migration: an install saved before a
   // hint existed simply does not list it, and sees it once.

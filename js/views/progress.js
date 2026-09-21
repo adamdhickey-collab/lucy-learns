@@ -4,9 +4,8 @@ import {
   BEHAVIORS,
   INCIDENT_CONTEXTS,
   INCIDENT_RESPONSES,
-  PROGRAMS,
 } from '../content.js';
-import { programProgress } from '../program.js';
+import { primaryProgram, programProgress } from '../program.js';
 import { programHeader, programStrip } from '../programui.js';
 import {
   getState,
@@ -123,7 +122,7 @@ function render() {
   const prior = weekSummary(1);
   const days = practiceByDay();
   const max = Math.max(1, ...days.map((d) => d.count));
-  const prog = programProgress(PROGRAMS[0].id);
+  const prog = programProgress(primaryProgram().id);
   const insight = headlineInsight();
 
   const bars = days.map(

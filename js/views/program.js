@@ -7,7 +7,7 @@
 import { IMAGES, programById } from '../content.js';
 import { programProgress, STAGE } from '../program.js';
 import { programHeader, stageList } from '../programui.js';
-import { html, join, icon, focusHeading } from '../ui.js';
+import { html, join, icon, countWord, focusHeading } from '../ui.js';
 
 function render({ id }) {
   const program = programById(id);
@@ -33,7 +33,12 @@ function render({ id }) {
       <p class="lede">${program.blurb}</p>
 
       <section class="section">
-        <h2>The four activities</h2>
+        ${/* Counted, not written. This said "The four activities" for as long
+              as there was one program and it had four; a second pack arrived
+              with programs of two and three, and the heading went on
+              insisting. Spelled out rather than a numeral, because it is a
+              sentence and not a statistic. */ ''}
+        <h2>The ${countWord(prog.stages.length)} activities</h2>
         <p class="section-note" style="margin-bottom: var(--s-4)">
           They stack. Each one assumes the one before it is starting to hold.
         </p>

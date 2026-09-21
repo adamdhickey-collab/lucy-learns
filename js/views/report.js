@@ -7,10 +7,9 @@ import {
   ACTIVITIES,
   LIVE_ACTIVITIES,
   INCIDENT_CONTEXTS,
-  PROGRAMS,
   TRAINER,
 } from '../content.js';
-import { programProgress } from '../program.js';
+import { primaryProgram, programProgress } from '../program.js';
 import { getState, exportSummary, getDog } from '../store.js';
 import {
   activityMastery,
@@ -135,7 +134,7 @@ function render() {
   const prior = priorRange(rangeDays);
   // The trainer set the program; the report should say how far through it the
   // household actually is, in the same unit the handout uses.
-  const prog = programProgress(PROGRAMS[0].id);
+  const prog = programProgress(primaryProgram().id);
   const rate = successRate(sessions);
   const priorRate = successRate(prior);
   const totalReps = repCount(sessions);

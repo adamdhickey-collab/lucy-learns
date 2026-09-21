@@ -1,0 +1,29 @@
+{
+  "id": "play-weave",
+  "briefId": "cool-flat-v2",
+  "shippedUnder": "cool-flat-v2",
+  "title": "Leg Weaves and Crawl — activity cover",
+  "activity": "Leg Weaves and Crawl",
+  "step": "the activity cover",
+  "note": "New art rather than a redraw. The second of the three the boot camp pack has no picture for.\n\nThis is the riskiest scene in the set for the reason Block B's ANATOMY paragraph exists: the readable action is a dog passing between two human legs, which is a generator's invitation to draw a third leg, a fourth, or a dog fused to the handler. So the scene text says the legs are separated and visible, and mustBeTrue counts limbs on both figures rather than trusting the general rule.\n\nIt also has to read as THROUGH rather than BESIDE at 84pt. A dog standing next to a person and a dog halfway between their legs are nearly the same silhouette once the picture is small, so the scene asks for the moment the two halves of her are on opposite sides of the near leg — that is the only frame where the gap is unambiguous.\n\nFront-on three-quarter rather than the set's usual side view, because a side view hides the gap entirely: the far leg falls behind the near one and there is nothing to weave through. This is the one scene allowed to turn the camera.\n\nDRAWN THROUGH A CHAT WINDOW, not through `generate` — see the note on play-tug for why. Two rounds, because the flatness correction that took three rounds there was front-loaded into the first request here and worked immediately.\n\nBoth rounds went on the action instead. Asking for a dog 'between her legs' produced a dog walking across in front of the handler, twice. What fixed it was naming the OVERLAP: the handler's near leg must be drawn in front of Lucy's midsection so her body visibly passes behind it and comes out the other side. Same shape of instruction as the fix recorded on door-stay-cover — describe what occupies the space, not what must avoid it.",
+  "blocks": [
+    "style",
+    "cast"
+  ],
+  "references": [
+    {
+      "role": "style:exemplar",
+      "scene": "door-sound-02-self"
+    },
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    }
+  ],
+  "scene": "Interior entry hall of an ordinary suburban home, clean three-quarter view at standing eye level, the same room, wall, floor and palette as the rest of this set, with the front door out of frame — THE LEFTMOST EIGHTH AND THE RIGHTMOST EIGHTH OF THIS PICTURE ARE EMPTY. Down the left-hand edge, for a full eighth of the picture's width, there is nothing but bare plaster wall above the baseboard and bare oak floor below it — no figure, no bed, no object of any kind enters that strip. The same is true of the right-hand edge. Everything that matters is arranged inside the middle three-quarters of the width, with those two empty strips left clear around it like a margin. This is because the app crops this picture to a centred square and throws those two strips away. Compose it as though the picture were only the middle three-quarters wide and the strips were the mount around it. The handler stands facing the viewer in three-quarter, straight-backed and relaxed, with her feet about hip distance apart so that both of her legs are fully visible and clearly separated, with daylight floor showing in the gap between them. Lucy is walking through that gap: her head, chest and front legs have already come out on the near side of the handler's nearer leg while her hindquarters and tail are still on the far side of it, so the picture reads unmistakably as a dog passing between two legs rather than standing beside them. Lucy's head is up and turned slightly toward the handler, her expression soft. The handler's nearer hand is low beside her own thigh with the palm open and empty, guiding rather than reaching, and her other arm hangs relaxed at her side. She looks down at Lucy with an easy, pleased expression and does not bend forward over her. No leash and no harness. Background: the plaster wall, one baseboard line, and generous empty oak floor.",
+  "mustBeTrue": "Lucy is genuinely passing between the handler's two legs: her head, chest and front legs are out on one side of the nearer leg and her hindquarters and tail are still on the other, with floor visible in the gap. The handler has exactly two legs, two arms and two hands and no more, she stands straight rather than bending over the dog, and no extra hand shape appears near the mustard treat pouch at her hip. Lucy has exactly four legs and one tail, wears the flat purple collar with the round blue tag, and there is no leash and no harness. Both figures sit inside the middle 75% of the width so a centred square crop keeps the handler's legs, the gap and the whole of Lucy. The rendering is flat two-tone with crisp edges and no gloss on Lucy's coat."
+}

@@ -8,10 +8,15 @@
 const VERSION = new URL(self.location.href).searchParams.get('v') || 'dev';
 const CACHE = `lucy-learns-${VERSION}`;
 
+// Both entry documents, because they are one app: the same shell, the same
+// service worker and the same cache, with the curriculum chosen by a
+// `data-pack` attribute on <html>. See js/pack.js.
 const SHELL = [
   './',
   './index.html',
+  './excited.html',
   './manifest.webmanifest',
+  './manifest-excited.webmanifest',
   './icons/icon-180.png',
   './icons/icon-192.png',
   './icons/icon-512.png',
@@ -23,6 +28,9 @@ const SHELL = [
   './js/ui.js',
   './js/store.js',
   './js/content.js',
+  './js/pack.js',
+  './js/content/door.js',
+  './js/content/excited.js',
   './js/version.js',
   './js/study.js',
   './js/config.js',
@@ -103,6 +111,9 @@ const SHELL = [
   './img/thumb-plan-mat.jpg',
   './img/thumb-plan-walkpeople.jpg',
   './img/thumb-plan-name.jpg',
+  './img/thumb-play-tug.jpg',
+  './img/thumb-play-weave.jpg',
+  './img/thumb-calm-foodtoy.jpg',
   './img/thumb-door-greet-04-open.jpg',
   './img/thumb-door-greet-05-reward.jpg',
   './img/thumb-door-greet-06-enter.jpg',
@@ -140,6 +151,9 @@ const SHELL = [
   './img/plan-mat.jpg',
   './img/plan-walkpeople.jpg',
   './img/plan-name.jpg',
+  './img/play-tug.jpg',
+  './img/play-weave.jpg',
+  './img/calm-foodtoy.jpg',
   './img/door-greet-04-open.jpg',
   './img/door-greet-05-reward.jpg',
   './img/door-greet-06-enter.jpg',
@@ -191,6 +205,21 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+/**
+ * Which document answers a request that missed the cache and has no network.
+ *
+ * It used to be './index.html' unconditionally, which was right while there was
+ * one. With two entry documents in the same scope, a cold offline load of
+ * excited.html would have been answered with the door app — same shell, wrong
+ * curriculum, and no sign to the reader that anything had gone wrong.
+ */
+const DOCUMENTS = ['./excited.html', './index.html'];
+
+const documentFor = (request) => {
+  const path = new URL(request.url).pathname;
+  return DOCUMENTS.find((doc) => path.endsWith(doc.slice(1))) || './index.html';
+};
+
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) return;
@@ -225,6 +254,8 @@ self.addEventListener('fetch', (event) => {
         caches.open(CACHE).then((cache) => cache.put(request, copy));
         return response;
       })
-      .catch(() => caches.match(request).then((hit) => hit || caches.match('./index.html')))
+      .catch(() =>
+        caches.match(request).then((hit) => hit || caches.match(documentFor(request)))
+      )
   );
 });

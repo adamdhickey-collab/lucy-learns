@@ -25,7 +25,8 @@ const md = fs.readFileSync(path.join(ROOT, WORKLIST), 'utf8');
 test('every worklist row is parsed, with its activity heading', () => {
   const rows = worklistRows(md);
   assert.equal(rows.length, worklistTotal(md));
-  assert.equal(rows.length, 37);
+  // The restyle's thirty-seven plus the three drawn for the boot camp pack.
+  assert.equal(rows.length, 40);
   for (const r of rows) {
     assert.match(r.key, /^[a-z0-9-]+$/);
     assert.notEqual(r.activity, '(none)', `${r.key} has no activity heading above it`);
@@ -50,7 +51,7 @@ test('every picture lands in exactly one state, and they sum to the register', (
   const states = ['approved', 'stale', 'draft', 'ready', 'blocked', 'none'];
   const total = states.reduce((n, s) => n + state.filter((r) => r.status === s).length, 0);
   assert.equal(total, state.length);
-  assert.equal(state.length, 37);
+  assert.equal(state.length, 40);
   for (const r of state) assert.ok(states.includes(r.status), `${r.key}: ${r.status}`);
 });
 
