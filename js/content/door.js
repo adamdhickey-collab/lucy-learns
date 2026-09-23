@@ -227,7 +227,7 @@ export const ACTIVITIES = [
     coverImage: 'door-sound-cover',
     estimatedMinutes: 5,
     difficulty: 'beginner',
-    equipment: ['{dog} on leash', 'Small high-value treats', 'Doorbell or a door to knock on'],
+    equipment: ['A leash, for levels one to three', 'Small high-value treats', 'Doorbell or a door to knock on', 'A helper, from level two onward'],
     safetyNotes: [
       'Stop while {dog} is still succeeding, not after a miss.',
       'One sound per repetition. Never repeat the bell to get a reaction.',
@@ -291,20 +291,49 @@ export const ACTIVITIES = [
       {
         number: 4,
         title: 'Call from a few feet away',
-        setup: 'After the sound, call {dog} from several feet back.',
+        setup: 'A helper rings the doorbell from outside while you wait a few feet back, then you call {dog}.',
         reps: 5,
         successCriteria: ['Comes to you after the sound', 'No charging the door'],
+        // Step one drew and said the handler at the door stepping on the leash
+        // — at the two levels where she is called to you from across the
+        // room. It has its own picture now, the moment before
+        // door-sound-03-name-distant, which is step three here. Step two
+        // said "Ring or knock once", which you cannot do from a few feet back
+        // or from another room. The sound comes from the helper on the porch,
+        // as it did at level three, and these two levels only move you away
+        // from it. The leash comes off for the same reason
+        // the name-distant picture draws none: she has to be free to come.
         overrides: {
+          0: {
+            instruction: 'Settle {dog} on {their} bed by the door, then walk a few feet back into the room.',
+            image: 'door-sound-01-apart',
+            helper: 'Take the leash off, so {she} is free to come to you when you call.',
+          },
+          1: {
+            instruction: 'Your helper rings the doorbell once from outside.',
+            image: 'door-sound-02-bell',
+            helper: 'One ring only. Agree it with your helper before you start, so nobody rings twice to get a reaction.',
+          },
           2: { instruction: 'Call {their} name from a few feet away.', cue: '{dog}!', image: 'door-sound-03-name-distant' },
         },
       },
       {
         number: 5,
         title: 'Call from another room',
-        setup: 'Call {dog} from the kitchen, bedroom, or living room.',
+        setup: 'A helper rings the doorbell from outside while you wait in the kitchen, bedroom, or living room, then you call {dog}.',
         reps: 5,
         successCriteria: ['Leaves the door and finds you', 'Arrives without barking'],
         overrides: {
+          0: {
+            instruction: 'Settle {dog} on {their} bed by the door, then go into another room.',
+            image: 'door-sound-01-apart',
+            helper: 'Take the leash off, so {she} can come and find you.',
+          },
+          1: {
+            instruction: 'Your helper rings the doorbell once from outside.',
+            image: 'door-sound-02-bell',
+            helper: 'One ring only. Agree it with your helper before you start, so nobody rings twice to get a reaction.',
+          },
           2: { instruction: 'Call {their} name from another room.', cue: '{dog}!', image: 'door-sound-03-name-distant' },
         },
       },
@@ -535,9 +564,17 @@ export const ACTIVITIES = [
     fallbackImage: 'door-sound-cover',
     fallbackSteps: FALLBACK_STEPS,
     steps: [
-      { instruction: 'Leash {dog} and settle {her} on {their} bed.', image: 'door-greet-01-settle' },
+      // Step one used to settle her on the bed and step three sent her to the
+      // bed she was already on. The bell is what brings her off it, and the
+      // send is the rep; the steps now say so.
+      { instruction: 'Leash {dog} and wait with {her} by {their} bed.', image: 'door-greet-01-settle' },
       { instruction: 'Your guest rings the bell.', image: 'door-sound-02-bell' },
-      { instruction: 'Send {her} to {their} bed.', cue: 'Go to bed', image: 'door-place-03-send' },
+      {
+        instruction: 'Send {her} to {their} bed.',
+        cue: 'Go to bed',
+        image: 'door-place-03-send',
+        helper: 'The bell will probably bring {her} up. Sending {her} back is the point of the rep.',
+      },
       { instruction: 'Open the door. The guest stays put.', image: 'door-greet-04-open' },
       { instruction: 'Reward {her} for holding the bed.', image: 'door-greet-05-reward' },
       { instruction: 'Bring the guest in and let {dog} settle.', image: 'door-greet-06-enter' },
@@ -564,6 +601,10 @@ export const ACTIVITIES = [
         reps: 3,
         endAfterStep: 5,
         successCriteria: ['Goes to the bed on cue', 'Holds it with the door open', 'No nipping'],
+        // A level that stops early stopped on a step that was never written as
+        // a last one: the rep ended with the door standing open and the guest
+        // on the porch. The last step of a short level says how it ends.
+        overrides: { 4: { instruction: 'Reward {her} for holding the bed, then close the door to finish.' } },
       },
       {
         number: 2,
@@ -573,7 +614,9 @@ export const ACTIVITIES = [
         endAfterStep: 6,
         successCriteria: ['Holds the bed while the guest enters', 'Settles within a few seconds'],
         // The image is the base step's now, so this override only rewords it.
-        overrides: { 5: { instruction: 'Guest steps inside and stands still by the door.' } },
+        overrides: {
+          5: { instruction: 'Guest steps in and stands by the door. Reward {dog} on the bed to finish.' },
+        },
       },
       {
         number: 3,
@@ -582,7 +625,12 @@ export const ACTIVITIES = [
         reps: 3,
         endAfterStep: 6,
         successCriteria: ['Holds the bed while the guest moves through the room'],
-        overrides: { 5: { instruction: 'Guest walks in, sits down, and ignores {her}.', image: 'door-greet-06-seated' } },
+        overrides: {
+          5: {
+            instruction: 'Guest walks in, sits, and ignores {her}. Reward {dog} on the bed to finish.',
+            image: 'door-greet-06-seated',
+          },
+        },
       },
       {
         number: 4,

@@ -166,6 +166,14 @@ export const IMAGES = withThumb({
     src: 'img/door-sound-01-setup.jpg',
     alt: 'Lucy sits beside her handler near the closed front door with the leash running down under the handler’s shoe.',
   },
+  // Levels 4 and 5 of Doorbell Predicts Rewards call her from across the
+  // house, and their first step drew 01-setup — handler beside her, leash
+  // under a shoe — over words saying to walk away with the leash off. This is
+  // the moment before 03-name-distant, drawn in the same hall.
+  'door-sound-01-apart': {
+    src: 'img/door-sound-01-apart.jpg',
+    alt: 'Lucy lies settled on her bed near the closed front door, watching her handler walk away from her across the hall.',
+  },
   'door-sound-02-self': {
     src: 'img/door-sound-02-self.jpg',
     alt: 'A handler knocks on the door frame while standing right beside Lucy with the leash under her foot.',
@@ -746,8 +754,9 @@ export const isAvailable = (activity) => Boolean(activity) && activity.available
  *
  * Almost everything in both curricula is a drill: a short thing you do, watch,
  * and do again, five times in five minutes, where the count is what makes the
- * observation worth anything. Three exercises in the boot camp pack are not.
- * Tug is a game. Invisible Dog is an hour with a leash on and the dog ignored.
+ * observation worth anything. Four exercises in the boot camp pack are not.
+ * Speed Drill Sits is thirty seconds of chasing, with no pause for a verdict
+ * between one sit and the next. Tug is a game. Invisible Dog is an hour with a leash on and the dog ignored.
  * Interactive Toys is dinner in a puzzle and then leaving the room. You do
  * each of them once and you are done, and the handout asks for them daily
  * rather than five times over.

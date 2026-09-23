@@ -1,0 +1,29 @@
+{
+  "id": "door-sound-01-apart",
+  "briefId": "cool-flat-v2",
+  "shippedUnder": "cool-flat-v2",
+  "title": "Settle her on her bed, then walk away from the door",
+  "activity": "Doorbell Predicts Rewards",
+  "step": "Levels 4 and 5, step 1 of 5 — the setup for calling her from a distance",
+  "note": "New, not a redraw. Levels 4 and 5 used door-sound-01-setup here — handler beside the dog, leash trapped under her shoe — over steps that call the dog from a few feet back and from another room, so the picture taught the opposite of the words. The step went text-only until this was drawn. It is the moment before door-sound-03-name-distant, which is step 3 at the same two levels, so that master is attachment 1: same hall, same camera, same bed, same door, and no leash, as it draws none. One picture serves both levels by showing the handler mid-walk and facing away rather than arrived somewhere: walking off is true of 'a few feet back' and of 'into another room' alike. Two traps are carried over from the set's history. The exemplar's poses must not cross over — name-distant's Lucy sits and looks over her shoulder and its handler stands facing her with a hand out, and round 102 of door-sound-01-setup copied a gaze straight off its exemplar — so the scene text names both poses as ones not to copy. And the handler is sized by number, because name-distant failed its 21:9 crop three rounds running on a figure drawn taller than the band. DRAWN THROUGH A CHAT WINDOW, not through `generate`: the API returned 429, no credits. Two rounds from the prompt `plan` assembles, the same three references in the same order, and the flatness correction front-loaded as on the boot camp scenes. Round 1 held every clause but one — the handler measured 52.0% of the frame height against 'no more than half' — and round 2, asked in the same chat to change only her size, came back at 45.7% with the room, Lucy and the door unchanged. Kept round 2.",
+  "blocks": [
+    "style",
+    "cast"
+  ],
+  "references": [
+    {
+      "scene": "door-sound-03-name-distant",
+      "role": "style:exemplar"
+    },
+    {
+      "path": "art/source/trainer-reference.jpg",
+      "role": "likeness:handler"
+    },
+    {
+      "path": "art/source/lucy-reference.jpg",
+      "role": "likeness:lucy"
+    }
+  ],
+  "scene": "The same entry hall as attachment 1, seen from the same place: match attachment 1 exactly for the camera, the eye level, the distance, the plaster wall, the baseboard, the oak floor, the closed charcoal front door on the right with its four-pane window, the doormat in front of it, and the cool-grey dog bed — a thick padded mattress a hand deep with a soft raised edge — in the same spot to the left of the door. This is the moment BEFORE attachment 1, and the two figures are posed differently from it. DO NOT COPY THE POSES IN ATTACHMENT 1: there Lucy sits and looks back over her shoulder, and the handler stands still facing Lucy with one hand held out. Here, LUCY LIES DOWN on the bed, chest down with her front legs stretched forward on the mattress and her hind legs tucked, relaxed and settled, head up, her whole muzzle pointed left toward the handler as the handler walks away. THE HANDLER IS WALKING AWAY FROM LUCY toward the left side of the frame: mid-stride, one foot ahead of the other, her body turned to the left in profile so her back is toward Lucy and the bed, her face looking ahead of her to the left and not back at the dog. Both of her hands are empty and swing naturally at her sides; nothing is raised, nothing is pointing, nothing is held out. She is upright and relaxed, not crouching and not leaning. A clear span of empty floor lies between her trailing heel and the bed — she has already covered a few paces. NO LEASH anywhere in this image: not on Lucy, not in the handler's hands, not on the floor, not on the bed. The door stays closed and nobody else is present. THE DOOR'S WINDOW: a four-pane grid in the upper half of the door, two panes across and two down, pale spruce foliage beyond, exactly as in attachment 1. HOW BIG THE HANDLER IS DRAWN: from the top of her head to the soles of her shoes she occupies no more than HALF the height of the picture — about 540 pixels of the 1086-pixel frame — the same size as the handler in attachment 1. Above her head leave roughly a fifth of the frame as empty plaster wall, and below her feet roughly a quarter as floor. Place her so her whole figure sits between a fifth and two fifths of the way across the picture from the left edge — not hard against the left edge. Background: the plaster wall, one baseboard line, the closed door, the doormat, the bed. Nothing else in the room. Shot straight on from standing eye level.",
+  "mustBeTrue": "the handler is mid-stride walking away from Lucy toward the left with her back to the bed and both hands empty, Lucy is lying down on the thick padded bed near the closed door with her head up watching the handler go, there is no leash anywhere in the picture, a clear span of empty floor separates the handler from the bed, the door's window is a four-pane grid — two across and two down, and the handler is drawn no more than half the frame tall with clear wall above her head and floor below her feet."
+}
