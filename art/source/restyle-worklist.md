@@ -137,6 +137,16 @@ extend the list rather than reopening it.
 | [x] | `play-weave` | **cover** · square-safe · new | Lucy walks between her handler's separated legs, her head and front legs out one side while her tail is still on the other. |
 | [x] | `calm-foodtoy` | **cover** · square-safe · new · nobody in frame | Lucy lies on her bed with a dark rubber food toy held between her front paws, nose down and working at it. |
 
+### Steps that outgrew their picture
+
+A step rewritten so that the picture beside it stopped being true. Like the
+boot camp three, not a restyle — nothing existed to redraw — and registered for
+the same reason: `approve` refuses a key with no row.
+
+| ✓ | key | notes | scene (the alt text) |
+| --- | --- | --- | --- |
+| [ ] | `door-sound-01-apart` | new · no leash | Lucy lies settled on her bed near the closed front door, watching her handler walk away from her across the hall. |
+
 ### Outside the list, on purpose
 
 Two files in `img/` carry no key in the `IMAGES` map. Neither belongs on the

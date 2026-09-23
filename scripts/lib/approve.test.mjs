@@ -35,11 +35,12 @@ test('the worklist accounts for every picture, done or not', () => {
   // The ledger is gone; the worklist is the only register now, so what is left
   // to pin is that it adds up.
   const total = worklistTotal(worklist);
-  // 37 for the restyle, plus the three drawn for the boot camp pack. A literal
+  // 37 for the restyle, three drawn for the boot camp pack, and one for a step
+  // rewritten out from under its picture (door-sound-01-apart). A literal
   // rather than a derived number on purpose: this is the canary that catches a
   // row deleted by a bad edit, and a count computed from the file it is meant
   // to be checking cannot do that.
-  assert.equal(total, 40);
+  assert.equal(total, 41);
   const rows = worklistRows(worklist);
   const remaining = worklistRemaining(worklist);
   assert.equal(rows.filter((r) => !r.ticked).length, remaining.length);
@@ -372,11 +373,12 @@ test('every avatar but dog-01 is drawn off dog-01', () => {
 
 test('avatars are outside the register, so the finish line does not move', () => {
   const md = fs.readFileSync(path.join(ROOT, WORKLIST), 'utf8');
-  // Was "the thirty-seven" when that was the whole register. It is forty now —
-  // the restyle's thirty-seven plus three drawn for the boot camp pack — and
+  // Was "the thirty-seven" when that was the whole register. It is forty-one
+  // now — the restyle's thirty-seven, three drawn for the boot camp pack and
+  // one for a rewritten door step — and
   // the claim is unchanged: an avatar is not a row, so approving one cannot
   // move the finish line.
-  assert.equal(worklistTotal(md), 40);
+  assert.equal(worklistTotal(md), 41);
   // A row, not a mention. This used to grep for the backticked key anywhere in
   // the file, and the worklist's own notes name `dog-01` in prose — the line
   // recording that lucy-portrait.jpg was retired in its favour — which is not

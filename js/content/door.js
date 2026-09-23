@@ -227,7 +227,7 @@ export const ACTIVITIES = [
     coverImage: 'door-sound-cover',
     estimatedMinutes: 5,
     difficulty: 'beginner',
-    equipment: ['{dog} on leash', 'Small high-value treats', 'Doorbell or a door to knock on'],
+    equipment: ['{dog} on leash', 'Small high-value treats', 'Doorbell or a door to knock on', 'A helper, from level two onward'],
     safetyNotes: [
       'Stop while {dog} is still succeeding, not after a miss.',
       'One sound per repetition. Never repeat the bell to get a reaction.',
@@ -291,18 +291,26 @@ export const ACTIVITIES = [
       {
         number: 4,
         title: 'Call from a few feet away',
-        setup: 'After the sound, call {dog} from several feet back.',
+        setup: 'A helper rings the doorbell from outside while you wait a few feet back, then you call {dog}.',
         reps: 5,
         successCriteria: ['Comes to you after the sound', 'No charging the door'],
         // Step one said to stand at the door stepping on the leash — at the
-        // two levels where she is called to you from across the room. Its
-        // picture shows exactly that, so the step goes without one rather
-        // than contradict the words over it.
+        // two levels where she is called to you from across the room — and
+        // step two still said "Ring or knock once", which you cannot do from
+        // a few feet back or from another room. The sound comes from the
+        // helper on the porch, as it did at level three, and these two levels
+        // only move you away from it. The leash comes off for the same reason
+        // the name-distant picture draws none: she has to be free to come.
         overrides: {
           0: {
-            instruction: 'Leave {dog} near the door and step a few feet back into the room.',
+            instruction: 'Settle {dog} on {their} bed by the door, then walk a few feet back into the room.',
             image: null,
-            helper: 'Drop the leash, or leave it off, so {she} is free to come to you when you call.',
+            helper: 'Take the leash off, so {she} is free to come to you when you call.',
+          },
+          1: {
+            instruction: 'Your helper rings the doorbell once from outside.',
+            image: 'door-sound-02-bell',
+            helper: 'One ring only. Agree it with your helper before you start, so nobody rings twice to get a reaction.',
           },
           2: { instruction: 'Call {their} name from a few feet away.', cue: '{dog}!', image: 'door-sound-03-name-distant' },
         },
@@ -310,14 +318,19 @@ export const ACTIVITIES = [
       {
         number: 5,
         title: 'Call from another room',
-        setup: 'Call {dog} from the kitchen, bedroom, or living room.',
+        setup: 'A helper rings the doorbell from outside while you wait in the kitchen, bedroom, or living room, then you call {dog}.',
         reps: 5,
         successCriteria: ['Leaves the door and finds you', 'Arrives without barking'],
         overrides: {
           0: {
-            instruction: 'Leave {dog} near the door and go into another room.',
+            instruction: 'Settle {dog} on {their} bed by the door, then go into another room.',
             image: null,
-            helper: 'Off leash, or with it dropped, so {she} can come and find you.',
+            helper: 'Take the leash off, so {she} can come and find you.',
+          },
+          1: {
+            instruction: 'Your helper rings the doorbell once from outside.',
+            image: 'door-sound-02-bell',
+            helper: 'One ring only. Agree it with your helper before you start, so nobody rings twice to get a reaction.',
           },
           2: { instruction: 'Call {their} name from another room.', cue: '{dog}!', image: 'door-sound-03-name-distant' },
         },
