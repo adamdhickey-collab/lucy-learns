@@ -357,7 +357,7 @@ const currentSteps = () => {
  * the reflex "went well" the criteria block exists to prevent, made
  * automatic. The steps turn; the judgement waits for a thumb.
  *
- * Not with "Why this matters" open either. A drawer open is somebody reading,
+ * Not with "More about this step" open either. A drawer open is somebody reading,
  * and a screen that turns over under a paragraph loses them the paragraph.
  */
 function paceWanted() {
@@ -994,10 +994,15 @@ function stepScreen(activity, level) {
               of an activity, which pushed the instruction up the screen and put
               a paragraph of reasoning between the step and the thumb reaching
               for Next. The step is the screen; the reasoning is there when it
-              is wanted. */ ''}
+              is wanted.
+
+              Labelled "Why this matters" until a read-through found half the
+              drawers held how rather than why: which line to pick, how short
+              the leash, what to do when she will not look. A household that
+              skips a "why" as optional skipped the instructions with it. */ ''}
         ${step.helper
           ? html`<details class="disclosure" data-why>
-              <summary>Why this matters</summary>
+              <summary>More about this step</summary>
               <div class="disclosure-body">${step.helper}</div>
             </details>`
           : ''}

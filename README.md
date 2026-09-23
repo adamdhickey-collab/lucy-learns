@@ -250,8 +250,11 @@ All content is data. Nothing about a new activity requires touching a screen.
 3. **Add the activity** to `ACTIVITIES`:
 
    - `steps` is the core loop that repeats at every level. Keep each
-     `instruction` under about twelve words. Put the reasoning in `helper`,
-     which sits behind a "Why this matters" disclosure.
+     `instruction` under about twelve words. Put the reasoning and the finer
+     how-to in `helper`, which sits behind a "More about this step"
+     disclosure — but anything the step cannot be done without (a duration, a
+     count, which side of the line) belongs in the instruction, because the
+     disclosure starts closed.
    - `cue` should use the household wording from `DEFAULT_COMMANDS`. It is
      resolved through `resolveCue()` at render time, so if you rename a cue on
      the Lucy screen, every activity updates.

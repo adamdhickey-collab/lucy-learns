@@ -176,16 +176,18 @@ test('a practice asks for exactly one pass, whatever the household setting', () 
   }
 });
 
-test('the three practices are the three the handout does not repeat', () => {
+// Speed Drill Sits joined the three: thirty seconds of chasing with no room
+// for a verdict after each sit, which the drill loop was asking for.
+test('the four practices are the four the handout does not repeat', () => {
   assert.deepEqual(
     excited.ACTIVITIES.filter(isPractice).map((a) => a.id).sort(),
-    ['ex-interactive-toys', 'ex-invisible-dog', 'ex-tug']
+    ['ex-interactive-toys', 'ex-invisible-dog', 'ex-speed-sit', 'ex-tug']
   );
 });
 
 test('everything else is still a drill, and the door pack is entirely drills', () => {
   const drills = excited.ACTIVITIES.filter((a) => !isPractice(a));
-  assert.equal(drills.length, 10);
+  assert.equal(drills.length, 9);
   for (const a of drills) assert.equal(a.kind, undefined, `${a.id} has a kind`);
   for (const a of door.ACTIVITIES) {
     assert.equal(isPractice(a), false, `${a.id} is a practice`);
@@ -251,3 +253,25 @@ test('an empty history is zero cleared and not complete', async () => {
   assert.equal(all.complete, false);
   assert.ok(all.total > 0, 'there should be levels to clear');
 });
+
+// ---------------------------------------------------------------------------
+// Every cue a step shows is one the household can see and reword.
+//
+// A cue is resolved against the pack's DEFAULT_COMMANDS; one that is not there
+// renders as its seed text and never appears on the commands screen. That is
+// how "lie down" came to be cued as "Sit" in Stay and as "Settle" in Crawl —
+// there was no word for it, so the steps borrowed the nearest one.
+const cuesIn = (pack) =>
+  pack.ACTIVITIES.flatMap((a) => [
+    ...a.steps.map((s) => [a.id, s.cue]),
+    ...a.levels.flatMap((l) => Object.values(l.overrides || {}).map((o) => [`${a.id} L${l.number}`, o.cue])),
+  ]).filter(([, cue]) => cue);
+
+for (const [name, pack] of [['door', door], ['excited', excited]]) {
+  test(`every ${name} step cue is a household command`, () => {
+    const known = new Set(pack.DEFAULT_COMMANDS.map((c) => c.cue.toLowerCase()));
+    for (const [where, cue] of cuesIn(pack)) {
+      assert.ok(known.has(cue.toLowerCase()), `${where} says “${cue}”, which is not in DEFAULT_COMMANDS`);
+    }
+  });
+}

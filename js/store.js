@@ -175,6 +175,21 @@ function migrate(next) {
     const { listen: _dropped, ...voice } = next.voice;
     next.voice = voice;
   }
+  // "They" is no longer offered (see PRONOUNS). fillDog already reads it as
+  // "she", but the dog sheet would open with neither chip pressed — a choice
+  // shown as unmade that the app is quietly making anyway.
+  if (next.dog && next.dog.pronoun === 'they') {
+    next.dog = { ...next.dog, pronoun: 'she' };
+  }
+  // A cue added to the pack after an install was made is missing from its
+  // stored list, and cueFor answers a missing id with an empty string — so the
+  // step shows Say “” where the new word should be. Append the ones it lacks,
+  // and leave every cue the household has already reworded alone.
+  if (Array.isArray(next.commands)) {
+    const have = new Set(next.commands.map((c) => c && c.id));
+    const missing = DEFAULT_COMMANDS.filter((c) => !have.has(c.id));
+    if (missing.length) next.commands = [...next.commands, ...missing.map((c) => ({ ...c }))];
+  }
   return next;
 }
 
@@ -294,19 +309,20 @@ export function updateCommand(id, cue) {
  * source and then come out as "him bed" for a male dog, and a token that
  * reads wrong in the source is one nobody types by mistake.
  *
- * Verbs are not tokenised. "{she} is" comes out as "they is", so any sentence
- * that conjugates after the pronoun is written around the name instead —
- * "after {dog} lands", not "after {she} lands".
+ * There is no "they". It was offered, and it could not be written for: verbs
+ * are not tokenised, so every "{she} is" and "{she} looks" in the content came
+ * out as "they is" and "they looks" — more than fifty sentences in the Excited
+ * pack alone. Two answers that conjugate the same way are two answers every
+ * sentence already handles. An install that stored "they" reads as "she"
+ * through the fallback in fillDog below, the same as one that stored nothing.
  */
 const PRONOUNS = {
   she: { she: 'she', her: 'her', their: 'her' },
   he: { she: 'he', her: 'him', their: 'his' },
-  they: { she: 'they', her: 'them', their: 'their' },
 };
 export const PRONOUN_CHOICES = [
   { id: 'she', label: 'She' },
   { id: 'he', label: 'He' },
-  { id: 'they', label: 'They' },
 ];
 
 const TOKEN = /\{(dog|she|her|their|She|Her|Their)\}/g;

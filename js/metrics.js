@@ -173,7 +173,7 @@ export function readyToAdvance(activityId, levelNumber) {
     // The rule below divides successes by repetitions, and a practice has one
     // of each by definition -- one pass, one observation -- so it would be
     // held at reps < 3 forever and never open the level after it. Today all
-    // three practices have a single level and nothing would notice; the fourth
+    // four practices have a single level and nothing would notice; the fifth
     // one written with two levels would, silently, which is the kind of trap
     // worth closing while the reason is still on screen.
     if (clearsOnEffort(levelNumber) || isPractice(activityById(activityId))) {

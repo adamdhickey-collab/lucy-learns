@@ -746,8 +746,9 @@ export const isAvailable = (activity) => Boolean(activity) && activity.available
  *
  * Almost everything in both curricula is a drill: a short thing you do, watch,
  * and do again, five times in five minutes, where the count is what makes the
- * observation worth anything. Three exercises in the boot camp pack are not.
- * Tug is a game. Invisible Dog is an hour with a leash on and the dog ignored.
+ * observation worth anything. Four exercises in the boot camp pack are not.
+ * Speed Drill Sits is thirty seconds of chasing, with no pause for a verdict
+ * between one sit and the next. Tug is a game. Invisible Dog is an hour with a leash on and the dog ignored.
  * Interactive Toys is dinner in a puzzle and then leaving the room. You do
  * each of them once and you are done, and the handout asks for them daily
  * rather than five times over.

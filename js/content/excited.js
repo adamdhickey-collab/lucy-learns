@@ -89,6 +89,11 @@ export const PLANNED_ACTIVITIES = [];
 // not both.
 export const DEFAULT_COMMANDS = [
   { id: 'sit', situation: 'Sit', cue: 'Sit' },
+  // Lying down had no word of its own, so the steps that ask for it borrowed
+  // one: Stay said "Sit" over an instruction to lie down, and Crawl said
+  // "Settle", which is the switch-off exercise's word and teaches the wrong
+  // thing if it is spent on a trick.
+  { id: 'down', situation: 'Lie down', cue: 'Down' },
   { id: 'stay', situation: 'Remain in position', cue: 'Stay' },
   { id: 'release', situation: 'End position', cue: 'Ok' },
   { id: 'mark', situation: 'Mark the moment it is right', cue: 'Yes!' },
@@ -235,7 +240,10 @@ export const ACTIVITIES = [
     shortTitle: 'Stay',
     icon: 'act-stay',
     shortPurpose: '{dog} holds {their} position until you release {her}.',
-    coverImage: 'door-stay-cover',
+    // Was the door-stay cover: a dog lying on a bed across the room while the
+    // handler held the front door open, over a level-one sit-stay with you
+    // standing right there. This is the cue itself, at arm's length.
+    coverImage: 'door-stay-02-cue',
     estimatedMinutes: 5,
     difficulty: 'beginner',
     equipment: ['Small treats', '{Their} bed or a marked spot', 'A timer or a clock'],
@@ -246,26 +254,34 @@ export const ACTIVITIES = [
     ],
     fallbackImage: BREATHER,
     fallbackSteps: FALLBACK_STEPS,
+    // Step three names its duration on every level. It said "Hold the count
+    // for this level", and the count was printed only on the get-ready screen,
+    // which is gone by step three — a household mid-rep had no way to find out
+    // what the count was.
     steps: [
       {
         instruction: 'Ask {dog} to sit.',
         cue: 'Sit',
         helper:
-          'A sit-stay first. Down-stay is the same exercise from a harder position, and it comes at level two.',
+          'A sit-stay first. The down-stay is the same exercise from a harder position, and it joins at level two.',
       },
-      { instruction: 'Cue the stay and hold {their} eye for one beat.', cue: 'Stay' },
       {
-        instruction: 'Hold the count for this level.',
+        instruction: 'Cue the stay, and look at {her} for a second before you do anything else.',
+        cue: 'Stay',
+        helper: 'The pause tells {her} the cue is finished and the waiting has started.',
+      },
+      {
+        instruction: 'Stand right beside {her} and count up to 30 seconds.',
         helper:
-          'Watch the clock rather than {her}. The handout is specific about durations because a stay that is guessed at drifts shorter every session.',
+          'Start at five seconds and add a few each rep. Watch the clock rather than {her}: a stay that is guessed at drifts shorter every session. If {dog} gets up, go back to the last count that worked.',
       },
       {
-        instruction: 'Go back to {her} and mark it.',
+        instruction: 'Mark it while {dog} is still in position, and pay {her} there.',
         cue: 'Yes!',
         helper:
-          'Walk back and pay {her} where {she} is. Calling {her} to you for the treat teaches {her} that breaking the stay is what earns it.',
+          'If you have stepped away, walk back to {her} to pay. Calling {her} to you for the treat teaches {her} that breaking the stay is what earns it.',
       },
-      { instruction: 'Release {her} with your word, then reset.', cue: 'Ok' },
+      { instruction: 'Release {her} with your word, then reset for the next rep.', cue: 'Ok' },
     ],
     levels: [
       {
@@ -289,7 +305,21 @@ export const ACTIVITIES = [
         cadence: { min: 1, max: 2, per: 'day' },
         reps: 4,
         successCriteria: ['Holds a minute in either position', 'Waits for the release word'],
-        overrides: { 0: { instruction: 'Ask {dog} to sit, or to lie down.', cue: 'Sit' } },
+        // One cue per screen, so the step asks for the down and says to swap:
+        // it showed "Sit" over an instruction to sit or lie down, and the
+        // helper still promised the down-stay "at level two" on level two.
+        overrides: {
+          0: {
+            instruction: 'Ask {dog} to lie down. Ask for a sit instead on the next rep.',
+            cue: 'Down',
+            helper:
+              'Swap between the two each rep, so “Stay” comes to mean hold whatever position you asked for.',
+          },
+          2: {
+            instruction: 'Stay close and count up to one minute.',
+            helper: 'Build to the minute across the session. The first rep does not have to be the longest.',
+          },
+        },
       },
       {
         number: 3,
@@ -304,9 +334,9 @@ export const ACTIVITIES = [
         ],
         overrides: {
           2: {
-            instruction: 'Hold the count, and look away from {her} while it runs.',
+            instruction: 'Hold for two to three minutes, and look at your phone while it runs.',
             helper:
-              'Disengaging is the point of this rung. Stay close enough to stop a break, but stop watching {her}.',
+              'Or write a grocery list: anything ordinary. Looking away is the point of this level. Stay close enough to stop a break, but stop watching {her}.',
           },
         },
       },
@@ -320,7 +350,7 @@ export const ACTIVITIES = [
         successCriteria: ['Holds while you are out of sight', 'Still there when you come back'],
         overrides: {
           2: {
-            instruction: 'Walk out of the room, wait, then come back.',
+            instruction: 'Hold three to four minutes nearby, then leave the room for thirty seconds.',
             helper:
               'Leave before {she} expects it and come back before {she} worries. Out of sight is a big raise; thirty seconds of it is plenty.',
           },
@@ -339,9 +369,8 @@ export const ACTIVITIES = [
         ],
         overrides: {
           2: {
-            instruction: 'Do something exciting while the count runs.',
-            helper:
-              'Answer the door, throw a toy, open the fridge. This is the rung the whole handout is aiming at.',
+            instruction: 'Hold for four to five minutes while you do something exciting.',
+            helper: 'Answer the door, throw a toy, or make a snack. This is the level the whole handout is aiming at. If {dog} breaks, make the exciting thing smaller before you make the stay shorter.',
           },
         },
       },
@@ -374,21 +403,29 @@ export const ACTIVITIES = [
     fallbackImage: BREATHER,
     fallbackSteps: FALLBACK_STEPS,
     steps: [
+      // The examples were behind the drawer, and they are what makes the step
+      // doable: "a line you can both see" read cold does not say where.
       {
-        instruction: 'Pick a line you can both see.',
-        helper:
-          'The edge of a rug, a doorway, the change in the floor at the kitchen. An invisible line is one you will enforce inconsistently.',
+        instruction: 'Pick a line you can both see, like the edge of a rug or a doorway.',
+        helper: 'Where the floor changes works too. An invisible line is one you will enforce inconsistently.',
       },
-      { instruction: 'Send {her} back over it.', cue: 'Back' },
+      // "Send her back over it" assumed the word was already taught, and did
+      // not say which side she ends up on.
       {
-        instruction: 'Get on with your job and stop supervising {her}.',
+        instruction: 'Send {her} to the far side of the line, away from you, and pay {her} there.',
+        cue: 'Back',
+        helper:
+          'If {dog} does not know the word yet, walk calmly into {their} space until {she} steps back over the line, then pay {her} on {their} side.',
+      },
+      {
+        instruction: 'Get on with your job for at least five minutes, and stop watching {her}.',
         helper:
           'This is the exercise. If you stand and watch the line, you are the one holding it rather than {her}.',
       },
       {
-        instruction: 'If {she} crosses, walk {her} back and reset.',
+        instruction: 'If {she} crosses, walk {her} back and carry on.',
         helper:
-          'Quietly, without a second cue and without a telling off. Put {her} back where the line is and carry on.',
+          'Quietly, without a second cue and without scolding. Put {her} back over the line and return to your job.',
       },
       { instruction: 'Invite {her} in when you are done.', cue: 'Ok' },
     ],
@@ -419,9 +456,9 @@ export const ACTIVITIES = [
         ],
         overrides: {
           2: {
-            instruction: 'Answer the door, start dinner, or begin the game.',
+            instruction: 'Answer the door, make dinner, or play a family game while {she} holds the line.',
             helper:
-              'The exciting thing is the point now. Hold your own line about the line, and do not check on {her} mid-job.',
+              'The exciting thing is the point now. Be as firm about the line as you want {her} to be, and do not check on {her} mid-job.',
           },
         },
       },
@@ -431,7 +468,7 @@ export const ACTIVITIES = [
   // -------------------------------------------------------------------------
   // One STEP in the handout with three practice contexts under it, and the
   // three are plainly a ladder: a dropped biscuit in your own kitchen is not
-  // another dog on a pavement. So they become levels, which is what the app
+  // another dog on a sidewalk. So they become levels, which is what the app
   // has for "the same exercise, harder".
   {
     id: 'ex-leave-it',
@@ -445,7 +482,7 @@ export const ACTIVITIES = [
     coverImage: 'plan-walkpeople',
     estimatedMinutes: 5,
     difficulty: 'intermediate',
-    equipment: ['A leash', 'Something dull to leave', 'Better treats in your pocket'],
+    equipment: ['A leash', 'Something dull to leave, like a plain biscuit', 'Better treats in your pocket'],
     safetyNotes: [
       'Never let {her} have the thing {she} left. The payment always comes from you.',
       'Say it once. A cue repeated four times is not a cue, it is nagging.',
@@ -453,30 +490,41 @@ export const ACTIVITIES = [
     ],
     fallbackImage: BREATHER,
     fallbackSteps: FALLBACK_STEPS,
+    // The equipment said "something dull", step one said "something tempting"
+    // and its helper said "dull first": three answers to one question. And
+    // nothing said what stops her getting it, on a screen whose safety note is
+    // that she never may. The release had no step and no word either.
     steps: [
       {
-        instruction: 'Put something tempting on the floor, a few steps away.',
-        helper: 'Dull first. You are teaching the word, not testing {their} self control.',
+        instruction: 'Put something mildly interesting on the floor, a few steps ahead.',
+        helper: 'Dull first. You are teaching the word, not testing {their} self-control.',
       },
-      { instruction: 'Walk {her} toward it on a short leash.' },
+      {
+        instruction: 'Walk {her} toward it on a leash short enough that {she} cannot reach it.',
+        helper: 'If {she} lunges, the leash stops {her}, not your voice. Then try again with something duller or from further away.',
+      },
       { instruction: 'Say it once, the moment {she} notices it.', cue: 'Leave it' },
       {
-        instruction: 'Mark the instant {she} looks away.',
+        instruction: 'Mark the instant {she} looks away from it.',
         cue: 'Yes!',
         helper:
           'The instant. Not when {she} looks at you — when {she} stops looking at the thing. That is the moment you are paying for.',
       },
       {
-        instruction: 'Pay {her} from your hand and walk on past.',
-        helper: 'Hold the “Leave it” until you are past it, as the handout says. Then release.',
+        instruction: 'Pay {her} from your hand and keep walking past it.',
+        helper: 'The “Leave it” still holds until you are past it, as the handout says.',
       },
+      { instruction: 'Once you are past it, release {her}.', cue: 'Ok' },
     ],
     levels: [
+      // Its setup said "Cold trials", which is trainer shorthand, over steps
+      // that had you placing the food and walking up to it — the opposite of a
+      // piece dropped by accident. The steps now do what the setup says.
       {
         number: 1,
         title: 'Dropped food in the kitchen',
         setup:
-          'Cold trials. Drop a piece of food on the kitchen floor as if by accident.',
+          'Drop a piece of food on the kitchen floor as if by accident, when {dog} is not expecting a training session.',
         cadence: { min: 1, max: 2, per: 'week' },
         reps: 5,
         successCriteria: [
@@ -484,6 +532,22 @@ export const ACTIVITIES = [
           'Takes the treat from your hand',
           'Does not dive for the floor',
         ],
+        overrides: {
+          0: {
+            instruction: 'With {dog} nearby in the kitchen, drop a piece of food as if by accident.',
+            helper:
+              'Trainers call this a cold trial: it works best when it does not look like training.',
+          },
+          1: {
+            instruction: 'Stay close enough to cover the food with your foot.',
+            helper: 'If {she} goes for it, cover it. {She} must not get it, and your foot is faster than a second cue.',
+          },
+          4: {
+            instruction: 'Pay {her} from your hand, then pick the food up yourself.',
+            helper: 'The food on the floor is never the reward. Picking it up yourself is how {she} learns that.',
+          },
+          5: { instruction: 'Once the food is off the floor, release {her}.', cue: 'Ok' },
+        },
       },
       {
         number: 2,
@@ -493,15 +557,12 @@ export const ACTIVITIES = [
         cadence: { min: 1, max: 2, per: 'week' },
         reps: 5,
         successCriteria: ['Walks past without pulling', 'Holds it until you are clear of the thing'],
-        overrides: {
-          1: { instruction: 'Walk {her} straight toward it and keep walking.' },
-        },
       },
       {
         number: 3,
         title: 'On a walk, past another dog',
         setup:
-          'Practice on your daily walk, on real distractions — another dog, a squirrel, something on the pavement.',
+          'Practice on your daily walk, on real distractions — another dog, a squirrel, something on the sidewalk.',
         cadence: { min: 1, max: 2, per: 'week' },
         reps: 4,
         successCriteria: [
@@ -511,11 +572,14 @@ export const ACTIVITIES = [
         ],
         overrides: {
           0: {
-            instruction: 'Spot the distraction before {she} does.',
+            instruction: 'On your walk, spot the distraction before {she} does.',
             helper:
               'Outdoors your advantage is seeing it first. A “Leave it” said before {she} locks on is a different exercise from one said after.',
           },
-          1: { instruction: 'Keep walking, and keep the leash short and loose.' },
+          1: {
+            instruction: 'Keep walking, with the leash short and loose.',
+            helper: 'If {she} lunges, the leash stops {her}, not your voice. Next time, give the distraction a wider berth.',
+          },
         },
       },
     ],
@@ -523,10 +587,15 @@ export const ACTIVITIES = [
 
   // -------------------------------------------------------------------------
   // The handout gives this one three sentences and a frequency, and it is the
-  // only exercise in the sheet that is explicitly a game. The steps keep that:
-  // a rep is a chase and a sit, not a drill.
+  // only exercise in the sheet that is explicitly a game. The steps keep that.
+  //
+  // A practice rather than a drill. As a drill, a rep was one chase and one
+  // sit, and the app stopped after every sit to ask how it went — in an
+  // exercise whose whole instruction is thirty seconds, go again straight away.
+  // The five screens are one round now, and the loop inside it is a step.
   {
     id: 'ex-speed-sit',
+    kind: PRACTICE,
     slug: 'speed-drill-sits',
     title: 'Speed Drill Sits',
     programId: 'wait',
@@ -558,18 +627,21 @@ export const ACTIVITIES = [
         cue: 'Yes!',
         helper: 'The faster {she} sits, the faster the food arrives. That is the whole lesson.',
       },
-      { instruction: 'Go again straight away, while {she} is still keen.' },
+      {
+        instruction: 'Run again straight away, and repeat until thirty seconds are up.',
+        helper: 'Stop while {she} still wants more. Ending on a keen sit is what makes tomorrow’s round easy.',
+      },
     ],
     levels: [
       {
         number: 1,
         title: 'Thirty seconds, every day',
-        setup: 'A fast, silly thirty seconds.',
+        setup: 'A fast, silly thirty seconds of chasing and sitting.',
         cadence: { min: 1, max: 1, per: 'day' },
-        reps: 5,
+        reps: 1,
         successCriteria: [
           'Sits without the cue being repeated',
-          'Sits faster by the last rep than the first',
+          'Sits faster by the last sit than the first',
           'Stays keen the whole thirty seconds',
         ],
       },
@@ -611,6 +683,10 @@ export const ACTIVITIES = [
           'A treat in each hand so you can pay from either. The hands go away so that your face is the only thing left to look at.',
       },
       { instruction: 'Ask for {their} eyes.', cue: 'Watch me' },
+      // Right for level one's single second, and wrong from level two on,
+      // where the levels ask for a hold: every later level overrides this
+      // step with its own count, because marking the moment of contact at a
+      // ten-second level pays the glance and never the hold.
       {
         instruction: 'Mark the moment {she} meets your eyes.',
         cue: 'Yes!',
@@ -640,7 +716,7 @@ export const ACTIVITIES = [
         number: 2,
         title: 'Five to ten seconds, with a distraction',
         setup:
-          'Five to ten second increments while somebody shakes a bag of treats nearby.',
+          'Hold eye contact for five to ten seconds while somebody shakes a bag of treats nearby.',
         cadence: { min: 1, max: 2, per: 'week' },
         reps: 5,
         successCriteria: ['Holds five seconds or more', 'Looks back at you after the noise'],
@@ -649,31 +725,50 @@ export const ACTIVITIES = [
             instruction: 'Ask for {their} eyes, and have your helper start the noise.',
             cue: 'Watch me',
           },
+          3: {
+            instruction: 'Count five to ten seconds while {she} holds your eyes, then mark it.',
+            cue: 'Yes!',
+            helper: 'Start at the short end and build. If {she} looks away first, the count was too long: pay the next one sooner.',
+          },
         },
       },
       {
         number: 3,
         title: 'Ten to twenty seconds',
         setup:
-          'Ten to twenty second increments, with harder distractions — a bag of treats, then out on a walk.',
+          'Hold eye contact for ten to twenty seconds, with harder distractions — a bag of treats indoors, then out on a walk.',
         cadence: { min: 1, max: 2, per: 'week' },
         reps: 4,
         successCriteria: ['Holds ten seconds or more', 'Works outside as well as inside'],
         overrides: {
           2: { instruction: 'Ask for {their} eyes with the distraction already going.', cue: 'Watch me' },
+          3: {
+            instruction: 'Count ten to twenty seconds while {she} holds your eyes, then mark it.',
+            cue: 'Yes!',
+            helper: 'Start at the short end and build. If {she} looks away first, the count was too long: pay the next one sooner.',
+          },
         },
       },
       {
         number: 4,
         title: 'Twenty seconds, out in the world',
         setup:
-          'Twenty second increments, out on a walk, with increasingly difficult distractions.',
+          'Hold eye contact for twenty seconds, out on a walk, with harder distractions each time.',
         cadence: { min: 1, max: 2, per: 'week' },
         reps: 4,
         successCriteria: ['Holds twenty seconds outdoors', 'Does not break at the first movement'],
         overrides: {
           0: { instruction: 'Ask {dog} to sit in front of you, out on the walk.', cue: 'Sit' },
+          1: {
+            instruction: 'Show {her} the treats, then close them in your fists at your sides.',
+            helper: 'The leash stays in one hand; there is no putting both hands behind your back on a walk.',
+          },
           2: { instruction: 'Ask for {their} eyes with the world going on behind you.', cue: 'Watch me' },
+          3: {
+            instruction: 'Count twenty seconds while {she} holds your eyes, then mark it.',
+            cue: 'Yes!',
+            helper: 'Start at the short end and build. If {she} looks away first, the count was too long: pay the next one sooner.',
+          },
         },
       },
       {
@@ -682,11 +777,11 @@ export const ACTIVITIES = [
         // 4. Written down as the trainer wrote it rather than quietly
         // corrected: the drop is almost certainly deliberate, because the
         // distraction at this rung is a real dog or squirrel going past and
-        // that is a much harder ask than a longer count in a car park. The
+        // that is a much harder ask than a longer count in a parking lot. The
         // setup line says so, so nobody reads it as a typo.
         title: 'Ten to fifteen seconds, past a dog or a squirrel',
         setup:
-          'Ten to fifteen second increments while passing a dog, or a squirrel, out on a walk. Shorter than level four on purpose — the distraction is doing the work now.',
+          'Hold eye contact for ten to fifteen seconds while passing a dog or a squirrel on a walk. Shorter than level four on purpose — the distraction is doing the work now.',
         cadence: { min: 1, max: 2, per: 'week' },
         reps: 4,
         successCriteria: [
@@ -700,6 +795,15 @@ export const ACTIVITIES = [
             cue: 'Watch me',
             helper:
               'Ask early. Once {she} has locked on, you are interrupting rather than asking, and the exercise is a different and harder one.',
+          },
+          1: {
+            instruction: 'Show {her} the treats, then close them in your fists at your sides.',
+            helper: 'The leash stays in one hand; there is no putting both hands behind your back on a walk.',
+          },
+          3: {
+            instruction: 'Count ten to fifteen seconds while {she} holds your eyes, then mark it.',
+            cue: 'Yes!',
+            helper: 'Start at the short end and build. If {she} looks away first, the count was too long: pay the next one sooner.',
           },
         },
       },
@@ -738,7 +842,7 @@ export const ACTIVITIES = [
     fallbackSteps: FALLBACK_STEPS,
     steps: [
       {
-        instruction: 'Set {her} up in a sit or a down somewhere mildly interesting.',
+        instruction: 'Somewhere mildly interesting, ask {her} to sit or lie down, then to stay.',
         cue: 'Stay',
         helper: 'In front of a window, or on the front porch. Busy enough to notice, quiet enough to cope.',
       },
@@ -746,7 +850,14 @@ export const ACTIVITIES = [
         instruction: 'Wait for {her} to notice something.',
         helper: 'Do nothing. The exercise starts when {she} spots it, not when you decide it has.',
       },
-      { instruction: 'Mark it the moment {she} looks.', cue: 'Yes!' },
+      // "The moment she looks" — at what? Every other exercise in the pack
+      // marks looking at you or looking away. This one marks looking at the
+      // distraction, which is the surprising part, so it has to be said.
+      {
+        instruction: 'Mark the moment {she} looks at the distraction.',
+        cue: 'Yes!',
+        helper: 'Yes, at it. Noticing the thing calmly is what you are paying for here.',
+      },
       {
         instruction: 'Lure {their} nose back to you and pay when {she} is looking at you.',
         helper:
@@ -755,7 +866,7 @@ export const ACTIVITIES = [
       {
         instruction: 'If {she} turns back on {their} own, jackpot it.',
         helper:
-          'Several treats, fast, one after another. The handout calls this the lightbulb moment — it is the behaviour you actually want, so pay it like it is.',
+          'Several treats, fast, one after another. The handout calls this the lightbulb moment — it is the behavior you actually want, so pay it like it is. If {she} does not turn back, that is fine: the rep is still done.',
       },
     ],
     levels: [
@@ -797,7 +908,7 @@ export const ACTIVITIES = [
     difficulty: 'beginner',
     equipment: ['Small treats', 'A bit of clear floor'],
     safetyNotes: [
-      'Keep spins slow and few. A dog whipping round repeatedly on a slick floor can hurt {her}self.',
+      'Keep spins slow and few. A dog whipping around repeatedly on a slick floor can hurt {her}self.',
       'Lure first, then fade the hand. A trick that only works with food in your fist is a bribe.',
       'Stop while it is still fun. These are meant to be the good bit.',
     ],
@@ -805,9 +916,11 @@ export const ACTIVITIES = [
     fallbackSteps: FALLBACK_STEPS,
     steps: [
       { instruction: 'Get {her} in front of you and interested.' },
+      // "Show her the shape with your hand" was written to cover a touch and
+      // a spin at once, and read as neither. The spin levels override it.
       {
-        instruction: 'Show {her} the shape with your hand.',
-        helper: 'A flat palm to boop, or a treat at nose height tracing the circle you want.',
+        instruction: 'Hold a flat palm a few inches from {their} nose.',
+        helper: 'If {she} ignores it, rub a treat on your palm first. Most dogs sniff a hand held close, and the sniff is the touch.',
       },
       { instruction: 'Name it as {she} does it.', cue: 'Touch' },
       { instruction: 'Mark and pay the moment it happens.', cue: 'Yes!' },
@@ -833,8 +946,11 @@ export const ACTIVITIES = [
         reps: 5,
         successCriteria: ['Completes the circle', 'Follows the hand without the food in it'],
         overrides: {
-          1: { instruction: 'Trace a slow clockwise circle at {their} nose height.' },
-          2: { instruction: 'Name it as {she} comes round.', cue: 'Spin' },
+          1: {
+            instruction: 'With a treat at {their} nose, trace a slow clockwise circle.',
+            helper: 'Wide and slow, so {her} body has room to follow {their} nose around.',
+          },
+          2: { instruction: 'Name it as {she} comes around.', cue: 'Spin' },
         },
       },
       {
@@ -846,8 +962,11 @@ export const ACTIVITIES = [
         reps: 5,
         successCriteria: ['Turns the other way', 'Does not default to the clockwise spin'],
         overrides: {
-          1: { instruction: 'Trace a slow counterclockwise circle at {their} nose height.' },
-          2: { instruction: 'Name it as {she} comes round.', cue: 'Turn' },
+          1: {
+            instruction: 'With a treat at {their} nose, trace a slow counterclockwise circle.',
+            helper: 'Wide and slow. If {she} starts to spin the old way, slow your hand down rather than speeding it up.',
+          },
+          2: { instruction: 'Name it as {she} comes around.', cue: 'Turn' },
         },
       },
     ],
@@ -874,14 +993,23 @@ export const ACTIVITIES = [
     ],
     fallbackImage: BREATHER,
     fallbackSteps: FALLBACK_STEPS,
+    // The weave was "lure her through" and "pay on the other side": nothing
+    // said what path a figure eight takes, and "the other side" survived onto
+    // the crawl level, which has no sides. The base cue also said "Touch",
+    // borrowed from the exercise before this one.
     steps: [
-      { instruction: 'Stand with your legs about hip distance apart.' },
+      { instruction: 'Stand still with your legs about hip distance apart, {dog} in front of you.' },
       {
-        instruction: 'Lure {her} through with a treat at nose height.',
-        helper: 'Slowly. Your hand goes where you want {their} nose to go, and the rest of {her} follows.',
+        instruction: 'Lure {her} back between your legs, then around your right leg to the front.',
+        helper:
+          'Treat in your right hand, slowly. Your hand goes where you want {their} nose to go, and the rest of {her} follows. Bend your knees rather than dragging {her} low.',
       },
-      { instruction: 'Name it as {she} moves.', cue: 'Touch' },
-      { instruction: 'Mark and pay on the other side.', cue: 'Yes!' },
+      {
+        instruction: 'Swap hands and lure {her} through again, around your left leg.',
+        cue: 'Weave',
+        helper: 'Say the word as {she} goes. Right loop, then left loop: that is one figure eight.',
+      },
+      { instruction: 'Mark and pay when {she} is back in front of you.', cue: 'Yes!' },
       { instruction: 'Reset and go again from the top.' },
     ],
     levels: [
@@ -892,8 +1020,7 @@ export const ACTIVITIES = [
           'Stand still with your legs hip distance apart while {dog} weaves a figure eight between them.',
         cadence: { min: 1, max: 2, per: 'week' },
         reps: 4,
-        successCriteria: ['Goes through without stopping', 'Comes back round for the second loop'],
-        overrides: { 2: { instruction: 'Name it as {she} weaves through.', cue: 'Weave' } },
+        successCriteria: ['Goes through without stopping', 'Comes back around for the second loop'],
       },
       {
         number: 2,
@@ -903,12 +1030,13 @@ export const ACTIVITIES = [
         reps: 4,
         successCriteria: ['Stays down while moving', 'Crawls a body length or more'],
         overrides: {
-          0: { instruction: 'Put {her} in a down, and get down there with {her}.', cue: 'Settle' },
+          0: { instruction: 'Ask {her} to lie down, and kneel down with {her}.', cue: 'Down' },
           1: {
             instruction: 'Draw the treat slowly along the floor away from {her}.',
             helper: 'Low and slow. If {her} bottom comes up, you moved it too fast or too high.',
           },
-          2: { instruction: 'Name it as {she} crawls.', cue: 'Crawl' },
+          2: { instruction: 'Name it as {she} crawls.', cue: 'Crawl', helper: 'Say it while {she} is moving, not before.' },
+          3: { instruction: 'Mark and pay once {she} has crawled a body length.', cue: 'Yes!' },
         },
       },
     ],
@@ -956,7 +1084,13 @@ export const ACTIVITIES = [
         helper:
           'Stop moving the toy entirely. Boring hands are what buy the release; pulling harder is what stops it.',
       },
-      { instruction: 'Pay the release by starting the game again.' },
+      // Restarting the game was the last step, so the game never ended — on
+      // the one exercise whose safety note is "you start it and you end it".
+      {
+        instruction: 'Restart the game as the reward. After a few rounds, put the toy away.',
+        helper:
+          'Getting the game back is what pays the “Out”. Ending it yourself, while {she} still wants more, is how it stays your game.',
+      },
     ],
     levels: [
       {
@@ -1008,18 +1142,35 @@ export const ACTIVITIES = [
     fallbackImage: BREATHER,
     fallbackSteps: FALLBACK_STEPS,
     steps: [
-      { instruction: 'Send {her} to {their} bed.', cue: 'Go to bed' },
+      {
+        instruction: 'Send {her} to {their} bed.',
+        cue: 'Go to bed',
+        helper:
+          'If {dog} does not know the word yet, walk {her} there with a treat at {their} nose and say it as {she} steps on.',
+      },
       {
         instruction: 'Pay {her} lavishly the moment {she} is on it.',
         cue: 'Yes!',
         helper: 'Lavishly is the handout’s word. Several treats, on the bed, between {their} paws.',
       },
-      { instruction: 'Hold it for this level’s count.', cue: 'Stay' },
+      // Said "Hold it for this level's count", and level one has no count:
+      // the handout's first step is about the bed being worth going to. The
+      // later levels override this with their own minutes.
+      {
+        instruction: 'Ask {her} to stay for a few seconds.',
+        cue: 'Stay',
+        helper: 'Level one is about the bed being a good place, not about how long. A few seconds is plenty.',
+      },
       {
         instruction: 'Go back and pay {her} again where {she} is.',
         helper: 'Every payment happens on the bed. That is what makes the bed the paying spot.',
       },
-      { instruction: 'Release {her}, and leave the chew there.', cue: 'Ok' },
+      // "Leave the chew there" — no step had put one there.
+      {
+        instruction: 'Release {her}, then put {their} special chew on the bed.',
+        cue: 'Ok',
+        helper: 'It only ever appears there. Going back for it on {their} own is the choice you are building.',
+      },
     ],
     levels: [
       {
@@ -1045,7 +1196,7 @@ export const ACTIVITIES = [
         successCriteria: ['Holds a minute', 'Stays put while you move about the room'],
         overrides: {
           2: {
-            instruction: 'Get on with something small while {she} holds it.',
+            instruction: 'Ask {her} to stay for up to a minute while you do something small nearby.',
             cue: 'Stay',
             helper: 'Fill a glass, check your phone. Ordinary, brief, and not about {her}.',
           },
@@ -1065,10 +1216,10 @@ export const ACTIVITIES = [
         ],
         overrides: {
           2: {
-            instruction: 'Open the front door and greet nobody.',
+            instruction: 'Ask {her} to stay three to five minutes, and open the front door partway through.',
             cue: 'Stay',
             helper:
-              'A pretend guest first, every time. Practice long before a real one is standing there.',
+              'Greet nobody on the porch. A pretend guest first, every time. Practice long before a real one is standing there.',
           },
         },
       },
@@ -1094,20 +1245,20 @@ export const ACTIVITIES = [
     safetyNotes: [
       'Leave {her} enough leash to lie down comfortably. This is about making down easy, not about restraint.',
       'Never haul on it. Your foot holds the slack; it does not pull {her} anywhere.',
-      'Start on {their} bed. A comfortable place makes the behaviour worth choosing.',
+      'Start on {their} bed. A comfortable place makes the behavior worth choosing.',
     ],
     fallbackImage: BREATHER,
     fallbackSteps: FALLBACK_STEPS,
     steps: [
       {
-        instruction: 'Stand on the leash, on {their} bed, with just enough for a comfortable down.',
+        instruction: 'Stand on the leash, leaving {dog} just enough to lie down on {their} bed.',
         helper:
           'Short enough that standing and sitting are awkward, long enough that lying down is easy. {She} is choosing, not being pulled.',
       },
       {
-        instruction: 'Wait. Say nothing.',
+        instruction: 'Wait. Say nothing, for as long as it takes.',
         helper:
-          '{She} may fidget for a while. That is normal and it is the exercise — you are waiting out the excitement, not correcting it.',
+          '{She} may fidget for a while, sometimes ten minutes or more the first few times. That is normal and it is the exercise — you are waiting out the excitement, not correcting it.',
       },
       {
         instruction: 'Let {her} work it out and lie down.',
@@ -1116,12 +1267,15 @@ export const ACTIVITIES = [
       {
         instruction: 'Mark it calmly and put the treats between {their} front paws.',
         cue: 'Yes!',
-        helper: 'Calmly. An excited “good girl” here undoes the thing you just waited for.',
+        helper: 'Calmly. An excited “good dog” here undoes the thing you just waited for.',
       },
+      // Was "Once she has the idea, put the word on it", which is not a thing
+      // to do on the first rep, and left the rep with no end. The word is
+      // still said here, but as {she} lies down rather than as a request.
       {
-        instruction: 'Once {she} has the idea, put the word on it.',
+        instruction: 'Say the word quietly while {she} lies there, then step off the leash.',
         cue: 'Settle',
-        helper: 'Name it only when {she} is already doing it reliably. The word goes on the behaviour, not before it.',
+        helper: 'That ends the rep. The word goes on the behavior, not before it. Only once {she} lies down quickly will it work as a request.',
       },
     ],
     levels: [
@@ -1161,16 +1315,15 @@ export const ACTIVITIES = [
     equipment: ['A leash', 'Treats in your pocket', 'Something ordinary to get on with'],
     safetyNotes: [
       'Never leave {her} attached to you and unattended, and never tie {her} to anything.',
-      'Ignoring means no eye contact, no talking, no telling off. Nothing is still attention.',
+      'Ignoring means no eye contact, no talking, no scolding. Nothing is still attention.',
       'Pay calm the moment it appears, before {she} asks you for anything.',
     ],
     fallbackImage: BREATHER,
     fallbackSteps: FALLBACK_STEPS,
     steps: [
       {
-        instruction: 'Clip the leash on and keep {her} with you.',
-        helper:
-          'Through your belt, or under your foot when you sit. Keeping {her} leashed is what makes the calm behaviour likely enough to reward.',
+        instruction: 'Clip on the leash and attach it to you, through your belt or under your foot.',
+        helper: 'Keeping {her} leashed is what makes the calm behavior likely enough to reward.',
       },
       {
         instruction: 'Go about your day and pretend {she} is not there.',
@@ -1178,13 +1331,18 @@ export const ACTIVITIES = [
       },
       {
         instruction: 'Wait for {her} to give up on you.',
-        helper: 'Lying down, a sigh, settling on {their} side. Boredom is the behaviour you are after.',
+        helper: 'Lying down, a sigh, settling on {their} side. Boredom is the behavior you are after.',
       },
       {
         instruction: 'Pay the calm quietly, without making an occasion of it.',
         helper: 'A treat delivered low and calmly, where {she} is. Do not wake the excitement back up.',
       },
-      { instruction: 'Carry on. Pay {her} again the next time {she} settles.' },
+      // Said "Carry on" and nothing else, so the practice had no end to walk
+      // to before the app asked how it went.
+      {
+        instruction: 'Keep going for about fifteen minutes, paying each time {she} settles. Then unclip {her}.',
+        helper: 'Longer is fine once {she} has the idea. Fifteen minutes is enough to see the calm arrive.',
+      },
     ],
     levels: [
       {
@@ -1205,7 +1363,7 @@ export const ACTIVITIES = [
 
   // -------------------------------------------------------------------------
   // The weakest fit in the pack, and worth being honest about in the code as
-  // well as on the screen: this is not a trained behaviour with repetitions,
+  // well as on the screen: this is not a trained behavior with repetitions,
   // it is a management tool the handout recommends daily. It is here because
   // leaving it out would drop a section of the homework, and it is written as
   // one rep because one rep is what it is.
