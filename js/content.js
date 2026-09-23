@@ -166,6 +166,14 @@ export const IMAGES = withThumb({
     src: 'img/door-sound-01-setup.jpg',
     alt: 'Lucy sits beside her handler near the closed front door with the leash running down under the handler’s shoe.',
   },
+  // Levels 4 and 5 of Doorbell Predicts Rewards call her from across the
+  // house, and their first step drew 01-setup — handler beside her, leash
+  // under a shoe — over words saying to walk away with the leash off. This is
+  // the moment before 03-name-distant, drawn in the same hall.
+  'door-sound-01-apart': {
+    src: 'img/door-sound-01-apart.jpg',
+    alt: 'Lucy lies settled on her bed near the closed front door, watching her handler walk away from her across the hall.',
+  },
   'door-sound-02-self': {
     src: 'img/door-sound-02-self.jpg',
     alt: 'A handler knocks on the door frame while standing right beside Lucy with the leash under her foot.',
