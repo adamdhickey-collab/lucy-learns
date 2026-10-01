@@ -2296,12 +2296,19 @@ details.disclosure .disclosure-body {
   background: var(--surface-sunken);
   color: var(--text-secondary);
   font-size: var(--step--1);
+  /* How far the two names on the left sit in from the strip's edge. The
+     toggle is a pill as wide as its column, and its icon and label sat
+     against the pill's left curve with a wide empty run after them, so they
+     read as pushed into the corner. One value, because the toggle's content
+     and the label below it have to start on the same line, and two copies of
+     a distance are how they stop. */
+  --pace-inset: calc(var(--s-2) + var(--s-3));
 }
 
-/* Set in from the row's edge by the toggle's own inner padding, so the two
-   names on the left start on the same line. */
+/* Set in from the row's edge to match the toggle's own inner padding, so the
+   two names on the left start on the same line. */
 .pace-step-label {
-  padding-left: var(--s-2);
+  padding-left: var(--pace-inset);
 }
 
 /* Drawn as the stepper buttons beside it are — white on the sunken field,
@@ -2315,7 +2322,7 @@ details.disclosure .disclosure-body {
   align-items: center;
   gap: var(--s-2);
   min-height: var(--tap);
-  padding: 0 var(--s-3) 0 var(--s-2);
+  padding: 0 var(--s-3) 0 var(--pace-inset);
   border: 1.5px solid var(--border-strong);
   border-radius: var(--r-pill);
   background: var(--surface);
