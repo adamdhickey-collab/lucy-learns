@@ -54,7 +54,7 @@ Nothing is seeded until you answer the last question:
 
 - **Start empty** — no history at all. Your first session is genuinely the
   first one.
-- **Fill in example data first** — twelve days of made-up practice so Progress
+- **Fill in example data first** — three weeks of made-up practice so Progress
   has something to show. Removable in one tap.
 
 To hand the app to someone else and have them see it exactly as a new user

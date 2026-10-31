@@ -27,7 +27,7 @@ if (STUDY) {
   // Applying the mode wipes stored data and rebuilds a baseline, and it did
   // that on every single load while the parameter stayed in the URL. A bare
   // `?study` means demo, so one forgotten query string turned every refresh
-  // into "delete everything this person logged and reseed twelve days of
+  // into "delete everything this person logged and reseed three weeks of
   // someone else's practice" — which looks, from the outside, exactly like
   // resetting the app and being dropped into the middle of the program with
   // activities already finished.

@@ -283,7 +283,7 @@ function render() {
             : html`<button class="setting-row" type="button" data-load-demo>
                 <span>
                   Load example data
-                  <small>Twelve days of made-up practice, to see what Progress looks like</small>
+                  <small>Three weeks of made-up practice, to see what Progress looks like</small>
                 </span>
               </button>`}
           <button class="setting-row danger" type="button" data-clear-all>
