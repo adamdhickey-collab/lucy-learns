@@ -639,31 +639,45 @@ export function clearAll() {
  */
 export function seedDemoSessions({ force = false } = {}) {
   if (state.seeded && !force) return;
-  // Twelve days across three of the four activities.
+  // Three weeks across the first three activities, finished, so Today opens
+  // on the fourth.
   //
   // Every row used to be dg-1, correctly, because it was the only activity in
   // the app. All four are open now, and a demo that only ever practices the
   // first one shows a household permanently stuck on it — the map stays empty,
   // no activity is ever finished, and nothing downstream of "you cleared one"
-  // is reachable. This walks the arc instead: the first activity finished, the
-  // second underway, the third just started.
+  // is reachable. This walks the arc instead: Sound, Stay and Place finished,
+  // one clean session of three reps or more at each level, and Greet next and
+  // not yet started. The live app is iframed on adamhickey.com beside a list
+  // that says Greet is where the household is, so the map has to show it: three
+  // checks, then Greet.
   //
   // Rest days and a double-practice day, so the charts look like real life,
   // and early sessions that went badly, so progress reads as earned.
   const plan = [
     // [daysAgo, hour, activityId, level, reps, successes, arousal, behaviors, assistance]
-    [12, 18, 'dg-1', 1, 5, 2, 3, ['barked', 'looked_at_handler'], ['treat_lure']],
-    [11, 19, 'dg-1', 1, 5, 3, 3, ['looked_at_handler', 'barked'], ['treat_lure']],
-    [10, 18, 'dg-1', 2, 5, 5, 2, ['looked_at_handler', 'recovered_quickly'], ['none']],
-    [9, 17, 'dg-1', 3, 5, 4, 2, ['looked_at_handler', 'four_paws_down'], ['verbal_cue']],
-    [8, 19, 'dg-1', 4, 5, 5, 1, ['looked_at_handler', 'recovered_quickly'], ['none']],
-    [7, 18, 'dg-1', 5, 5, 3, 3, ['looked_at_handler', 'barked'], ['reduced_distance']],
-    [6, 9, 'dg-1', 5, 5, 5, 2, ['looked_at_handler', 'recovered_quickly'], ['none']],
-    [5, 19, 'dg-2', 1, 4, 2, 3, ['jumped', 'looked_at_handler'], ['treat_lure']],
-    [4, 18, 'dg-2', 1, 4, 4, 2, ['looked_at_handler', 'four_paws_down'], ['none']],
-    [3, 18, 'dg-2', 2, 4, 3, 2, ['looked_at_handler'], ['verbal_cue']],
-    [2, 19, 'dg-2', 3, 4, 4, 2, ['looked_at_handler', 'recovered_quickly'], ['none']],
-    [1, 18, 'dg-3', 1, 5, 3, 2, ['looked_at_handler', 'jumped'], ['treat_lure']],
+    [21, 18, 'dg-1', 1, 5, 2, 3, ['barked', 'looked_at_handler'], ['treat_lure']],
+    [20, 19, 'dg-1', 1, 5, 3, 3, ['looked_at_handler', 'barked'], ['treat_lure']],
+    [19, 18, 'dg-1', 2, 5, 5, 2, ['looked_at_handler', 'recovered_quickly'], ['none']],
+    [18, 17, 'dg-1', 3, 5, 4, 2, ['looked_at_handler', 'four_paws_down'], ['verbal_cue']],
+    [17, 19, 'dg-1', 4, 5, 5, 1, ['looked_at_handler', 'recovered_quickly'], ['none']],
+    [16, 18, 'dg-1', 5, 5, 3, 3, ['looked_at_handler', 'barked'], ['reduced_distance']],
+    [15, 9, 'dg-1', 5, 5, 5, 2, ['looked_at_handler', 'recovered_quickly'], ['none']],
+    [14, 19, 'dg-2', 1, 4, 2, 3, ['jumped', 'looked_at_handler'], ['treat_lure']],
+    [13, 18, 'dg-2', 1, 4, 4, 2, ['looked_at_handler', 'four_paws_down'], ['none']],
+    [12, 18, 'dg-2', 2, 4, 3, 2, ['looked_at_handler'], ['verbal_cue']],
+    [11, 19, 'dg-2', 3, 4, 3, 2, ['looked_at_handler', 'recovered_quickly'], ['none']],
+    [10, 18, 'dg-2', 4, 4, 4, 1, ['looked_at_handler', 'four_paws_down'], ['none']],
+    [9, 18, 'dg-2', 5, 4, 2, 2, ['looked_at_handler', 'barked'], ['verbal_cue']],
+    [9, 9, 'dg-2', 5, 4, 4, 1, ['looked_at_handler', 'recovered_quickly'], ['none']],
+    [8, 19, 'dg-2', 6, 4, 4, 2, ['looked_at_handler'], ['none']],
+    [7, 18, 'dg-2', 7, 4, 4, 2, ['looked_at_handler', 'four_paws_down'], ['none']],
+    [6, 18, 'dg-2', 8, 4, 4, 2, ['jumped', 'looked_at_handler'], ['verbal_cue']],
+    [5, 19, 'dg-3', 1, 5, 4, 2, ['looked_at_handler', 'jumped'], ['treat_lure']],
+    [4, 18, 'dg-3', 2, 5, 4, 2, ['looked_at_handler', 'four_paws_down'], ['none']],
+    [3, 18, 'dg-3', 3, 5, 5, 2, ['looked_at_handler'], ['verbal_cue']],
+    [2, 19, 'dg-3', 4, 5, 5, 1, ['looked_at_handler', 'recovered_quickly'], ['none']],
+    [1, 18, 'dg-3', 5, 5, 5, 2, ['looked_at_handler', 'four_paws_down'], ['none']],
   ];
 
   state.sessions = plan

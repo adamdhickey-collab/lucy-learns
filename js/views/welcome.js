@@ -284,7 +284,7 @@ function render() {
                   <em class="choice-tag">Recommended</em>
                   <strong>Look around with example data</strong>
                   <small>
-                    Twelve days of made-up practice, so Progress, the report and
+                    Three weeks of made-up practice, so Progress, the report and
                     the program map have something in them. Removable in one tap.
                   </small>
                 </span>

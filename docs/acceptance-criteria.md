@@ -18,7 +18,7 @@ Two starting states matter, and several criteria only exist in one of them:
 
 - **Empty** — clear storage, complete the welcome, choose *Start empty*.
 - **Seeded** — clear storage, complete the welcome, choose *Fill in example
-  data first*. Twelve days across three activities.
+  data first*. Three weeks across three activities, all three finished.
 
 Marks: **[v]** verified in a browser during development. **[ ]** never yet
 tested — these are the ones a UAT pass is actually for.
