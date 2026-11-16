@@ -1060,12 +1060,11 @@ a.visually-hidden:focus {
    "Fabiola" feel like a greeting makes "Bartholomew" wrap into the avatar.
    today.js measures the first name and sets data-name-length; three sizes is
    enough to cover everything from "Al" to a name that has no business being
-   in a heading. Wrapping is still allowed as the last resort — a balanced
-   two-line greeting beats a clipped one. */
+   in a heading. Wrapping is still allowed as the last resort — a two-line
+   greeting beats a clipped one. */
 .today-head h1 {
   font-size: var(--step-4);
   line-height: 1.15;
-  text-wrap: balance;
   overflow-wrap: anywhere;
 }
 
@@ -1194,7 +1193,6 @@ a.visually-hidden:focus {
   font-weight: 600;
   color: var(--text-primary);
   font-variation-settings: 'SOFT' 40, 'WONK' 1, 'opsz' 28;
-  text-wrap: balance;
 }
 
 .insight svg {
@@ -1985,7 +1983,6 @@ details.disclosure .disclosure-body {
 }
 
 .step-instruction {
-  text-wrap: balance;
   font-family: var(--font-display);
   font-size: var(--step-3);
   line-height: 1.18;
