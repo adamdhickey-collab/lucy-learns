@@ -267,6 +267,19 @@ h4 {
   font-variation-settings: 'SOFT' 30, 'WONK' 1, 'opsz' 40;
 }
 
+/* Every headline balances its lines, deliberately, since 2026-11-16: the owner
+   compared on and off on adamhickey.com and kept it on, as one global rule
+   there too. Headlines only. Paragraphs, instructions and body text wrap the
+   way the browser wraps them, and nothing here uses `text-wrap: pretty`. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+}
+
 /* Small headings sit closer to the body face so they do not shout. */
 h3,
 h4 {
@@ -1060,8 +1073,8 @@ a.visually-hidden:focus {
    "Fabiola" feel like a greeting makes "Bartholomew" wrap into the avatar.
    today.js measures the first name and sets data-name-length; three sizes is
    enough to cover everything from "Al" to a name that has no business being
-   in a heading. Wrapping is still allowed as the last resort — a two-line
-   greeting beats a clipped one. */
+   in a heading. Wrapping is still allowed as the last resort — a balanced
+   two-line greeting beats a clipped one. */
 .today-head h1 {
   font-size: var(--step-4);
   line-height: 1.15;
